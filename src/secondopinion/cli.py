@@ -9,6 +9,7 @@ from .audit import audit_dataset
 from .normalize import normalize_openreview_notes
 from .openreview_client import OpenReviewClient
 from .report import write_html_report, write_markdown_report
+from .snapshot import normalize_snapshot, save_openreview_snapshot
 
 
 def main(argv: list[str] | None = None) -> None:
@@ -20,6 +21,17 @@ def main(argv: list[str] | None = None) -> None:
     scan.add_argument("--limit", type=int, default=25)
     scan.add_argument("--out", default="data/normalized/iclr_2024_sample.json")
     scan.add_argument("--raw-out", default="")
+
+    snapshot = subparsers.add_parser("snapshot-iclr", help="Save a full raw OpenReview snapshot for ICLR.")
+    snapshot.add_argument("--year", type=int, default=2024)
+    snapshot.add_argument("--limit", type=int, default=25)
+    snapshot.add_argument("--page-size", type=int, default=100)
+    snapshot.add_argument("--root", default="data/raw")
+    snapshot.add_argument("--normalize-out", default="")
+
+    normalize = subparsers.add_parser("normalize-snapshot", help="Create normalized data from a raw snapshot.")
+    normalize.add_argument("--snapshot", required=True)
+    normalize.add_argument("--out", required=True)
 
     audit = subparsers.add_parser("audit", help="Audit a normalized dataset and write JSON/Markdown/HTML reports.")
     audit.add_argument("--input", required=True)
@@ -35,6 +47,10 @@ def main(argv: list[str] | None = None) -> None:
     args = parser.parse_args(argv)
     if args.command == "scan-iclr":
         command_scan_iclr(args)
+    elif args.command == "snapshot-iclr":
+        command_snapshot_iclr(args)
+    elif args.command == "normalize-snapshot":
+        command_normalize_snapshot(args)
     elif args.command == "audit":
         command_audit(args)
     elif args.command == "demo":
@@ -47,6 +63,38 @@ def command_scan_iclr(args: argparse.Namespace) -> None:
     if args.raw_out:
         write_json({"notes": notes}, args.raw_out)
     normalized = normalize_openreview_notes(notes, venue="ICLR", year=args.year)
+    write_json(normalized, args.out)
+    print(
+        f"Saved {normalized['paper_count']} papers and {normalized['review_count']} reviews to {args.out}."
+    )
+
+
+def command_snapshot_iclr(args: argparse.Namespace) -> None:
+    client = OpenReviewClient()
+    invitation = f"ICLR.cc/{args.year}/Conference/-/Submission"
+    result = save_openreview_snapshot(
+        client,
+        venue="ICLR",
+        year=args.year,
+        invitation=invitation,
+        details="replies",
+        limit=args.limit,
+        page_size=args.page_size,
+        root=args.root,
+    )
+    manifest = result["manifest"]
+    print(
+        f"Saved raw snapshot to {result['snapshot_dir']} "
+        f"({manifest['paper_count']} papers, {manifest['reply_count']} replies)."
+    )
+    if args.normalize_out:
+        normalized = normalize_snapshot(result["snapshot_dir"])
+        write_json(normalized, args.normalize_out)
+        print(f"Saved normalized data to {args.normalize_out}.")
+
+
+def command_normalize_snapshot(args: argparse.Namespace) -> None:
+    normalized = normalize_snapshot(args.snapshot)
     write_json(normalized, args.out)
     print(
         f"Saved {normalized['paper_count']} papers and {normalized['review_count']} reviews to {args.out}."
@@ -85,4 +133,3 @@ def write_json(payload: dict[str, Any], path: str | Path) -> None:
     with path.open("w", encoding="utf-8") as handle:
         json.dump(payload, handle, ensure_ascii=False, indent=2)
         handle.write("\n")
-

@@ -34,8 +34,8 @@ class OpenReviewClient:
         limit: int = 50,
         details: str | None = "replies",
         offset: int = 0,
-    ) -> list[dict[str, Any]]:
-        payload = self.get_json(
+    ) -> dict[str, Any]:
+        return self.get_json(
             "/notes",
             {
                 "invitation": invitation,
@@ -44,7 +44,6 @@ class OpenReviewClient:
                 "offset": offset,
             },
         )
-        return list(payload.get("notes", []))
 
     def get_all_notes(
         self,
@@ -62,7 +61,8 @@ class OpenReviewClient:
             if remaining == 0:
                 break
             batch_size = min(page_size, remaining) if remaining is not None else page_size
-            batch = self.get_notes(invitation, limit=batch_size, offset=offset, details=details)
+            payload = self.get_notes(invitation, limit=batch_size, offset=offset, details=details)
+            batch = list(payload.get("notes", []))
             if not batch:
                 break
             notes.extend(batch)
@@ -76,4 +76,3 @@ class OpenReviewClient:
     def get_iclr_submissions(self, year: int, *, limit: int | None = None) -> list[dict[str, Any]]:
         invitation = f"ICLR.cc/{year}/Conference/-/Submission"
         return self.get_all_notes(invitation, limit=limit, details="replies")
-

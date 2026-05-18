@@ -71,8 +71,8 @@ MVP 输出：
 
 当前 MVP 是一个本地可运行的 review audit 工具，先完成最小闭环：
 
-1. 抓取 ICLR OpenReview submission 和 replies。
-2. 归一化为 papers / reviews / rebuttals / decisions schema。
+1. 抓取 ICLR OpenReview submission 和 replies，完整保存 raw snapshot。
+2. 从 raw snapshot 派生 normalized papers / reviews / rebuttals / decisions schema。
 3. 从 review weaknesses 中抽取可审计 claim。
 4. 用论文摘要、author response 和可扩展 paper sections 做轻量 evidence retrieval。
 5. 输出 claim-level verdict、issue flags、Review Quality Score 和 Markdown / HTML 报告。
@@ -92,7 +92,29 @@ PYTHONPATH=src python3 -m secondopinion demo
 抓取少量 ICLR 2024 公开数据并归一化：
 
 ```bash
-PYTHONPATH=src python3 -m secondopinion scan-iclr --year 2024 --limit 10 --out data/normalized/iclr_2024_sample.json
+PYTHONPATH=src python3 -m secondopinion snapshot-iclr \
+  --year 2024 \
+  --limit 10 \
+  --normalize-out data/normalized/iclr_2024_sample.json
+```
+
+raw snapshot 会保存在类似下面的目录：
+
+```text
+data/raw/openreview/iclr/2024/20260518T120000Z/
+```
+
+每个 snapshot 包含：
+
+- `manifest.json`：记录 source、venue、year、API query、paper/reply 数量和 raw page 文件列表。
+- `notes_page_0000.json`：OpenReview API 的完整分页响应，不删除字段。
+
+也可以从已有 snapshot 重新派生 normalized 数据：
+
+```bash
+PYTHONPATH=src python3 -m secondopinion normalize-snapshot \
+  --snapshot data/raw/openreview/iclr/2024/<snapshot_id> \
+  --out data/normalized/iclr_2024_sample.json
 ```
 
 对归一化数据做审计：
@@ -102,6 +124,13 @@ PYTHONPATH=src python3 -m secondopinion audit --input data/normalized/iclr_2024_
 ```
 
 本版先使用 `rule-baseline-v0.1`，重点是验证数据链路、schema、rubric 和报告格式。后续可以把 claim extraction、evidence retrieval 和 verdict 分类替换为 LLM + RAG 实现。
+
+数据原则：
+
+- `data/raw/` 保留不同 venue 的原始结构，用于复现和重新派生。
+- `data/normalized/` 才是跨 venue 统一 schema。
+- `data/audits/` 和 `reports/` 是可重复生成的产物。
+- 上述目录默认不提交 GitHub；仓库只提交代码、schema、文档和小样例。
 
 ## 目标
 
