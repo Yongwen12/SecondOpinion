@@ -4,7 +4,9 @@ version = "0.1.0"
 description = "Evidence-grounded review quality audit MVP for OpenReview venues."
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = []
+dependencies = [
+  "pypdf>=4.0",
+]
 
 [project.scripts]
 secondopinion = "secondopinion.cli:main"
@@ -18,4 +20,3 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
-

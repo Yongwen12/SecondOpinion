@@ -8,6 +8,7 @@ from typing import Any
 from .audit import audit_dataset
 from .normalize import normalize_openreview_notes
 from .openreview_client import OpenReviewClient
+from .pdf_store import build_evidence_store
 from .report import write_html_report, write_markdown_report
 from .snapshot import normalize_snapshot, save_openreview_snapshot
 
@@ -33,6 +34,13 @@ def main(argv: list[str] | None = None) -> None:
     normalize.add_argument("--snapshot", required=True)
     normalize.add_argument("--out", required=True)
 
+    evidence = subparsers.add_parser("build-evidence-store", help="Download PDFs and attach parsed paper sections.")
+    evidence.add_argument("--input", required=True)
+    evidence.add_argument("--out", required=True)
+    evidence.add_argument("--pdf-root", default="data/pdfs")
+    evidence.add_argument("--limit", type=int, default=None)
+    evidence.add_argument("--force", action="store_true")
+
     audit = subparsers.add_parser("audit", help="Audit a normalized dataset and write JSON/Markdown/HTML reports.")
     audit.add_argument("--input", required=True)
     audit.add_argument("--out", default="data/audits/audit_results.json")
@@ -51,6 +59,8 @@ def main(argv: list[str] | None = None) -> None:
         command_snapshot_iclr(args)
     elif args.command == "normalize-snapshot":
         command_normalize_snapshot(args)
+    elif args.command == "build-evidence-store":
+        command_build_evidence_store(args)
     elif args.command == "audit":
         command_audit(args)
     elif args.command == "demo":
@@ -98,6 +108,22 @@ def command_normalize_snapshot(args: argparse.Namespace) -> None:
     write_json(normalized, args.out)
     print(
         f"Saved {normalized['paper_count']} papers and {normalized['review_count']} reviews to {args.out}."
+    )
+
+
+def command_build_evidence_store(args: argparse.Namespace) -> None:
+    dataset = read_json(args.input)
+    enriched, manifest = build_evidence_store(
+        dataset,
+        pdf_root=args.pdf_root,
+        limit=args.limit,
+        force=args.force,
+    )
+    write_json(enriched, args.out)
+    evidence = enriched.get("evidence_store", {})
+    print(
+        f"Saved evidence dataset to {args.out} "
+        f"({manifest['pdf_count']} PDFs, {evidence.get('chunk_count', 0)} chunks)."
     )
 
 

@@ -117,10 +117,27 @@ PYTHONPATH=src python3 -m secondopinion normalize-snapshot \
   --out data/normalized/iclr_2024_sample.json
 ```
 
+构建 PDF evidence store：
+
+```bash
+PYTHONPATH=src python3 -m secondopinion build-evidence-store \
+  --input data/normalized/iclr_2024_sample.json \
+  --out data/derived/iclr_2024_with_evidence.json \
+  --limit 10
+```
+
+这一步会下载 submission PDF，解析正文和 appendix，并把 page / section / text chunks 加回 normalized dataset。PDF 文件和派生 evidence dataset 默认保存在 `data/pdfs/`、`data/derived/`，不会提交到 GitHub。
+
 对归一化数据做审计：
 
 ```bash
 PYTHONPATH=src python3 -m secondopinion audit --input data/normalized/iclr_2024_sample.json
+```
+
+如果已经构建 evidence store，可以直接审计派生数据：
+
+```bash
+PYTHONPATH=src python3 -m secondopinion audit --input data/derived/iclr_2024_with_evidence.json
 ```
 
 本版先使用 `rule-baseline-v0.1`，重点是验证数据链路、schema、rubric 和报告格式。后续可以把 claim extraction、evidence retrieval 和 verdict 分类替换为 LLM + RAG 实现。

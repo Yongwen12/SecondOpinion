@@ -22,6 +22,8 @@ build/
 data/raw/
 data/normalized/
 data/audits/
+data/pdfs/
+data/derived/
 reports/*.md
 reports/*.html
 
