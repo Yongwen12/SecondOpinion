@@ -77,9 +77,17 @@ MVP 输出：
 4. 用论文摘要、author response 和可扩展 paper sections 做轻量 evidence retrieval。
 5. 输出 claim-level verdict、issue flags、Review Quality Score 和 Markdown / HTML 报告。
 
-当前 claim extraction 使用 `claim-extraction-rule-v0.2`：它会优先解析 structured `weaknesses` / `questions` 字段，必要时回退到完整 `review_text`，并把一句话里的多个批评点拆成独立 claim。每个 claim 会保留来源字段、原句序号、原句文本和抽取原因。
+当前 claim extraction 使用 `claim-extraction-llm-v0.1`：LLM 负责从 review 原文中抽取、拆分和分类 claim，系统只做 deterministic validation。每条 claim 必须带 `source_field` 和可回指到原文的 `source_sentence`；匹配不到原文的 claim 会被丢弃。
 
 当前 evidence retrieval 使用 `section-aware-bm25-v0.2`：它会综合 abstract、PDF sections、appendix 和 author response，按 claim 类型给 section 加权，并在报告中保留 page、section、snippet 和 score。verdict 默认偏保守，遇到“review 说缺失，但论文里检索到相关证据”的情况会标成 `possibly_contradicted`，留给人工复核。
+
+运行 audit 前需要设置 OpenAI API key：
+
+```bash
+export OPENAI_API_KEY="..."
+```
+
+默认 claim model 是 `gpt-4o-mini`，也可以用 `SECONDOPINION_CLAIM_MODEL` 或 `--claim-model` 覆盖。
 
 先跑内置样例：
 
@@ -144,7 +152,7 @@ PYTHONPATH=src python3 -m secondopinion audit --input data/normalized/iclr_2024_
 PYTHONPATH=src python3 -m secondopinion audit --input data/derived/iclr_2024_with_evidence.json
 ```
 
-本版先使用 `rule-baseline-v0.1`，重点是验证数据链路、schema、rubric 和报告格式。后续可以把 claim extraction、evidence retrieval 和 verdict 分类替换为 LLM + RAG 实现。
+本版 audit scoring 仍使用 `rule-baseline-v0.1`，重点是验证数据链路、schema、rubric 和报告格式。claim extraction 已切到 LLM-only + source validation；后续可以继续把 verdict 分类升级为 LLM judge + RAG。
 
 ## Google Drive 数据存储
 

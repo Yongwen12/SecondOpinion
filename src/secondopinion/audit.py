@@ -4,7 +4,13 @@ import hashlib
 import statistics
 from typing import Any
 
-from .claim_extraction import CLAIM_EXTRACTION_VERSION, TONE_PROBLEM_WORDS, extract_claims
+from .claim_extraction import (
+    CLAIM_EXTRACTION_VERSION,
+    DEFAULT_CLAIM_MODEL,
+    TONE_PROBLEM_WORDS,
+    StructuredLLMClient,
+    extract_claims,
+)
 from .models import ClaimAudit, Evidence, ReviewAudit
 from .retrieval import RETRIEVAL_VERSION, retrieve_evidence
 from .text import tokens
@@ -222,8 +228,14 @@ def dimension_average(claims: list[ClaimAudit], attribute: str, default: float =
     return float(statistics.mean(values)) if values else default
 
 
-def audit_review(paper: dict[str, Any], review: dict[str, Any]) -> ReviewAudit:
-    extracted = extract_claims(review)
+def audit_review(
+    paper: dict[str, Any],
+    review: dict[str, Any],
+    *,
+    claim_llm_client: StructuredLLMClient | None = None,
+    claim_model: str = DEFAULT_CLAIM_MODEL,
+) -> ReviewAudit:
+    extracted = extract_claims(review, llm_client=claim_llm_client, model=claim_model)
     claims = [audit_claim(paper, review, claim) for claim in extracted]
     review_text = review.get("review_text") or ""
     lowered = review_text.lower()
@@ -314,11 +326,27 @@ def _append_flag(flags: list[str], flag: str) -> None:
         flags.append(flag)
 
 
-def audit_dataset(dataset: dict[str, Any]) -> dict[str, Any]:
+def audit_dataset(
+    dataset: dict[str, Any],
+    *,
+    claim_llm_client: StructuredLLMClient | None = None,
+    claim_model: str = DEFAULT_CLAIM_MODEL,
+) -> dict[str, Any]:
     audits = []
     for paper in dataset.get("papers", []):
         for review in paper.get("reviews", []):
-            audits.append(audit_review(paper, review).to_dict())
+            if claim_llm_client is None:
+                from .llm_client import OpenAIChatClient
+
+                claim_llm_client = OpenAIChatClient.from_env()
+            audits.append(
+                audit_review(
+                    paper,
+                    review,
+                    claim_llm_client=claim_llm_client,
+                    claim_model=claim_model,
+                ).to_dict()
+            )
     return {
         "schema_version": "0.1",
         "dataset": dataset.get("dataset", "unknown"),
@@ -328,6 +356,7 @@ def audit_dataset(dataset: dict[str, Any]) -> dict[str, Any]:
         "model_version": MODEL_VERSION,
         "rubric_version": RUBRIC_VERSION,
         "claim_extraction_version": CLAIM_EXTRACTION_VERSION,
+        "claim_model": claim_model,
         "retrieval_version": RETRIEVAL_VERSION,
         "audits": audits,
     }

@@ -36,6 +36,7 @@ def write_markdown_report(audit_result: dict[str, Any], path: str | Path) -> Non
         f"- RQS range: {summary['min_rqs']} - {summary['max_rqs']}",
         f"- Auditor: `{audit_result.get('model_version')}`",
         f"- Claim extraction: `{audit_result.get('claim_extraction_version', 'unknown')}`",
+        f"- Claim model: `{audit_result.get('claim_model', 'unknown')}`",
         f"- Evidence retrieval: `{audit_result.get('retrieval_version', 'unknown')}`",
         "",
         "## Issue Flags",
@@ -238,7 +239,7 @@ def write_html_report(audit_result: dict[str, Any], path: str | Path) -> None:
     <body>
       <header>
         <h1>SecondOpinion MVP Audit Report</h1>
-        <p>Dataset <code>{html.escape(audit_result.get('dataset', 'unknown'))}</code> audited with <code>{html.escape(audit_result.get('model_version', ''))}</code>, <code>{html.escape(audit_result.get('claim_extraction_version', ''))}</code>, and <code>{html.escape(audit_result.get('retrieval_version', ''))}</code>.</p>
+        <p>Dataset <code>{html.escape(audit_result.get('dataset', 'unknown'))}</code> audited with <code>{html.escape(audit_result.get('model_version', ''))}</code>, <code>{html.escape(audit_result.get('claim_extraction_version', ''))}</code>, <code>{html.escape(audit_result.get('claim_model', ''))}</code>, and <code>{html.escape(audit_result.get('retrieval_version', ''))}</code>.</p>
       </header>
       <main>
         <section class="summary">

@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from pathlib import Path
 from typing import Any
 
 from .audit import audit_dataset
+from .claim_extraction import DEFAULT_CLAIM_MODEL
 from .normalize import normalize_openreview_notes
 from .openreview_client import OpenReviewClient
 from .pdf_store import build_evidence_store
@@ -73,6 +75,7 @@ def main(argv: list[str] | None = None) -> None:
     audit.add_argument("--out", default="data/audits/audit_results.json")
     audit.add_argument("--markdown", default="reports/audit_report.md")
     audit.add_argument("--html", default="reports/audit_report.html")
+    audit.add_argument("--claim-model", default=os.environ.get("SECONDOPINION_CLAIM_MODEL", DEFAULT_CLAIM_MODEL))
 
     demo = subparsers.add_parser(
         "demo",
@@ -82,6 +85,7 @@ def main(argv: list[str] | None = None) -> None:
     demo.add_argument("--out", default="data/audits/demo_audit_results.json")
     demo.add_argument("--markdown", default="reports/mvp_demo.md")
     demo.add_argument("--html", default="reports/mvp_demo.html")
+    demo.add_argument("--claim-model", default=os.environ.get("SECONDOPINION_CLAIM_MODEL", DEFAULT_CLAIM_MODEL))
 
     storage = subparsers.add_parser("storage-info", help="Show artifact storage and Google Drive suggestions.")
     storage.add_argument("--storage-root", default=None)
@@ -169,7 +173,7 @@ def command_build_evidence_store(args: argparse.Namespace) -> None:
 
 def command_audit(args: argparse.Namespace) -> None:
     dataset = read_json(artifact_path(args.input, args))
-    result = audit_dataset(dataset)
+    result = audit_dataset(dataset, claim_model=args.claim_model)
     write_outputs(
         result,
         artifact_path(args.out, args),
@@ -180,7 +184,7 @@ def command_audit(args: argparse.Namespace) -> None:
 
 def command_demo(args: argparse.Namespace) -> None:
     dataset = read_json("examples/sample_normalized_dataset.json")
-    result = audit_dataset(dataset)
+    result = audit_dataset(dataset, claim_model=args.claim_model)
     write_outputs(
         result,
         artifact_path(args.out, args),
