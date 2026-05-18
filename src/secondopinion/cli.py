@@ -22,7 +22,7 @@ from .annotation import (
 )
 from .audit import DEFAULT_JUDGE_MODEL, audit_dataset
 from .claim_extraction import DEFAULT_CLAIM_MODEL
-from .llm_client import OpenAIChatClient
+from .llm_client import LLMClientError, OpenAIChatClient
 from .normalize import normalize_openreview_notes
 from .openreview_client import OpenReviewClient
 from .pdf_store import build_evidence_store
@@ -239,12 +239,15 @@ def command_build_evidence_store(args: argparse.Namespace) -> None:
 
 def command_audit(args: argparse.Namespace) -> None:
     dataset = read_json(artifact_path(args.input, args))
-    result = audit_dataset(
-        dataset,
-        claim_model=args.claim_model,
-        judge_model=args.judge_model,
-        use_llm_judge=args.llm_judge,
-    )
+    try:
+        result = audit_dataset(
+            dataset,
+            claim_model=args.claim_model,
+            judge_model=args.judge_model,
+            use_llm_judge=args.llm_judge,
+        )
+    except LLMClientError as exc:
+        raise SystemExit(f"LLM setup error: {exc}") from exc
     write_outputs(
         result,
         artifact_path(args.out, args),
@@ -255,12 +258,15 @@ def command_audit(args: argparse.Namespace) -> None:
 
 def command_demo(args: argparse.Namespace) -> None:
     dataset = read_json("examples/sample_normalized_dataset.json")
-    result = audit_dataset(
-        dataset,
-        claim_model=args.claim_model,
-        judge_model=args.judge_model,
-        use_llm_judge=args.llm_judge,
-    )
+    try:
+        result = audit_dataset(
+            dataset,
+            claim_model=args.claim_model,
+            judge_model=args.judge_model,
+            use_llm_judge=args.llm_judge,
+        )
+    except LLMClientError as exc:
+        raise SystemExit(f"LLM setup error: {exc}") from exc
     write_outputs(
         result,
         artifact_path(args.out, args),
@@ -300,7 +306,10 @@ def command_annotation_llm_label(args: argparse.Namespace) -> None:
     run_id = tasks[0]["run_id"] if tasks else "annotations"
     defaults = default_task_paths(run_id)
     out = artifact_path(args.out or defaults["llm_labels"], args)
-    client = OpenAIChatClient.from_env()
+    try:
+        client = OpenAIChatClient.from_env()
+    except LLMClientError as exc:
+        raise SystemExit(f"LLM setup error: {exc}") from exc
     labels = llm_label_tasks(
         tasks,
         llm_client=client,

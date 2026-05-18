@@ -27,7 +27,10 @@ class OpenAIChatClient:
     def from_env(cls) -> "OpenAIChatClient":
         api_key = os.environ.get("OPENAI_API_KEY", "").strip()
         if not api_key:
-            raise LLMClientError("OPENAI_API_KEY is required for LLM claim extraction.")
+            raise LLMClientError(
+                "OPENAI_API_KEY is required for LLM calls. "
+                "Set it in your shell or create a local .env from .env.example."
+            )
         return cls(
             api_key=api_key,
             base_url=os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1"),
