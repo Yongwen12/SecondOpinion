@@ -63,6 +63,10 @@ MVP 输出：
 - review 分数和文字是否一致
 - 简短解释
 
+## 项目文件
+
+- [P0 ICLR Review Audit Project Plan](docs/P0%20Iclr%20Review%20Audit%20Project%20Plan.docx)
+
 ## 目标
 
 建立一个更透明、可解释、可审计的 review 质量评价机制，帮助作者、会议和社区理解 peer review 的质量问题。
