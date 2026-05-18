@@ -24,8 +24,10 @@ data/normalized/
 data/audits/
 data/pdfs/
 data/derived/
+data/annotations/
 reports/*.md
 reports/*.html
+reports/annotations/
 
 .DS_Store
 Thumbs.db

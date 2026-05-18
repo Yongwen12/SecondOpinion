@@ -154,6 +154,47 @@ PYTHONPATH=src python3 -m secondopinion audit --input data/derived/iclr_2024_wit
 
 本版 audit scoring 仍使用 `rule-baseline-v0.1`，重点是验证数据链路、schema、rubric 和报告格式。claim extraction 已切到 LLM-only + source validation；后续可以继续把 verdict 分类升级为 LLM judge + RAG。
 
+## 标注与校准
+
+每次 audit run 都可以导出成标注任务包，用于人工标注、LLM 平行标注和一致性比较。
+
+导出标注任务和静态 HTML：
+
+```bash
+PYTHONPATH=src python3 -m secondopinion annotation-export \
+  --audit data/audits/audit_results.json
+```
+
+默认输出：
+
+- `data/annotations/tasks/<run_id>.jsonl`
+- `reports/annotations/<run_id>.html`
+
+HTML 标注包默认不显示 LLM 标注结果。人工导出的 JSONL 可以先校验：
+
+```bash
+PYTHONPATH=src python3 -m secondopinion annotation-validate-labels \
+  --labels data/annotations/labels/human/<run_id>.jsonl
+```
+
+生成独立的 LLM 平行标注：
+
+```bash
+PYTHONPATH=src python3 -m secondopinion annotation-llm-label \
+  --tasks data/annotations/tasks/<run_id>.jsonl
+```
+
+比较 human labels 和 LLM labels：
+
+```bash
+PYTHONPATH=src python3 -m secondopinion annotation-compare \
+  --tasks data/annotations/tasks/<run_id>.jsonl \
+  --human data/annotations/labels/human/<run_id>.jsonl \
+  --llm data/annotations/labels/llm/<run_id>.jsonl
+```
+
+第一阶段只预留 `venue_guideline`、`external_reference`、`field_consensus` 这些外部 evidence source type，不接实时外部搜索。
+
 ## Google Drive 数据存储
 
 GitHub 只适合放代码、schema、文档和小样例。raw snapshot、PDF、derived evidence dataset、审计报告这些大文件可以放到 Google Drive for Desktop 的同步目录里。

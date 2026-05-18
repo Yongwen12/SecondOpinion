@@ -6,8 +6,23 @@ import os
 from pathlib import Path
 from typing import Any
 
+from .annotation import (
+    DEFAULT_ANNOTATION_MODEL,
+    compare_annotations,
+    default_task_paths,
+    export_annotation_tasks,
+    llm_label_tasks,
+    read_jsonl,
+    validate_labels,
+    write_annotation_html,
+    write_comparison_html,
+    write_comparison_markdown,
+    write_json as write_annotation_json,
+    write_jsonl,
+)
 from .audit import audit_dataset
 from .claim_extraction import DEFAULT_CLAIM_MODEL
+from .llm_client import OpenAIChatClient
 from .normalize import normalize_openreview_notes
 from .openreview_client import OpenReviewClient
 from .pdf_store import build_evidence_store
@@ -90,6 +105,45 @@ def main(argv: list[str] | None = None) -> None:
     storage = subparsers.add_parser("storage-info", help="Show artifact storage and Google Drive suggestions.")
     storage.add_argument("--storage-root", default=None)
 
+    annotation_export = subparsers.add_parser(
+        "annotation-export",
+        parents=[storage_parent],
+        help="Export audit results into annotation tasks and a static HTML packet.",
+    )
+    annotation_export.add_argument("--audit", required=True)
+    annotation_export.add_argument("--run-id", default="")
+    annotation_export.add_argument("--tasks-out", default="")
+    annotation_export.add_argument("--html", default="")
+
+    annotation_llm = subparsers.add_parser(
+        "annotation-llm-label",
+        parents=[storage_parent],
+        help="Generate independent LLM labels for annotation tasks.",
+    )
+    annotation_llm.add_argument("--tasks", required=True)
+    annotation_llm.add_argument("--out", default="")
+    annotation_llm.add_argument("--model", default=os.environ.get("SECONDOPINION_ANNOTATION_MODEL", DEFAULT_ANNOTATION_MODEL))
+    annotation_llm.add_argument("--annotator-id", default="")
+
+    annotation_compare = subparsers.add_parser(
+        "annotation-compare",
+        parents=[storage_parent],
+        help="Compare human annotation labels with LLM labels.",
+    )
+    annotation_compare.add_argument("--human", required=True)
+    annotation_compare.add_argument("--llm", required=True)
+    annotation_compare.add_argument("--tasks", default="")
+    annotation_compare.add_argument("--out", default="")
+    annotation_compare.add_argument("--markdown", default="")
+    annotation_compare.add_argument("--html", default="")
+
+    annotation_validate = subparsers.add_parser(
+        "annotation-validate-labels",
+        parents=[storage_parent],
+        help="Validate annotation labels JSONL.",
+    )
+    annotation_validate.add_argument("--labels", required=True)
+
     args = parser.parse_args(argv)
     if args.command == "scan-iclr":
         command_scan_iclr(args)
@@ -105,6 +159,14 @@ def main(argv: list[str] | None = None) -> None:
         command_demo(args)
     elif args.command == "storage-info":
         command_storage_info(args)
+    elif args.command == "annotation-export":
+        command_annotation_export(args)
+    elif args.command == "annotation-llm-label":
+        command_annotation_llm_label(args)
+    elif args.command == "annotation-compare":
+        command_annotation_compare(args)
+    elif args.command == "annotation-validate-labels":
+        command_annotation_validate_labels(args)
 
 
 def command_scan_iclr(args: argparse.Namespace) -> None:
@@ -204,6 +266,65 @@ def command_storage_info(args: argparse.Namespace) -> None:
         print(f"Suggested Google Drive root: {suggestion}")
     else:
         print("Suggested Google Drive root: not found")
+
+
+def command_annotation_export(args: argparse.Namespace) -> None:
+    audit_result = read_json(artifact_path(args.audit, args))
+    run_id, tasks = export_annotation_tasks(audit_result, run_id=args.run_id or None)
+    defaults = default_task_paths(run_id)
+    tasks_out = artifact_path(args.tasks_out or defaults["tasks"], args)
+    html_out = artifact_path(args.html or defaults["html"], args)
+    write_jsonl(tasks_out, tasks)
+    write_annotation_html(tasks, html_out)
+    print(f"Saved {len(tasks)} annotation tasks to {tasks_out}.")
+    print(f"Saved annotation HTML to {html_out}.")
+
+
+def command_annotation_llm_label(args: argparse.Namespace) -> None:
+    tasks_path = artifact_path(args.tasks, args)
+    tasks = read_jsonl(tasks_path)
+    run_id = tasks[0]["run_id"] if tasks else "annotations"
+    defaults = default_task_paths(run_id)
+    out = artifact_path(args.out or defaults["llm_labels"], args)
+    client = OpenAIChatClient.from_env()
+    labels = llm_label_tasks(
+        tasks,
+        llm_client=client,
+        model=args.model,
+        annotator_id=args.annotator_id or None,
+    )
+    write_jsonl(out, labels)
+    print(f"Saved {len(labels)} LLM annotation labels to {out}.")
+
+
+def command_annotation_compare(args: argparse.Namespace) -> None:
+    human_labels = read_jsonl(artifact_path(args.human, args))
+    llm_labels = read_jsonl(artifact_path(args.llm, args))
+    human_issues = validate_labels(human_labels)
+    llm_issues = validate_labels(llm_labels)
+    if human_issues or llm_issues:
+        raise SystemExit(f"Invalid labels: human={human_issues[:3]} llm={llm_issues[:3]}")
+    tasks = read_jsonl(artifact_path(args.tasks, args)) if args.tasks else []
+    run_id = (tasks[0]["run_id"] if tasks else (human_labels[0].get("run_id") if human_labels else "annotations"))
+    defaults = default_task_paths(run_id)
+    out = artifact_path(args.out or defaults["comparison"], args)
+    markdown = artifact_path(args.markdown or defaults["comparison_markdown"], args)
+    html = artifact_path(args.html or defaults["comparison_html"], args)
+    comparison = compare_annotations(human_labels, llm_labels, tasks=tasks)
+    write_annotation_json(out, comparison)
+    write_comparison_markdown(comparison, markdown)
+    write_comparison_html(comparison, html)
+    print(f"Saved annotation comparison JSON to {out}.")
+    print(f"Saved annotation comparison Markdown to {markdown}.")
+    print(f"Saved annotation comparison HTML to {html}.")
+
+
+def command_annotation_validate_labels(args: argparse.Namespace) -> None:
+    labels = read_jsonl(artifact_path(args.labels, args))
+    issues = validate_labels(labels)
+    if issues:
+        raise SystemExit(f"Found {len(issues)} invalid labels: {issues[:5]}")
+    print(f"Validated {len(labels)} annotation labels.")
 
 
 def artifact_path(path: str | Path, args: argparse.Namespace) -> Path:
