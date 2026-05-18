@@ -37,6 +37,8 @@ def write_markdown_report(audit_result: dict[str, Any], path: str | Path) -> Non
         f"- Auditor: `{audit_result.get('model_version')}`",
         f"- Claim extraction: `{audit_result.get('claim_extraction_version', 'unknown')}`",
         f"- Claim model: `{audit_result.get('claim_model', 'unknown')}`",
+        f"- Judge: `{audit_result.get('judge_version', 'unknown')}`",
+        f"- Judge model: `{audit_result.get('judge_model', 'rule-baseline') or 'rule-baseline'}`",
         f"- Evidence retrieval: `{audit_result.get('retrieval_version', 'unknown')}`",
         "",
         "## Issue Flags",
@@ -69,6 +71,7 @@ def write_markdown_report(audit_result: dict[str, Any], path: str | Path) -> Non
             evidence = claim.get("evidence", [])
             top_evidence = evidence_label(evidence[0]) if evidence else "none"
             claim_flags = ", ".join(claim.get("issue_flags", [])) or "none"
+            judge = claim.get("judge_version", "") or "unknown"
             lines.append(
                 "| "
                 + " | ".join(
@@ -76,7 +79,7 @@ def write_markdown_report(audit_result: dict[str, Any], path: str | Path) -> Non
                         _md_cell(claim.get("claim_text", "")),
                         _md_cell(claim_source_label(claim)),
                         _md_cell(claim.get("claim_type", "")),
-                        _md_cell(claim.get("verdict", "")),
+                        _md_cell(f"{claim.get('verdict', '')} ({judge})"),
                         _md_cell(top_evidence),
                         _md_cell(claim_flags),
                     ]
@@ -109,6 +112,7 @@ def write_html_report(audit_result: dict[str, Any], path: str | Path) -> None:
                 else "<blockquote>No evidence retrieved.</blockquote>"
             )
             flags = " ".join(f"<span>{html.escape(flag)}</span>" for flag in claim.get("issue_flags", []))
+            rationale = claim.get("judge_rationale") or ""
             claims.append(
                 f"""
                 <details>
@@ -118,8 +122,10 @@ def write_html_report(audit_result: dict[str, Any], path: str | Path) -> None:
                     <code>{html.escape(claim.get('claim_type', ''))}</code>
                     <code>{html.escape(claim.get('verdict', ''))}</code>
                     <code>{html.escape(claim.get('audit_confidence', ''))}</code>
+                    <code>{html.escape(claim.get('judge_version', ''))}</code>
                   </div>
                   {evidence_html}
+                  <p>{html.escape(rationale)}</p>
                   <div class="flags">{flags}</div>
                 </details>
                 """
@@ -239,7 +245,7 @@ def write_html_report(audit_result: dict[str, Any], path: str | Path) -> None:
     <body>
       <header>
         <h1>SecondOpinion MVP Audit Report</h1>
-        <p>Dataset <code>{html.escape(audit_result.get('dataset', 'unknown'))}</code> audited with <code>{html.escape(audit_result.get('model_version', ''))}</code>, <code>{html.escape(audit_result.get('claim_extraction_version', ''))}</code>, <code>{html.escape(audit_result.get('claim_model', ''))}</code>, and <code>{html.escape(audit_result.get('retrieval_version', ''))}</code>.</p>
+        <p>Dataset <code>{html.escape(audit_result.get('dataset', 'unknown'))}</code> audited with <code>{html.escape(audit_result.get('model_version', ''))}</code>, <code>{html.escape(audit_result.get('claim_extraction_version', ''))}</code>, <code>{html.escape(audit_result.get('claim_model', ''))}</code>, <code>{html.escape(audit_result.get('judge_version', ''))}</code>, <code>{html.escape(audit_result.get('judge_model', '') or 'rule-baseline')}</code>, and <code>{html.escape(audit_result.get('retrieval_version', ''))}</code>.</p>
       </header>
       <main>
         <section class="summary">

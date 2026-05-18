@@ -88,8 +88,8 @@ class PdfStoreTests(unittest.TestCase):
             },
         }
         self.assertEqual(
-            str(pdf_store_dir(dataset, "data/pdfs")),
-            "data/pdfs/openreview/iclr/2024/20260518T000000Z",
+            pdf_store_dir(dataset, "data/pdfs"),
+            Path("data/pdfs") / "openreview" / "iclr" / "2024" / "20260518T000000Z",
         )
 
 

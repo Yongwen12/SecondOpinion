@@ -49,6 +49,32 @@ class SampleClaimClient:
         }
 
 
+class SampleJudgeClient:
+    def complete_json(self, *, model, messages, schema_name, schema):
+        self.model = model
+        self.schema_name = schema_name
+        return {
+            "verdict": "supported",
+            "confidence": "high",
+            "evidence_support": 3,
+            "factual_alignment": 3,
+            "severity_calibration": 4,
+            "rationale": "The retrieved evidence supports the reviewer's clarification request.",
+            "evidence_assessments": [
+                {
+                    "evidence_id": "claim_ignored_ev1",
+                    "verdict": "supporting_candidate",
+                    "confidence": "high",
+                }
+            ],
+        }
+
+
+class FailingJudgeClient:
+    def complete_json(self, *, model, messages, schema_name, schema):
+        raise RuntimeError("judge unavailable")
+
+
 class AuditTests(unittest.TestCase):
     def test_extract_claims_from_weaknesses(self):
         review = {"weaknesses": "The paper lacks ablation studies. The writing is fine."}
@@ -71,6 +97,40 @@ class AuditTests(unittest.TestCase):
         self.assertEqual(first["claims"][0]["verdict"], "possibly_contradicted")
         self.assertEqual(first["claims"][0]["source_field"], "weaknesses")
         self.assertGreater(first["audit_count"] if "audit_count" in first else result["audit_count"], 0)
+
+    def test_llm_judge_can_override_rule_verdict(self):
+        dataset = json.loads(Path("examples/sample_normalized_dataset.json").read_text())
+        result = audit_dataset(
+            dataset,
+            claim_llm_client=SampleClaimClient(),
+            judge_llm_client=SampleJudgeClient(),
+            claim_model="claim-test",
+            judge_model="judge-test",
+            use_llm_judge=True,
+        )
+        first_claim = result["audits"][0]["claims"][0]
+        self.assertEqual(result["model_version"], "llm-rag-judge-v0.1")
+        self.assertEqual(result["judge_model"], "judge-test")
+        self.assertEqual(first_claim["verdict"], "supported")
+        self.assertEqual(first_claim["audit_confidence"], "high")
+        self.assertEqual(first_claim["judge_version"], "llm-rag-judge-v0.1")
+        self.assertIn("retrieved evidence supports", first_claim["judge_rationale"])
+        self.assertNotIn("possibly-contradicted-by-paper", first_claim["issue_flags"])
+
+    def test_llm_judge_failure_falls_back_to_rule_verdict(self):
+        dataset = json.loads(Path("examples/sample_normalized_dataset.json").read_text())
+        result = audit_dataset(
+            dataset,
+            claim_llm_client=SampleClaimClient(),
+            judge_llm_client=FailingJudgeClient(),
+            claim_model="claim-test",
+            judge_model="judge-test",
+            use_llm_judge=True,
+        )
+        first_claim = result["audits"][0]["claims"][0]
+        self.assertEqual(first_claim["verdict"], "possibly_contradicted")
+        self.assertIn("llm-judge-failed", first_claim["issue_flags"])
+        self.assertEqual(first_claim["judge_version"], "llm-rag-judge-v0.1+fallback")
 
 
 if __name__ == "__main__":

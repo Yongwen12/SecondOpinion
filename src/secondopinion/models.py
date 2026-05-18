@@ -45,6 +45,9 @@ class ClaimAudit:
     audit_confidence: str
     requires_external_knowledge: bool
     requires_human_expert: bool
+    judge_version: str = ""
+    judge_model: str = ""
+    judge_rationale: str = ""
     issue_flags: list[str] = field(default_factory=list)
     evidence: list[Evidence] = field(default_factory=list)
 
@@ -63,6 +66,8 @@ class ReviewAudit:
     rubric_version: str
     claim_extraction_version: str
     retrieval_version: str
+    judge_version: str
+    judge_model: str
     rqs_score: int
     audit_confidence: str
     issue_flags: list[str]

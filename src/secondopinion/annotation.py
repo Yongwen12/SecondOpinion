@@ -57,6 +57,7 @@ VERDICT_VALUES = (
     "partially_supported",
     "insufficient",
     "possibly_contradicted",
+    "vague_or_not_checkable",
     "needs_human_check",
     "unclear",
 )
@@ -84,6 +85,7 @@ def stable_run_id(audit_result: dict[str, Any]) -> str:
         "audit_count": audit_result.get("audit_count"),
         "model_version": audit_result.get("model_version"),
         "claim_extraction_version": audit_result.get("claim_extraction_version"),
+        "judge_version": audit_result.get("judge_version"),
         "retrieval_version": audit_result.get("retrieval_version"),
         "audits": [
             {
@@ -107,6 +109,8 @@ def annotation_provenance(audit_result: dict[str, Any], run_id: str) -> dict[str
         "rubric_version": audit_result.get("rubric_version"),
         "claim_extraction_version": audit_result.get("claim_extraction_version"),
         "claim_model": audit_result.get("claim_model"),
+        "judge_version": audit_result.get("judge_version"),
+        "judge_model": audit_result.get("judge_model"),
         "retrieval_version": audit_result.get("retrieval_version"),
         "reserved_external_evidence_source_types": list(EXTERNAL_EVIDENCE_SOURCE_TYPES),
     }
@@ -687,7 +691,7 @@ def write_annotation_html(tasks: list[dict[str, Any]], path: str | Path) -> None
       }} else if (task.task_type === 'verdict_correctness') {{
         root.innerHTML = `
           <label>Verdict correct</label><select data-key="verdict_correct">${{options(['yes','no','unclear'])}}</select>
-          <label>Correct verdict</label><select data-key="correct_verdict">${{options(['supported','partially_supported','insufficient','possibly_contradicted','needs_human_check','unclear'])}}</select>
+          <label>Correct verdict</label><select data-key="correct_verdict">${{options(['supported','partially_supported','insufficient','possibly_contradicted','vague_or_not_checkable','needs_human_check','unclear'])}}</select>
           <label>Confidence correct</label><select data-key="confidence_correct">${{options(['yes','no','unclear'])}}</select>
           <label>Correct confidence</label><select data-key="correct_confidence">${{options(['high','medium','low','unclear'])}}</select>`;
       }} else {{

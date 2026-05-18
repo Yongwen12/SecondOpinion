@@ -20,7 +20,7 @@ from .annotation import (
     write_json as write_annotation_json,
     write_jsonl,
 )
-from .audit import audit_dataset
+from .audit import DEFAULT_JUDGE_MODEL, audit_dataset
 from .claim_extraction import DEFAULT_CLAIM_MODEL
 from .llm_client import OpenAIChatClient
 from .normalize import normalize_openreview_notes
@@ -91,6 +91,8 @@ def main(argv: list[str] | None = None) -> None:
     audit.add_argument("--markdown", default="reports/audit_report.md")
     audit.add_argument("--html", default="reports/audit_report.html")
     audit.add_argument("--claim-model", default=os.environ.get("SECONDOPINION_CLAIM_MODEL", DEFAULT_CLAIM_MODEL))
+    audit.add_argument("--llm-judge", action="store_true", help="Use an LLM judge for evidence-grounded claim verdicts.")
+    audit.add_argument("--judge-model", default=os.environ.get("SECONDOPINION_JUDGE_MODEL", DEFAULT_JUDGE_MODEL))
 
     demo = subparsers.add_parser(
         "demo",
@@ -101,6 +103,8 @@ def main(argv: list[str] | None = None) -> None:
     demo.add_argument("--markdown", default="reports/mvp_demo.md")
     demo.add_argument("--html", default="reports/mvp_demo.html")
     demo.add_argument("--claim-model", default=os.environ.get("SECONDOPINION_CLAIM_MODEL", DEFAULT_CLAIM_MODEL))
+    demo.add_argument("--llm-judge", action="store_true", help="Use an LLM judge for evidence-grounded claim verdicts.")
+    demo.add_argument("--judge-model", default=os.environ.get("SECONDOPINION_JUDGE_MODEL", DEFAULT_JUDGE_MODEL))
 
     storage = subparsers.add_parser("storage-info", help="Show artifact storage and Google Drive suggestions.")
     storage.add_argument("--storage-root", default=None)
@@ -235,7 +239,12 @@ def command_build_evidence_store(args: argparse.Namespace) -> None:
 
 def command_audit(args: argparse.Namespace) -> None:
     dataset = read_json(artifact_path(args.input, args))
-    result = audit_dataset(dataset, claim_model=args.claim_model)
+    result = audit_dataset(
+        dataset,
+        claim_model=args.claim_model,
+        judge_model=args.judge_model,
+        use_llm_judge=args.llm_judge,
+    )
     write_outputs(
         result,
         artifact_path(args.out, args),
@@ -246,7 +255,12 @@ def command_audit(args: argparse.Namespace) -> None:
 
 def command_demo(args: argparse.Namespace) -> None:
     dataset = read_json("examples/sample_normalized_dataset.json")
-    result = audit_dataset(dataset, claim_model=args.claim_model)
+    result = audit_dataset(
+        dataset,
+        claim_model=args.claim_model,
+        judge_model=args.judge_model,
+        use_llm_judge=args.llm_judge,
+    )
     write_outputs(
         result,
         artifact_path(args.out, args),
