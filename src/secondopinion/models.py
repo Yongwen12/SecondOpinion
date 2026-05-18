@@ -15,6 +15,8 @@ class Evidence:
     verdict: str
     confidence: str
     score: float
+    raw_score: float | None = None
+    matched_terms: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -66,4 +68,3 @@ class ReviewAudit:
         result = asdict(self)
         result["claims"] = [claim.to_dict() for claim in self.claims]
         return result
-

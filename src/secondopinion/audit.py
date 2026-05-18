@@ -5,12 +5,12 @@ import statistics
 from typing import Any
 
 from .models import ClaimAudit, Evidence, ReviewAudit
+from .retrieval import RETRIEVAL_VERSION, retrieve_evidence
 from .text import clean_text, split_review_sentences, tokens
 
 
 MODEL_VERSION = "rule-baseline-v0.1"
 RUBRIC_VERSION = "iclr-review-audit-rubric-v0.1"
-RETRIEVAL_VERSION = "lexical-evidence-v0.1"
 
 NEGATION_WORDS = ("no ", "not ", "lack", "lacks", "lacking", "missing", "insufficient", "without", "fails to")
 ABSENCE_CLAIM_WORDS = (
@@ -193,87 +193,29 @@ def score_tone(text: str) -> int:
     return 4
 
 
-def build_evidence_sources(paper: dict[str, Any]) -> list[dict[str, Any]]:
-    sources = []
-    if paper.get("title"):
-        sources.append({"source_type": "paper", "section": "title", "page": None, "text": paper["title"]})
-    if paper.get("abstract"):
-        sources.append({"source_type": "paper", "section": "abstract", "page": None, "text": paper["abstract"]})
-    for idx, rebuttal in enumerate(paper.get("rebuttals", []), start=1):
-        if rebuttal.get("text"):
-            sources.append(
-                {
-                    "source_type": "rebuttal",
-                    "section": f"author_response_{idx}",
-                    "page": None,
-                    "text": rebuttal["text"],
-                }
-            )
-    for idx, section in enumerate(paper.get("paper_sections", []), start=1):
-        if section.get("text"):
-            sources.append(
-                {
-                    "source_type": section.get("source_type", "paper"),
-                    "section": section.get("section") or f"section_{idx}",
-                    "page": section.get("page"),
-                    "text": section["text"],
-                }
-            )
-    return sources
-
-
-def retrieve_evidence(claim_id: str, claim_text: str, paper: dict[str, Any], top_k: int = 3) -> list[Evidence]:
-    claim_tokens = tokens(claim_text)
-    scored = []
-    for source in build_evidence_sources(paper):
-        source_tokens = tokens(source.get("text", ""))
-        if not source_tokens:
-            continue
-        overlap = len(claim_tokens & source_tokens)
-        score = overlap / max(len(claim_tokens), 1)
-        if overlap:
-            scored.append((score, source))
-    scored.sort(key=lambda item: item[0], reverse=True)
-
-    evidence_items: list[Evidence] = []
-    for idx, (score, source) in enumerate(scored[:top_k], start=1):
-        verdict = "partial" if score >= 0.16 else "insufficient"
-        confidence = "medium" if score >= 0.22 else "low"
-        evidence_items.append(
-            Evidence(
-                evidence_id=f"{claim_id}_ev{idx}",
-                claim_id=claim_id,
-                source_type=source["source_type"],
-                section=source["section"],
-                page=source.get("page"),
-                text=clean_text(source["text"])[:700],
-                verdict=verdict,
-                confidence=confidence,
-                score=round(score, 3),
-            )
-        )
-    return evidence_items
-
-
 def classify_evidence_verdict(claim_text: str, evidence: list[Evidence], claim_type: str) -> tuple[str, str, int | None]:
     if claim_type in EXPERT_REQUIRED_TYPES:
-        return "expert_required", "low", None
+        return "needs_human_check", "low", None
     if not evidence:
         return "insufficient", "low", 1
 
     best = evidence[0]
     lowered_claim = claim_text.lower()
     absence_claim = any(word in lowered_claim for word in ABSENCE_CLAIM_WORDS)
-    if absence_claim and best.section != "title" and best.score >= 0.2:
+    strong_absence_counterevidence = best.score >= 0.35 and len(best.matched_terms) >= 2
+    if absence_claim and best.section != "title" and strong_absence_counterevidence:
         for item in evidence:
-            item.verdict = "contradict"
-            item.confidence = "medium" if item.score < 0.28 else "high"
-        return "contradicted_by_paper", evidence[0].confidence, 0
-    if best.score >= 0.28:
+            item.verdict = "possibly_contradicting_candidate"
+            item.confidence = "medium" if item.score < 0.6 else "high"
+        return "possibly_contradicted", evidence[0].confidence, 0
+    if best.score >= 0.62:
         for item in evidence:
-            item.verdict = "support"
-        return "supported_by_available_evidence", "medium", 3
-    if best.score >= 0.16:
+            item.verdict = "supporting_candidate"
+            item.confidence = "medium" if item.score < 0.7 else "high"
+        return "supported", evidence[0].confidence, 3
+    if best.score >= 0.35:
+        for item in evidence:
+            item.verdict = "partial_candidate"
         return "partially_supported", "low", 2
     return "insufficient", "low", 1
 
@@ -287,17 +229,17 @@ def audit_claim(paper: dict[str, Any], review: dict[str, Any], claim: dict[str, 
     specificity = score_specificity(claim_text)
     actionability = score_actionability(claim_text)
     tone = score_tone(claim_text)
-    evidence = retrieve_evidence(claim_id, claim_text, paper)
+    evidence = retrieve_evidence(claim_id, claim_text, paper, claim_type=claim_type)
     verdict, confidence, evidence_score = classify_evidence_verdict(claim_text, evidence, claim_type)
 
-    requires_human_expert = claim_type in EXPERT_REQUIRED_TYPES or verdict == "expert_required"
+    requires_human_expert = claim_type in EXPERT_REQUIRED_TYPES or verdict == "needs_human_check"
     requires_external = claim_type in {"novelty", "theory"}
     factual_alignment = evidence_score
-    severity = 2 if requires_human_expert else (1 if verdict == "contradicted_by_paper" else 3)
+    severity = 2 if requires_human_expert else (1 if verdict == "possibly_contradicted" else 3)
 
     flags = []
-    if verdict == "contradicted_by_paper":
-        flags.append("contradicted-by-paper")
+    if verdict == "possibly_contradicted":
+        flags.append("possibly-contradicted-by-paper")
     if verdict == "insufficient" and claim["importance"] in {"major", "medium"}:
         flags.append("unsupported-major-claim")
     if specificity <= 1:
@@ -337,7 +279,7 @@ def score_review_text_consistency(review: dict[str, Any], claims: list[ClaimAudi
         return 3, False
     issue_count = sum(1 for claim in claims if claim.importance in {"major", "medium"})
     severe_issue_count = sum(
-        1 for claim in claims if claim.verdict in {"contradicted_by_paper", "insufficient"} and claim.importance == "major"
+        1 for claim in claims if claim.verdict in {"possibly_contradicted", "insufficient"} and claim.importance == "major"
     )
     if rating <= 4 and issue_count == 0:
         return 1, True
@@ -430,8 +372,8 @@ def summarize_review_audit(rqs: int, flags: list[str], claims: list[ClaimAudit])
         return "No auditable claims were extracted from this review."
     if rqs >= 75 and not flags:
         return "The review appears specific, professional, and broadly supported by available evidence."
-    if "contradicted-by-paper" in flags:
-        return "At least one major criticism appears contradicted by available paper evidence; human verification is recommended."
+    if "possibly-contradicted-by-paper" in flags:
+        return "At least one criticism may be contradicted by available paper evidence; human verification is recommended."
     if "unsupported-major-claim" in flags:
         return "Some major criticisms currently lack supporting evidence in the available materials."
     if "unprofessional-tone" in flags:

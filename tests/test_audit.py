@@ -12,14 +12,15 @@ class AuditTests(unittest.TestCase):
         self.assertEqual(claims[0]["claim_type"], "ablation")
         self.assertIn("lacks ablation", claims[0]["claim_text"])
 
-    def test_demo_flags_contradicted_claim(self):
+    def test_demo_flags_possible_contradiction_claim(self):
         dataset = json.loads(Path("examples/sample_normalized_dataset.json").read_text())
         result = audit_dataset(dataset)
         first = result["audits"][0]
-        self.assertIn("contradicted-by-paper", first["issue_flags"])
+        self.assertEqual(result["retrieval_version"], "section-aware-bm25-v0.2")
+        self.assertIn("possibly-contradicted-by-paper", first["issue_flags"])
+        self.assertEqual(first["claims"][0]["verdict"], "possibly_contradicted")
         self.assertGreater(first["audit_count"] if "audit_count" in first else result["audit_count"], 0)
 
 
 if __name__ == "__main__":
     unittest.main()
-

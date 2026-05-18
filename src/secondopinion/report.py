@@ -64,7 +64,7 @@ def write_markdown_report(audit_result: dict[str, Any], path: str | Path) -> Non
         )
         for claim in audit.get("claims", []):
             evidence = claim.get("evidence", [])
-            top_evidence = evidence[0]["section"] if evidence else "none"
+            top_evidence = evidence_label(evidence[0]) if evidence else "none"
             claim_flags = ", ".join(claim.get("issue_flags", [])) or "none"
             lines.append(
                 "| "
@@ -97,8 +97,9 @@ def write_html_report(audit_result: dict[str, Any], path: str | Path) -> None:
         for claim in audit.get("claims", []):
             evidence = claim.get("evidence") or []
             top = evidence[0] if evidence else None
+            top_label = evidence_label(top) if top else ""
             evidence_html = (
-                f"<blockquote><b>{html.escape(top['source_type'])}/{html.escape(top['section'])}</b>: "
+                f"<blockquote><b>{html.escape(top['source_type'])}/{html.escape(top_label)}</b>: "
                 f"{html.escape(top['text'])}</blockquote>"
                 if top
                 else "<blockquote>No evidence retrieved.</blockquote>"
@@ -257,3 +258,11 @@ def write_html_report(audit_result: dict[str, Any], path: str | Path) -> None:
 def _md_cell(value: str) -> str:
     return str(value).replace("|", "\\|").replace("\n", " ")
 
+
+def evidence_label(evidence: dict[str, Any]) -> str:
+    label = str(evidence.get("section") or "unknown")
+    if evidence.get("page"):
+        label = f"{label} p.{evidence['page']}"
+    if evidence.get("score") is not None:
+        label = f"{label} score={float(evidence['score']):.2f}"
+    return label
