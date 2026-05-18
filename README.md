@@ -142,6 +142,48 @@ PYTHONPATH=src python3 -m secondopinion audit --input data/derived/iclr_2024_wit
 
 本版先使用 `rule-baseline-v0.1`，重点是验证数据链路、schema、rubric 和报告格式。后续可以把 claim extraction、evidence retrieval 和 verdict 分类替换为 LLM + RAG 实现。
 
+## Google Drive 数据存储
+
+GitHub 只适合放代码、schema、文档和小样例。raw snapshot、PDF、derived evidence dataset、审计报告这些大文件可以放到 Google Drive for Desktop 的同步目录里。
+
+先查看本机可用的 Drive 路径：
+
+```bash
+PYTHONPATH=src python3 -m secondopinion storage-info
+```
+
+然后设置 artifact 根目录：
+
+```bash
+export SECONDOPINION_STORAGE_ROOT="$HOME/Library/CloudStorage/GoogleDrive-<account>/My Drive/SecondOpinionData"
+```
+
+设置后，所有相对路径形式的 `data/...` 和 `reports/...` 都会自动读写到这个 Drive 根目录下。例如：
+
+```bash
+PYTHONPATH=src python3 -m secondopinion snapshot-iclr \
+  --year 2024 \
+  --limit 10 \
+  --normalize-out data/normalized/iclr_2024_sample.json
+```
+
+实际会写入：
+
+```text
+$SECONDOPINION_STORAGE_ROOT/data/raw/...
+$SECONDOPINION_STORAGE_ROOT/data/normalized/iclr_2024_sample.json
+```
+
+也可以不用环境变量，单次命令指定：
+
+```bash
+PYTHONPATH=src python3 -m secondopinion audit \
+  --storage-root "$HOME/Library/CloudStorage/GoogleDrive-<account>/My Drive/SecondOpinionData" \
+  --input data/derived/iclr_2024_with_evidence.json
+```
+
+绝对路径不会被改写，`examples/`、`docs/`、源码等仓库文件也不会被重定向。
+
 数据原则：
 
 - `data/raw/` 保留不同 venue 的原始结构，用于复现和重新派生。
