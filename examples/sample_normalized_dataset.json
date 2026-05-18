@@ -1,0 +1,58 @@
+{
+  "dataset": "iclr_2024_sample",
+  "schema_version": "0.1",
+  "paper_count": 1,
+  "review_count": 2,
+  "papers": [
+    {
+      "paper_id": "sample-paper-001",
+      "openreview_forum_id": "sample-paper-001",
+      "venue": "ICLR",
+      "year": 2024,
+      "title": "Modular Retrieval Networks for Evidence-Grounded Reasoning",
+      "abstract": "We introduce a modular retrieval network for evidence-grounded reasoning. The evaluation compares against BM25, Contriever, and a supervised cross-encoder baseline on three datasets. Table 2 reports an ablation study over the retriever, reranker, and calibration modules. Appendix C includes additional dataset statistics and failure analysis.",
+      "authors_anonymized": true,
+      "pdf_url": "https://openreview.net/pdf?id=sample",
+      "decision": "Reject",
+      "rebuttals": [
+        {
+          "id": "sample-rebuttal-001",
+          "text": "The authors note that Table 2 contains ablations and Appendix C contains additional failure analysis. They agree that the baseline section could explain hyperparameter tuning more clearly."
+        }
+      ],
+      "reviews": [
+        {
+          "review_id": "sample-review-001",
+          "paper_id": "sample-paper-001",
+          "review_text": "Summary: The paper proposes a retrieval method. Strengths: The topic is relevant. Weaknesses: The paper lacks any ablation study and does not compare to standard baselines. The authors should clarify the training setup and report the impact of each module. Rating: 3: reject. Confidence: 4.",
+          "summary": "The paper proposes a retrieval method.",
+          "strengths": "The topic is relevant.",
+          "weaknesses": "The paper lacks any ablation study and does not compare to standard baselines. The authors should clarify the training setup and report the impact of each module.",
+          "questions": "",
+          "rating_raw": "3: reject",
+          "rating_normalized": 3.0,
+          "confidence_raw": "4: confident",
+          "confidence_normalized": 8.0,
+          "review_stage": "initial",
+          "snapshot_time": "2026-05-18T00:00:00+00:00"
+        },
+        {
+          "review_id": "sample-review-002",
+          "paper_id": "sample-paper-001",
+          "review_text": "Summary: The submission studies evidence-grounded reasoning. Strengths: The experimental comparison is relevant and the ablation in Table 2 is helpful. Weaknesses: The paper should explain the calibration module more clearly and include a broader discussion of failure cases. Rating: 6: marginally above acceptance threshold. Confidence: 3.",
+          "summary": "The submission studies evidence-grounded reasoning.",
+          "strengths": "The experimental comparison is relevant and the ablation in Table 2 is helpful.",
+          "weaknesses": "The paper should explain the calibration module more clearly and include a broader discussion of failure cases.",
+          "questions": "",
+          "rating_raw": "6: marginally above acceptance threshold",
+          "rating_normalized": 6.0,
+          "confidence_raw": "3: fairly confident",
+          "confidence_normalized": 6.0,
+          "review_stage": "initial",
+          "snapshot_time": "2026-05-18T00:00:00+00:00"
+        }
+      ],
+      "snapshot_time": "2026-05-18T00:00:00+00:00"
+    }
+  ]
+}

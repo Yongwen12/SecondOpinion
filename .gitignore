@@ -19,5 +19,11 @@ node_modules/
 dist/
 build/
 
+data/raw/
+data/normalized/
+data/audits/
+reports/*.md
+reports/*.html
+
 .DS_Store
 Thumbs.db

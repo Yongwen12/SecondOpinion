@@ -67,6 +67,42 @@ MVP 输出：
 
 - [P0 ICLR Review Audit Project Plan](docs/P0%20Iclr%20Review%20Audit%20Project%20Plan.docx)
 
+## MVP 使用方式
+
+当前 MVP 是一个本地可运行的 review audit 工具，先完成最小闭环：
+
+1. 抓取 ICLR OpenReview submission 和 replies。
+2. 归一化为 papers / reviews / rebuttals / decisions schema。
+3. 从 review weaknesses 中抽取可审计 claim。
+4. 用论文摘要、author response 和可扩展 paper sections 做轻量 evidence retrieval。
+5. 输出 claim-level verdict、issue flags、Review Quality Score 和 Markdown / HTML 报告。
+
+先跑内置样例：
+
+```bash
+PYTHONPATH=src python3 -m secondopinion demo
+```
+
+生成结果：
+
+- `data/audits/demo_audit_results.json`
+- `reports/mvp_demo.md`
+- `reports/mvp_demo.html`
+
+抓取少量 ICLR 2024 公开数据并归一化：
+
+```bash
+PYTHONPATH=src python3 -m secondopinion scan-iclr --year 2024 --limit 10 --out data/normalized/iclr_2024_sample.json
+```
+
+对归一化数据做审计：
+
+```bash
+PYTHONPATH=src python3 -m secondopinion audit --input data/normalized/iclr_2024_sample.json
+```
+
+本版先使用 `rule-baseline-v0.1`，重点是验证数据链路、schema、rubric 和报告格式。后续可以把 claim extraction、evidence retrieval 和 verdict 分类替换为 LLM + RAG 实现。
+
 ## 目标
 
 建立一个更透明、可解释、可审计的 review 质量评价机制，帮助作者、会议和社区理解 peer review 的质量问题。
