@@ -4,6 +4,7 @@ import json
 import os
 import urllib.error
 import urllib.request
+from pathlib import Path
 from typing import Any
 
 
@@ -25,6 +26,7 @@ class OpenAIChatClient:
 
     @classmethod
     def from_env(cls) -> "OpenAIChatClient":
+        load_dotenv()
         api_key = os.environ.get("OPENAI_API_KEY", "").strip()
         if not api_key:
             raise LLMClientError(
@@ -87,3 +89,18 @@ class OpenAIChatClient:
             return json.loads(content)
         except json.JSONDecodeError as exc:
             raise LLMClientError("OpenAI API returned non-JSON content despite structured output request.") from exc
+
+
+def load_dotenv(path: str | Path = ".env") -> None:
+    env_path = Path(path)
+    if not env_path.exists():
+        return
+    for line in env_path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip().strip('"').strip("'")
+        if key and key not in os.environ:
+            os.environ[key] = value
