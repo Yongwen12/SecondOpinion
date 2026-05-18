@@ -4,15 +4,15 @@ import hashlib
 import statistics
 from typing import Any
 
+from .claim_extraction import CLAIM_EXTRACTION_VERSION, TONE_PROBLEM_WORDS, extract_claims
 from .models import ClaimAudit, Evidence, ReviewAudit
 from .retrieval import RETRIEVAL_VERSION, retrieve_evidence
-from .text import clean_text, split_review_sentences, tokens
+from .text import tokens
 
 
 MODEL_VERSION = "rule-baseline-v0.1"
 RUBRIC_VERSION = "iclr-review-audit-rubric-v0.1"
 
-NEGATION_WORDS = ("no ", "not ", "lack", "lacks", "lacking", "missing", "insufficient", "without", "fails to")
 ABSENCE_CLAIM_WORDS = (
     "lack",
     "lacks",
@@ -57,90 +57,12 @@ TECHNICAL_WORDS = (
     "architecture",
     "algorithm",
 )
-TONE_PROBLEM_WORDS = (
-    "nonsense",
-    "ridiculous",
-    "lazy",
-    "obviously bad",
-    "do not understand",
-    "no idea",
-    "terrible",
-    "worthless",
-)
-
-CLAIM_TYPES = {
-    "experiment": ("experiment", "evaluation", "empirical", "result", "metric"),
-    "baseline": ("baseline", "compare", "comparison", "sota", "state-of-the-art"),
-    "ablation": ("ablation", "component removal", "component study"),
-    "methodology": ("method", "approach", "algorithm", "architecture", "assumption"),
-    "theory": ("theorem", "proof", "lemma", "theory"),
-    "novelty": ("novel", "novelty", "original", "incremental"),
-    "clarity": ("clarity", "unclear", "notation", "explain", "presentation"),
-    "writing": ("writing", "grammar", "typo", "readability"),
-    "ethics": ("ethic", "privacy", "harm", "safety"),
-    "tone": TONE_PROBLEM_WORDS,
-}
-
 EXPERT_REQUIRED_TYPES = {"novelty", "theory"}
 
 
 def _id(prefix: str, *parts: str) -> str:
     digest = hashlib.sha1("||".join(parts).encode("utf-8")).hexdigest()[:10]
     return f"{prefix}_{digest}"
-
-
-def classify_claim_type(text: str) -> str:
-    lowered = text.lower()
-    for claim_type, keywords in CLAIM_TYPES.items():
-        if any(keyword in lowered for keyword in keywords):
-            return claim_type
-    return "general"
-
-
-def infer_importance(text: str, claim_type: str) -> str:
-    lowered = text.lower()
-    if claim_type == "tone":
-        return "tone-only"
-    if any(word in lowered for word in ("fatal", "major", "central", "main", "critical", "core")):
-        return "major"
-    if any(word in lowered for word in ("minor", "small", "typo", "detail")):
-        return "minor"
-    if lowered.endswith("?"):
-        return "question"
-    if claim_type in {"baseline", "ablation", "methodology", "experiment", "theory", "novelty"}:
-        return "major"
-    return "medium"
-
-
-def extract_claims(review: dict[str, Any], max_claims: int = 8) -> list[dict[str, str]]:
-    source = review.get("weaknesses") or review.get("review_text") or ""
-    sentences = split_review_sentences(source)
-    selected: list[str] = []
-    for sentence in sentences:
-        lowered = sentence.lower()
-        if any(word in lowered for word in NEGATION_WORDS + SPECIFICITY_WORDS + TONE_PROBLEM_WORDS):
-            selected.append(sentence)
-        if len(selected) >= max_claims:
-            break
-    if not selected:
-        selected = sentences[: min(3, len(sentences))]
-
-    claims = []
-    seen = set()
-    for text in selected:
-        normalized = " ".join(text.lower().split())
-        if normalized in seen:
-            continue
-        seen.add(normalized)
-        claim_type = classify_claim_type(text)
-        claims.append(
-            {
-                "claim_text": clean_text(text),
-                "claim_type": claim_type,
-                "importance": infer_importance(text, claim_type),
-            }
-        )
-    return claims
 
 
 def score_specificity(text: str) -> int:
@@ -220,7 +142,7 @@ def classify_evidence_verdict(claim_text: str, evidence: list[Evidence], claim_t
     return "insufficient", "low", 1
 
 
-def audit_claim(paper: dict[str, Any], review: dict[str, Any], claim: dict[str, str]) -> ClaimAudit:
+def audit_claim(paper: dict[str, Any], review: dict[str, Any], claim: dict[str, Any]) -> ClaimAudit:
     review_id = review.get("review_id", "review")
     claim_text = claim["claim_text"]
     claim_id = _id("claim", review_id, claim_text)
@@ -257,6 +179,11 @@ def audit_claim(paper: dict[str, Any], review: dict[str, Any], claim: dict[str, 
         claim_text=claim_text,
         claim_type=claim_type,
         importance=claim["importance"],
+        source_field=str(claim.get("source_field", "")),
+        source_sentence_index=claim.get("source_sentence_index"),
+        source_sentence=str(claim.get("source_sentence", "")),
+        extraction_reason=str(claim.get("extraction_reason", "")),
+        extraction_version=str(claim.get("extraction_version", CLAIM_EXTRACTION_VERSION)),
         auditability=auditability,
         specificity=specificity,
         evidence_support=evidence_score,
@@ -357,6 +284,7 @@ def audit_review(paper: dict[str, Any], review: dict[str, Any]) -> ReviewAudit:
         paper_id=paper.get("paper_id", ""),
         model_version=MODEL_VERSION,
         rubric_version=RUBRIC_VERSION,
+        claim_extraction_version=CLAIM_EXTRACTION_VERSION,
         retrieval_version=RETRIEVAL_VERSION,
         rqs_score=rqs,
         audit_confidence=audit_confidence,
@@ -399,6 +327,7 @@ def audit_dataset(dataset: dict[str, Any]) -> dict[str, Any]:
         "audit_count": len(audits),
         "model_version": MODEL_VERSION,
         "rubric_version": RUBRIC_VERSION,
+        "claim_extraction_version": CLAIM_EXTRACTION_VERSION,
         "retrieval_version": RETRIEVAL_VERSION,
         "audits": audits,
     }

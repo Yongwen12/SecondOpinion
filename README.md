@@ -77,6 +77,8 @@ MVP 输出：
 4. 用论文摘要、author response 和可扩展 paper sections 做轻量 evidence retrieval。
 5. 输出 claim-level verdict、issue flags、Review Quality Score 和 Markdown / HTML 报告。
 
+当前 claim extraction 使用 `claim-extraction-rule-v0.2`：它会优先解析 structured `weaknesses` / `questions` 字段，必要时回退到完整 `review_text`，并把一句话里的多个批评点拆成独立 claim。每个 claim 会保留来源字段、原句序号、原句文本和抽取原因。
+
 当前 evidence retrieval 使用 `section-aware-bm25-v0.2`：它会综合 abstract、PDF sections、appendix 和 author response，按 claim 类型给 section 加权，并在报告中保留 page、section、snippet 和 score。verdict 默认偏保守，遇到“review 说缺失，但论文里检索到相关证据”的情况会标成 `possibly_contradicted`，留给人工复核。
 
 先跑内置样例：

@@ -35,6 +35,8 @@ def write_markdown_report(audit_result: dict[str, Any], path: str | Path) -> Non
         f"- Average RQS: {summary['average_rqs']}",
         f"- RQS range: {summary['min_rqs']} - {summary['max_rqs']}",
         f"- Auditor: `{audit_result.get('model_version')}`",
+        f"- Claim extraction: `{audit_result.get('claim_extraction_version', 'unknown')}`",
+        f"- Evidence retrieval: `{audit_result.get('retrieval_version', 'unknown')}`",
         "",
         "## Issue Flags",
         "",
@@ -58,8 +60,8 @@ def write_markdown_report(audit_result: dict[str, Any], path: str | Path) -> Non
                 f"- Flags: {flags}",
                 f"- Summary: {audit.get('summary')}",
                 "",
-                "| Claim | Type | Verdict | Evidence | Flags |",
-                "| --- | --- | --- | --- | --- |",
+                "| Claim | Source | Type | Verdict | Evidence | Flags |",
+                "| --- | --- | --- | --- | --- | --- |",
             ]
         )
         for claim in audit.get("claims", []):
@@ -71,6 +73,7 @@ def write_markdown_report(audit_result: dict[str, Any], path: str | Path) -> Non
                 + " | ".join(
                     [
                         _md_cell(claim.get("claim_text", "")),
+                        _md_cell(claim_source_label(claim)),
                         _md_cell(claim.get("claim_type", "")),
                         _md_cell(claim.get("verdict", "")),
                         _md_cell(top_evidence),
@@ -110,6 +113,7 @@ def write_html_report(audit_result: dict[str, Any], path: str | Path) -> None:
                 <details>
                   <summary>{html.escape(claim.get('claim_text', ''))}</summary>
                   <div class="claim-meta">
+                    <code>{html.escape(claim_source_label(claim))}</code>
                     <code>{html.escape(claim.get('claim_type', ''))}</code>
                     <code>{html.escape(claim.get('verdict', ''))}</code>
                     <code>{html.escape(claim.get('audit_confidence', ''))}</code>
@@ -234,7 +238,7 @@ def write_html_report(audit_result: dict[str, Any], path: str | Path) -> None:
     <body>
       <header>
         <h1>SecondOpinion MVP Audit Report</h1>
-        <p>Dataset <code>{html.escape(audit_result.get('dataset', 'unknown'))}</code> audited with <code>{html.escape(audit_result.get('model_version', ''))}</code>.</p>
+        <p>Dataset <code>{html.escape(audit_result.get('dataset', 'unknown'))}</code> audited with <code>{html.escape(audit_result.get('model_version', ''))}</code>, <code>{html.escape(audit_result.get('claim_extraction_version', ''))}</code>, and <code>{html.escape(audit_result.get('retrieval_version', ''))}</code>.</p>
       </header>
       <main>
         <section class="summary">
@@ -266,3 +270,14 @@ def evidence_label(evidence: dict[str, Any]) -> str:
     if evidence.get("score") is not None:
         label = f"{label} score={float(evidence['score']):.2f}"
     return label
+
+
+def claim_source_label(claim: dict[str, Any]) -> str:
+    source = str(claim.get("source_field") or "review")
+    index = claim.get("source_sentence_index")
+    if index is None:
+        return source
+    try:
+        return f"{source}#{int(index) + 1}"
+    except (TypeError, ValueError):
+        return source

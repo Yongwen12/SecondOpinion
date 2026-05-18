@@ -29,6 +29,11 @@ class ClaimAudit:
     claim_text: str
     claim_type: str
     importance: str
+    source_field: str
+    source_sentence_index: int | None
+    source_sentence: str
+    extraction_reason: str
+    extraction_version: str
     auditability: int
     specificity: int
     evidence_support: int | None
@@ -56,6 +61,7 @@ class ReviewAudit:
     paper_id: str
     model_version: str
     rubric_version: str
+    claim_extraction_version: str
     retrieval_version: str
     rqs_score: int
     audit_confidence: str
