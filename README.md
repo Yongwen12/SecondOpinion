@@ -74,12 +74,12 @@ MVP 输出：
 1. 抓取 ICLR OpenReview submission 和 replies，完整保存 raw snapshot。
 2. 从 raw snapshot 派生 normalized papers / reviews / rebuttals / decisions schema。
 3. 从 review weaknesses 中抽取可审计 claim。
-4. 用论文摘要、author response 和可扩展 paper sections 做轻量 evidence retrieval。
+4. 用论文摘要、author response 和可扩展 PDF evidence chunks 做轻量 evidence retrieval。
 5. 输出 claim-level verdict、issue flags、Review Quality Score 和 Markdown / HTML 报告。
 
 当前 claim extraction 使用 `claim-extraction-llm-v0.1`：LLM 负责从 review 原文中抽取、拆分和分类 claim，系统只做 deterministic validation。每条 claim 必须带 `source_field` 和可回指到原文的 `source_sentence`；匹配不到原文的 claim 会被丢弃。
 
-当前 evidence retrieval 使用 `section-aware-bm25-v0.2`：它会综合 abstract、PDF sections、appendix 和 author response，按 claim 类型给 section 加权，并在报告中保留 page、section、snippet 和 score。默认 verdict 仍使用 `rule-baseline-v0.1`，偏保守，遇到“review 说缺失，但论文里检索到相关证据”的情况会标成 `possibly_contradicted`，留给人工复核。
+当前 evidence retrieval 使用 `section-aware-bm25-v0.2`：它会综合 abstract、PDF evidence chunks、appendix 和 author response，按 claim 类型给 section 加权，并在报告中保留 page、section label、snippet 和 score。默认 verdict 仍使用 `rule-baseline-v0.1`，偏保守，遇到“review 说缺失，但论文里检索到相关证据”的情况会标成 `possibly_contradicted`，留给人工复核。
 
 运行 audit 前需要设置 OpenAI API key：
 
@@ -138,7 +138,7 @@ PYTHONPATH=src python3 -m secondopinion build-evidence-store \
   --limit 10
 ```
 
-这一步会下载 submission PDF，解析正文和 appendix，并把 page / section / text chunks 加回 normalized dataset。PDF 文件和派生 evidence dataset 默认保存在 `data/pdfs/`、`data/derived/`，不会提交到 GitHub。
+这一步会下载 submission PDF，解析正文和 appendix，并把带有 page / section label / text 的 evidence chunks 加回 normalized dataset。PDF 文件和派生 evidence dataset 默认保存在 `data/pdfs/`、`data/derived/`，不会提交到 GitHub。
 
 对归一化数据做审计：
 

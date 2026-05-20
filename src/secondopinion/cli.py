@@ -73,7 +73,7 @@ def main(argv: list[str] | None = None) -> None:
     evidence = subparsers.add_parser(
         "build-evidence-store",
         parents=[storage_parent],
-        help="Download PDFs and attach parsed paper sections.",
+        help="Download PDFs and attach parsed evidence chunks.",
     )
     evidence.add_argument("--input", required=True)
     evidence.add_argument("--out", required=True)
