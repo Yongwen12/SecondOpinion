@@ -104,8 +104,8 @@ def write_markdown_report(audit_result: dict[str, Any], path: str | Path) -> Non
                 f"- Notes: {flags}",
                 f"- Summary: {audit.get('summary')}",
                 "",
-                "| Review point | Review section | Point type | SecondOpinion assessment | Most relevant passage | Notes |",
-                "| --- | --- | --- | --- | --- | --- |",
+                "| Review point | SecondOpinion take | Support | Most relevant passage | Notes |",
+                "| --- | --- | --- | --- | --- |",
             ]
         )
         for claim in audit.get("claims", []):
@@ -117,9 +117,8 @@ def write_markdown_report(audit_result: dict[str, Any], path: str | Path) -> Non
                 + " | ".join(
                     [
                         _md_cell(claim.get("claim_text", "")),
-                        _md_cell(claim_source_label(claim)),
-                        _md_cell(claim_type_label(claim.get("claim_type", ""))),
                         _md_cell(claim_assessment_text(claim)),
+                        _md_cell(f"{support_percent(claim)}%"),
                         _md_cell(top_evidence),
                         _md_cell(claim_flags),
                     ]
@@ -145,21 +144,21 @@ def write_html_report(audit_result: dict[str, Any], path: str | Path) -> None:
             evidence = claim.get("evidence") or []
             top = evidence[0] if evidence else None
             top_label = evidence_label(top) if top else ""
+            support = support_percent(claim)
             evidence_html = (
                 f"""
-                <section class="evidence-block">
-                  <h3>Most relevant manuscript passage</h3>
+                <section class="evidence-block compact">
+                  <h4>Manuscript reference</h4>
                   <blockquote>
                     <b>{_h(top_label)}</b>
-                    <span>{_h(evidence_verdict_label(top.get('verdict', '')))}</span>
                     <p>{_h(top['text'])}</p>
                   </blockquote>
                 </section>
                 """
                 if top
                 else """
-                <section class="evidence-block">
-                  <h3>Most relevant manuscript passage</h3>
+                <section class="evidence-block compact">
+                  <h4>Manuscript reference</h4>
                   <blockquote>No clearly relevant manuscript passage was found.</blockquote>
                 </section>
                 """
@@ -175,29 +174,30 @@ def write_html_report(audit_result: dict[str, Any], path: str | Path) -> None:
                 f"""
                 <details>
                   <summary>{_h(claim.get('claim_text', ''))}</summary>
-                  <div class="claim-facts">
-                    <div>
-                      <span>Type of review point</span>
-                      <p>{_h(claim_type_label(claim.get('claim_type', '')))}</p>
+                  <section class="take-card">
+                    <div class="take-top">
+                      <div>
+                        <h3>SecondOpinion take</h3>
+                        <p>{_h(assessment)}</p>
+                      </div>
+                      <div class="support-meter {support_class(support)}">
+                        <b>{support}%</b>
+                        <span>support</span>
+                      </div>
                     </div>
-                    <div>
-                      <span>SecondOpinion take</span>
-                      <p>{_h(verdict_label(claim.get('verdict', '')))}</p>
+                    <div class="take-meta">
+                      <span>{_h(short_claim_type_label(claim.get('claim_type', '')))}</span>
+                      <span>{_h(confidence_label(claim.get('audit_confidence', '')))}</span>
                     </div>
-                    <div>
-                      <span>Assessment source</span>
-                      <p>{_h(judge_label(claim))}</p>
-                    </div>
-                  </div>
-                  <section class="source-block">
-                    <h3>Original reviewer text</h3>
-                    <p>{_h(claim.get('source_sentence', '') or 'No source sentence recorded.')}</p>
                   </section>
-                  {evidence_html}
-                  <section class="assessment">
-                    <h3>SecondOpinion assessment</h3>
-                    <p>{_h(assessment)}</p>
-                  </section>
+                  <details class="reference-materials">
+                    <summary>Reference material</summary>
+                    <section class="source-block compact">
+                      <h4>Reviewer wording</h4>
+                      <p>{_h(claim.get('source_sentence', '') or 'No source sentence recorded.')}</p>
+                    </section>
+                    {evidence_html}
+                  </details>
                   <div class="flags">{flags}</div>
                 </details>
                 """
@@ -348,53 +348,109 @@ def write_html_report(audit_result: dict[str, Any], path: str | Path) -> None:
           color: var(--ink);
           line-height: 1.45;
         }}
-        .claim-facts {{
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-          gap: 10px;
-          margin: 12px 0;
+        .take-card {{
+          border: 1px solid var(--line);
+          border-radius: 8px;
+          background: #f0f9ff;
+          padding: 14px;
+          margin-top: 12px;
         }}
-        .claim-facts div, .source-block, .assessment, .evidence-block {{
+        .take-top {{
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) 104px;
+          gap: 14px;
+          align-items: start;
+        }}
+        .take-card h3 {{
+          margin: 0;
+          font-size: 14px;
+          color: var(--muted);
+          text-transform: uppercase;
+          letter-spacing: 0;
+        }}
+        .take-card p {{
+          margin: 8px 0 0;
+          color: var(--ink);
+          font-size: 17px;
+          line-height: 1.55;
+        }}
+        .support-meter {{
+          border-radius: 8px;
+          color: #fff;
+          padding: 10px;
+          text-align: center;
+        }}
+        .support-high {{ background: #0f766e; }}
+        .support-mid {{ background: #b45309; }}
+        .support-low {{ background: #b91c1c; }}
+        .support-meter b {{
+          display: block;
+          font-size: 26px;
+          line-height: 1;
+        }}
+        .support-meter span {{
+          display: block;
+          margin-top: 4px;
+          font-size: 12px;
+        }}
+        .take-meta {{
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin-top: 12px;
+        }}
+        .take-meta span {{
+          border: 1px solid #bae6fd;
+          border-radius: 999px;
+          background: #fff;
+          color: #0369a1;
+          padding: 4px 8px;
+          font-size: 12px;
+        }}
+        .reference-materials {{
+          border-top: 0;
+          margin-top: 10px;
+          padding: 0;
+        }}
+        .reference-materials > summary {{
+          color: var(--muted);
+          font-size: 13px;
+          font-weight: 600;
+        }}
+        .source-block, .evidence-block {{
           border: 1px solid var(--line);
           border-radius: 8px;
           background: #fff;
           padding: 10px 12px;
+          margin-top: 8px;
         }}
-        .claim-facts span, .source-block h3, .assessment h3, .evidence-block h3 {{
-          display: block;
+        .source-block.compact p, .evidence-block.compact p {{
+          margin: 0;
+          color: var(--muted);
+          font-size: 13px;
+          line-height: 1.45;
+        }}
+        .source-block h4, .evidence-block h4 {{
           margin: 0 0 6px;
           color: var(--muted);
-          font-size: 12px;
+          font-size: 11px;
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 0;
         }}
-        .claim-facts p, .source-block p, .assessment p, .evidence-block p {{
-          margin: 0;
-          color: var(--ink);
-          line-height: 1.5;
-        }}
-        .source-block, .assessment, .evidence-block {{
-          margin-top: 10px;
-        }}
-        .assessment {{
-          border-color: #bae6fd;
-          background: #f0f9ff;
-        }}
         blockquote {{
-          margin: 10px 0 0;
-          padding: 10px 12px;
+          margin: 0;
+          padding: 8px 10px;
           border-left: 3px solid var(--accent);
           background: #f0fdfa;
           color: #334155;
           line-height: 1.5;
         }}
-        blockquote b {{ display: block; margin-bottom: 6px; }}
-        blockquote span {{
-          display: inline-block;
-          margin-bottom: 8px;
+        blockquote b {{
+          display: block;
+          margin-bottom: 6px;
           color: var(--muted);
-          font-size: 13px;
+          font-size: 12px;
         }}
       </style>
     </head>
@@ -488,6 +544,65 @@ def flag_label(flag: str) -> str:
     return FLAG_LABELS.get(str(flag), str(flag).replace("-", " "))
 
 
+def short_claim_type_label(claim_type: str) -> str:
+    labels = {
+        "ablation": "Ablation",
+        "baseline": "Baselines",
+        "experiment": "Experiments",
+        "methodology": "Methodology",
+        "theory": "Theory",
+        "novelty": "Novelty",
+        "clarity": "Clarity",
+        "writing": "Writing",
+        "ethics": "Ethics",
+        "tone": "Tone",
+        "general": "General",
+    }
+    return labels.get(str(claim_type), "General")
+
+
+def confidence_label(confidence: Any) -> str:
+    value = str(confidence or "").strip().lower()
+    if value == "high":
+        return "High confidence"
+    if value == "medium":
+        return "Medium confidence"
+    if value == "low":
+        return "Low confidence"
+    return "Confidence not available"
+
+
+def support_percent(claim: dict[str, Any]) -> int:
+    verdict = str(claim.get("verdict") or "")
+    if verdict == "supported":
+        base = 85
+    elif verdict == "partially_supported":
+        base = 58
+    elif verdict == "insufficient":
+        base = 30
+    elif verdict == "possibly_contradicted":
+        base = 18
+    elif verdict == "vague_or_not_checkable":
+        base = 40
+    elif verdict == "needs_human_check":
+        base = 50
+    else:
+        base = 50
+
+    evidence_support = claim.get("evidence_support")
+    if verdict in {"supported", "partially_supported", "insufficient"} and isinstance(evidence_support, (int, float)):
+        base = round((base + max(0, min(3, float(evidence_support))) / 3 * 100) / 2)
+    return int(max(0, min(100, base)))
+
+
+def support_class(score: int) -> str:
+    if score >= 70:
+        return "support-high"
+    if score >= 45:
+        return "support-mid"
+    return "support-low"
+
+
 def review_rating_label(audit: dict[str, Any]) -> str:
     raw = _display_text(audit.get("rating_raw"))
     normalized = audit.get("rating_normalized")
@@ -525,26 +640,55 @@ def judge_label(claim: dict[str, Any]) -> str:
 
 
 def claim_assessment_text(claim: dict[str, Any]) -> str:
-    verdict = verdict_label(str(claim.get("verdict") or ""))
-    confidence = str(claim.get("audit_confidence") or "unknown")
     rationale = str(claim.get("judge_rationale") or "").strip()
     judge_version = str(claim.get("judge_version") or "")
     evidence = claim.get("evidence") or []
     top = evidence[0] if evidence else None
+    quote = evidence_quote(top)
+    verdict = str(claim.get("verdict") or "")
+
+    if verdict == "supported":
+        take = "SecondOpinion finds this review point well supported."
+        if quote:
+            take += f" The manuscript backs it up with: \"{quote}\""
+    elif verdict == "partially_supported":
+        take = "SecondOpinion finds this review point only partly supported."
+        if quote:
+            take += f" The closest manuscript evidence is: \"{quote}\""
+    elif verdict == "possibly_contradicted":
+        take = "SecondOpinion finds this review point weakly supported."
+        if quote:
+            take += f" The manuscript appears to address it directly: \"{quote}\""
+    elif verdict == "insufficient":
+        take = "SecondOpinion finds too little manuscript support for this review point."
+        if quote:
+            take += f" The closest passage is related but not decisive: \"{quote}\""
+    elif verdict == "vague_or_not_checkable":
+        take = "SecondOpinion finds this review point too broad to evaluate cleanly from the manuscript."
+        if quote:
+            take += f" The closest relevant passage is: \"{quote}\""
+    elif verdict == "needs_human_check":
+        take = "SecondOpinion finds this point dependent on specialist context beyond the retrieved passage."
+        if quote:
+            take += f" The closest passage is: \"{quote}\""
+    else:
+        take = verdict_label(verdict)
+        if quote:
+            take += f" Relevant manuscript text: \"{quote}\""
 
     if judge_version.startswith("llm-rag-judge") and rationale and "fallback" not in judge_version:
-        return f"{verdict} Confidence: {confidence}. Rationale: {rationale}"
+        take += f" Rationale: {rationale}"
+    return take
 
-    if "fallback" in judge_version:
-        fallback = rationale or "This assessment uses the available manuscript evidence."
-        return f"{verdict} Confidence: {confidence}. {fallback}"
 
-    if top:
-        evidence_part = f"Top evidence: {evidence_label(top)}."
-    else:
-        evidence_part = "No evidence passage was retrieved."
-    return (
-        f"{verdict} Confidence: {confidence}. "
-        "SecondOpinion screened the reviewer point against the most relevant manuscript passage. "
-        f"{evidence_part}"
-    )
+def evidence_quote(evidence: dict[str, Any] | None, max_chars: int = 220) -> str:
+    if not evidence:
+        return ""
+    text = _display_text(evidence.get("text"))
+    if not text:
+        return ""
+    text = re.sub(r"\s+", " ", text)
+    if len(text) <= max_chars:
+        return text
+    clipped = text[:max_chars].rsplit(" ", 1)[0].strip()
+    return f"{clipped}..."

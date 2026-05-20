@@ -10,6 +10,7 @@ from secondopinion.report import (
     flag_label,
     review_rating_label,
     reviewer_confidence_label,
+    support_percent,
     verdict_label,
     write_html_report,
 )
@@ -57,6 +58,10 @@ class ReportTests(unittest.TestCase):
         self.assertEqual(pdf_label, "Manuscript section 2.2 MODELS p.4")
         self.assertEqual(rebuttal_label, "Author response")
 
+    def test_support_percent_measures_support_for_review_point(self):
+        self.assertGreaterEqual(support_percent({"verdict": "supported", "evidence_support": 3}), 80)
+        self.assertLessEqual(support_percent({"verdict": "possibly_contradicted", "evidence_support": 3}), 25)
+
     def test_rule_assessment_is_user_facing(self):
         assessment = claim_assessment_text(
             {
@@ -68,12 +73,13 @@ class ReportTests(unittest.TestCase):
                         "source_type": "paper",
                         "section": "abstract",
                         "score": 0.8,
+                        "text": "The paper explains the training setup in detail.",
                     }
                 ],
             }
         )
-        self.assertIn("SecondOpinion screened", assessment)
-        self.assertIn("Paper abstract", assessment)
+        self.assertIn("well supported", assessment)
+        self.assertIn("training setup", assessment)
 
     def test_llm_assessment_surfaces_rationale(self):
         assessment = claim_assessment_text(
@@ -139,10 +145,13 @@ class ReportTests(unittest.TestCase):
         self.assertIn(b"bad pdf text", data)
         self.assertIn(b"Reviewer rating", data)
         self.assertIn(b"Final decision", data)
-        self.assertIn(b"SecondOpinion assessment", data)
+        self.assertIn(b"SecondOpinion take", data)
+        self.assertIn(b"85%", data)
+        self.assertIn(b"Reference material", data)
         self.assertNotIn(b"Reviewer source", data)
         self.assertNotIn(b"System verdict", data)
         self.assertNotIn(b"LLM judge", data)
+        self.assertNotIn(b"Assessment source", data)
 
 
 if __name__ == "__main__":
