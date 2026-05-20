@@ -45,6 +45,16 @@ class ClaimAudit:
     audit_confidence: str
     requires_external_knowledge: bool
     requires_human_expert: bool
+    review_point_type: str = ""
+    stance: str = ""
+    support_score: int | None = None
+    second_opinion_take: str = ""
+    quoted_manuscript_evidence: str = ""
+    reasoning_summary: str = ""
+    professionalism_score: int | None = None
+    specificity_score: int | None = None
+    helpfulness_score: int | None = None
+    fairness_score: int | None = None
     judge_version: str = ""
     judge_model: str = ""
     judge_rationale: str = ""

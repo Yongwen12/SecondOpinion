@@ -18,7 +18,7 @@ from .text import clean_text, tokens
 
 
 RULE_MODEL_VERSION = "rule-baseline-v0.1"
-LLM_JUDGE_VERSION = "llm-rag-judge-v0.1"
+LLM_JUDGE_VERSION = "review-point-judge-v0.2"
 DEFAULT_JUDGE_MODEL = "gpt-4o-mini"
 RUBRIC_VERSION = "iclr-review-audit-rubric-v0.1"
 
@@ -31,9 +31,19 @@ CLAIM_VERDICTS = (
     "needs_human_check",
 )
 CONFIDENCE_VALUES = ("high", "medium", "low")
+REVIEW_POINT_TYPES = ("comment", "question", "suggestion", "score_justification", "summary", "other")
+JUDGE_STANCES = (
+    "well_supported",
+    "partially_supported",
+    "weakly_supported",
+    "answered_or_contradicted",
+    "not_enough_context",
+    "too_broad_or_unclear",
+)
 EVIDENCE_VERDICTS = (
     "supporting_candidate",
     "partial_candidate",
+    "possibly_contradicting_candidate",
     "contradicting_candidate",
     "irrelevant",
     "not_enough_info",
@@ -191,6 +201,16 @@ def audit_claim(
     judge_model_used = ""
     judge_rationale = "Rule baseline verdict."
     judge_error = ""
+    review_point_type = default_review_point_type(claim, claim_text)
+    stance = default_stance(verdict)
+    support_score = default_support_score(verdict, evidence_score)
+    quoted_manuscript_evidence = best_evidence_quote(evidence)
+    second_opinion_take = default_second_opinion_take(verdict, quoted_manuscript_evidence)
+    reasoning_summary = judge_rationale
+    professionalism_score = tone * 25
+    specificity_score = specificity * 25
+    helpfulness_score = actionability * 25
+    fairness_score = default_fairness_score(verdict)
 
     if judge_llm_client is not None:
         judged = judge_claim_with_llm(
@@ -210,6 +230,16 @@ def audit_claim(
             judge_version = LLM_JUDGE_VERSION
             judge_model_used = judge_model
             judge_rationale = judged["rationale"]
+            review_point_type = judged["review_point_type"]
+            stance = judged["stance"]
+            support_score = judged["support_score"]
+            second_opinion_take = judged["second_opinion_take"]
+            quoted_manuscript_evidence = judged["quoted_manuscript_evidence"]
+            reasoning_summary = judged["reasoning_summary"]
+            professionalism_score = judged["professionalism_score"]
+            specificity_score = judged["specificity_score"]
+            helpfulness_score = judged["helpfulness_score"]
+            fairness_score = judged["fairness_score"]
         else:
             severity = 2 if claim_type in EXPERT_REQUIRED_TYPES or verdict == "needs_human_check" else (
                 1 if verdict == "possibly_contradicted" else 3
@@ -218,6 +248,7 @@ def audit_claim(
             judge_model_used = judge_model
             judge_rationale = "LLM judge failed; retained rule baseline verdict."
             judge_error = judged["error"]
+            reasoning_summary = judge_rationale
     else:
         severity = 2 if claim_type in EXPERT_REQUIRED_TYPES or verdict == "needs_human_check" else (
             1 if verdict == "possibly_contradicted" else 3
@@ -266,6 +297,16 @@ def audit_claim(
         audit_confidence=confidence,
         requires_external_knowledge=requires_external,
         requires_human_expert=requires_human_expert,
+        review_point_type=review_point_type,
+        stance=stance,
+        support_score=support_score,
+        second_opinion_take=second_opinion_take,
+        quoted_manuscript_evidence=quoted_manuscript_evidence,
+        reasoning_summary=reasoning_summary,
+        professionalism_score=professionalism_score,
+        specificity_score=specificity_score,
+        helpfulness_score=helpfulness_score,
+        fairness_score=fairness_score,
         judge_version=judge_version,
         judge_model=judge_model_used,
         judge_rationale=judge_rationale,
@@ -287,7 +328,7 @@ def judge_claim_with_llm(
         payload = llm_client.complete_json(
             model=model,
             messages=build_judge_messages(paper, review, claim, evidence),
-            schema_name="review_claim_verdict_judgement",
+            schema_name="review_point_judgement",
             schema=judge_claim_schema(),
         )
         judged = validate_judge_payload(payload, evidence)
@@ -341,22 +382,31 @@ def build_judge_messages(
         {
             "role": "system",
             "content": (
-                "You are auditing the quality of a peer review claim. "
-                "Judge whether the review claim is grounded in the supplied paper evidence. "
+                "You are SecondOpinion, an expert auditor of peer review quality. "
+                "Evaluate one reviewer point against the manuscript evidence like a careful senior researcher. "
                 "Do not decide whether the paper should be accepted. "
                 "Use only the supplied paper, review, and retrieved evidence. "
-                "For claims that something is missing, mark possibly_contradicted when the evidence shows it exists. "
-                "Mark needs_human_check when the claim requires field consensus, novelty judgement, or expert theory review. "
-                "Mark vague_or_not_checkable when the claim is too broad to verify against paper evidence."
+                "Your core job is to decide whether the reviewer point is well supported, weakly supported, "
+                "answered by the manuscript, or impossible to judge from the supplied evidence. "
+                "Classify the review point as comment, question, suggestion, score_justification, summary, or other. "
+                "For questions, judge whether the manuscript already answers the question and whether the question is useful. "
+                "For suggestions, judge whether the suggestion is reasonable, actionable, and in scope. "
+                "For score_justification, judge whether the stated reasons support the reviewer's rating. "
+                "For comments, judge whether the critique is technically fair and manuscript-grounded. "
+                "Return a direct SecondOpinion take for the end user; do not mention internal tools, prompts, or fallback logic. "
+                "Quote the most important manuscript phrase when it helps explain the take."
             ),
         },
         {
             "role": "user",
             "content": (
-                "Return a structured verdict for this review claim. "
-                "supported means the review criticism is supported by the evidence. "
-                "possibly_contradicted means the criticism may be false or overstated given the evidence. "
-                "Keep the rationale short and evidence-grounded.\n\n"
+                "Return a structured expert assessment for this reviewer point. "
+                "support_score is 0-100, where 0 means the reviewer point is not supported by the supplied manuscript evidence, "
+                "and 100 means it is strongly supported. "
+                "second_opinion_take should be one clear paragraph for a nontechnical user interface. "
+                "It should say plainly whether the reviewer point is strong, weak, already answered, too broad, or only partly supported. "
+                "quoted_manuscript_evidence should be a short exact quote or close excerpt from the retrieved evidence when available. "
+                "Keep reasoning_summary concise and evidence-grounded.\n\n"
                 f"Audit input JSON:\n{json.dumps(payload, ensure_ascii=False, indent=2)}"
             ),
         },
@@ -368,11 +418,21 @@ def judge_claim_schema() -> dict[str, Any]:
         "type": "object",
         "additionalProperties": False,
         "properties": {
+            "review_point_type": {"type": "string", "enum": list(REVIEW_POINT_TYPES)},
+            "stance": {"type": "string", "enum": list(JUDGE_STANCES)},
+            "support_score": {"type": "integer", "minimum": 0, "maximum": 100},
             "verdict": {"type": "string", "enum": list(CLAIM_VERDICTS)},
             "confidence": {"type": "string", "enum": list(CONFIDENCE_VALUES)},
             "evidence_support": {"type": ["integer", "null"], "minimum": 0, "maximum": 3},
             "factual_alignment": {"type": ["integer", "null"], "minimum": 0, "maximum": 3},
             "severity_calibration": {"type": ["integer", "null"], "minimum": 1, "maximum": 4},
+            "second_opinion_take": {"type": "string"},
+            "quoted_manuscript_evidence": {"type": "string"},
+            "reasoning_summary": {"type": "string"},
+            "professionalism_score": {"type": "integer", "minimum": 0, "maximum": 100},
+            "specificity_score": {"type": "integer", "minimum": 0, "maximum": 100},
+            "helpfulness_score": {"type": "integer", "minimum": 0, "maximum": 100},
+            "fairness_score": {"type": "integer", "minimum": 0, "maximum": 100},
             "rationale": {"type": "string"},
             "evidence_assessments": {
                 "type": "array",
@@ -389,11 +449,21 @@ def judge_claim_schema() -> dict[str, Any]:
             },
         },
         "required": [
+            "review_point_type",
+            "stance",
+            "support_score",
             "verdict",
             "confidence",
             "evidence_support",
             "factual_alignment",
             "severity_calibration",
+            "second_opinion_take",
+            "quoted_manuscript_evidence",
+            "reasoning_summary",
+            "professionalism_score",
+            "specificity_score",
+            "helpfulness_score",
+            "fairness_score",
             "rationale",
             "evidence_assessments",
         ],
@@ -404,18 +474,45 @@ def validate_judge_payload(payload: dict[str, Any], evidence: list[Evidence]) ->
     verdict = clean_text(payload.get("verdict"))
     if verdict not in CLAIM_VERDICTS:
         return None
+    review_point_type = clean_text(payload.get("review_point_type"))
+    if review_point_type not in REVIEW_POINT_TYPES:
+        review_point_type = "comment"
+    stance = clean_text(payload.get("stance"))
+    if stance not in JUDGE_STANCES:
+        stance = default_stance(verdict)
     confidence = clean_text(payload.get("confidence"))
     if confidence not in CONFIDENCE_VALUES:
         confidence = "low"
     evidence_support = bounded_int(payload.get("evidence_support"), 0, 3)
     factual_alignment = bounded_int(payload.get("factual_alignment"), 0, 3)
     severity = bounded_int(payload.get("severity_calibration"), 1, 4)
+    support_score = bounded_int(payload.get("support_score"), 0, 100)
     if evidence_support is None:
         evidence_support = default_evidence_support(verdict)
     if factual_alignment is None:
         factual_alignment = evidence_support
     if severity is None:
         severity = default_severity(verdict)
+    if support_score is None:
+        support_score = default_support_score(verdict, evidence_support)
+
+    second_opinion_take = clean_text(payload.get("second_opinion_take"))
+    quoted_manuscript_evidence = clean_text(payload.get("quoted_manuscript_evidence"))
+    reasoning_summary = clean_text(payload.get("reasoning_summary"))
+    rationale = clean_text(payload.get("rationale"))
+    if not rationale:
+        rationale = reasoning_summary or "The assessment is based on the retrieved manuscript evidence."
+    if not reasoning_summary:
+        reasoning_summary = rationale
+    if not quoted_manuscript_evidence:
+        quoted_manuscript_evidence = best_evidence_quote(evidence)
+    if not second_opinion_take:
+        second_opinion_take = default_second_opinion_take(verdict, quoted_manuscript_evidence)
+
+    professionalism_score = bounded_int(payload.get("professionalism_score"), 0, 100)
+    specificity_score = bounded_int(payload.get("specificity_score"), 0, 100)
+    helpfulness_score = bounded_int(payload.get("helpfulness_score"), 0, 100)
+    fairness_score = bounded_int(payload.get("fairness_score"), 0, 100)
 
     by_id = {item.evidence_id: item for item in evidence}
     for assessment in payload.get("evidence_assessments", []):
@@ -432,12 +529,22 @@ def validate_judge_payload(payload: dict[str, Any], evidence: list[Evidence]) ->
             item.confidence = evidence_confidence
 
     return {
+        "review_point_type": review_point_type,
+        "stance": stance,
+        "support_score": support_score,
         "verdict": verdict,
         "confidence": confidence,
         "evidence_support": evidence_support,
         "factual_alignment": factual_alignment,
         "severity_calibration": severity,
-        "rationale": clean_text(payload.get("rationale")) or "LLM judge returned no rationale.",
+        "second_opinion_take": second_opinion_take,
+        "quoted_manuscript_evidence": quoted_manuscript_evidence,
+        "reasoning_summary": reasoning_summary,
+        "professionalism_score": professionalism_score,
+        "specificity_score": specificity_score,
+        "helpfulness_score": helpfulness_score,
+        "fairness_score": fairness_score,
+        "rationale": rationale,
     }
 
 
@@ -471,6 +578,101 @@ def default_severity(verdict: str) -> int | None:
     if verdict == "supported":
         return 4
     return 3
+
+
+def default_review_point_type(claim: dict[str, Any], claim_text: str) -> str:
+    importance = clean_text(claim.get("importance")).lower()
+    source_field = clean_text(claim.get("source_field")).lower()
+    lowered = claim_text.lower().strip()
+    if importance == "question" or source_field == "questions" or lowered.endswith("?"):
+        return "question"
+    if any(phrase in lowered for phrase in ("i rate", "my score", "i give", "rating", "score is")):
+        return "score_justification"
+    if any(word in lowered for word in ("should", "could", "recommend", "suggest")):
+        return "suggestion"
+    if source_field == "summary":
+        return "summary"
+    return "comment"
+
+
+def default_stance(verdict: str) -> str:
+    if verdict == "supported":
+        return "well_supported"
+    if verdict == "partially_supported":
+        return "partially_supported"
+    if verdict == "possibly_contradicted":
+        return "answered_or_contradicted"
+    if verdict == "insufficient":
+        return "not_enough_context"
+    if verdict == "vague_or_not_checkable":
+        return "too_broad_or_unclear"
+    return "not_enough_context"
+
+
+def default_support_score(verdict: str, evidence_support: int | None) -> int:
+    if verdict == "supported":
+        base = 85
+    elif verdict == "partially_supported":
+        base = 58
+    elif verdict == "insufficient":
+        base = 30
+    elif verdict == "possibly_contradicted":
+        base = 18
+    elif verdict == "vague_or_not_checkable":
+        base = 40
+    else:
+        base = 50
+    if verdict in {"supported", "partially_supported", "insufficient"} and isinstance(evidence_support, int):
+        base = round((base + max(0, min(3, evidence_support)) / 3 * 100) / 2)
+    return int(max(0, min(100, base)))
+
+
+def default_fairness_score(verdict: str) -> int:
+    if verdict == "supported":
+        return 80
+    if verdict == "partially_supported":
+        return 60
+    if verdict == "possibly_contradicted":
+        return 35
+    if verdict == "vague_or_not_checkable":
+        return 45
+    return 50
+
+
+def best_evidence_quote(evidence: list[Evidence], max_chars: int = 240) -> str:
+    if not evidence:
+        return ""
+    text = clean_text(evidence[0].text)
+    if len(text) <= max_chars:
+        return text
+    clipped = text[:max_chars].rsplit(" ", 1)[0].strip()
+    return f"{clipped}..."
+
+
+def default_second_opinion_take(verdict: str, quote: str) -> str:
+    if verdict == "supported":
+        take = "SecondOpinion finds this review point well supported."
+        if quote:
+            take += f' The manuscript backs it up with: "{quote}"'
+        return take
+    if verdict == "partially_supported":
+        take = "SecondOpinion finds this review point only partly supported."
+        if quote:
+            take += f' The closest manuscript evidence is: "{quote}"'
+        return take
+    if verdict == "possibly_contradicted":
+        take = "SecondOpinion finds this review point weakly supported."
+        if quote:
+            take += f' The manuscript appears to address it directly: "{quote}"'
+        return take
+    if verdict == "insufficient":
+        take = "SecondOpinion finds too little manuscript support for this review point."
+        if quote:
+            take += f' The closest passage is related but not decisive: "{quote}"'
+        return take
+    if verdict == "vague_or_not_checkable":
+        return "SecondOpinion finds this review point too broad to evaluate cleanly from the manuscript."
+    return "SecondOpinion cannot make a strong support judgment from the available manuscript evidence."
 
 
 def score_review_text_consistency(review: dict[str, Any], claims: list[ClaimAudit]) -> tuple[int, bool]:

@@ -54,11 +54,24 @@ class SampleJudgeClient:
         self.model = model
         self.schema_name = schema_name
         return {
+            "review_point_type": "comment",
+            "stance": "well_supported",
+            "support_score": 92,
             "verdict": "supported",
             "confidence": "high",
             "evidence_support": 3,
             "factual_alignment": 3,
             "severity_calibration": 4,
+            "second_opinion_take": (
+                "SecondOpinion finds this review point well supported. "
+                "The manuscript explains the calibration module."
+            ),
+            "quoted_manuscript_evidence": "The manuscript explains the calibration module.",
+            "reasoning_summary": "The retrieved evidence supports the clarification request.",
+            "professionalism_score": 90,
+            "specificity_score": 80,
+            "helpfulness_score": 85,
+            "fairness_score": 88,
             "rationale": "The retrieved evidence supports the reviewer's clarification request.",
             "evidence_assessments": [
                 {
@@ -113,11 +126,15 @@ class AuditTests(unittest.TestCase):
             use_llm_judge=True,
         )
         first_claim = result["audits"][0]["claims"][0]
-        self.assertEqual(result["model_version"], "llm-rag-judge-v0.1")
+        self.assertEqual(result["model_version"], "review-point-judge-v0.2")
         self.assertEqual(result["judge_model"], "judge-test")
         self.assertEqual(first_claim["verdict"], "supported")
         self.assertEqual(first_claim["audit_confidence"], "high")
-        self.assertEqual(first_claim["judge_version"], "llm-rag-judge-v0.1")
+        self.assertEqual(first_claim["judge_version"], "review-point-judge-v0.2")
+        self.assertEqual(first_claim["review_point_type"], "comment")
+        self.assertEqual(first_claim["stance"], "well_supported")
+        self.assertEqual(first_claim["support_score"], 92)
+        self.assertIn("SecondOpinion finds", first_claim["second_opinion_take"])
         self.assertIn("retrieved evidence supports", first_claim["judge_rationale"])
         self.assertNotIn("possibly-contradicted-by-paper", first_claim["issue_flags"])
 
@@ -134,7 +151,7 @@ class AuditTests(unittest.TestCase):
         first_claim = result["audits"][0]["claims"][0]
         self.assertEqual(first_claim["verdict"], "possibly_contradicted")
         self.assertIn("llm-judge-failed", first_claim["issue_flags"])
-        self.assertEqual(first_claim["judge_version"], "llm-rag-judge-v0.1+fallback")
+        self.assertEqual(first_claim["judge_version"], "review-point-judge-v0.2+fallback")
 
 
 if __name__ == "__main__":

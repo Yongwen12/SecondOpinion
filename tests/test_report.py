@@ -86,7 +86,7 @@ class ReportTests(unittest.TestCase):
             {
                 "verdict": "possibly_contradicted",
                 "audit_confidence": "medium",
-                "judge_version": "llm-rag-judge-v0.1",
+                "judge_version": "review-point-judge-v0.2",
                 "judge_rationale": "The paper gives the requested setup details.",
                 "evidence": [],
             }

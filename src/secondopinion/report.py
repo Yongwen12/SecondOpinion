@@ -573,6 +573,9 @@ def confidence_label(confidence: Any) -> str:
 
 
 def support_percent(claim: dict[str, Any]) -> int:
+    explicit = claim.get("support_score")
+    if isinstance(explicit, (int, float)):
+        return int(max(0, min(100, explicit)))
     verdict = str(claim.get("verdict") or "")
     if verdict == "supported":
         base = 85
@@ -630,7 +633,7 @@ def reviewer_confidence_label(audit: dict[str, Any]) -> str:
 def judge_label(claim: dict[str, Any]) -> str:
     judge_version = str(claim.get("judge_version") or "unknown")
     model = str(claim.get("judge_model") or "")
-    if judge_version.startswith("llm-rag-judge"):
+    if judge_version.startswith(("llm-rag-judge", "review-point-judge")):
         if "+fallback" in judge_version:
             return "SecondOpinion fallback assessment."
         return "SecondOpinion expert assessment."
@@ -640,6 +643,9 @@ def judge_label(claim: dict[str, Any]) -> str:
 
 
 def claim_assessment_text(claim: dict[str, Any]) -> str:
+    explicit_take = _display_text(claim.get("second_opinion_take"))
+    if explicit_take:
+        return explicit_take
     rationale = str(claim.get("judge_rationale") or "").strip()
     judge_version = str(claim.get("judge_version") or "")
     evidence = claim.get("evidence") or []
@@ -676,7 +682,7 @@ def claim_assessment_text(claim: dict[str, Any]) -> str:
         if quote:
             take += f" Relevant manuscript text: \"{quote}\""
 
-    if judge_version.startswith("llm-rag-judge") and rationale and "fallback" not in judge_version:
+    if judge_version.startswith(("llm-rag-judge", "review-point-judge")) and rationale and "fallback" not in judge_version:
         take += f" Rationale: {rationale}"
     return take
 
