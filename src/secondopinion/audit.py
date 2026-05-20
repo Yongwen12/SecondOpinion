@@ -600,12 +600,12 @@ def summarize_review_audit(rqs: int, flags: list[str], claims: list[ClaimAudit])
     if rqs >= 75 and not flags:
         return "The review appears specific, professional, and broadly supported by available evidence."
     if "possibly-contradicted-by-paper" in flags:
-        return "At least one criticism may be contradicted by available paper evidence; human verification is recommended."
+        return "At least one critique appears weakened by evidence already present in the manuscript."
     if "unsupported-major-claim" in flags:
         return "Some major criticisms currently lack supporting evidence in the available materials."
     if "unprofessional-tone" in flags:
         return "The review contains language that may fall below a professional tone standard."
-    return "The review is partially auditable, with mixed evidence and room for calibration."
+    return "The review has mixed evidence support and may benefit from sharper, more actionable reasoning."
 
 
 def _append_flag(flags: list[str], flag: str) -> None:

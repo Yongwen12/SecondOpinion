@@ -19,11 +19,11 @@ class ReportTests(unittest.TestCase):
     def test_report_labels_are_human_readable(self):
         self.assertEqual(
             claim_source_label({"source_field": "weaknesses", "source_sentence_index": 3}),
-            "reviewer weaknesses, sentence 4",
+            "Weaknesses section, sentence 4",
         )
         self.assertIn("unclear", claim_type_label("clarity"))
-        self.assertIn("support", verdict_label("supported").lower())
-        self.assertIn("clear next step", flag_label("missing-actionable-suggestions"))
+        self.assertIn("grounded", verdict_label("supported").lower())
+        self.assertIn("limited guidance", flag_label("missing-actionable-suggestions"))
         self.assertEqual(
             review_rating_label({"rating_raw": "3: reject", "rating_normalized": 3.0}),
             "3: reject (normalized: 3.0)",
@@ -54,10 +54,10 @@ class ReportTests(unittest.TestCase):
                 "score": 0.5,
             }
         )
-        self.assertEqual(pdf_label, "PDF evidence - Section 2.2 MODELS p.4 score=0.89")
-        self.assertEqual(rebuttal_label, "Author response / rebuttal - author_response_1 score=0.50")
+        self.assertEqual(pdf_label, "Manuscript section 2.2 MODELS p.4")
+        self.assertEqual(rebuttal_label, "Author response")
 
-    def test_rule_assessment_says_it_is_not_llm_judge(self):
+    def test_rule_assessment_is_user_facing(self):
         assessment = claim_assessment_text(
             {
                 "verdict": "supported",
@@ -72,7 +72,7 @@ class ReportTests(unittest.TestCase):
                 ],
             }
         )
-        self.assertIn("not an LLM judge evaluation", assessment)
+        self.assertIn("SecondOpinion screened", assessment)
         self.assertIn("Paper abstract", assessment)
 
     def test_llm_assessment_surfaces_rationale(self):
@@ -85,7 +85,7 @@ class ReportTests(unittest.TestCase):
                 "evidence": [],
             }
         )
-        self.assertIn("LLM rationale", assessment)
+        self.assertIn("Rationale", assessment)
         self.assertIn("requested setup details", assessment)
 
     def test_html_report_strips_pdf_control_characters(self):
@@ -139,6 +139,10 @@ class ReportTests(unittest.TestCase):
         self.assertIn(b"bad pdf text", data)
         self.assertIn(b"Reviewer rating", data)
         self.assertIn(b"Final decision", data)
+        self.assertIn(b"SecondOpinion assessment", data)
+        self.assertNotIn(b"Reviewer source", data)
+        self.assertNotIn(b"System verdict", data)
+        self.assertNotIn(b"LLM judge", data)
 
 
 if __name__ == "__main__":

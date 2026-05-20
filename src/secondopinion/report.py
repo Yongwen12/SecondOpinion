@@ -8,45 +8,45 @@ from typing import Any
 
 
 CLAIM_TYPE_LABELS = {
-    "ablation": "Ablation concern: the reviewer says an experiment or component analysis is missing.",
-    "baseline": "Baseline concern: the reviewer says comparisons to prior methods are missing or weak.",
-    "experiment": "Experiment concern: the reviewer questions the evaluation setup, data, or metrics.",
-    "methodology": "Methodology concern: the reviewer questions the method design or technical description.",
-    "theory": "Theory concern: the reviewer questions assumptions, proofs, or formal claims.",
-    "novelty": "Novelty concern: the reviewer questions whether the contribution is new.",
-    "clarity": "Clarity concern: the reviewer says the paper is unclear, underspecified, or hard to follow.",
-    "writing": "Writing concern: the reviewer comments on presentation, grammar, or readability.",
-    "ethics": "Ethics concern: the reviewer raises ethics, privacy, safety, or broader impact issues.",
-    "tone": "Tone concern: the extracted claim is about reviewer language or professionalism.",
-    "general": "General concern: the claim does not fit a more specific category.",
+    "ablation": "Ablation: critique about missing or weak component analysis.",
+    "baseline": "Baselines: critique about comparisons to prior methods.",
+    "experiment": "Experiments: critique about evaluation setup, data, or metrics.",
+    "methodology": "Methodology: critique about method design or technical description.",
+    "theory": "Theory: critique about assumptions, proofs, or formal claims.",
+    "novelty": "Novelty: critique about whether the contribution is new.",
+    "clarity": "Clarity: critique about unclear, underspecified, or hard-to-follow writing.",
+    "writing": "Writing: comment about presentation, grammar, or readability.",
+    "ethics": "Ethics: concern about privacy, safety, fairness, or broader impact.",
+    "tone": "Tone: comment about the professionalism of the review language.",
+    "general": "General: broader review point.",
 }
 
 VERDICT_LABELS = {
-    "supported": "Evidence appears to support the reviewer's criticism.",
-    "partially_supported": "Evidence partially supports the criticism, but the match is incomplete.",
-    "insufficient": "Retrieved evidence is not enough to verify the criticism.",
-    "possibly_contradicted": "Retrieved paper evidence may contradict or weaken the criticism.",
-    "vague_or_not_checkable": "The criticism is too broad or vague to check against the retrieved evidence.",
-    "needs_human_check": "This claim needs human or domain-expert judgment.",
+    "supported": "The critique appears well grounded in the manuscript.",
+    "partially_supported": "The critique is partly grounded, but the evidence is incomplete.",
+    "insufficient": "The available manuscript evidence is not enough to support the critique.",
+    "possibly_contradicted": "The manuscript appears to answer or weaken this critique.",
+    "vague_or_not_checkable": "The critique is too broad to evaluate precisely from the manuscript.",
+    "needs_human_check": "This point depends on specialist context beyond the retrieved passage.",
 }
 
 FLAG_LABELS = {
-    "possibly-contradicted-by-paper": "The paper may contain evidence that weakens this reviewer criticism.",
-    "unsupported-major-claim": "A major criticism did not retrieve enough supporting evidence.",
-    "vague-or-not-checkable": "The criticism is too broad or underspecified for automatic checking.",
+    "possibly-contradicted-by-paper": "Manuscript may already address this critique.",
+    "unsupported-major-claim": "Major critique has weak manuscript support.",
+    "vague-or-not-checkable": "Critique is too broad to evaluate precisely.",
     "vague-criticism": "The criticism lacks concrete detail.",
     "unprofessional-tone": "The reviewer wording may fall below professional tone standards.",
-    "missing-actionable-suggestions": "The criticism does not give the authors a clear next step.",
-    "requires-human-expert-check": "This point needs human or domain-expert review.",
-    "llm-judge-failed": "The LLM judge failed, so the system used the fallback verdict.",
+    "missing-actionable-suggestions": "Critique gives limited guidance for improvement.",
+    "requires-human-expert-check": "Specialist context is needed.",
+    "llm-judge-failed": "Automated assessment used a fallback method.",
 }
 
 SOURCE_FIELD_LABELS = {
-    "summary": "reviewer summary",
-    "strengths": "reviewer strengths",
-    "weaknesses": "reviewer weaknesses",
-    "questions": "reviewer questions",
-    "review_text": "review body",
+    "summary": "Summary section",
+    "strengths": "Strengths section",
+    "weaknesses": "Weaknesses section",
+    "questions": "Questions section",
+    "review_text": "Main review text",
 }
 
 
@@ -71,28 +71,22 @@ def write_markdown_report(audit_result: dict[str, Any], path: str | Path) -> Non
     path.parent.mkdir(parents=True, exist_ok=True)
     summary = summarize(audit_result)
     lines = [
-        "# SecondOpinion MVP Audit Report",
+        "# SecondOpinion Review Quality Report",
         "",
         f"- Dataset: `{audit_result.get('dataset', 'unknown')}`",
         f"- Papers: {audit_result.get('paper_count', 0)}",
         f"- Reviews audited: {summary['audit_count']}",
-        f"- Average RQS: {summary['average_rqs']}",
-        f"- RQS range: {summary['min_rqs']} - {summary['max_rqs']}",
-        f"- Auditor: `{audit_result.get('model_version')}`",
-        f"- Claim extraction: `{audit_result.get('claim_extraction_version', 'unknown')}`",
-        f"- Claim model: `{audit_result.get('claim_model', 'unknown')}`",
-        f"- Judge: `{audit_result.get('judge_version', 'unknown')}`",
-        f"- Judge model: `{audit_result.get('judge_model', 'rule-baseline') or 'rule-baseline'}`",
-        f"- Evidence retrieval: `{audit_result.get('retrieval_version', 'unknown')}`",
+        f"- Average Review Quality Score: {summary['average_rqs']}",
+        f"- Review Quality Score range: {summary['min_rqs']} - {summary['max_rqs']}",
         "",
-        "## Issue Flags",
+        "## Potential Review Issues",
         "",
     ]
     if summary["flags"]:
         for flag, count in summary["flags"].items():
-            lines.append(f"- `{flag}`: {count}")
+            lines.append(f"- {flag_label(flag)}: {count}")
     else:
-        lines.append("- No issue flags.")
+        lines.append("- No recurring issues detected.")
 
     lines.extend(["", "## Review Audits", ""])
     for audit in audit_result.get("audits", []):
@@ -105,19 +99,19 @@ def write_markdown_report(audit_result: dict[str, Any], path: str | Path) -> Non
                 f"- Reviewer rating: {review_rating_label(audit)}",
                 f"- Reviewer confidence: {reviewer_confidence_label(audit)}",
                 f"- Final decision: {audit.get('decision') or 'Unknown'}",
-                f"- RQS: **{audit.get('rqs_score')}**",
-                f"- Confidence: `{audit.get('audit_confidence')}`",
-                f"- Flags: {flags}",
+                f"- Review Quality Score: **{audit.get('rqs_score')}**",
+                f"- Assessment confidence: `{audit.get('audit_confidence')}`",
+                f"- Notes: {flags}",
                 f"- Summary: {audit.get('summary')}",
                 "",
-                "| Claim | Reviewer source | Category | System assessment | Top evidence | Flags |",
+                "| Review point | Review section | Point type | SecondOpinion assessment | Most relevant passage | Notes |",
                 "| --- | --- | --- | --- | --- | --- |",
             ]
         )
         for claim in audit.get("claims", []):
             evidence = claim.get("evidence", [])
             top_evidence = evidence_label(evidence[0]) if evidence else "none"
-            claim_flags = "; ".join(flag_label(flag) for flag in claim.get("issue_flags", [])) or "none"
+            claim_flags = "; ".join(flag_label(flag) for flag in claim.get("issue_flags", [])) or "None"
             lines.append(
                 "| "
                 + " | ".join(
@@ -141,9 +135,9 @@ def write_html_report(audit_result: dict[str, Any], path: str | Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     summary = summarize(audit_result)
     flag_items = "".join(
-        f"<li><code>{_h(flag)}</code><span>{count}</span></li>"
+        f"<li><span>{_h(flag_label(flag))}</span><b>{count}</b></li>"
         for flag, count in summary["flags"].items()
-    ) or "<li>No issue flags<span>0</span></li>"
+    ) or "<li>No recurring issues detected.<b>0</b></li>"
     cards = []
     for audit in audit_result.get("audits", []):
         claims = []
@@ -154,7 +148,7 @@ def write_html_report(audit_result: dict[str, Any], path: str | Path) -> None:
             evidence_html = (
                 f"""
                 <section class="evidence-block">
-                  <h3>Top retrieved evidence</h3>
+                  <h3>Most relevant manuscript passage</h3>
                   <blockquote>
                     <b>{_h(top_label)}</b>
                     <span>{_h(evidence_verdict_label(top.get('verdict', '')))}</span>
@@ -165,8 +159,8 @@ def write_html_report(audit_result: dict[str, Any], path: str | Path) -> None:
                 if top
                 else """
                 <section class="evidence-block">
-                  <h3>Top retrieved evidence</h3>
-                  <blockquote>No evidence retrieved.</blockquote>
+                  <h3>Most relevant manuscript passage</h3>
+                  <blockquote>No clearly relevant manuscript passage was found.</blockquote>
                 </section>
                 """
             )
@@ -175,7 +169,7 @@ def write_html_report(audit_result: dict[str, Any], path: str | Path) -> None:
                 for flag in claim.get("issue_flags", [])
             )
             if not flags:
-                flags = "<span>No issue flags for this claim.</span>"
+                flags = "<span>No additional notes.</span>"
             assessment = claim_assessment_text(claim)
             claims.append(
                 f"""
@@ -183,29 +177,25 @@ def write_html_report(audit_result: dict[str, Any], path: str | Path) -> None:
                   <summary>{_h(claim.get('claim_text', ''))}</summary>
                   <div class="claim-facts">
                     <div>
-                      <span>Reviewer source</span>
-                      <p>{_h(claim_source_label(claim))}</p>
-                    </div>
-                    <div>
-                      <span>Claim category</span>
+                      <span>Type of review point</span>
                       <p>{_h(claim_type_label(claim.get('claim_type', '')))}</p>
                     </div>
                     <div>
-                      <span>System verdict</span>
+                      <span>SecondOpinion take</span>
                       <p>{_h(verdict_label(claim.get('verdict', '')))}</p>
                     </div>
                     <div>
-                      <span>Judge</span>
+                      <span>Assessment source</span>
                       <p>{_h(judge_label(claim))}</p>
                     </div>
                   </div>
                   <section class="source-block">
-                    <h3>Reviewer text used for this claim</h3>
+                    <h3>Original reviewer text</h3>
                     <p>{_h(claim.get('source_sentence', '') or 'No source sentence recorded.')}</p>
                   </section>
                   {evidence_html}
                   <section class="assessment">
-                    <h3>System assessment</h3>
+                    <h3>SecondOpinion assessment</h3>
                     <p>{_h(assessment)}</p>
                   </section>
                   <div class="flags">{flags}</div>
@@ -255,7 +245,7 @@ def write_html_report(audit_result: dict[str, Any], path: str | Path) -> None:
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>SecondOpinion MVP Audit Report</title>
+      <title>SecondOpinion Review Quality Report</title>
       <style>
         :root {{
           color-scheme: light;
@@ -305,7 +295,8 @@ def write_html_report(audit_result: dict[str, Any], path: str | Path) -> None:
           margin-bottom: 20px;
         }}
         .flag-list ul {{ list-style: none; padding: 0; margin: 8px 0 0; }}
-        .flag-list li {{ display: flex; justify-content: space-between; border-top: 1px solid var(--line); padding: 8px 0; }}
+        .flag-list li {{ display: flex; justify-content: space-between; gap: 16px; border-top: 1px solid var(--line); padding: 8px 0; }}
+        .flag-list b {{ font-size: 16px; }}
         .audit-card {{ padding: 18px; margin-bottom: 16px; }}
         .card-top {{ display: flex; justify-content: space-between; gap: 18px; align-items: flex-start; }}
         .score {{
@@ -409,18 +400,18 @@ def write_html_report(audit_result: dict[str, Any], path: str | Path) -> None:
     </head>
     <body>
       <header>
-        <h1>SecondOpinion MVP Audit Report</h1>
-        <p>Dataset <code>{_h(audit_result.get('dataset', 'unknown'))}</code> audited with <code>{_h(audit_result.get('model_version', ''))}</code>, <code>{_h(audit_result.get('claim_extraction_version', ''))}</code>, <code>{_h(audit_result.get('claim_model', ''))}</code>, <code>{_h(audit_result.get('judge_version', ''))}</code>, <code>{_h(audit_result.get('judge_model', '') or 'rule-baseline')}</code>, and <code>{_h(audit_result.get('retrieval_version', ''))}</code>.</p>
+        <h1>SecondOpinion Review Quality Report</h1>
+        <p>Evidence-grounded assessment of reviewer comments, manuscript support, specificity, tone, and usefulness for authors.</p>
       </header>
       <main>
         <section class="summary">
-          <div class="metric"><b>{summary['audit_count']}</b><span>Reviews audited</span></div>
-          <div class="metric"><b>{summary['average_rqs']}</b><span>Average RQS</span></div>
-          <div class="metric"><b>{summary['min_rqs']}-{summary['max_rqs']}</b><span>RQS range</span></div>
+          <div class="metric"><b>{summary['audit_count']}</b><span>Reviews assessed</span></div>
+          <div class="metric"><b>{summary['average_rqs']}</b><span>Average Review Quality Score</span></div>
+          <div class="metric"><b>{summary['min_rqs']}-{summary['max_rqs']}</b><span>Review Quality Score range</span></div>
           <div class="metric"><b>{audit_result.get('paper_count', 0)}</b><span>Papers</span></div>
         </section>
         <section class="flag-list">
-          <h2>Issue Flags</h2>
+          <h2>Potential Review Issues</h2>
           <ul>{flag_items}</ul>
         </section>
         {''.join(cards)}
@@ -452,17 +443,15 @@ def evidence_label(evidence: dict[str, Any]) -> str:
     source_type = str(evidence.get("source_type") or "paper")
     section = str(evidence.get("section") or "unknown")
     if source_type == "rebuttal":
-        label = f"Author response / rebuttal - {section}"
+        label = "Author response"
     elif section == "title":
         label = "Paper title"
     elif section == "abstract":
         label = "Paper abstract"
     else:
-        label = f"PDF evidence - Section {section}"
+        label = f"Manuscript section {section}"
     if evidence.get("page"):
         label = f"{label} p.{evidence['page']}"
-    if evidence.get("score") is not None:
-        label = f"{label} score={float(evidence['score']):.2f}"
     return label
 
 
@@ -488,11 +477,11 @@ def verdict_label(verdict: str) -> str:
 
 def evidence_verdict_label(verdict: str) -> str:
     labels = {
-        "supporting_candidate": "This retrieved passage is a candidate supporting match.",
-        "partial_candidate": "This retrieved passage is a partial match.",
-        "possibly_contradicting_candidate": "This retrieved passage may contradict the review claim.",
+        "supporting_candidate": "This passage is relevant to the review point.",
+        "partial_candidate": "This passage is related, but does not fully settle the point.",
+        "possibly_contradicting_candidate": "This passage may weaken the review point.",
     }
-    return labels.get(str(verdict), f"Evidence match label: {verdict}")
+    return labels.get(str(verdict), "This passage is included as supporting context.")
 
 
 def flag_label(flag: str) -> str:
@@ -527,13 +516,12 @@ def judge_label(claim: dict[str, Any]) -> str:
     judge_version = str(claim.get("judge_version") or "unknown")
     model = str(claim.get("judge_model") or "")
     if judge_version.startswith("llm-rag-judge"):
-        suffix = f" using {model}" if model else ""
         if "+fallback" in judge_version:
-            return f"LLM judge attempted{suffix}; fallback verdict used."
-        return f"LLM judge{suffix}."
+            return "SecondOpinion fallback assessment."
+        return "SecondOpinion expert assessment."
     if judge_version.startswith("rule-baseline"):
-        return "Rule-based evidence matcher; no LLM judge was run for this claim."
-    return judge_version
+        return "SecondOpinion evidence screen."
+    return "SecondOpinion assessment."
 
 
 def claim_assessment_text(claim: dict[str, Any]) -> str:
@@ -545,10 +533,10 @@ def claim_assessment_text(claim: dict[str, Any]) -> str:
     top = evidence[0] if evidence else None
 
     if judge_version.startswith("llm-rag-judge") and rationale and "fallback" not in judge_version:
-        return f"{verdict} Confidence: {confidence}. LLM rationale: {rationale}"
+        return f"{verdict} Confidence: {confidence}. Rationale: {rationale}"
 
     if "fallback" in judge_version:
-        fallback = rationale or "The LLM judge failed, so the fallback verdict was used."
+        fallback = rationale or "This assessment uses the available manuscript evidence."
         return f"{verdict} Confidence: {confidence}. {fallback}"
 
     if top:
@@ -557,6 +545,6 @@ def claim_assessment_text(claim: dict[str, Any]) -> str:
         evidence_part = "No evidence passage was retrieved."
     return (
         f"{verdict} Confidence: {confidence}. "
-        "This is a rule-based evidence-matching assessment, not an LLM judge evaluation. "
+        "SecondOpinion screened the reviewer point against the most relevant manuscript passage. "
         f"{evidence_part}"
     )
