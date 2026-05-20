@@ -102,6 +102,9 @@ def write_markdown_report(audit_result: dict[str, Any], path: str | Path) -> Non
                 f"### Review `{audit.get('review_id')}`",
                 "",
                 f"- Paper: `{audit.get('paper_id')}`",
+                f"- Reviewer rating: {review_rating_label(audit)}",
+                f"- Reviewer confidence: {reviewer_confidence_label(audit)}",
+                f"- Final decision: {audit.get('decision') or 'Unknown'}",
                 f"- RQS: **{audit.get('rqs_score')}**",
                 f"- Confidence: `{audit.get('audit_confidence')}`",
                 f"- Flags: {flags}",
@@ -227,6 +230,20 @@ def write_html_report(audit_result: dict[str, Any], path: str | Path) -> None:
                 <code>{_h(audit.get('paper_id', ''))}</code>
                 <code>{_h(audit.get('audit_confidence', ''))}</code>
               </div>
+              <div class="review-context">
+                <div>
+                  <span>Reviewer rating</span>
+                  <p>{_h(review_rating_label(audit))}</p>
+                </div>
+                <div>
+                  <span>Reviewer confidence</span>
+                  <p>{_h(reviewer_confidence_label(audit))}</p>
+                </div>
+                <div>
+                  <span>Final decision</span>
+                  <p>{_h(audit.get('decision') or 'Unknown')}</p>
+                </div>
+              </div>
               <div class="flags">{flags}</div>
               <div class="claims">{''.join(claims)}</div>
             </article>
@@ -314,6 +331,32 @@ def write_html_report(audit_result: dict[str, Any], path: str | Path) -> None:
         .flags span {{ color: var(--warn); background: #fff7ed; border-color: #fed7aa; }}
         details {{ border-top: 1px solid var(--line); padding: 12px 0; }}
         summary {{ cursor: pointer; font-weight: 600; line-height: 1.4; }}
+        .review-context {{
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+          gap: 10px;
+          margin: 12px 0;
+        }}
+        .review-context div {{
+          border: 1px solid var(--line);
+          border-radius: 8px;
+          background: #f8fafb;
+          padding: 10px 12px;
+        }}
+        .review-context span {{
+          display: block;
+          margin: 0 0 6px;
+          color: var(--muted);
+          font-size: 12px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0;
+        }}
+        .review-context p {{
+          margin: 0;
+          color: var(--ink);
+          line-height: 1.45;
+        }}
         .claim-facts {{
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
@@ -454,6 +497,30 @@ def evidence_verdict_label(verdict: str) -> str:
 
 def flag_label(flag: str) -> str:
     return FLAG_LABELS.get(str(flag), str(flag).replace("-", " "))
+
+
+def review_rating_label(audit: dict[str, Any]) -> str:
+    raw = _display_text(audit.get("rating_raw"))
+    normalized = audit.get("rating_normalized")
+    if raw and normalized is not None:
+        return f"{raw} (normalized: {normalized})"
+    if raw:
+        return raw
+    if normalized is not None:
+        return f"Normalized rating: {normalized}"
+    return "Not available"
+
+
+def reviewer_confidence_label(audit: dict[str, Any]) -> str:
+    raw = _display_text(audit.get("reviewer_confidence_raw"))
+    normalized = audit.get("reviewer_confidence_normalized")
+    if raw and normalized is not None:
+        return f"{raw} (normalized: {normalized})"
+    if raw:
+        return raw
+    if normalized is not None:
+        return f"Normalized confidence: {normalized}"
+    return "Not available"
 
 
 def judge_label(claim: dict[str, Any]) -> str:

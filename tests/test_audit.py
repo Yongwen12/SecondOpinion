@@ -96,6 +96,10 @@ class AuditTests(unittest.TestCase):
         self.assertIn("possibly-contradicted-by-paper", first["issue_flags"])
         self.assertEqual(first["claims"][0]["verdict"], "possibly_contradicted")
         self.assertEqual(first["claims"][0]["source_field"], "weaknesses")
+        self.assertEqual(first["decision"], "Reject")
+        self.assertEqual(first["rating_raw"], "3: reject")
+        self.assertEqual(first["rating_normalized"], 3.0)
+        self.assertEqual(first["reviewer_confidence_raw"], "4: confident")
         self.assertGreater(first["audit_count"] if "audit_count" in first else result["audit_count"], 0)
 
     def test_llm_judge_can_override_rule_verdict(self):

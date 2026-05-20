@@ -8,6 +8,8 @@ from secondopinion.report import (
     claim_type_label,
     evidence_label,
     flag_label,
+    review_rating_label,
+    reviewer_confidence_label,
     verdict_label,
     write_html_report,
 )
@@ -22,6 +24,19 @@ class ReportTests(unittest.TestCase):
         self.assertIn("unclear", claim_type_label("clarity"))
         self.assertIn("support", verdict_label("supported").lower())
         self.assertIn("clear next step", flag_label("missing-actionable-suggestions"))
+        self.assertEqual(
+            review_rating_label({"rating_raw": "3: reject", "rating_normalized": 3.0}),
+            "3: reject (normalized: 3.0)",
+        )
+        self.assertEqual(
+            reviewer_confidence_label(
+                {
+                    "reviewer_confidence_raw": "4: confident",
+                    "reviewer_confidence_normalized": 8.0,
+                }
+            ),
+            "4: confident (normalized: 8.0)",
+        )
 
     def test_evidence_label_distinguishes_pdf_and_rebuttal_sources(self):
         pdf_label = evidence_label(
@@ -84,6 +99,11 @@ class ReportTests(unittest.TestCase):
                     "summary": "ok",
                     "rqs_score": 80,
                     "audit_confidence": "high",
+                    "rating_raw": "3: reject",
+                    "rating_normalized": 3.0,
+                    "reviewer_confidence_raw": "4: confident",
+                    "reviewer_confidence_normalized": 8.0,
+                    "decision": "Reject",
                     "issue_flags": [],
                     "claims": [
                         {
@@ -117,6 +137,8 @@ class ReportTests(unittest.TestCase):
             data = path.read_bytes()
         self.assertNotIn(b"\x00", data)
         self.assertIn(b"bad pdf text", data)
+        self.assertIn(b"Reviewer rating", data)
+        self.assertIn(b"Final decision", data)
 
 
 if __name__ == "__main__":

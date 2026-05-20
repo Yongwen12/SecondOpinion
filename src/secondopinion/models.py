@@ -62,6 +62,12 @@ class ReviewAudit:
     audit_id: str
     review_id: str
     paper_id: str
+    paper_title: str
+    decision: str
+    rating_raw: str
+    rating_normalized: float | None
+    reviewer_confidence_raw: str
+    reviewer_confidence_normalized: float | None
     model_version: str
     rubric_version: str
     claim_extraction_version: str
