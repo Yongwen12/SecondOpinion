@@ -160,7 +160,7 @@ PYTHONPATH=src python3 -m secondopinion audit \
 PYTHONPATH=src python3 -m secondopinion audit --input data/derived/iclr_2024_with_evidence.json
 ```
 
-`--llm-judge` 使用 `review-point-judge-v0.2`：LLM 不重新决定论文是否该 accept，而是判断单条 reviewer point 是否被 manuscript / author response 支持。每条 point 会记录 `review_point_type`、`stance`、`support_score`、`second_opinion_take`、`quoted_manuscript_evidence`、`reasoning_summary`、`professionalism_score`、`specificity_score`、`helpfulness_score` 和 `fairness_score`；如果调用失败，系统会保留 rule baseline verdict，并给 claim 加上 `llm-judge-failed` flag。
+`--llm-judge` 使用 `review-point-judge-v0.2`：LLM 不重新决定论文是否该 accept，而是判断单条 reviewer point 是否被 manuscript / author response 支持。每条 point 会记录 `review_point_type`、`stance`、`support_score`、`answer_coverage_score`、`question_value_score`、`second_opinion_take`、`quoted_manuscript_evidence`、`reasoning_summary`、`professionalism_score`、`specificity_score`、`helpfulness_score` 和 `fairness_score`；如果调用失败，系统会保留 rule baseline verdict，并给 claim 加上 `llm-judge-failed` flag。
 
 ## 标注与校准
 

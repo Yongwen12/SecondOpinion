@@ -48,6 +48,8 @@ class ClaimAudit:
     review_point_type: str = ""
     stance: str = ""
     support_score: int | None = None
+    answer_coverage_score: int | None = None
+    question_value_score: int | None = None
     second_opinion_take: str = ""
     quoted_manuscript_evidence: str = ""
     reasoning_summary: str = ""

@@ -57,6 +57,8 @@ class SampleJudgeClient:
             "review_point_type": "comment",
             "stance": "well_supported",
             "support_score": 92,
+            "answer_coverage_score": 0,
+            "question_value_score": 0,
             "verdict": "supported",
             "confidence": "high",
             "evidence_support": 3,
@@ -134,6 +136,8 @@ class AuditTests(unittest.TestCase):
         self.assertEqual(first_claim["review_point_type"], "comment")
         self.assertEqual(first_claim["stance"], "well_supported")
         self.assertEqual(first_claim["support_score"], 92)
+        self.assertEqual(first_claim["answer_coverage_score"], 0)
+        self.assertEqual(first_claim["question_value_score"], 0)
         self.assertIn("SecondOpinion finds", first_claim["second_opinion_take"])
         self.assertIn("retrieved evidence supports", first_claim["judge_rationale"])
         self.assertNotIn("possibly-contradicted-by-paper", first_claim["issue_flags"])
