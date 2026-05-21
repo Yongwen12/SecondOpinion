@@ -12,6 +12,7 @@ from .claim_extraction import (
     StructuredLLMClient,
     extract_claims,
 )
+from .model_config import DEFAULT_CHEAP_MODEL
 from .models import ClaimAudit, Evidence, ReviewAudit
 from .retrieval import RETRIEVAL_VERSION, retrieve_evidence
 from .text import clean_text, tokens
@@ -19,7 +20,7 @@ from .text import clean_text, tokens
 
 RULE_MODEL_VERSION = "rule-baseline-v0.1"
 LLM_JUDGE_VERSION = "review-point-judge-v0.2"
-DEFAULT_JUDGE_MODEL = "gpt-4o-mini"
+DEFAULT_JUDGE_MODEL = DEFAULT_CHEAP_MODEL
 RUBRIC_VERSION = "iclr-review-audit-rubric-v0.1"
 
 CLAIM_VERDICTS = (
@@ -32,14 +33,21 @@ CLAIM_VERDICTS = (
 )
 CONFIDENCE_VALUES = ("high", "medium", "low")
 REVIEW_POINT_TYPES = ("comment", "question", "suggestion", "score_justification", "summary", "other")
-JUDGE_STANCES = (
-    "well_supported",
-    "partially_supported",
-    "weakly_supported",
-    "answered_or_contradicted",
-    "not_enough_context",
-    "too_broad_or_unclear",
+SECONDOPINION_STANCES = (
+    "strongly_disagree",
+    "disagree",
+    "mixed",
+    "agree",
+    "strongly_agree",
 )
+LEGACY_STANCE_MAP = {
+    "well_supported": "agree",
+    "partially_supported": "mixed",
+    "weakly_supported": "disagree",
+    "answered_or_contradicted": "strongly_disagree",
+    "not_enough_context": "mixed",
+    "too_broad_or_unclear": "mixed",
+}
 EVIDENCE_VERDICTS = (
     "supporting_candidate",
     "partial_candidate",
@@ -202,8 +210,8 @@ def audit_claim(
     judge_rationale = "Rule baseline verdict."
     judge_error = ""
     review_point_type = default_review_point_type(claim, claim_text)
-    stance = default_stance(verdict)
     support_score = default_support_score(verdict, evidence_score)
+    stance = default_stance(verdict, support_score)
     answer_coverage_score = default_answer_coverage_score(review_point_type, verdict, support_score)
     question_value_score = default_question_value_score(review_point_type, specificity, actionability)
     quoted_manuscript_evidence = best_evidence_quote(evidence)
@@ -399,6 +407,10 @@ def build_judge_messages(
                 "For suggestions, judge whether the suggestion is reasonable, actionable, and in scope. "
                 "For score_justification, judge whether the stated reasons support the reviewer's rating. "
                 "For comments, judge whether the critique is technically fair and manuscript-grounded. "
+                "Use stance as SecondOpinion's single attitude toward the reviewer point: "
+                "strongly_agree means the reviewer point is clearly valid and important; agree means mostly valid; "
+                "mixed means partly valid, unclear, or evidence-limited; disagree means overstated or weakly supported; "
+                "strongly_disagree means the manuscript evidence clearly answers or undermines the reviewer point. "
                 "Return a direct SecondOpinion take for the end user; do not mention internal tools, prompts, or fallback logic. "
                 "The take should be persuasive by juxtaposing the reviewer wording with manuscript evidence. "
                 "Write the take in this order: first name the reviewer point, then quote the manuscript evidence, then state the conclusion. "
@@ -413,6 +425,7 @@ def build_judge_messages(
                 "by the supplied manuscript evidence, and 100 means it is strongly supported. "
                 "For questions, support_score should summarize overall usefulness, while answer_coverage_score says how much the manuscript "
                 "already answers the question and question_value_score says how valuable the question is as a review point. "
+                "stance is the primary user-facing judgment and must use one of: strongly_disagree, disagree, mixed, agree, strongly_agree. "
                 "second_opinion_take should be one clear paragraph for a nontechnical user interface. "
                 "It must explicitly refer to the reviewer point and quote manuscript evidence before giving the conclusion. "
                 "quoted_manuscript_evidence should be a short exact quote or close excerpt from the retrieved evidence when available. "
@@ -429,7 +442,7 @@ def judge_claim_schema() -> dict[str, Any]:
         "additionalProperties": False,
         "properties": {
             "review_point_type": {"type": "string", "enum": list(REVIEW_POINT_TYPES)},
-            "stance": {"type": "string", "enum": list(JUDGE_STANCES)},
+            "stance": {"type": "string", "enum": list(SECONDOPINION_STANCES)},
             "support_score": {"type": "integer", "minimum": 0, "maximum": 100},
             "answer_coverage_score": {"type": "integer", "minimum": 0, "maximum": 100},
             "question_value_score": {"type": "integer", "minimum": 0, "maximum": 100},
@@ -491,9 +504,6 @@ def validate_judge_payload(payload: dict[str, Any], evidence: list[Evidence]) ->
     review_point_type = clean_text(payload.get("review_point_type"))
     if review_point_type not in REVIEW_POINT_TYPES:
         review_point_type = "comment"
-    stance = clean_text(payload.get("stance"))
-    if stance not in JUDGE_STANCES:
-        stance = default_stance(verdict)
     confidence = clean_text(payload.get("confidence"))
     if confidence not in CONFIDENCE_VALUES:
         confidence = "low"
@@ -511,6 +521,7 @@ def validate_judge_payload(payload: dict[str, Any], evidence: list[Evidence]) ->
         severity = default_severity(verdict)
     if support_score is None:
         support_score = default_support_score(verdict, evidence_support)
+    stance = normalize_stance(payload.get("stance"), verdict=verdict, support_score=support_score)
     if answer_coverage_score is None:
         answer_coverage_score = default_answer_coverage_score(review_point_type, verdict, support_score)
     if question_value_score is None:
@@ -617,18 +628,35 @@ def default_review_point_type(claim: dict[str, Any], claim_text: str) -> str:
     return "comment"
 
 
-def default_stance(verdict: str) -> str:
+def normalize_stance(value: Any, *, verdict: str, support_score: int | None = None) -> str:
+    stance = clean_text(value)
+    if stance in SECONDOPINION_STANCES:
+        return stance
+    if stance in LEGACY_STANCE_MAP:
+        return LEGACY_STANCE_MAP[stance]
+    return default_stance(verdict, support_score)
+
+
+def default_stance(verdict: str, support_score: int | None = None) -> str:
+    if isinstance(support_score, int):
+        if support_score >= 82:
+            return "strongly_agree"
+        if support_score >= 62:
+            return "agree"
+        if support_score >= 40:
+            return "mixed"
+        if support_score >= 20:
+            return "disagree"
+        return "strongly_disagree"
     if verdict == "supported":
-        return "well_supported"
+        return "agree"
     if verdict == "partially_supported":
-        return "partially_supported"
+        return "mixed"
     if verdict == "possibly_contradicted":
-        return "answered_or_contradicted"
-    if verdict == "insufficient":
-        return "not_enough_context"
-    if verdict == "vague_or_not_checkable":
-        return "too_broad_or_unclear"
-    return "not_enough_context"
+        return "strongly_disagree"
+    if verdict in {"insufficient", "vague_or_not_checkable", "needs_human_check"}:
+        return "mixed"
+    return "mixed"
 
 
 def default_support_score(verdict: str, evidence_support: int | None) -> int:

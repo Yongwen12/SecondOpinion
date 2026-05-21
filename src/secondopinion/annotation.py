@@ -7,11 +7,12 @@ import json
 from pathlib import Path
 from typing import Any
 
+from .model_config import DEFAULT_CHEAP_MODEL
 
 ANNOTATION_TASK_VERSION = "annotation-task-v0.1"
 ANNOTATION_LABEL_VERSION = "annotation-label-v0.1"
 ANNOTATION_LLM_PROMPT_VERSION = "annotation-llm-label-v0.1"
-DEFAULT_ANNOTATION_MODEL = "gpt-4o-mini"
+DEFAULT_ANNOTATION_MODEL = DEFAULT_CHEAP_MODEL
 
 TASK_TYPES = ("claim_quality", "evidence_relevance", "verdict_correctness", "review_audit_quality")
 EXTERNAL_EVIDENCE_SOURCE_TYPES = ("venue_guideline", "external_reference", "field_consensus")

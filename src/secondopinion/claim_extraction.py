@@ -4,11 +4,12 @@ import json
 import re
 from typing import Any, Protocol
 
+from .model_config import DEFAULT_CHEAP_MODEL
 from .text import clean_text
 
 
 CLAIM_EXTRACTION_VERSION = "claim-extraction-llm-v0.1"
-DEFAULT_CLAIM_MODEL = "gpt-4o-mini"
+DEFAULT_CLAIM_MODEL = DEFAULT_CHEAP_MODEL
 
 CLAIM_TYPE_VALUES = (
     "ablation",

@@ -55,7 +55,7 @@ class SampleJudgeClient:
         self.schema_name = schema_name
         return {
             "review_point_type": "comment",
-            "stance": "well_supported",
+            "stance": "strongly_agree",
             "support_score": 92,
             "answer_coverage_score": 0,
             "question_value_score": 0,
@@ -134,7 +134,7 @@ class AuditTests(unittest.TestCase):
         self.assertEqual(first_claim["audit_confidence"], "high")
         self.assertEqual(first_claim["judge_version"], "review-point-judge-v0.2")
         self.assertEqual(first_claim["review_point_type"], "comment")
-        self.assertEqual(first_claim["stance"], "well_supported")
+        self.assertEqual(first_claim["stance"], "strongly_agree")
         self.assertEqual(first_claim["support_score"], 92)
         self.assertEqual(first_claim["answer_coverage_score"], 0)
         self.assertEqual(first_claim["question_value_score"], 0)

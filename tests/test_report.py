@@ -10,6 +10,7 @@ from secondopinion.report import (
     flag_label,
     review_rating_label,
     reviewer_confidence_label,
+    stance_label,
     support_percent,
     verdict_label,
     write_html_report,
@@ -38,6 +39,8 @@ class ReportTests(unittest.TestCase):
             ),
             "4: confident (normalized: 8.0)",
         )
+        self.assertEqual(stance_label({"stance": "strongly_disagree"}), "Strongly disagree")
+        self.assertEqual(stance_label({"stance": "well_supported"}), "Agree")
 
     def test_evidence_label_distinguishes_pdf_and_rebuttal_sources(self):
         pdf_label = evidence_label(
@@ -146,7 +149,7 @@ class ReportTests(unittest.TestCase):
         self.assertIn(b"Reviewer rating", data)
         self.assertIn(b"Final decision", data)
         self.assertIn(b"SecondOpinion take", data)
-        self.assertIn(b"85%", data)
+        self.assertIn(b"Strongly agree", data)
         self.assertIn(b"Reference material", data)
         self.assertNotIn(b"Reviewer source", data)
         self.assertNotIn(b"System verdict", data)

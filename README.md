@@ -79,7 +79,7 @@ MVP 输出：
 
 当前 claim extraction 使用 `claim-extraction-llm-v0.1`：LLM 负责从 review 原文中抽取、拆分和分类 claim，系统只做 deterministic validation。每条 claim 必须带 `source_field` 和可回指到原文的 `source_sentence`；匹配不到原文的 claim 会被丢弃。
 
-当前 evidence retrieval 使用 `section-aware-bm25-v0.2`：它会综合 abstract、PDF evidence chunks、appendix 和 author response，按 claim 类型给 section 加权，并在报告中保留 page、section label 和 snippet。默认 verdict 仍使用 `rule-baseline-v0.1`，偏保守；打开 LLM judge 后会生成面向用户的 SecondOpinion take 和 0-100 support score。
+当前 evidence retrieval 使用 `section-aware-bm25-v0.2`：它会综合 abstract、PDF evidence chunks、appendix 和 author response，按 claim 类型给 section 加权，并在报告中保留 page、section label 和 snippet。默认 verdict 仍使用 `rule-baseline-v0.1`，偏保守；打开 LLM judge 后会生成面向用户的 SecondOpinion take，并用统一 stance 展示 SecondOpinion 对 reviewer point 的态度：`strongly_disagree` / `disagree` / `mixed` / `agree` / `strongly_agree`。
 
 运行 audit 前需要设置 OpenAI API key：
 
@@ -87,7 +87,7 @@ MVP 输出：
 export OPENAI_API_KEY="..."
 ```
 
-默认 claim model 是 `gpt-4o-mini`，也可以用 `SECONDOPINION_CLAIM_MODEL` 或 `--claim-model` 覆盖。review point judge 可以显式打开：默认 judge model 是 `gpt-4o-mini`，可用 `SECONDOPINION_JUDGE_MODEL` 或 `--judge-model` 覆盖。
+默认走 cheap-first 策略：claim extraction、review point judge 和 annotation LLM labeler 都使用 `gpt-5-nano`，并对 GPT-5 系列默认设置 `SECONDOPINION_REASONING_EFFORT=minimal`。也可以用 `SECONDOPINION_CLAIM_MODEL` / `--claim-model`、`SECONDOPINION_JUDGE_MODEL` / `--judge-model` 或 `SECONDOPINION_ANNOTATION_MODEL` 覆盖。
 
 先跑内置样例：
 
@@ -160,7 +160,7 @@ PYTHONPATH=src python3 -m secondopinion audit \
 PYTHONPATH=src python3 -m secondopinion audit --input data/derived/iclr_2024_with_evidence.json
 ```
 
-`--llm-judge` 使用 `review-point-judge-v0.2`：LLM 不重新决定论文是否该 accept，而是判断单条 reviewer point 是否被 manuscript / author response 支持。每条 point 会记录 `review_point_type`、`stance`、`support_score`、`answer_coverage_score`、`question_value_score`、`second_opinion_take`、`quoted_manuscript_evidence`、`reasoning_summary`、`professionalism_score`、`specificity_score`、`helpfulness_score` 和 `fairness_score`；如果调用失败，系统会保留 rule baseline verdict，并给 claim 加上 `llm-judge-failed` flag。
+`--llm-judge` 使用 `review-point-judge-v0.2`：LLM 不重新决定论文是否该 accept，而是判断单条 reviewer point 是否被 manuscript / author response 支持。每条 point 会记录 `review_point_type`、`stance`、`support_score`、`answer_coverage_score`、`question_value_score`、`second_opinion_take`、`quoted_manuscript_evidence`、`reasoning_summary`、`professionalism_score`、`specificity_score`、`helpfulness_score` 和 `fairness_score`。其中 `stance` 是主展示维度，表示 SecondOpinion 是否同意 reviewer point；其他分数保留给排序、调试和后续 calibration。如果调用失败，系统会保留 rule baseline verdict，并给 claim 加上 `llm-judge-failed` flag。
 
 ## 标注与校准
 

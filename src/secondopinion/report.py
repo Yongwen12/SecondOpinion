@@ -41,6 +41,23 @@ FLAG_LABELS = {
     "llm-judge-failed": "Automated assessment used a fallback method.",
 }
 
+STANCE_LABELS = {
+    "strongly_disagree": "Strongly disagree",
+    "disagree": "Disagree",
+    "mixed": "Mixed",
+    "agree": "Agree",
+    "strongly_agree": "Strongly agree",
+}
+
+LEGACY_STANCE_MAP = {
+    "well_supported": "agree",
+    "partially_supported": "mixed",
+    "weakly_supported": "disagree",
+    "answered_or_contradicted": "strongly_disagree",
+    "not_enough_context": "mixed",
+    "too_broad_or_unclear": "mixed",
+}
+
 SOURCE_FIELD_LABELS = {
     "summary": "Summary section",
     "strengths": "Strengths section",
@@ -104,7 +121,7 @@ def write_markdown_report(audit_result: dict[str, Any], path: str | Path) -> Non
                 f"- Notes: {flags}",
                 f"- Summary: {audit.get('summary')}",
                 "",
-                "| Review point | SecondOpinion take | Support | Most relevant passage | Notes |",
+                "| Review point | SecondOpinion stance | SecondOpinion take | Most relevant passage | Notes |",
                 "| --- | --- | --- | --- | --- |",
             ]
         )
@@ -117,8 +134,8 @@ def write_markdown_report(audit_result: dict[str, Any], path: str | Path) -> Non
                 + " | ".join(
                     [
                         _md_cell(claim.get("claim_text", "")),
+                        _md_cell(stance_label(claim)),
                         _md_cell(claim_assessment_text(claim)),
-                        _md_cell(f"{support_percent(claim)}%"),
                         _md_cell(top_evidence),
                         _md_cell(claim_flags),
                     ]
@@ -144,7 +161,6 @@ def write_html_report(audit_result: dict[str, Any], path: str | Path) -> None:
             evidence = claim.get("evidence") or []
             top = evidence[0] if evidence else None
             top_label = evidence_label(top) if top else ""
-            support = support_percent(claim)
             evidence_html = (
                 f"""
                 <section class="evidence-block compact">
@@ -170,6 +186,7 @@ def write_html_report(audit_result: dict[str, Any], path: str | Path) -> None:
             if not flags:
                 flags = "<span>No additional notes.</span>"
             assessment = claim_assessment_text(claim)
+            stance = stance_value(claim)
             claims.append(
                 f"""
                 <details>
@@ -180,9 +197,9 @@ def write_html_report(audit_result: dict[str, Any], path: str | Path) -> None:
                         <h3>SecondOpinion take</h3>
                         <p>{_h(assessment)}</p>
                       </div>
-                      <div class="support-meter {support_class(support)}">
-                        <b>{support}%</b>
-                        <span>support</span>
+                      <div class="stance-badge {stance_class(stance)}">
+                        <b>{_h(stance_label(claim))}</b>
+                        <span>SecondOpinion stance</span>
                       </div>
                     </div>
                     <div class="take-meta">
@@ -357,7 +374,7 @@ def write_html_report(audit_result: dict[str, Any], path: str | Path) -> None:
         }}
         .take-top {{
           display: grid;
-          grid-template-columns: minmax(0, 1fr) 104px;
+          grid-template-columns: minmax(0, 1fr) 150px;
           gap: 14px;
           align-items: start;
         }}
@@ -374,21 +391,23 @@ def write_html_report(audit_result: dict[str, Any], path: str | Path) -> None:
           font-size: 17px;
           line-height: 1.55;
         }}
-        .support-meter {{
+        .stance-badge {{
           border-radius: 8px;
           color: #fff;
           padding: 10px;
           text-align: center;
         }}
-        .support-high {{ background: #0f766e; }}
-        .support-mid {{ background: #b45309; }}
-        .support-low {{ background: #b91c1c; }}
-        .support-meter b {{
+        .stance-strongly-agree {{ background: #047857; }}
+        .stance-agree {{ background: #0f766e; }}
+        .stance-mixed {{ background: #b45309; }}
+        .stance-disagree {{ background: #b91c1c; }}
+        .stance-strongly-disagree {{ background: #7f1d1d; }}
+        .stance-badge b {{
           display: block;
-          font-size: 26px;
-          line-height: 1;
+          font-size: 18px;
+          line-height: 1.15;
         }}
-        .support-meter span {{
+        .stance-badge span {{
           display: block;
           margin-top: 4px;
           font-size: 12px;
@@ -604,6 +623,34 @@ def support_class(score: int) -> str:
     if score >= 45:
         return "support-mid"
     return "support-low"
+
+
+def stance_value(claim: dict[str, Any]) -> str:
+    stance = str(claim.get("stance") or "").strip()
+    if stance in STANCE_LABELS:
+        return stance
+    if stance in LEGACY_STANCE_MAP:
+        return LEGACY_STANCE_MAP[stance]
+    score = support_percent(claim)
+    if score >= 82:
+        return "strongly_agree"
+    if score >= 62:
+        return "agree"
+    if score >= 40:
+        return "mixed"
+    if score >= 20:
+        return "disagree"
+    return "strongly_disagree"
+
+
+def stance_label(claim: dict[str, Any]) -> str:
+    return STANCE_LABELS[stance_value(claim)]
+
+
+def stance_class(stance: str) -> str:
+    if stance not in STANCE_LABELS:
+        stance = "mixed"
+    return f"stance-{stance.replace('_', '-')}"
 
 
 def review_rating_label(audit: dict[str, Any]) -> str:

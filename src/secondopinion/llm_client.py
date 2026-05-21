@@ -7,6 +7,8 @@ import urllib.request
 from pathlib import Path
 from typing import Any
 
+from .model_config import apply_chat_completion_cost_controls
+
 
 class LLMClientError(RuntimeError):
     pass
@@ -49,7 +51,6 @@ class OpenAIChatClient:
         body = {
             "model": model,
             "messages": messages,
-            "temperature": 0,
             "response_format": {
                 "type": "json_schema",
                 "json_schema": {
@@ -59,6 +60,7 @@ class OpenAIChatClient:
                 },
             },
         }
+        apply_chat_completion_cost_controls(body, model=model)
         request = urllib.request.Request(
             f"{self.base_url}/chat/completions",
             data=json.dumps(body).encode("utf-8"),
