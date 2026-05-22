@@ -66,6 +66,7 @@ MVP 输出：
 ## 项目文件
 
 - [P0 ICLR Review Audit Project Plan](docs/P0%20Iclr%20Review%20Audit%20Project%20Plan.docx)
+- [SecondOpinion MVP Design Notes](docs/secondopinion-mvp-design-notes.md)
 
 ## MVP 使用方式
 
