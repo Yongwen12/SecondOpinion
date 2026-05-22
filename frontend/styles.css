@@ -40,6 +40,7 @@ body {
 
 button,
 input,
+select,
 textarea {
   font: inherit;
 }
@@ -201,6 +202,49 @@ main {
 .query-row input:focus {
   border-color: var(--teal);
   box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.14);
+}
+
+.demo-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.demo-row label {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.demo-row select,
+.demo-row a {
+  min-height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.demo-row select {
+  max-width: 260px;
+  padding: 0 34px 0 10px;
+  color: var(--ink);
+}
+
+.demo-row a {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 10px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.demo-row a:hover {
+  color: var(--ink);
+  border-color: var(--teal);
 }
 
 .primary-action {

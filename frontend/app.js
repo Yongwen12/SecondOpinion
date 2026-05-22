@@ -9,7 +9,7 @@ const pipelineLayers = [
       },
       {
         title: "Collect reviews",
-        artifact: "4 reviews, 4 scores",
+        artifact: "Reviews and scores",
         note: "Found reviewer ratings, confidences, and full review text."
       }
     ]
@@ -19,22 +19,22 @@ const pipelineLayers = [
     steps: [
       {
         title: "Classify stance",
-        artifact: "1 supportive, 2 mixed, 1 skeptical",
-        note: "Reviewer 2 is the highest leverage reviewer because the concerns are concrete and fixable."
+        artifact: "Reviewer + SO stance",
+        note: "Mapped reviewer posture separately from Second Opinion agreement with reviewer points."
       },
       {
         title: "Extract claims",
-        artifact: "18 reviewer claims",
+        artifact: "Claim-level points",
         note: "Separated actionable criticisms from summaries and praise."
       },
       {
         title: "Cluster issues",
-        artifact: "5 issue clusters",
+        artifact: "Cross-review issues",
         note: "Baseline and evaluation concerns overlap across multiple reviewers."
       },
       {
         title: "Score review quality",
-        artifact: "Avg SO score: 75.8",
+        artifact: "SO scores ready",
         note: "Novelty framing is risky, but likely addressable with clearer positioning."
       }
     ]
@@ -44,7 +44,7 @@ const pipelineLayers = [
     steps: [
       {
         title: "Prioritize responses",
-        artifact: "R2 and R3 first",
+        artifact: "High-priority points",
         note: "High-overlap issues are promoted into the rebuttal workspace."
       },
       {
@@ -68,6 +68,10 @@ const stanceScale = [
   ["agree", "Agree"],
   ["strongly_agree", "Strongly agree"]
 ];
+
+const demoAssets = {
+  "three-papers": "./demos/demo_three_papers_audit_results.json"
+};
 
 const analysis = {
   paperTitle: "Second Opinion Demo Submission",
@@ -286,6 +290,8 @@ const analysis = {
 
 let activeTab = "overview";
 let activeIssue = 0;
+let activeAnalysis = analysis;
+let activeAnalysisPromise = Promise.resolve(analysis);
 
 const form = document.querySelector("#analysis-form");
 const pipelineSection = document.querySelector("#pipeline");
@@ -300,6 +306,7 @@ const tabPanelEl = document.querySelector("#tab-panel");
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();
+  activeAnalysisPromise = loadSelectedAnalysis();
   startAnalysis();
 });
 
@@ -383,19 +390,26 @@ function addLog(note) {
   analysisLogEl.prepend(li);
 }
 
-function showWorkspace() {
+async function showWorkspace() {
   pipelineTitleEl.textContent = "Analysis complete";
+  try {
+    activeAnalysis = await activeAnalysisPromise;
+  } catch (error) {
+    console.error(error);
+    activeAnalysis = analysis;
+  }
+  activeIssue = 0;
   workspaceSection.classList.remove("hidden");
   renderWorkspace();
   workspaceSection.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function renderWorkspace() {
-  paperTitleEl.textContent = `${analysis.venue} ${analysis.year} · ${analysis.paperTitle}`;
-  paperMetricsEl.innerHTML = analysis.metrics
+  paperTitleEl.textContent = `${activeAnalysis.venue} ${activeAnalysis.year} · ${activeAnalysis.paperTitle}`;
+  paperMetricsEl.innerHTML = activeAnalysis.metrics
     .map(([value, label]) => `<div class="metric-chip"><b>${escapeHtml(value)}</b><span>${escapeHtml(label)}</span></div>`)
     .join("");
-  reviewerRailEl.innerHTML = analysis.reviewers
+  reviewerRailEl.innerHTML = activeAnalysis.reviewers
     .map(
       (reviewer) => `
         <div class="reviewer-mini">
@@ -433,12 +447,12 @@ function renderOverview() {
       <article class="surface">
         <div class="surface-head">
           <h3>Situation</h3>
-          <p>${escapeHtml(analysis.overview.situation)}</p>
+          <p>${escapeHtml(activeAnalysis.overview.situation)}</p>
         </div>
         <div class="surface-body">
           <ul class="status-list">
-            <li><b>Highest leverage reviewer</b><span>${escapeHtml(analysis.overview.leverage)}</span></li>
-            <li><b>Response strategy</b><span>${escapeHtml(analysis.overview.strategy)}</span></li>
+            <li><b>Highest leverage reviewer</b><span>${escapeHtml(activeAnalysis.overview.leverage)}</span></li>
+            <li><b>Response strategy</b><span>${escapeHtml(activeAnalysis.overview.strategy)}</span></li>
           </ul>
         </div>
       </article>
@@ -471,7 +485,7 @@ function renderOverview() {
       </div>
       <div class="surface-body">
         <ul class="priority-list">
-          ${analysis.priorities
+          ${activeAnalysis.priorities
             .map(([title, note]) => `<li><b>${escapeHtml(title)}</b><span>${escapeHtml(note)}</span></li>`)
             .join("")}
         </ul>
@@ -483,7 +497,7 @@ function renderOverview() {
 function renderReviewers() {
   tabPanelEl.innerHTML = `
     <div class="review-list">
-      ${analysis.reviewers
+      ${activeAnalysis.reviewers
         .map(
           (reviewer) => `
             <article class="review-card">
@@ -527,11 +541,11 @@ function renderReviewers() {
 }
 
 function renderRebuttal() {
-  const issue = analysis.issues[activeIssue];
+  const issue = activeAnalysis.issues[activeIssue] || activeAnalysis.issues[0];
   tabPanelEl.innerHTML = `
     <div class="issue-workspace">
       <div class="issue-list">
-        ${analysis.issues
+        ${activeAnalysis.issues
           .map(
             (item, index) => `
               <button class="issue-button ${index === activeIssue ? "active" : ""}" type="button" data-issue="${index}">
@@ -604,7 +618,7 @@ function capitalize(value) {
 function renderReviewerScoreBoard() {
   return `
     <div class="reviewer-score-board">
-      ${analysis.reviewers
+      ${activeAnalysis.reviewers
         .map(
           (reviewer) => `
             <div class="audit-score-row">
@@ -662,7 +676,7 @@ function renderStanceLegend() {
 function renderStanceMap() {
   return `
     <div class="stance-map">
-      ${analysis.reviewers
+      ${activeAnalysis.reviewers
         .map(
           (reviewer) => `
             <div class="stance-map-row">
@@ -721,6 +735,274 @@ function qualityClass(score) {
     return "quality-mid";
   }
   return "quality-low";
+}
+
+async function loadSelectedAnalysis() {
+  const demoSelect = document.querySelector("#demo-select");
+  const selectedDemo = demoSelect ? demoSelect.value : "three-papers";
+  if (!demoAssets[selectedDemo]) {
+    return analysis;
+  }
+  const response = await fetch(demoAssets[selectedDemo], { cache: "no-store" });
+  if (!response.ok) {
+    throw new Error(`Unable to load demo dataset: ${response.status}`);
+  }
+  const auditResult = await response.json();
+  return buildAnalysisFromAuditResult(auditResult);
+}
+
+function buildAnalysisFromAuditResult(auditResult) {
+  const audits = Array.isArray(auditResult.audits) ? auditResult.audits : [];
+  const paperIds = unique(audits.map((audit) => audit.paper_id).filter(Boolean));
+  const paperIndexById = new Map(paperIds.map((paperId, index) => [paperId, index + 1]));
+  const reviewIndexByPaper = new Map();
+
+  const reviewers = audits.map((audit) => {
+    const paperIndex = paperIndexById.get(audit.paper_id) || 1;
+    const nextReviewIndex = (reviewIndexByPaper.get(audit.paper_id) || 0) + 1;
+    reviewIndexByPaper.set(audit.paper_id, nextReviewIndex);
+    const claims = Array.isArray(audit.claims) ? audit.claims : [];
+    const stanceBreakdown = getStanceBreakdown(claims);
+    const dominantAuditStance = getDominantStance(stanceBreakdown);
+    const priorityClaims = claims.filter((claim) => guidancePriority(claim) === "high");
+    const rating = numberOrNull(audit.rating_normalized);
+    const confidence = numberOrNull(audit.reviewer_confidence_normalized);
+    const qualityScore = Math.round(numberOrNull(audit.rqs_score) ?? 0);
+    const highPriorityCount = priorityClaims.length;
+
+    return {
+      id: `P${paperIndex}-R${nextReviewIndex}`,
+      score: formatMetric(rating),
+      confidence: formatMetric(confidence),
+      qualityScore,
+      stance: reviewerSentiment(rating),
+      potential: highPriorityCount >= 2 ? "High" : highPriorityCount === 1 ? "Medium" : "Low",
+      headline: audit.summary || "Second Opinion audit completed for this review.",
+      auditSummary: `${audit.paper_title || "Untitled paper"} · ${audit.decision || "Decision unknown"}. ${issueFlagSummary(audit.issue_flags)}`,
+      dominantAuditStance,
+      stanceSummary: `Second Opinion stance distribution across ${claims.length} extracted reviewer points.`,
+      stanceBreakdown,
+      dimensions: mapAuditDimensions(audit.dimensions),
+      response: bestReviewerGuidance(claims)
+    };
+  });
+
+  const allClaims = audits.flatMap((audit, auditIndex) =>
+    (audit.claims || []).map((claim) => ({ audit, claim, reviewer: reviewers[auditIndex] }))
+  );
+  const highPriorityClaims = allClaims.filter(({ claim }) => guidancePriority(claim) === "high");
+  const avgRqs = average(audits.map((audit) => audit.rqs_score));
+  const avgRating = average(audits.map((audit) => audit.rating_normalized));
+  const avgConfidence = average(audits.map((audit) => audit.reviewer_confidence_normalized));
+  const lowestReviewer = reviewers.reduce((lowest, reviewer) => {
+    if (!lowest || reviewer.qualityScore < lowest.qualityScore) {
+      return reviewer;
+    }
+    return lowest;
+  }, null);
+
+  return {
+    paperTitle: "Three-paper audit demo",
+    venue: "ICLR",
+    year: "2024",
+    metrics: [
+      [formatMetric(avgRating), "Avg score"],
+      [formatMetric(avgConfidence), "Avg confidence"],
+      [formatMetric(avgRqs), "Avg SO score"],
+      [String(auditResult.paper_count || paperIds.length || 0), "Papers"],
+      [String(highPriorityClaims.length), "High priority"]
+    ],
+    overview: {
+      situation: `${auditResult.paper_count || paperIds.length || 0} papers, ${auditResult.audit_count || audits.length} reviews, and ${allClaims.length} reviewer points audited from the ICLR 2024 demo packet.`,
+      leverage: lowestReviewer
+        ? `${lowestReviewer.id} has the lowest Second Opinion review-quality score (${lowestReviewer.qualityScore}) and should be inspected first.`
+        : "No reviewer audit is available.",
+      strategy: "Start with high-priority rebuttal guidance, then use stance colors to separate valid reviewer points from weakly grounded or contradicted claims."
+    },
+    reviewers,
+    priorities: buildPriorities(highPriorityClaims),
+    issues: buildIssues(allClaims)
+  };
+}
+
+function buildPriorities(highPriorityClaims) {
+  const items = [];
+  const seen = new Set();
+  for (const { claim, reviewer } of highPriorityClaims) {
+    const title = truncate(claim.claim_text || "High-priority reviewer point", 84);
+    if (seen.has(title)) {
+      continue;
+    }
+    seen.add(title);
+    const guidance = claim.rebuttal_guidance || {};
+    items.push([
+      title,
+      `${reviewer.id}: ${truncate(guidance.suggested_response || "Use the retrieved evidence to answer this point directly.", 140)}`
+    ]);
+    if (items.length >= 5) {
+      break;
+    }
+  }
+  if (items.length) {
+    return items;
+  }
+  return [["No high-priority rebuttal items", "The loaded demo did not expose high-priority guidance."]];
+}
+
+function buildIssues(allClaims) {
+  const sorted = [...allClaims].sort((left, right) => {
+    const priorityDelta = priorityRank(guidancePriority(right.claim)) - priorityRank(guidancePriority(left.claim));
+    if (priorityDelta) {
+      return priorityDelta;
+    }
+    return importanceRank(right.claim.importance) - importanceRank(left.claim.importance);
+  });
+  const issues = sorted.slice(0, 8).map(({ audit, claim, reviewer }) => {
+    const guidance = claim.rebuttal_guidance || {};
+    return {
+      title: truncate(claim.claim_text || "Reviewer point", 82),
+      raisedBy: [reviewer.id],
+      severity: importanceRank(claim.importance) >= 2 ? "High" : "Medium",
+      fixability: guidancePriority(claim) === "high" ? "Medium" : "High",
+      priority: capitalize(guidancePriority(claim)),
+      summary: claim.extraction_reason || claim.source_sentence || audit.summary || "Reviewer point extracted from the audit result.",
+      assessment: claim.second_opinion_take || claim.reasoning_summary || "Second Opinion assessment is available in the full report.",
+      strategy: guidance.suggested_response || "Answer this point with the strongest available evidence and avoid overclaiming.",
+      quotes: [claim.source_sentence || claim.claim_text || "No source quote recorded."],
+      draft: guidance.suggested_response || "Acknowledge the point, cite the relevant manuscript evidence, and state the concrete revision or clarification."
+    };
+  });
+  return issues.length ? issues : analysis.issues;
+}
+
+function mapAuditDimensions(dimensions) {
+  const labels = {
+    claim_accuracy_and_evidence: "Claim accuracy",
+    technical_substance: "Technical substance",
+    specificity: "Specificity",
+    constructiveness: "Constructiveness",
+    balance_and_fairness: "Balance and fairness",
+    professional_tone: "Professional tone",
+    score_text_consistency: "Score consistency",
+    venue_guideline_compliance: "Venue compliance"
+  };
+  const entries = Object.entries(dimensions || {});
+  if (!entries.length) {
+    return { "Review quality": 0 };
+  }
+  return Object.fromEntries(
+    entries.map(([key, value]) => {
+      const numeric = numberOrNull(value) ?? 0;
+      const normalized = numeric <= 5 ? Math.round((numeric / 4) * 100) : Math.round(numeric);
+      return [labels[key] || key.replaceAll("_", " "), Math.max(0, Math.min(100, normalized))];
+    })
+  );
+}
+
+function getStanceBreakdown(claims) {
+  const breakdown = Object.fromEntries(stanceScale.map(([key]) => [key, 0]));
+  for (const claim of claims) {
+    const stance = normalizeStance(claim.stance);
+    breakdown[stance] += 1;
+  }
+  return breakdown;
+}
+
+function getDominantStance(breakdown) {
+  return stanceScale.reduce((best, [key]) => {
+    if ((breakdown[key] || 0) > (breakdown[best] || 0)) {
+      return key;
+    }
+    return best;
+  }, "mixed");
+}
+
+function normalizeStance(value) {
+  const normalized = String(value || "mixed").trim().toLowerCase().replaceAll("-", "_");
+  if (stanceScale.some(([key]) => key === normalized)) {
+    return normalized;
+  }
+  return "mixed";
+}
+
+function bestReviewerGuidance(claims) {
+  const claim =
+    claims.find((item) => guidancePriority(item) === "high" && item.rebuttal_guidance?.suggested_response) ||
+    claims.find((item) => item.rebuttal_guidance?.suggested_response);
+  return claim?.rebuttal_guidance?.suggested_response || "Use the issue workspace to inspect claim-level rebuttal guidance.";
+}
+
+function guidancePriority(claim) {
+  const priority = String(claim?.rebuttal_guidance?.priority || "medium").trim().toLowerCase();
+  return ["high", "medium", "low"].includes(priority) ? priority : "medium";
+}
+
+function priorityRank(priority) {
+  return { low: 1, medium: 2, high: 3 }[priority] || 2;
+}
+
+function importanceRank(importance) {
+  const value = String(importance || "").toLowerCase();
+  if (value === "major") {
+    return 3;
+  }
+  if (value === "medium" || value === "minor") {
+    return 2;
+  }
+  return 1;
+}
+
+function reviewerSentiment(rating) {
+  if (rating === null) {
+    return "mixed";
+  }
+  if (rating >= 6) {
+    return "supportive";
+  }
+  if (rating >= 4) {
+    return "mixed";
+  }
+  return "skeptical";
+}
+
+function issueFlagSummary(flags) {
+  if (!Array.isArray(flags) || !flags.length) {
+    return "No recurring issue flags.";
+  }
+  return `${flags.length} issue flags, including ${flags.slice(0, 2).map((flag) => flag.replaceAll("-", " ")).join(" and ")}.`;
+}
+
+function unique(values) {
+  return [...new Set(values)];
+}
+
+function average(values) {
+  const numericValues = values.map(numberOrNull).filter((value) => value !== null);
+  if (!numericValues.length) {
+    return null;
+  }
+  return numericValues.reduce((sum, value) => sum + value, 0) / numericValues.length;
+}
+
+function numberOrNull(value) {
+  const numeric = Number(value);
+  return Number.isFinite(numeric) ? numeric : null;
+}
+
+function formatMetric(value) {
+  const numeric = numberOrNull(value);
+  if (numeric === null) {
+    return "n/a";
+  }
+  return Number.isInteger(numeric) ? String(numeric) : numeric.toFixed(1);
+}
+
+function truncate(value, maxLength) {
+  const text = String(value || "").trim();
+  if (text.length <= maxLength) {
+    return text;
+  }
+  return `${text.slice(0, maxLength - 3).trim()}...`;
 }
 
 function escapeHtml(value) {
