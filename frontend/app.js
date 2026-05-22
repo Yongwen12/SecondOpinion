@@ -301,6 +301,8 @@ const analysis = {
 
 let activeTab = "overview";
 let activeIssue = 0;
+let activeReviewer = 0;
+let activeClaim = 0;
 let activeAnalysis = analysis;
 let activeAnalysisPromise = Promise.resolve(analysis);
 
@@ -410,6 +412,8 @@ async function showWorkspace() {
     activeAnalysis = analysis;
   }
   activeIssue = 0;
+  activeReviewer = 0;
+  activeClaim = 0;
   workspaceSection.classList.remove("hidden");
   renderWorkspace();
   workspaceSection.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -441,6 +445,7 @@ function renderWorkspace() {
 }
 
 function renderTab() {
+  workspaceSection.classList.toggle("reviewers-mode", activeTab === "reviewers");
   if (activeTab === "overview") {
     renderOverview();
     return;
@@ -454,105 +459,165 @@ function renderTab() {
 
 function renderOverview() {
   tabPanelEl.innerHTML = `
-    <div class="panel-grid">
+    <div class="overview-stack">
       <article class="surface">
         <div class="surface-head">
-          <h3>Situation</h3>
+          <h3>Quick summary</h3>
           <p>${escapeHtml(activeAnalysis.overview.situation)}</p>
         </div>
         <div class="surface-body">
-          <ul class="status-list">
-            <li><b>Highest leverage reviewer</b><span>${escapeHtml(activeAnalysis.overview.leverage)}</span></li>
-            <li><b>Response strategy</b><span>${escapeHtml(activeAnalysis.overview.strategy)}</span></li>
-          </ul>
+          <div class="summary-grid">
+            <ul class="status-list">
+              <li><b>Highest leverage reviewer</b><span>${escapeHtml(activeAnalysis.overview.leverage)}</span></li>
+              <li><b>Response strategy</b><span>${escapeHtml(activeAnalysis.overview.strategy)}</span></li>
+            </ul>
+            <div class="summary-score-panel">
+              <h4>Review audit scores</h4>
+              ${renderReviewerScoreBoard()}
+            </div>
+          </div>
         </div>
       </article>
 
       <article class="surface">
         <div class="surface-head">
-          <h3>Review audit scores</h3>
-          <p>Second Opinion score for each reviewer's review quality.</p>
+          <h3>Second Opinion stance map</h3>
+          <p>Color-coded agreement with reviewer points, from strongly disagree to strongly agree.</p>
         </div>
         <div class="surface-body">
-          ${renderReviewerScoreBoard()}
+          ${renderStanceLegend()}
+          ${renderStanceMap()}
         </div>
       </article>
     </div>
-
-    <article class="surface stance-map-surface">
-      <div class="surface-head">
-        <h3>Second Opinion stance map</h3>
-        <p>Color-coded agreement with reviewer points, from strongly disagree to strongly agree.</p>
-      </div>
-      <div class="surface-body">
-        ${renderStanceLegend()}
-        ${renderStanceMap()}
-      </div>
-    </article>
-
-    <article class="surface" style="margin-top:18px">
-      <div class="surface-head">
-        <h3>Response priorities</h3>
-      </div>
-      <div class="surface-body">
-        <ul class="priority-list">
-          ${activeAnalysis.priorities
-            .map(([title, note]) => `<li><b>${escapeHtml(title)}</b><span>${escapeHtml(note)}</span></li>`)
-            .join("")}
-        </ul>
-      </div>
-    </article>
   `;
 }
 
 function renderReviewers() {
+  const reviewers = activeAnalysis.reviewers || [];
+  activeReviewer = Math.max(0, Math.min(activeReviewer, reviewers.length - 1));
+  const reviewer = reviewers[activeReviewer] || reviewers[0];
+  const claims = Array.isArray(reviewer?.claims) ? reviewer.claims : [];
+  activeClaim = Math.max(0, Math.min(activeClaim, claims.length - 1));
+
   tabPanelEl.innerHTML = `
-    <div class="review-list">
-      ${activeAnalysis.reviewers
-        .map(
-          (reviewer) => `
-            <article class="review-card">
-              <div class="review-card-top">
-                <div>
-                  <h3>${reviewer.id}</h3>
-                  <div class="review-meta">
-                    <span class="badge">Score ${reviewer.score}</span>
-                    <span class="badge">Confidence ${reviewer.confidence}</span>
-                    <span class="badge stance ${reviewer.stance}">${capitalize(reviewer.stance)}</span>
-                    <span class="badge ${reviewer.potential.toLowerCase()}">${reviewer.potential} potential</span>
-                  </div>
-                </div>
-                <div class="score-summary" aria-label="Second Opinion reviewer assessment">
-                  <div class="so-stance-label ${stanceClass(reviewer.dominantAuditStance)}">
-                    <span>SO stance</span>
-                    <b>${stanceLabel(reviewer.dominantAuditStance)}</b>
-                  </div>
-                  <div class="quality-score ${qualityClass(reviewer.qualityScore)}">
-                    <b>${reviewer.qualityScore}</b>
-                    <span>SO score</span>
-                  </div>
-                </div>
-              </div>
-              <p>${escapeHtml(reviewer.headline)}</p>
-              <p>${escapeHtml(reviewer.auditSummary)}</p>
-              <div class="review-stance-block">
-                <div class="stance-row-header">
-                  <b>Stance distribution</b>
-                  <span>${escapeHtml(reviewer.stanceSummary)}</span>
-                </div>
-                ${renderStanceDistribution(reviewer.stanceBreakdown)}
-              </div>
-              <div class="score-stack">
-                ${renderScoreRows(reviewer.dimensions)}
-              </div>
-              <div class="draft-box">
-                <p>${escapeHtml(reviewer.response)}</p>
-              </div>
-            </article>
-          `
-        )
-        .join("")}
+    <div class="reviewer-analysis-stack">
+      <article class="surface">
+        <div class="surface-head">
+          <h3>Reviewer analysis</h3>
+          <p>${escapeHtml(activeAnalysis.overview.situation)}</p>
+        </div>
+        <div class="surface-body">
+          <div class="summary-grid">
+            <ul class="status-list">
+              <li><b>Highest leverage reviewer</b><span>${escapeHtml(activeAnalysis.overview.leverage)}</span></li>
+              <li><b>Response strategy</b><span>${escapeHtml(activeAnalysis.overview.strategy)}</span></li>
+            </ul>
+            <div class="summary-score-panel">
+              <h4>Review audit scores</h4>
+              ${renderReviewerScoreBoard()}
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <div class="reviewer-tab-layout">
+        <div class="reviewer-tabs" role="tablist" aria-label="Reviewers">
+          ${reviewers
+            .map(
+              (item, index) => `
+                <button
+                  class="reviewer-tab ${index === activeReviewer ? "active" : ""}"
+                  type="button"
+                  role="tab"
+                  aria-selected="${index === activeReviewer}"
+                  data-reviewer-tab="${index}"
+                >
+                  <strong>${item.id}</strong>
+                  <span>${item.score} / ${item.confidence}</span>
+                  <b class="${stanceClass(item.dominantAuditStance)}">${stanceLabel(item.dominantAuditStance)}</b>
+                </button>
+              `
+            )
+            .join("")}
+        </div>
+        ${reviewer ? renderReviewerDetailPanel(reviewer, activeClaim) : ""}
+      </div>
     </div>
+  `;
+
+  tabPanelEl.querySelectorAll("[data-reviewer-tab]").forEach((button) => {
+    button.addEventListener("click", () => {
+      activeReviewer = Number(button.dataset.reviewerTab);
+      activeClaim = 0;
+      renderReviewers();
+    });
+  });
+
+  tabPanelEl.querySelectorAll("[data-claim-tab]").forEach((button) => {
+    button.addEventListener("click", () => {
+      activeClaim = Number(button.dataset.claimTab);
+      renderReviewers();
+    });
+  });
+}
+
+function renderReviewerDetailPanel(reviewer, selectedClaimIndex) {
+  const claims = Array.isArray(reviewer.claims) ? reviewer.claims : [];
+  return `
+    <article class="reviewer-detail-panel">
+      <div class="selected-reviewer-head">
+        <div class="reviewer-summary-copy">
+          <h3>${reviewer.id}</h3>
+          <div class="review-meta">
+            <span class="badge">Score ${reviewer.score}</span>
+            <span class="badge">Confidence ${reviewer.confidence}</span>
+            <span class="badge stance ${reviewer.stance}">${capitalize(reviewer.stance)}</span>
+            <span class="badge ${reviewer.potential.toLowerCase()}">${reviewer.potential} potential</span>
+            <span class="badge">${claims.length} claims</span>
+          </div>
+          <p>${escapeHtml(reviewer.headline)}</p>
+        </div>
+        <div class="reviewer-summary-metrics">
+          <div class="mini-distribution">
+            ${renderStanceDistribution(reviewer.stanceBreakdown)}
+            <b class="stance-pill ${stanceClass(reviewer.dominantAuditStance)}">${stanceLabel(reviewer.dominantAuditStance)}</b>
+          </div>
+          <div class="score-summary" aria-label="Second Opinion reviewer assessment">
+            <div class="so-stance-label ${stanceClass(reviewer.dominantAuditStance)}">
+              <span>SO stance</span>
+              <b>${stanceLabel(reviewer.dominantAuditStance)}</b>
+            </div>
+            <div class="quality-score ${qualityClass(reviewer.qualityScore)}">
+              <b>${reviewer.qualityScore}</b>
+              <span>SO score</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reviewer-detail-body">
+        <div class="reviewer-audit-grid">
+          <section>
+            <h4>Review quality dimensions</h4>
+            <div class="score-stack">
+              ${renderScoreRows(reviewer.dimensions)}
+            </div>
+          </section>
+          <section>
+            <h4>Rebuttal instruction</h4>
+            <div class="draft-box">
+              <p>${escapeHtml(reviewer.response)}</p>
+            </div>
+          </section>
+        </div>
+
+        <section>
+          <h4>Extracted claims and scores</h4>
+          ${renderClaimTabs(claims, selectedClaimIndex)}
+        </section>
+      </div>
+    </article>
   `;
 }
 
@@ -631,6 +696,13 @@ function capitalize(value) {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
+function labelize(value) {
+  return String(value || "")
+    .replaceAll("_", " ")
+    .replaceAll("-", " ")
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
 function renderReviewerScoreBoard() {
   return `
     <div class="reviewer-score-board">
@@ -654,6 +726,122 @@ function renderReviewerScoreBoard() {
         .join("")}
     </div>
   `;
+}
+
+function renderClaimTabs(claims, selectedClaimIndex) {
+  if (!claims.length) {
+    return `<p class="empty-note">No extracted claim breakdown is available for this reviewer.</p>`;
+  }
+  const safeIndex = Math.max(0, Math.min(selectedClaimIndex, claims.length - 1));
+  const selectedClaim = claims[safeIndex];
+  return `
+    <div class="claim-tab-layout">
+      <div class="claim-tabs" role="tablist" aria-label="Extracted claims">
+        ${claims
+          .map(
+            (claim, index) => `
+              <button
+                class="claim-tab ${index === safeIndex ? "active" : ""}"
+                type="button"
+                role="tab"
+                aria-selected="${index === safeIndex}"
+                data-claim-tab="${index}"
+              >
+                <strong>Claim ${claim.claimIndex}</strong>
+                <span>${escapeHtml(truncate(claim.claim_text || "Reviewer claim", 72))}</span>
+                <b class="${stanceClass(claim.normalizedStance)}">${stanceLabel(claim.normalizedStance)}</b>
+              </button>
+            `
+          )
+          .join("")}
+      </div>
+      <div class="claim-detail-panel">
+        ${renderClaimCard(selectedClaim)}
+      </div>
+    </div>
+  `;
+}
+
+function renderClaimCard(claim) {
+  return `
+    <article class="claim-card">
+      <div class="claim-card-head">
+        <div>
+          <h5>Claim ${claim.claimIndex}</h5>
+          <p>${escapeHtml(claim.claim_text || "Reviewer claim was extracted, but no text was recorded.")}</p>
+        </div>
+        <span class="stance-pill ${stanceClass(claim.normalizedStance)}">SO: ${stanceLabel(claim.normalizedStance)}</span>
+      </div>
+
+      <div class="claim-meta">
+        <span class="badge">${escapeHtml(labelize(claim.claim_type || "claim"))}</span>
+        <span class="badge">${escapeHtml(capitalize(String(claim.importance || "medium")))}</span>
+        <span class="badge">${escapeHtml(labelize(claim.verdict || "not recorded"))}</span>
+        <span class="badge ${claim.guidancePriority}">${capitalize(claim.guidancePriority)} priority</span>
+      </div>
+
+      <div class="claim-score-grid">
+        ${renderClaimScoreRows(claim)}
+      </div>
+
+      <div class="claim-analysis-grid">
+        <div class="claim-note">
+          <b>Second Opinion assessment</b>
+          <p>${escapeHtml(claim.second_opinion_take || claim.reasoning_summary || "No claim-level assessment was recorded.")}</p>
+        </div>
+        <div class="claim-note">
+          <b>Reviewer source</b>
+          <p>${escapeHtml(claim.source_sentence || claim.claim_text || "No source sentence recorded.")}</p>
+        </div>
+        <div class="claim-note claim-note-wide">
+          <b>Suggested rebuttal</b>
+          <p>${escapeHtml(claim.rebuttal_guidance?.suggested_response || "Answer this point with the strongest available evidence and avoid overclaiming.")}</p>
+        </div>
+      </div>
+    </article>
+  `;
+}
+
+function renderClaimCards(claims) {
+  if (!claims.length) {
+    return `<p class="empty-note">No extracted claim breakdown is available for this reviewer.</p>`;
+  }
+  return `
+    <div class="claim-list">
+      ${claims
+        .map((claim) => renderClaimCard(claim))
+        .join("")}
+    </div>
+  `;
+}
+
+function renderClaimScoreRows(claim) {
+  const rows = [
+    ["Support", claim.support_score, 100],
+    ["Answer coverage", claim.answer_coverage_score, 100],
+    ["Question value", claim.question_value_score, 100],
+    ["Specificity", claim.specificity, 4],
+    ["Evidence support", claim.evidence_support, 4],
+    ["Actionability", claim.actionability, 4],
+    ["Fairness", claim.fairness_score, 100]
+  ].filter(([, value]) => numberOrNull(value) !== null);
+
+  return rows
+    .map(([label, value, max]) => {
+      const numeric = numberOrNull(value) || 0;
+      const percent = Math.max(0, Math.min(100, Math.round((numeric / max) * 100)));
+      const display = max === 100 ? String(Math.round(numeric)) : `${numeric}/4`;
+      return `
+        <div class="claim-score-row">
+          <span>${escapeHtml(label)}</span>
+          <div class="score-track">
+            <span class="score-fill ${qualityClass(percent)}" style="width:${percent}%"></span>
+          </div>
+          <b>${escapeHtml(display)}</b>
+        </div>
+      `;
+    })
+    .join("");
 }
 
 function renderScoreRows(dimensions) {
@@ -809,6 +997,12 @@ function buildAnalysisFromAuditResult(auditResult, demoConfig = {}) {
       stanceSummary: `Second Opinion stance distribution across ${claims.length} extracted reviewer points.`,
       stanceBreakdown,
       dimensions: mapAuditDimensions(audit.dimensions),
+      claims: claims.map((claim, claimIndex) => ({
+        ...claim,
+        claimIndex: claimIndex + 1,
+        guidancePriority: guidancePriority(claim),
+        normalizedStance: normalizeStance(claim.stance)
+      })),
       response: bestReviewerGuidance(claims)
     };
   });
