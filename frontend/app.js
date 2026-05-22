@@ -508,13 +508,18 @@ function renderReviewers() {
                     <span class="badge">Score ${reviewer.score}</span>
                     <span class="badge">Confidence ${reviewer.confidence}</span>
                     <span class="badge stance ${reviewer.stance}">${capitalize(reviewer.stance)}</span>
-                    <span class="stance-pill ${stanceClass(reviewer.dominantAuditStance)}">SO stance: ${stanceLabel(reviewer.dominantAuditStance)}</span>
                     <span class="badge ${reviewer.potential.toLowerCase()}">${reviewer.potential} potential</span>
                   </div>
                 </div>
-                <div class="quality-score ${qualityClass(reviewer.qualityScore)}">
-                  <b>${reviewer.qualityScore}</b>
-                  <span>SO score</span>
+                <div class="score-summary" aria-label="Second Opinion reviewer assessment">
+                  <div class="so-stance-label ${stanceClass(reviewer.dominantAuditStance)}">
+                    <span>SO stance</span>
+                    <b>${stanceLabel(reviewer.dominantAuditStance)}</b>
+                  </div>
+                  <div class="quality-score ${qualityClass(reviewer.qualityScore)}">
+                    <b>${reviewer.qualityScore}</b>
+                    <span>SO score</span>
+                  </div>
                 </div>
               </div>
               <p>${escapeHtml(reviewer.headline)}</p>

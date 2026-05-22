@@ -892,6 +892,38 @@ main {
   text-align: center;
 }
 
+.score-summary {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: stretch;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.so-stance-label {
+  display: grid;
+  align-content: center;
+  min-width: 126px;
+  min-height: 72px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  color: #fff;
+}
+
+.so-stance-label span {
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+  text-transform: uppercase;
+  opacity: 0.86;
+}
+
+.so-stance-label b {
+  margin-top: 6px;
+  font-size: 16px;
+  line-height: 1.12;
+}
+
 .quality-score b {
   font-size: 26px;
   line-height: 1;
@@ -1145,6 +1177,11 @@ main {
   .stance-row,
   .stance-row-header {
     display: grid;
+  }
+
+  .score-summary {
+    justify-content: start;
+    flex-wrap: wrap;
   }
 
   .stance-map-row,
