@@ -69,8 +69,19 @@ const stanceScale = [
   ["strongly_agree", "Strongly agree"]
 ];
 
-const demoAssets = {
-  "three-papers": "./demos/demo_three_papers_audit_results.json"
+const demoConfigs = {
+  "paper-microbial": {
+    src: "./demos/demo_three_papers_audit_results.json",
+    paperId: "cXs5md5wAq"
+  },
+  "paper-tabr": {
+    src: "./demos/demo_three_papers_audit_results.json",
+    paperId: "rhgIgTSSxW"
+  },
+  "paper-nekm": {
+    src: "./demos/demo_three_papers_audit_results.json",
+    paperId: "kKRbAY4CXv"
+  }
 };
 
 const analysis = {
@@ -744,21 +755,29 @@ function qualityClass(score) {
 
 async function loadSelectedAnalysis() {
   const demoSelect = document.querySelector("#demo-select");
-  const selectedDemo = demoSelect ? demoSelect.value : "three-papers";
-  if (!demoAssets[selectedDemo]) {
+  const selectedDemo = demoSelect ? demoSelect.value : "paper-microbial";
+  const demoConfig = demoConfigs[selectedDemo];
+  if (!demoConfig) {
     return analysis;
   }
-  const response = await fetch(demoAssets[selectedDemo], { cache: "no-store" });
+  const response = await fetch(demoConfig.src, { cache: "no-store" });
   if (!response.ok) {
     throw new Error(`Unable to load demo dataset: ${response.status}`);
   }
   const auditResult = await response.json();
-  return buildAnalysisFromAuditResult(auditResult);
+  return buildAnalysisFromAuditResult(auditResult, demoConfig);
 }
 
-function buildAnalysisFromAuditResult(auditResult) {
-  const audits = Array.isArray(auditResult.audits) ? auditResult.audits : [];
+function buildAnalysisFromAuditResult(auditResult, demoConfig = {}) {
+  const allAudits = Array.isArray(auditResult.audits) ? auditResult.audits : [];
+  const matchingAudits = demoConfig.paperId
+    ? allAudits.filter((audit) => audit.paper_id === demoConfig.paperId)
+    : allAudits;
+  const audits = matchingAudits.length ? matchingAudits : allAudits;
   const paperIds = unique(audits.map((audit) => audit.paper_id).filter(Boolean));
+  const singlePaper = paperIds.length <= 1;
+  const selectedPaperTitle =
+    demoConfig.paperTitle || audits.find((audit) => audit.paper_title)?.paper_title || "Audit demo";
   const paperIndexById = new Map(paperIds.map((paperId, index) => [paperId, index + 1]));
   const reviewIndexByPaper = new Map();
 
@@ -776,14 +795,16 @@ function buildAnalysisFromAuditResult(auditResult) {
     const highPriorityCount = priorityClaims.length;
 
     return {
-      id: `P${paperIndex}-R${nextReviewIndex}`,
+      id: singlePaper ? `R${nextReviewIndex}` : `P${paperIndex}-R${nextReviewIndex}`,
       score: formatMetric(rating),
       confidence: formatMetric(confidence),
       qualityScore,
       stance: reviewerSentiment(rating),
       potential: highPriorityCount >= 2 ? "High" : highPriorityCount === 1 ? "Medium" : "Low",
       headline: audit.summary || "Second Opinion audit completed for this review.",
-      auditSummary: `${audit.paper_title || "Untitled paper"} · ${audit.decision || "Decision unknown"}. ${issueFlagSummary(audit.issue_flags)}`,
+      auditSummary: singlePaper
+        ? `${audit.decision || "Decision unknown"}. ${issueFlagSummary(audit.issue_flags)}`
+        : `${audit.paper_title || "Untitled paper"} · ${audit.decision || "Decision unknown"}. ${issueFlagSummary(audit.issue_flags)}`,
       dominantAuditStance,
       stanceSummary: `Second Opinion stance distribution across ${claims.length} extracted reviewer points.`,
       stanceBreakdown,
@@ -807,18 +828,23 @@ function buildAnalysisFromAuditResult(auditResult) {
   }, null);
 
   return {
-    paperTitle: "Three-paper audit demo",
+    paperTitle: selectedPaperTitle,
     venue: "ICLR",
     year: "2024",
     metrics: [
       [formatMetric(avgRating), "Avg score"],
       [formatMetric(avgConfidence), "Avg confidence"],
       [formatMetric(avgRqs), "Avg SO score"],
-      [String(auditResult.paper_count || paperIds.length || 0), "Papers"],
+      [
+        String(singlePaper ? audits.length : auditResult.paper_count || paperIds.length || 0),
+        singlePaper ? "Reviews" : "Papers"
+      ],
       [String(highPriorityClaims.length), "High priority"]
     ],
     overview: {
-      situation: `${auditResult.paper_count || paperIds.length || 0} papers, ${auditResult.audit_count || audits.length} reviews, and ${allClaims.length} reviewer points audited from the ICLR 2024 demo packet.`,
+      situation: singlePaper
+        ? `${audits.length} reviews and ${allClaims.length} reviewer points audited for this ICLR 2024 paper.`
+        : `${auditResult.paper_count || paperIds.length || 0} papers, ${auditResult.audit_count || audits.length} reviews, and ${allClaims.length} reviewer points audited from the ICLR 2024 demo packet.`,
       leverage: lowestReviewer
         ? `${lowestReviewer.id} has the lowest Second Opinion review-quality score (${lowestReviewer.qualityScore}) and should be inspected first.`
         : "No reviewer audit is available.",
