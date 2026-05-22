@@ -33,8 +33,8 @@ const pipelineLayers = [
         note: "Baseline and evaluation concerns overlap across multiple reviewers."
       },
       {
-        title: "Score fixability",
-        artifact: "3 high-priority responses",
+        title: "Score review quality",
+        artifact: "Avg SO score: 75.8",
         note: "Novelty framing is risky, but likely addressable with clearer positioning."
       }
     ]
@@ -68,6 +68,7 @@ const analysis = {
   metrics: [
     ["5.25", "Avg score"],
     ["3.75", "Avg confidence"],
+    ["75.8", "Avg SO score"],
     ["5", "Issue clusters"],
     ["3", "High priority"]
   ],
@@ -89,36 +90,72 @@ const analysis = {
       id: "R1",
       score: 6,
       confidence: 4,
+      qualityScore: 82,
       stance: "supportive",
       potential: "Medium",
       headline: "Mostly positive, asks for sharper novelty framing.",
+      auditSummary: "High-quality review: specific, professional, and mostly actionable. The novelty concern needs more explicit manuscript grounding.",
+      dimensions: {
+        Professionalism: 92,
+        Specificity: 78,
+        "Evidence grounding": 74,
+        Actionability: 84,
+        Fairness: 82
+      },
       response: "Thank R1 for recognizing the contribution, then make the novelty claim more concrete and cite the exact section where the method differs."
     },
     {
       id: "R2",
       score: 4,
       confidence: 3,
+      qualityScore: 61,
       stance: "skeptical",
       potential: "High",
       headline: "Concerned about missing baselines and experimental breadth.",
+      auditSummary: "Mixed review quality: the main concerns are important, but some claims are broader than the retrieved manuscript evidence supports.",
+      dimensions: {
+        Professionalism: 76,
+        Specificity: 67,
+        "Evidence grounding": 52,
+        Actionability: 63,
+        Fairness: 49
+      },
       response: "Prioritize R2. Acknowledge the baseline concern, add a compact comparison table, and state which additional experiment can be completed."
     },
     {
       id: "R3",
       score: 5,
       confidence: 4,
+      qualityScore: 72,
       stance: "mixed",
       potential: "Medium",
       headline: "Likes the idea but doubts whether the evaluation proves the central claim.",
+      auditSummary: "Generally useful review: the evaluation concern is fair, but the review compresses several distinct issues into one broad objection.",
+      dimensions: {
+        Professionalism: 86,
+        Specificity: 69,
+        "Evidence grounding": 66,
+        Actionability: 70,
+        Fairness: 71
+      },
       response: "Tie the main claim to the strongest existing results. Avoid overclaiming; define the scope more tightly."
     },
     {
       id: "R4",
       score: 6,
       confidence: 4,
+      qualityScore: 88,
       stance: "supportive",
       potential: "Low",
       headline: "Supportive review with presentation-level requests.",
+      auditSummary: "Strong review quality: concise, professional, and well calibrated to fixable presentation issues.",
+      dimensions: {
+        Professionalism: 95,
+        Specificity: 84,
+        "Evidence grounding": 82,
+        Actionability: 90,
+        Fairness: 88
+      },
       response: "Answer briefly. Do not spend too much rebuttal budget unless the AC echoes this concern."
     }
   ],
@@ -319,6 +356,10 @@ function renderWorkspace() {
       (reviewer) => `
         <div class="reviewer-mini">
           <strong>${reviewer.id}<span>${reviewer.score} / ${reviewer.confidence}</span></strong>
+          <div class="mini-score">
+            <span>SO score</span>
+            <b>${reviewer.qualityScore}</b>
+          </div>
           <span>${escapeHtml(reviewer.headline)}</span>
         </div>
       `
@@ -357,22 +398,11 @@ function renderOverview() {
 
       <article class="surface">
         <div class="surface-head">
-          <h3>Score landscape</h3>
-          <p>Current submission is highlighted against a mock ICLR distribution.</p>
+          <h3>Review audit scores</h3>
+          <p>Second Opinion score for each reviewer's review quality.</p>
         </div>
         <div class="surface-body">
-          <div class="mini-chart">
-            ${analysis.overview.scoreDistribution
-              .map(
-                ([label, height]) => `
-                  <div class="bar ${label === "5.5" ? "target" : ""}">
-                    <span style="height:${height}%"></span>
-                    <label>${label}</label>
-                  </div>
-                `
-              )
-              .join("")}
-          </div>
+          ${renderReviewerScoreBoard()}
         </div>
       </article>
     </div>
@@ -409,8 +439,16 @@ function renderReviewers() {
                     <span class="badge ${reviewer.potential.toLowerCase()}">${reviewer.potential} potential</span>
                   </div>
                 </div>
+                <div class="quality-score ${qualityClass(reviewer.qualityScore)}">
+                  <b>${reviewer.qualityScore}</b>
+                  <span>SO score</span>
+                </div>
               </div>
               <p>${escapeHtml(reviewer.headline)}</p>
+              <p>${escapeHtml(reviewer.auditSummary)}</p>
+              <div class="score-stack">
+                ${renderScoreRows(reviewer.dimensions)}
+              </div>
               <div class="draft-box">
                 <p>${escapeHtml(reviewer.response)}</p>
               </div>
@@ -495,6 +533,57 @@ function renderRebuttal() {
 
 function capitalize(value) {
   return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+function renderReviewerScoreBoard() {
+  return `
+    <div class="reviewer-score-board">
+      ${analysis.reviewers
+        .map(
+          (reviewer) => `
+            <div class="audit-score-row">
+              <div>
+                <strong>${reviewer.id}</strong>
+                <span>${escapeHtml(reviewer.auditSummary)}</span>
+              </div>
+              <div class="audit-score-meter">
+                <div class="score-track">
+                  <span class="score-fill ${qualityClass(reviewer.qualityScore)}" style="width:${reviewer.qualityScore}%"></span>
+                </div>
+                <b>${reviewer.qualityScore}</b>
+              </div>
+            </div>
+          `
+        )
+        .join("")}
+    </div>
+  `;
+}
+
+function renderScoreRows(dimensions) {
+  return Object.entries(dimensions)
+    .map(
+      ([label, value]) => `
+        <div class="score-row">
+          <span>${escapeHtml(label)}</span>
+          <div class="score-track">
+            <span class="score-fill ${qualityClass(value)}" style="width:${value}%"></span>
+          </div>
+          <b>${value}</b>
+        </div>
+      `
+    )
+    .join("");
+}
+
+function qualityClass(score) {
+  if (score >= 80) {
+    return "quality-high";
+  }
+  if (score >= 65) {
+    return "quality-mid";
+  }
+  return "quality-low";
 }
 
 function escapeHtml(value) {

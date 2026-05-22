@@ -460,6 +460,28 @@ main {
   font-size: 13px;
 }
 
+.mini-score {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 7px 9px;
+  border: 1px solid var(--soft-line);
+  border-radius: 7px;
+  background: #fff;
+}
+
+.mini-score span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.mini-score b {
+  color: var(--teal-dark);
+  font-size: 17px;
+}
+
 .tab-panel {
   min-width: 0;
 }
@@ -542,9 +564,15 @@ main {
 
 .score-row {
   display: grid;
-  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  grid-template-columns: minmax(118px, 0.55fr) minmax(0, 1fr) 42px;
   gap: 10px;
   align-items: center;
+}
+
+.score-row > span {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
 }
 
 .score-track {
@@ -555,6 +583,7 @@ main {
 }
 
 .score-fill {
+  display: block;
   height: 100%;
   border-radius: inherit;
   background: var(--teal);
@@ -566,6 +595,67 @@ main {
 
 .score-row:nth-child(3) .score-fill {
   background: var(--violet);
+}
+
+.score-row .score-fill.quality-high,
+.audit-score-meter .score-fill.quality-high,
+.quality-score.quality-high {
+  background: var(--green);
+}
+
+.score-row .score-fill.quality-mid,
+.audit-score-meter .score-fill.quality-mid,
+.quality-score.quality-mid {
+  background: var(--amber);
+}
+
+.score-row .score-fill.quality-low,
+.audit-score-meter .score-fill.quality-low,
+.quality-score.quality-low {
+  background: var(--red);
+}
+
+.reviewer-score-board {
+  display: grid;
+  gap: 12px;
+}
+
+.audit-score-row {
+  display: grid;
+  gap: 9px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--soft-line);
+}
+
+.audit-score-row:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.audit-score-row strong {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 15px;
+}
+
+.audit-score-row span {
+  display: block;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.audit-score-meter {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 36px;
+  gap: 10px;
+  align-items: center;
+}
+
+.audit-score-meter b {
+  color: var(--ink);
+  font-size: 15px;
+  text-align: right;
 }
 
 .review-list {
@@ -589,6 +679,28 @@ main {
   align-items: start;
   justify-content: space-between;
   gap: 14px;
+}
+
+.quality-score {
+  display: grid;
+  place-items: center;
+  min-width: 82px;
+  min-height: 72px;
+  padding: 9px;
+  border-radius: 8px;
+  color: #fff;
+  text-align: center;
+}
+
+.quality-score b {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.quality-score span {
+  margin-top: 3px;
+  font-size: 12px;
+  font-weight: 750;
 }
 
 .review-meta,
