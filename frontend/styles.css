@@ -566,7 +566,7 @@ main {
 
 .summary-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.64fr);
+  grid-template-columns: minmax(0, 0.72fr) minmax(420px, 1fr);
   gap: 18px;
   align-items: start;
 }
@@ -583,6 +583,28 @@ main {
 .summary-score-panel h4 {
   margin: 0;
   font-size: 14px;
+}
+
+.summary-score-panel .reviewer-score-board {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.summary-score-panel .audit-score-row {
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--soft-line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.summary-score-panel .audit-score-row:last-child {
+  padding: 10px;
+  border: 1px solid var(--soft-line);
+}
+
+.summary-score-panel .audit-score-row span {
+  min-height: 58px;
 }
 
 .surface {

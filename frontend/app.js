@@ -62,11 +62,11 @@ const pipelineLayers = [
 ];
 
 const stanceScale = [
-  ["strongly_disagree", "Strongly disagree"],
-  ["disagree", "Disagree"],
-  ["mixed", "Mixed"],
-  ["agree", "Agree"],
-  ["strongly_agree", "Strongly agree"]
+  ["strongly_disagree", "Contradicted"],
+  ["disagree", "Weak support"],
+  ["mixed", "Questionable"],
+  ["agree", "Partly valid"],
+  ["strongly_agree", "Well supported"]
 ];
 
 const demoConfigs = {
@@ -144,7 +144,7 @@ const analysis = {
       stance: "skeptical",
       potential: "High",
       headline: "Concerned about missing baselines and experimental breadth.",
-      auditSummary: "Mixed review quality: the main concerns are important, but some claims are broader than the retrieved manuscript evidence supports.",
+      auditSummary: "Uneven review quality: the main concerns are important, but some claims are broader than the retrieved manuscript evidence supports.",
       dominantAuditStance: "disagree",
       stanceSummary: "Second Opinion disagrees with several broad R2 claims, but agrees that baseline coverage needs a precise response.",
       stanceBreakdown: {
@@ -482,7 +482,7 @@ function renderOverview() {
       <article class="surface">
         <div class="surface-head">
           <h3>Second Opinion stance map</h3>
-          <p>Color-coded agreement with reviewer points, from strongly disagree to strongly agree.</p>
+          <p>Color-coded support for reviewer points, from contradicted to well supported.</p>
         </div>
         <div class="surface-body">
           ${renderStanceLegend()}
@@ -502,25 +502,6 @@ function renderReviewers() {
 
   tabPanelEl.innerHTML = `
     <div class="reviewer-analysis-stack">
-      <article class="surface">
-        <div class="surface-head">
-          <h3>Reviewer analysis</h3>
-          <p>${escapeHtml(activeAnalysis.overview.situation)}</p>
-        </div>
-        <div class="surface-body">
-          <div class="summary-grid">
-            <ul class="status-list">
-              <li><b>Highest leverage reviewer</b><span>${escapeHtml(activeAnalysis.overview.leverage)}</span></li>
-              <li><b>Response strategy</b><span>${escapeHtml(activeAnalysis.overview.strategy)}</span></li>
-            </ul>
-            <div class="summary-score-panel">
-              <h4>Review audit scores</h4>
-              ${renderReviewerScoreBoard()}
-            </div>
-          </div>
-        </div>
-      </article>
-
       <div class="reviewer-tab-layout">
         <div class="reviewer-tabs" role="tablist" aria-label="Reviewers">
           ${reviewers
@@ -924,7 +905,7 @@ function renderStanceDistribution(breakdown) {
 
 function stanceLabel(value) {
   const found = stanceScale.find(([key]) => key === value);
-  return found ? found[1] : "Mixed";
+  return found ? found[1] : "Questionable";
 }
 
 function stanceClass(value) {
