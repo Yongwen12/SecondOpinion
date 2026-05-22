@@ -603,7 +603,7 @@ main {
   border: 1px solid var(--soft-line);
 }
 
-.summary-score-panel .audit-score-row span {
+.summary-score-panel .audit-score-row > div > span {
   min-height: 58px;
 }
 
