@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Second Opinion</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Second Opinion home">
+        <span class="brand-mark" aria-hidden="true">SO</span>
+        <span>Second Opinion</span>
+      </a>
+      <nav class="topnav" aria-label="Main">
+        <a href="#workspace">Workspace</a>
+        <a href="#venues">Venues</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="search-band" id="search">
+        <div class="search-copy">
+          <p class="eyebrow">ICLR preview</p>
+          <h1>Review audit and rebuttal workspace</h1>
+        </div>
+
+        <form class="search-panel" id="analysis-form">
+          <div class="venue-row" id="venues" aria-label="Venue">
+            <button class="venue-pill active" type="button" data-venue="ICLR">ICLR</button>
+            <button class="venue-pill" type="button" disabled>ICML</button>
+            <button class="venue-pill" type="button" disabled>NeurIPS</button>
+            <button class="venue-pill" type="button" disabled>ACL</button>
+          </div>
+
+          <label class="field-label" for="paper-query">Paper, OpenReview URL, or pasted reviews</label>
+          <div class="query-row">
+            <input
+              id="paper-query"
+              name="query"
+              autocomplete="off"
+              spellcheck="false"
+              value="https://openreview.net/forum?id=second-opinion-demo"
+            >
+            <button class="primary-action" type="submit">Analyze</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="pipeline-band hidden" id="pipeline" aria-live="polite">
+        <div class="section-head">
+          <p class="eyebrow">Analysis pipeline</p>
+          <h2 id="pipeline-title">Preparing analysis</h2>
+        </div>
+        <div class="pipeline-layout">
+          <div class="pipeline-layers" id="pipeline-layers"></div>
+          <aside class="analysis-feed" aria-label="Analysis notes">
+            <h3>Live notes</h3>
+            <ol id="analysis-log"></ol>
+          </aside>
+        </div>
+      </section>
+
+      <section class="workspace hidden" id="workspace">
+        <div class="workspace-head">
+          <div>
+            <p class="eyebrow">Workspace</p>
+            <h2 id="paper-title">ICLR submission analysis</h2>
+          </div>
+          <div class="paper-metrics" id="paper-metrics"></div>
+        </div>
+
+        <div class="tabs" role="tablist" aria-label="Workspace tabs">
+          <button class="tab active" type="button" data-tab="overview">Overview</button>
+          <button class="tab" type="button" data-tab="reviewers">Reviewer Analysis</button>
+          <button class="tab" type="button" data-tab="rebuttal">Rebuttal Workspace</button>
+        </div>
+
+        <div class="workspace-grid">
+          <aside class="reviewer-rail" aria-label="Reviewers">
+            <h3>Reviewers</h3>
+            <div id="reviewer-rail"></div>
+          </aside>
+          <section class="tab-panel" id="tab-panel" aria-live="polite"></section>
+        </div>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
