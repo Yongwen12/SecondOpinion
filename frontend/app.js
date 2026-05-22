@@ -62,8 +62,8 @@ const pipelineLayers = [
 ];
 
 const stanceScale = [
-  ["strongly_disagree", "Contradicted"],
-  ["disagree", "Weak support"],
+  ["strongly_disagree", "Conflicts"],
+  ["disagree", "Thin support"],
   ["mixed", "Questionable"],
   ["agree", "Partly valid"],
   ["strongly_agree", "Well supported"]
