@@ -61,6 +61,14 @@ const pipelineLayers = [
   }
 ];
 
+const stanceScale = [
+  ["strongly_disagree", "Strongly disagree"],
+  ["disagree", "Disagree"],
+  ["mixed", "Mixed"],
+  ["agree", "Agree"],
+  ["strongly_agree", "Strongly agree"]
+];
+
 const analysis = {
   paperTitle: "Second Opinion Demo Submission",
   venue: "ICLR",
@@ -95,6 +103,15 @@ const analysis = {
       potential: "Medium",
       headline: "Mostly positive, asks for sharper novelty framing.",
       auditSummary: "High-quality review: specific, professional, and mostly actionable. The novelty concern needs more explicit manuscript grounding.",
+      dominantAuditStance: "agree",
+      stanceSummary: "Second Opinion agrees with most R1 points, while marking the novelty critique as only partly grounded.",
+      stanceBreakdown: {
+        strongly_disagree: 0,
+        disagree: 0,
+        mixed: 1,
+        agree: 3,
+        strongly_agree: 1
+      },
       dimensions: {
         Professionalism: 92,
         Specificity: 78,
@@ -113,6 +130,15 @@ const analysis = {
       potential: "High",
       headline: "Concerned about missing baselines and experimental breadth.",
       auditSummary: "Mixed review quality: the main concerns are important, but some claims are broader than the retrieved manuscript evidence supports.",
+      dominantAuditStance: "disagree",
+      stanceSummary: "Second Opinion disagrees with several broad R2 claims, but agrees that baseline coverage needs a precise response.",
+      stanceBreakdown: {
+        strongly_disagree: 1,
+        disagree: 2,
+        mixed: 1,
+        agree: 1,
+        strongly_agree: 0
+      },
       dimensions: {
         Professionalism: 76,
         Specificity: 67,
@@ -131,6 +157,15 @@ const analysis = {
       potential: "Medium",
       headline: "Likes the idea but doubts whether the evaluation proves the central claim.",
       auditSummary: "Generally useful review: the evaluation concern is fair, but the review compresses several distinct issues into one broad objection.",
+      dominantAuditStance: "mixed",
+      stanceSummary: "Second Opinion is mixed on R3: the evaluation concern is valid, but the novelty comparison needs more evidence.",
+      stanceBreakdown: {
+        strongly_disagree: 0,
+        disagree: 1,
+        mixed: 2,
+        agree: 2,
+        strongly_agree: 0
+      },
       dimensions: {
         Professionalism: 86,
         Specificity: 69,
@@ -149,6 +184,15 @@ const analysis = {
       potential: "Low",
       headline: "Supportive review with presentation-level requests.",
       auditSummary: "Strong review quality: concise, professional, and well calibrated to fixable presentation issues.",
+      dominantAuditStance: "strongly_agree",
+      stanceSummary: "Second Opinion strongly agrees that R4's points are fair, low-risk, and directly actionable.",
+      stanceBreakdown: {
+        strongly_disagree: 0,
+        disagree: 0,
+        mixed: 1,
+        agree: 2,
+        strongly_agree: 2
+      },
       dimensions: {
         Professionalism: 95,
         Specificity: 84,
@@ -360,6 +404,9 @@ function renderWorkspace() {
             <span>SO score</span>
             <b>${reviewer.qualityScore}</b>
           </div>
+          <span class="mini-stance ${stanceClass(reviewer.dominantAuditStance)}">
+            ${escapeHtml(stanceLabel(reviewer.dominantAuditStance))}
+          </span>
           <span>${escapeHtml(reviewer.headline)}</span>
         </div>
       `
@@ -407,6 +454,17 @@ function renderOverview() {
       </article>
     </div>
 
+    <article class="surface stance-map-surface">
+      <div class="surface-head">
+        <h3>Second Opinion stance map</h3>
+        <p>Color-coded agreement with reviewer points, from strongly disagree to strongly agree.</p>
+      </div>
+      <div class="surface-body">
+        ${renderStanceLegend()}
+        ${renderStanceMap()}
+      </div>
+    </article>
+
     <article class="surface" style="margin-top:18px">
       <div class="surface-head">
         <h3>Response priorities</h3>
@@ -436,6 +494,7 @@ function renderReviewers() {
                     <span class="badge">Score ${reviewer.score}</span>
                     <span class="badge">Confidence ${reviewer.confidence}</span>
                     <span class="badge stance ${reviewer.stance}">${capitalize(reviewer.stance)}</span>
+                    <span class="stance-pill ${stanceClass(reviewer.dominantAuditStance)}">SO stance: ${stanceLabel(reviewer.dominantAuditStance)}</span>
                     <span class="badge ${reviewer.potential.toLowerCase()}">${reviewer.potential} potential</span>
                   </div>
                 </div>
@@ -446,6 +505,13 @@ function renderReviewers() {
               </div>
               <p>${escapeHtml(reviewer.headline)}</p>
               <p>${escapeHtml(reviewer.auditSummary)}</p>
+              <div class="review-stance-block">
+                <div class="stance-row-header">
+                  <b>Stance distribution</b>
+                  <span>${escapeHtml(reviewer.stanceSummary)}</span>
+                </div>
+                ${renderStanceDistribution(reviewer.stanceBreakdown)}
+              </div>
               <div class="score-stack">
                 ${renderScoreRows(reviewer.dimensions)}
               </div>
@@ -574,6 +640,77 @@ function renderScoreRows(dimensions) {
       `
     )
     .join("");
+}
+
+function renderStanceLegend() {
+  return `
+    <div class="stance-legend" aria-label="Second Opinion stance legend">
+      ${stanceScale
+        .map(
+          ([key, label]) => `
+            <span>
+              <i class="${stanceClass(key)}"></i>
+              ${escapeHtml(label)}
+            </span>
+          `
+        )
+        .join("")}
+    </div>
+  `;
+}
+
+function renderStanceMap() {
+  return `
+    <div class="stance-map">
+      ${analysis.reviewers
+        .map(
+          (reviewer) => `
+            <div class="stance-map-row">
+              <div>
+                <strong>${reviewer.id}</strong>
+                <span>${escapeHtml(reviewer.stanceSummary)}</span>
+              </div>
+              <div class="stance-map-main">
+                ${renderStanceDistribution(reviewer.stanceBreakdown)}
+                <b class="stance-pill ${stanceClass(reviewer.dominantAuditStance)}">${stanceLabel(reviewer.dominantAuditStance)}</b>
+              </div>
+            </div>
+          `
+        )
+        .join("")}
+    </div>
+  `;
+}
+
+function renderStanceDistribution(breakdown) {
+  const total = Object.values(breakdown).reduce((sum, value) => sum + value, 0) || 1;
+  const segments = stanceScale
+    .map(([key, label]) => {
+      const count = breakdown[key] || 0;
+      if (!count) {
+        return "";
+      }
+      const width = Math.max(8, Math.round((count / total) * 100));
+      return `
+        <span
+          class="stance-segment ${stanceClass(key)}"
+          style="width:${width}%"
+          title="${escapeHtml(label)}: ${count}"
+          aria-label="${escapeHtml(label)}: ${count}"
+        ></span>
+      `;
+    })
+    .join("");
+  return `<div class="stance-distribution">${segments}</div>`;
+}
+
+function stanceLabel(value) {
+  const found = stanceScale.find(([key]) => key === value);
+  return found ? found[1] : "Mixed";
+}
+
+function stanceClass(value) {
+  return `so-stance-${String(value || "mixed").replaceAll("_", "-")}`;
 }
 
 function qualityClass(score) {
