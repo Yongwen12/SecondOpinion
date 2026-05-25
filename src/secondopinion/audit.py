@@ -202,7 +202,13 @@ def audit_claim(
     specificity = score_specificity(claim_text)
     actionability = score_actionability(claim_text)
     tone = score_tone(claim_text)
-    evidence = retrieve_evidence(claim_id, claim_text, paper, claim_type=claim_type)
+    evidence = retrieve_evidence(
+        claim_id,
+        claim_text,
+        paper,
+        claim_type=claim_type,
+        include_rebuttals=False,
+    )
     verdict, confidence, evidence_score = classify_evidence_verdict(claim_text, evidence, claim_type)
     factual_alignment = evidence_score
     judge_version = RULE_MODEL_VERSION
@@ -364,7 +370,6 @@ def build_judge_messages(
             "paper_id": paper.get("paper_id"),
             "title": clean_text(paper.get("title")),
             "abstract": clean_text(paper.get("abstract")),
-            "decision": clean_text(paper.get("decision")),
         },
         "review": {
             "review_id": review.get("review_id"),
@@ -399,7 +404,8 @@ def build_judge_messages(
                 "You are SecondOpinion, an expert auditor of peer review quality. "
                 "Evaluate one reviewer point against the manuscript evidence like a careful senior researcher. "
                 "Do not decide whether the paper should be accepted. "
-                "Use only the supplied paper, review, and retrieved evidence. "
+                "Use only the supplied paper, review, and retrieved review-time evidence. "
+                "Do not use author responses, final decisions, or later revisions to score the reviewer point. "
                 "Your core job is to decide whether the reviewer point is well supported, weakly supported, "
                 "answered by the manuscript, or impossible to judge from the supplied evidence. "
                 "Classify the review point as comment, question, suggestion, score_justification, summary, or other. "

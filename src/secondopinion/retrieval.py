@@ -61,7 +61,7 @@ def expand_query_terms(claim_text: str, claim_type: str) -> list[str]:
     return sorted(terms)
 
 
-def build_evidence_sources(paper: dict[str, Any]) -> list[dict[str, Any]]:
+def build_evidence_sources(paper: dict[str, Any], *, include_rebuttals: bool = False) -> list[dict[str, Any]]:
     sources: list[dict[str, Any]] = []
 
     def add(source_type: str, section: str, text: Any, page: int | None = None) -> None:
@@ -79,8 +79,9 @@ def build_evidence_sources(paper: dict[str, Any]) -> list[dict[str, Any]]:
 
     add("paper", "title", paper.get("title"))
     add("paper", "abstract", paper.get("abstract"))
-    for idx, rebuttal in enumerate(paper.get("rebuttals", []), start=1):
-        add("rebuttal", f"author_response_{idx}", rebuttal.get("text"))
+    if include_rebuttals:
+        for idx, rebuttal in enumerate(paper.get("rebuttals", []), start=1):
+            add("rebuttal", f"author_response_{idx}", rebuttal.get("text"))
     for idx, section in enumerate(paper.get("paper_sections", []), start=1):
         add(
             section.get("source_type", "paper"),
@@ -138,12 +139,13 @@ def retrieve_evidence(
     *,
     claim_type: str = "general",
     top_k: int = 3,
+    include_rebuttals: bool = False,
 ) -> list[Evidence]:
     query_terms = expand_query_terms(claim_text, claim_type)
     if not query_terms:
         return []
 
-    sources = build_evidence_sources(paper)
+    sources = build_evidence_sources(paper, include_rebuttals=include_rebuttals)
     if not sources:
         return []
 

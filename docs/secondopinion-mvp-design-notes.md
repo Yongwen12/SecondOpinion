@@ -49,6 +49,21 @@ per review:
 
 The current implementation still judges review points one by one; batching the judge per review is a high-priority optimization.
 
+## Temporal Evidence Boundary
+
+SecondOpinion should separate review-time assessment from post-review assistance.
+
+For **Review Assessment**, the system should evaluate whether a reviewer point was fair and well grounded at the time the review was written. This stage must not use author responses, final decisions, meta-reviews, or later PDF revisions as evidence for scoring the reviewer. It may use:
+
+- the submitted manuscript;
+- submitted appendices and PDF evidence chunks;
+- review text, rating, and confidence;
+- venue guidelines and external literature that would have been available at review time.
+
+For **Rebuttal Guidance**, the system may use post-review materials, including author responses, reviewer follow-ups, meta-reviews, and revised manuscript text. These materials help decide how authors should respond, but they should not retroactively lower or raise the reviewer's assessment score.
+
+This boundary is important for cases where the author response says a concern has been addressed in a new PDF. That response can support rebuttal strategy, but it should not be treated as manuscript evidence when judging whether the original reviewer critique was reasonable.
+
 ## Data Strategy
 
 For research use, data retention should be maximal.

@@ -157,6 +157,42 @@ class AuditTests(unittest.TestCase):
         self.assertIn("llm-judge-failed", first_claim["issue_flags"])
         self.assertEqual(first_claim["judge_version"], "review-point-judge-v0.2+fallback")
 
+    def test_review_assessment_ignores_author_response(self):
+        dataset = {
+            "dataset": "temporal_boundary",
+            "papers": [
+                {
+                    "paper_id": "p1",
+                    "title": "A Model for Review Auditing",
+                    "abstract": "We introduce a model for review auditing.",
+                    "decision": "Reject",
+                    "reviews": [
+                        {
+                            "review_id": "r1",
+                            "review_text": "The paper lacks ablation studies.",
+                            "weaknesses": "The paper lacks ablation studies.",
+                            "rating_raw": "3: reject",
+                            "rating_normalized": 3.0,
+                            "confidence_raw": "4: confident",
+                            "confidence_normalized": 8.0,
+                        }
+                    ],
+                    "rebuttals": [
+                        {
+                            "id": "reply1",
+                            "text": "We added a new ablation study in the revised PDF.",
+                        }
+                    ],
+                    "paper_sections": [],
+                }
+            ],
+        }
+        result = audit_dataset(dataset, claim_llm_client=SampleClaimClient())
+        claim = result["audits"][0]["claims"][0]
+        self.assertNotEqual(claim["verdict"], "possibly_contradicted")
+        self.assertNotIn("possibly-contradicted-by-paper", claim["issue_flags"])
+        self.assertFalse(any(item["source_type"] == "rebuttal" for item in claim["evidence"]))
+
 
 if __name__ == "__main__":
     unittest.main()

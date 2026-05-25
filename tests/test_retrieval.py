@@ -40,6 +40,33 @@ class RetrievalTests(unittest.TestCase):
         self.assertIn("ablation study", snippet)
         self.assertLessEqual(len(snippet), 166)
 
+    def test_rebuttals_are_excluded_by_default(self):
+        paper = {
+            "paper_id": "paper1",
+            "title": "A Model for Review Auditing",
+            "abstract": "We introduce a model for review auditing.",
+            "rebuttals": [
+                {
+                    "text": "We added a new ablation study in the revised PDF.",
+                }
+            ],
+        }
+        without_rebuttal = retrieve_evidence(
+            "claim1",
+            "The paper lacks ablation studies.",
+            paper,
+            claim_type="ablation",
+        )
+        with_rebuttal = retrieve_evidence(
+            "claim1",
+            "The paper lacks ablation studies.",
+            paper,
+            claim_type="ablation",
+            include_rebuttals=True,
+        )
+        self.assertFalse(any(item.source_type == "rebuttal" for item in without_rebuttal))
+        self.assertTrue(any(item.source_type == "rebuttal" for item in with_rebuttal))
+
     def test_retrieval_version_is_v2(self):
         self.assertEqual(RETRIEVAL_VERSION, "section-aware-bm25-v0.2")
 
