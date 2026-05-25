@@ -84,6 +84,11 @@ MVP 输出：
 
 下一版目标要求外部证据进入 review assessment 和 rebuttal guidance。对 novelty、related work、baseline、实验充分性、method validity 和 field norm 相关 claim，系统需要检索相关论文、venue guideline、benchmark/baseline convention 等外部材料；reviewer score 和 final decision 只能作为优先级和校准信号，不能当作 claim correctness 的 ground truth。
 
+下一步重点：
+
+1. 设计聪明、快速、省钱的外部证据路径：metadata-first 检索，先用论文标题、摘要、venue guideline 和 benchmark/baseline convention；只对高优先级或不确定 claim 下载全文、生成摘要，并缓存所有外部 evidence。
+2. 做小规模专家标注：先选小几十篇论文，给专家展示 claim-level reviewer point，让他们用 1-5 分快速标注是否同意 reviewer 的实质性看法，并对 rebuttal usefulness 打分；第一阶段主要看 SecondOpinion stance 和专家分数的 correlation。
+
 运行 audit 前需要设置 OpenAI API key：
 
 ```bash

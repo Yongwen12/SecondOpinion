@@ -64,6 +64,15 @@ Minimum external evidence sources:
 
 The system should keep internal and external evidence separate in the data model and UI. A reviewer score or final decision can help prioritize issues, but it is not external evidence and should not be treated as ground truth.
 
+Next implementation should focus on a smart, fast, and low-cost external evidence path:
+
+- use metadata-first retrieval before downloading full papers;
+- search only for claim types that need field context, such as novelty, related work, baselines, experiments, and method validity;
+- cache search results, paper metadata, abstracts, PDFs, and summaries by stable IDs;
+- use abstracts and venue guidelines first, then full-paper summaries only for high-priority or ambiguous claims;
+- batch related claims from the same paper or review to avoid repeated searches;
+- reserve stronger models for high-impact claims or final assessment writing.
+
 ## Temporal Evidence Boundary
 
 SecondOpinion should separate review-time assessment from post-review assistance.
@@ -291,12 +300,12 @@ Calibration plan:
 - human labels and LLM labels are generated independently;
 - comparison reports become a calibration dataset;
 - high-confidence model decisions should be checked against human labels over time.
+- next expert annotation should stay small and low burden: select a few dozen papers, show claim-level reviewer points, ask experts for a simple 1-5 agreement score, and measure correlation with SecondOpinion stance.
+- primary early metrics should be AI-expert correlation, human-human correlation when two labels are available, and rebuttal usefulness score.
 
 ## External References
 
-First MVP does not need live external search.
-
-External references should be reserved for later, especially for:
+External references are required for the target product, especially for:
 
 - novelty;
 - field consensus;
@@ -309,22 +318,28 @@ Until external references are added, novelty and deep field claims should use ca
 
 The fastest path to a credible demo is:
 
-1. **Report redesign**
+1. **Low-cost external evidence**
+   Add metadata-first related paper and venue-guideline retrieval for substantive reviewer points.
+
+2. **Small expert annotation run**
+   Select a few dozen papers and ask experts for simple 1-5 agreement scores on reviewer points. Use correlation as the first quantitative signal.
+
+3. **Report redesign**
    User-facing structure: paper summary, review landscape, key issues, per-review assessment, rebuttal guidance, evidence appendix.
 
-2. **Rebuttal guidance**
+4. **Rebuttal guidance**
    Add priority, strategy, suggested response, evidence to cite, and risks to avoid.
 
-3. **Claim extractor cleanup**
+5. **Claim extractor cleanup**
    Avoid neutral summaries and praise. Extract only auditable negative/actionable points.
 
-4. **Batch judge per review**
+6. **Batch judge per review**
    Reduce runtime and API calls.
 
-5. **Minimal reliability gate**
+7. **Minimal reliability gate**
    Verify quotes and prevent overconfident conclusions.
 
-6. **Three-paper demo packet**
+8. **Three-paper demo packet**
    Use real ICLR 2024 samples across different topics. Show real reviews, PDFs, evidence, stance, and rebuttal guidance.
 
 ## References We Discussed
