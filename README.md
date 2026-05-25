@@ -75,12 +75,14 @@ MVP 输出：
 1. 抓取 ICLR OpenReview submission 和 replies，完整保存 raw snapshot。
 2. 从 raw snapshot 派生 normalized papers / reviews / rebuttals / decisions schema。
 3. 从 review weaknesses 中抽取可审计 claim。
-4. 用论文摘要和可扩展 PDF evidence chunks 做 review-time evidence retrieval；author response 保留给 post-review / rebuttal guidance。
+4. 用论文摘要、可扩展 PDF evidence chunks 和外部学术证据做 review-time evidence retrieval；author response 保留给 post-review / rebuttal guidance。
 5. 输出 claim-level verdict、issue flags、Review Quality Score 和 Markdown / HTML 报告。
 
 当前 claim extraction 使用 `claim-extraction-llm-v0.1`：LLM 负责从 review 原文中抽取、拆分和分类 claim，系统只做 deterministic validation。每条 claim 必须带 `source_field` 和可回指到原文的 `source_sentence`；匹配不到原文的 claim 会被丢弃。
 
 当前 evidence retrieval 使用 `section-aware-bm25-v0.2`：review assessment 阶段只使用 review-time evidence，例如 abstract、PDF evidence chunks 和 appendix，不使用 author response、final decision 或后续修订来给 reviewer 打分。author response 只应进入 post-review / rebuttal guidance 阶段。retrieval 会按 claim 类型给 section 加权，并在报告中保留 page、section label 和 snippet。默认 verdict 仍使用 `rule-baseline-v0.1`，偏保守；打开 LLM judge 后会生成面向用户的 SecondOpinion take，并用统一 stance 展示 SecondOpinion 对 reviewer point 的态度：`strongly_disagree` / `disagree` / `mixed` / `agree` / `strongly_agree`。
+
+下一版目标要求外部证据进入 review assessment 和 rebuttal guidance。对 novelty、related work、baseline、实验充分性、method validity 和 field norm 相关 claim，系统需要检索相关论文、venue guideline、benchmark/baseline convention 等外部材料；reviewer score 和 final decision 只能作为优先级和校准信号，不能当作 claim correctness 的 ground truth。
 
 运行 audit 前需要设置 OpenAI API key：
 

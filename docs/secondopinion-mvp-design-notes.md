@@ -49,6 +49,21 @@ per review:
 
 The current implementation still judges review points one by one; batching the judge per review is a high-priority optimization.
 
+## External Evidence Requirement
+
+External evidence is a required part of the target product, not an optional enhancement.
+
+Both **Review Assessment** and **Rebuttal Guidance** should use external evidence when judging substantive reviewer points. Manuscript-only evidence is not enough for claims about novelty, related work, baseline choice, experimental sufficiency, method validity, or field norms.
+
+Minimum external evidence sources:
+
+- related papers from arXiv, Semantic Scholar, OpenAlex, or equivalent scholarly indexes;
+- venue guidelines, scoring rubrics, and review instructions;
+- benchmark or baseline conventions when relevant to the claim;
+- field-level context needed to judge novelty, significance, or experimental adequacy.
+
+The system should keep internal and external evidence separate in the data model and UI. A reviewer score or final decision can help prioritize issues, but it is not external evidence and should not be treated as ground truth.
+
 ## Temporal Evidence Boundary
 
 SecondOpinion should separate review-time assessment from post-review assistance.
