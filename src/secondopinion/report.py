@@ -39,6 +39,11 @@ FLAG_LABELS = {
     "missing-actionable-suggestions": "Critique gives limited guidance for improvement.",
     "requires-human-expert-check": "Specialist context is needed.",
     "llm-judge-failed": "Automated assessment used a fallback method.",
+    "llm-batch-judge-incomplete": "Batch assessment did not return every claim.",
+    "unverified-quoted-evidence": "Quoted evidence was replaced with a retrieved passage.",
+    "confidence-downgraded-evidence-limited": "Confidence was lowered because evidence is limited.",
+    "stance-corrected-by-reliability-gate": "Stance was corrected to match the evidence judgment.",
+    "user-facing-copy-rewritten": "Assessment copy was rewritten to remove internal wording.",
 }
 
 STANCE_LABELS = {
@@ -47,6 +52,22 @@ STANCE_LABELS = {
     "mixed": "Mixed",
     "agree": "Agree",
     "strongly_agree": "Strongly agree",
+}
+
+REBUTTAL_PRIORITY_LABELS = {
+    "high": "High priority",
+    "medium": "Medium priority",
+    "low": "Low priority",
+}
+
+REBUTTAL_STRATEGY_LABELS = {
+    "acknowledge_and_clarify": "Acknowledge and clarify",
+    "cite_existing_evidence": "Cite existing evidence",
+    "concede_and_fix": "Concede and fix",
+    "add_experiment_or_analysis": "Add experiment or analysis",
+    "explain_scope": "Explain scope",
+    "challenge_politely": "Challenge politely",
+    "seek_expert_context": "Seek expert context",
 }
 
 LEGACY_STANCE_MAP = {
@@ -121,8 +142,8 @@ def write_markdown_report(audit_result: dict[str, Any], path: str | Path) -> Non
                 f"- Notes: {flags}",
                 f"- Summary: {audit.get('summary')}",
                 "",
-                "| Review point | SecondOpinion stance | SecondOpinion take | Most relevant passage | Notes |",
-                "| --- | --- | --- | --- | --- |",
+                "| Review point | SecondOpinion stance | Review assessment | Judgment basis | Rebuttal guidance | Most relevant passage | Notes |",
+                "| --- | --- | --- | --- | --- | --- | --- |",
             ]
         )
         for claim in audit.get("claims", []):
@@ -136,6 +157,8 @@ def write_markdown_report(audit_result: dict[str, Any], path: str | Path) -> Non
                         _md_cell(claim.get("claim_text", "")),
                         _md_cell(stance_label(claim)),
                         _md_cell(claim_assessment_text(claim)),
+                        _md_cell(claim_reasoning_text(claim)),
+                        _md_cell(rebuttal_guidance_text(claim)),
                         _md_cell(top_evidence),
                         _md_cell(claim_flags),
                     ]
@@ -186,7 +209,21 @@ def write_html_report(audit_result: dict[str, Any], path: str | Path) -> None:
             if not flags:
                 flags = "<span>No additional notes.</span>"
             assessment = claim_assessment_text(claim)
+            reasoning = claim_reasoning_text(claim)
+            reasoning_html = (
+                f"""
+                  <section class="basis-card">
+                    <h3>Judgment Basis</h3>
+                    <p>{_h(reasoning)}</p>
+                  </section>
+                """
+                if reasoning
+                else ""
+            )
             stance = stance_value(claim)
+            guidance = rebuttal_guidance(claim)
+            guidance_evidence = guidance_list_html("Evidence to cite", guidance.get("evidence_to_cite", []))
+            guidance_risks = guidance_list_html("Risks to avoid", guidance.get("risks_to_avoid", []))
             claims.append(
                 f"""
                 <details>
@@ -194,7 +231,7 @@ def write_html_report(audit_result: dict[str, Any], path: str | Path) -> None:
                   <section class="take-card">
                     <div class="take-top">
                       <div>
-                        <h3>SecondOpinion take</h3>
+                        <h3>Review Assessment</h3>
                         <p>{_h(assessment)}</p>
                       </div>
                       <div class="stance-badge {stance_class(stance)}">
@@ -206,6 +243,21 @@ def write_html_report(audit_result: dict[str, Any], path: str | Path) -> None:
                       <span>{_h(short_claim_type_label(claim.get('claim_type', '')))}</span>
                       <span>{_h(confidence_label(claim.get('audit_confidence', '')))}</span>
                     </div>
+                  </section>
+                  {reasoning_html}
+                  <section class="guidance-card">
+                    <div class="guidance-top">
+                      <h3>Rebuttal Guidance</h3>
+                      <span class="priority priority-{_h(guidance.get('priority', 'medium'))}">
+                        {_h(rebuttal_priority_label(guidance.get('priority')))}
+                      </span>
+                    </div>
+                    <p>{_h(guidance.get('suggested_response', ''))}</p>
+                    <div class="take-meta">
+                      <span>{_h(rebuttal_strategy_label(guidance.get('strategy')))}</span>
+                    </div>
+                    {guidance_evidence}
+                    {guidance_risks}
                   </section>
                   <details class="reference-materials">
                     <summary>Reference material</summary>
@@ -372,11 +424,31 @@ def write_html_report(audit_result: dict[str, Any], path: str | Path) -> None:
           padding: 14px;
           margin-top: 12px;
         }}
+        .guidance-card {{
+          border: 1px solid #bbf7d0;
+          border-radius: 8px;
+          background: #f0fdf4;
+          padding: 14px;
+          margin-top: 10px;
+        }}
+        .basis-card {{
+          border: 1px solid #ddd6fe;
+          border-radius: 8px;
+          background: #f5f3ff;
+          padding: 12px 14px;
+          margin-top: 10px;
+        }}
         .take-top {{
           display: grid;
           grid-template-columns: minmax(0, 1fr) 150px;
           gap: 14px;
           align-items: start;
+        }}
+        .guidance-top {{
+          display: flex;
+          justify-content: space-between;
+          gap: 12px;
+          align-items: center;
         }}
         .take-card h3 {{
           margin: 0;
@@ -385,10 +457,36 @@ def write_html_report(audit_result: dict[str, Any], path: str | Path) -> None:
           text-transform: uppercase;
           letter-spacing: 0;
         }}
+        .guidance-card h3 {{
+          margin: 0;
+          font-size: 14px;
+          color: #166534;
+          text-transform: uppercase;
+          letter-spacing: 0;
+        }}
+        .basis-card h3 {{
+          margin: 0;
+          font-size: 13px;
+          color: #5b21b6;
+          text-transform: uppercase;
+          letter-spacing: 0;
+        }}
         .take-card p {{
           margin: 8px 0 0;
           color: var(--ink);
           font-size: 17px;
+          line-height: 1.55;
+        }}
+        .guidance-card p {{
+          margin: 10px 0 0;
+          color: var(--ink);
+          font-size: 15px;
+          line-height: 1.55;
+        }}
+        .basis-card p {{
+          margin: 8px 0 0;
+          color: #3f3f46;
+          font-size: 14px;
           line-height: 1.55;
         }}
         .stance-badge {{
@@ -425,6 +523,39 @@ def write_html_report(audit_result: dict[str, Any], path: str | Path) -> None:
           color: #0369a1;
           padding: 4px 8px;
           font-size: 12px;
+        }}
+        .guidance-card .take-meta span {{
+          border-color: #bbf7d0;
+          color: #166534;
+        }}
+        .priority {{
+          border-radius: 999px;
+          padding: 4px 9px;
+          color: #fff;
+          font-size: 12px;
+          font-weight: 700;
+          white-space: nowrap;
+        }}
+        .priority-high {{ background: #b91c1c; }}
+        .priority-medium {{ background: #b45309; }}
+        .priority-low {{ background: #047857; }}
+        .guidance-list {{
+          margin-top: 10px;
+        }}
+        .guidance-list h4 {{
+          margin: 0 0 6px;
+          color: #166534;
+          font-size: 11px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0;
+        }}
+        .guidance-list ul {{
+          margin: 0;
+          padding-left: 18px;
+          color: var(--muted);
+          line-height: 1.45;
+          font-size: 13px;
         }}
         .reference-materials {{
           border-top: 0;
@@ -591,6 +722,80 @@ def confidence_label(confidence: Any) -> str:
     return "Confidence not available"
 
 
+def rebuttal_guidance(claim: dict[str, Any]) -> dict[str, Any]:
+    raw = claim.get("rebuttal_guidance")
+    if not isinstance(raw, dict):
+        raw = {}
+
+    priority = str(raw.get("priority") or "medium").strip().lower()
+    if priority not in REBUTTAL_PRIORITY_LABELS:
+        priority = "medium"
+
+    strategy = str(raw.get("strategy") or "acknowledge_and_clarify").strip().lower()
+    if strategy not in REBUTTAL_STRATEGY_LABELS:
+        strategy = "acknowledge_and_clarify"
+
+    suggested_response = _display_text(raw.get("suggested_response"))
+    if not suggested_response:
+        suggested_response = "Acknowledge the reviewer point, cite the strongest available evidence, and state the narrow revision or clarification you can make."
+
+    evidence_to_cite = display_string_list(raw.get("evidence_to_cite"))
+    risks_to_avoid = display_string_list(raw.get("risks_to_avoid"))
+
+    return {
+        "priority": priority,
+        "strategy": strategy,
+        "suggested_response": suggested_response,
+        "evidence_to_cite": evidence_to_cite,
+        "risks_to_avoid": risks_to_avoid,
+    }
+
+
+def rebuttal_guidance_text(claim: dict[str, Any]) -> str:
+    guidance = rebuttal_guidance(claim)
+    pieces = [
+        rebuttal_priority_label(guidance["priority"]),
+        rebuttal_strategy_label(guidance["strategy"]),
+        guidance["suggested_response"],
+    ]
+    if guidance["evidence_to_cite"]:
+        pieces.append("Evidence to cite: " + "; ".join(guidance["evidence_to_cite"]))
+    if guidance["risks_to_avoid"]:
+        pieces.append("Risks to avoid: " + "; ".join(guidance["risks_to_avoid"]))
+    return " ".join(piece for piece in pieces if piece)
+
+
+def display_string_list(value: Any) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    cleaned = []
+    for item in value:
+        text = _display_text(item)
+        if text and text not in cleaned:
+            cleaned.append(text)
+    return cleaned
+
+
+def rebuttal_priority_label(priority: Any) -> str:
+    return REBUTTAL_PRIORITY_LABELS.get(str(priority or "").strip().lower(), "Medium priority")
+
+
+def rebuttal_strategy_label(strategy: Any) -> str:
+    return REBUTTAL_STRATEGY_LABELS.get(str(strategy or "").strip().lower(), "Acknowledge and clarify")
+
+
+def guidance_list_html(title: str, items: list[str]) -> str:
+    if not items:
+        return ""
+    list_items = "".join(f"<li>{_h(item)}</li>" for item in items)
+    return f"""
+      <div class="guidance-list">
+        <h4>{_h(title)}</h4>
+        <ul>{list_items}</ul>
+      </div>
+    """
+
+
 def support_percent(claim: dict[str, Any]) -> int:
     explicit = claim.get("support_score")
     if isinstance(explicit, (int, float)):
@@ -732,6 +937,18 @@ def claim_assessment_text(claim: dict[str, Any]) -> str:
     if judge_version.startswith(("llm-rag-judge", "review-point-judge")) and rationale and "fallback" not in judge_version:
         take += f" Rationale: {rationale}"
     return take
+
+
+def claim_reasoning_text(claim: dict[str, Any]) -> str:
+    reasoning = _display_text(claim.get("reasoning_summary"))
+    rationale = _display_text(claim.get("judge_rationale"))
+    if reasoning and rationale and normalize_display_for_compare(reasoning) != normalize_display_for_compare(rationale):
+        return f"{reasoning} Rationale: {rationale}"
+    return reasoning or rationale
+
+
+def normalize_display_for_compare(text: str) -> str:
+    return re.sub(r"\W+", "", text).lower()
 
 
 def evidence_quote(evidence: dict[str, Any] | None, max_chars: int = 220) -> str:

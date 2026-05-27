@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import statistics
 from typing import Any
 
@@ -14,12 +15,13 @@ from .claim_extraction import (
 )
 from .model_config import DEFAULT_CHEAP_MODEL
 from .models import ClaimAudit, Evidence, ReviewAudit
+from .prompt_assets import load_prompt
 from .retrieval import RETRIEVAL_VERSION, retrieve_evidence
 from .text import clean_text, tokens
 
 
 RULE_MODEL_VERSION = "rule-baseline-v0.1"
-LLM_JUDGE_VERSION = "review-point-judge-v0.2"
+LLM_JUDGE_VERSION = "review-point-judge-v0.4"
 DEFAULT_JUDGE_MODEL = DEFAULT_CHEAP_MODEL
 RUBRIC_VERSION = "iclr-review-audit-rubric-v0.1"
 
@@ -39,6 +41,16 @@ SECONDOPINION_STANCES = (
     "mixed",
     "agree",
     "strongly_agree",
+)
+REBUTTAL_PRIORITIES = ("high", "medium", "low")
+REBUTTAL_STRATEGIES = (
+    "acknowledge_and_clarify",
+    "cite_existing_evidence",
+    "concede_and_fix",
+    "add_experiment_or_analysis",
+    "explain_scope",
+    "challenge_politely",
+    "seek_expert_context",
 )
 LEGACY_STANCE_MAP = {
     "well_supported": "agree",
@@ -186,6 +198,36 @@ def classify_evidence_verdict(claim_text: str, evidence: list[Evidence], claim_t
     return "insufficient", "low", 1
 
 
+def claim_issue_flags(
+    *,
+    verdict: str,
+    importance: str,
+    specificity: int,
+    tone: int,
+    actionability: int,
+    requires_human_expert: bool,
+    judge_error: str = "",
+) -> list[str]:
+    flags = []
+    if verdict == "possibly_contradicted":
+        flags.append("possibly-contradicted-by-paper")
+    if verdict == "insufficient" and importance in {"major", "medium"}:
+        flags.append("unsupported-major-claim")
+    if verdict == "vague_or_not_checkable":
+        flags.append("vague-or-not-checkable")
+    if specificity <= 1:
+        flags.append("vague-criticism")
+    if tone <= 2:
+        flags.append("unprofessional-tone")
+    if actionability <= 1 and importance not in {"tone-only", "question"}:
+        flags.append("missing-actionable-suggestions")
+    if requires_human_expert:
+        flags.append("requires-human-expert-check")
+    if judge_error:
+        flags.append("llm-judge-failed")
+    return flags
+
+
 def audit_claim(
     paper: dict[str, Any],
     review: dict[str, Any],
@@ -222,6 +264,13 @@ def audit_claim(
     question_value_score = default_question_value_score(review_point_type, specificity, actionability)
     quoted_manuscript_evidence = best_evidence_quote(evidence)
     second_opinion_take = default_second_opinion_take(claim_text, verdict, quoted_manuscript_evidence)
+    rebuttal_guidance = default_rebuttal_guidance(
+        claim=claim,
+        review_point_type=review_point_type,
+        verdict=verdict,
+        stance=stance,
+        evidence=evidence,
+    )
     reasoning_summary = judge_rationale
     professionalism_score = tone * 25
     specificity_score = specificity * 25
@@ -254,6 +303,7 @@ def audit_claim(
             second_opinion_take = judged["second_opinion_take"]
             quoted_manuscript_evidence = judged["quoted_manuscript_evidence"]
             reasoning_summary = judged["reasoning_summary"]
+            rebuttal_guidance = judged["rebuttal_guidance"]
             professionalism_score = judged["professionalism_score"]
             specificity_score = judged["specificity_score"]
             helpfulness_score = judged["helpfulness_score"]
@@ -275,25 +325,17 @@ def audit_claim(
     requires_human_expert = claim_type in EXPERT_REQUIRED_TYPES or verdict == "needs_human_check"
     requires_external = claim_type in {"novelty", "theory"}
 
-    flags = []
-    if verdict == "possibly_contradicted":
-        flags.append("possibly-contradicted-by-paper")
-    if verdict == "insufficient" and claim["importance"] in {"major", "medium"}:
-        flags.append("unsupported-major-claim")
-    if verdict == "vague_or_not_checkable":
-        flags.append("vague-or-not-checkable")
-    if specificity <= 1:
-        flags.append("vague-criticism")
-    if tone <= 2:
-        flags.append("unprofessional-tone")
-    if actionability <= 1 and claim["importance"] not in {"tone-only", "question"}:
-        flags.append("missing-actionable-suggestions")
-    if requires_human_expert:
-        flags.append("requires-human-expert-check")
-    if judge_error:
-        flags.append("llm-judge-failed")
+    flags = claim_issue_flags(
+        verdict=verdict,
+        importance=claim["importance"],
+        specificity=specificity,
+        tone=tone,
+        actionability=actionability,
+        requires_human_expert=requires_human_expert,
+        judge_error=judge_error,
+    )
 
-    return ClaimAudit(
+    result = ClaimAudit(
         claim_id=claim_id,
         review_id=review_id,
         claim_text=claim_text,
@@ -323,6 +365,7 @@ def audit_claim(
         second_opinion_take=second_opinion_take,
         quoted_manuscript_evidence=quoted_manuscript_evidence,
         reasoning_summary=reasoning_summary,
+        rebuttal_guidance=rebuttal_guidance,
         professionalism_score=professionalism_score,
         specificity_score=specificity_score,
         helpfulness_score=helpfulness_score,
@@ -333,6 +376,8 @@ def audit_claim(
         issue_flags=flags,
         evidence=evidence,
     )
+    apply_reliability_gate(result)
+    return result
 
 
 def judge_claim_with_llm(
@@ -357,6 +402,144 @@ def judge_claim_with_llm(
     if judged is None:
         return {"ok": False, "error": "LLM judge returned an invalid payload."}
     return {"ok": True, **judged}
+
+
+def judge_review_claims_with_llm(
+    paper: dict[str, Any],
+    review: dict[str, Any],
+    claims: list[ClaimAudit],
+    *,
+    llm_client: StructuredLLMClient,
+    model: str,
+) -> dict[str, Any]:
+    if not claims:
+        return {"ok": True, "judgements": {}}
+    try:
+        payload = llm_client.complete_json(
+            model=model,
+            messages=build_batch_judge_messages(paper, review, claims),
+            schema_name="review_point_batch_judgement",
+            schema=batch_judge_schema(),
+        )
+        judgements = validate_batch_judge_payload(payload, claims)
+    except Exception as exc:  # noqa: BLE001 - keep the audit usable when the judge call fails.
+        return {"ok": False, "error": str(exc)}
+    if judgements is None:
+        return {"ok": False, "error": "LLM batch judge returned an invalid payload."}
+    return {"ok": True, "judgements": judgements}
+
+
+def apply_batch_judgements(claims: list[ClaimAudit], batch_result: dict[str, Any], *, judge_model: str) -> None:
+    if not claims:
+        return
+    if not batch_result["ok"]:
+        for claim in claims:
+            mark_claim_judge_failure(claim, judge_model=judge_model, error=batch_result["error"])
+        return
+    judgements = batch_result["judgements"]
+    for claim in claims:
+        judged = judgements.get(claim.claim_id)
+        if judged is None:
+            mark_claim_judge_failure(
+                claim,
+                judge_model=judge_model,
+                error="LLM batch judge did not return a judgement for this claim.",
+            )
+            continue
+        apply_judgement_to_claim(claim, judged, judge_model=judge_model)
+
+
+def apply_batch_judgements_with_single_retry(
+    paper: dict[str, Any],
+    review: dict[str, Any],
+    claims: list[ClaimAudit],
+    batch_result: dict[str, Any],
+    *,
+    judge_llm_client: StructuredLLMClient,
+    judge_model: str,
+) -> None:
+    if not claims or not batch_result.get("ok"):
+        apply_batch_judgements(claims, batch_result, judge_model=judge_model)
+        return
+    judgements = batch_result["judgements"]
+    for claim in claims:
+        judged = judgements.get(claim.claim_id)
+        if judged is not None:
+            apply_judgement_to_claim(claim, judged, judge_model=judge_model)
+            continue
+
+        single_result = judge_claim_with_llm(
+            paper,
+            review,
+            claim_to_extracted_payload(claim),
+            claim.evidence,
+            llm_client=judge_llm_client,
+            model=judge_model,
+        )
+        if single_result["ok"]:
+            apply_judgement_to_claim(claim, single_result, judge_model=judge_model)
+        else:
+            mark_claim_judge_failure(
+                claim,
+                judge_model=judge_model,
+                error="LLM batch judge omitted this claim; single-claim retry failed.",
+            )
+
+
+def claim_to_extracted_payload(claim: ClaimAudit) -> dict[str, Any]:
+    return {
+        "claim_text": claim.claim_text,
+        "claim_type": claim.claim_type,
+        "importance": claim.importance,
+        "source_field": claim.source_field,
+        "source_sentence": claim.source_sentence,
+    }
+
+
+def apply_judgement_to_claim(claim: ClaimAudit, judged: dict[str, Any], *, judge_model: str) -> None:
+    claim.verdict = judged["verdict"]
+    claim.audit_confidence = judged["confidence"]
+    claim.evidence_support = judged["evidence_support"]
+    claim.factual_alignment = judged["factual_alignment"]
+    claim.severity_calibration = judged["severity_calibration"]
+    claim.review_point_type = judged["review_point_type"]
+    claim.stance = judged["stance"]
+    claim.support_score = judged["support_score"]
+    claim.answer_coverage_score = judged["answer_coverage_score"]
+    claim.question_value_score = judged["question_value_score"]
+    claim.second_opinion_take = judged["second_opinion_take"]
+    claim.quoted_manuscript_evidence = judged["quoted_manuscript_evidence"]
+    claim.reasoning_summary = judged["reasoning_summary"]
+    claim.rebuttal_guidance = judged["rebuttal_guidance"]
+    claim.professionalism_score = judged["professionalism_score"]
+    claim.specificity_score = judged["specificity_score"]
+    claim.helpfulness_score = judged["helpfulness_score"]
+    claim.fairness_score = judged["fairness_score"]
+    claim.judge_version = LLM_JUDGE_VERSION
+    claim.judge_model = judge_model
+    claim.judge_rationale = judged["rationale"]
+    claim.requires_human_expert = claim.claim_type in EXPERT_REQUIRED_TYPES or claim.verdict == "needs_human_check"
+    claim.requires_external_knowledge = claim.claim_type in {"novelty", "theory"}
+    claim.issue_flags = claim_issue_flags(
+        verdict=claim.verdict,
+        importance=claim.importance,
+        specificity=claim.specificity,
+        tone=claim.tone,
+        actionability=claim.actionability,
+        requires_human_expert=claim.requires_human_expert,
+    )
+    apply_reliability_gate(claim)
+
+
+def mark_claim_judge_failure(claim: ClaimAudit, *, judge_model: str, error: str) -> None:
+    claim.judge_version = f"{LLM_JUDGE_VERSION}+fallback"
+    claim.judge_model = judge_model
+    claim.judge_rationale = "LLM batch judge failed; retained rule baseline verdict."
+    claim.reasoning_summary = claim.judge_rationale
+    _append_flag(claim.issue_flags, "llm-judge-failed")
+    if error:
+        _append_flag(claim.issue_flags, "llm-batch-judge-incomplete")
+    apply_reliability_gate(claim)
 
 
 def build_judge_messages(
@@ -400,46 +583,117 @@ def build_judge_messages(
     return [
         {
             "role": "system",
-            "content": (
-                "You are SecondOpinion, an expert auditor of peer review quality. "
-                "Evaluate one reviewer point against the manuscript evidence like a careful senior researcher. "
-                "Do not decide whether the paper should be accepted. "
-                "Use only the supplied paper, review, and retrieved review-time evidence. "
-                "Do not use author responses, final decisions, or later revisions to score the reviewer point. "
-                "Your core job is to decide whether the reviewer point is well supported, weakly supported, "
-                "answered by the manuscript, or impossible to judge from the supplied evidence. "
-                "Classify the review point as comment, question, suggestion, score_justification, summary, or other. "
-                "For questions, judge whether the manuscript already answers the question and whether the question is useful. "
-                "For suggestions, judge whether the suggestion is reasonable, actionable, and in scope. "
-                "For score_justification, judge whether the stated reasons support the reviewer's rating. "
-                "For comments, judge whether the critique is technically fair and manuscript-grounded. "
-                "Use stance as SecondOpinion's single attitude toward the reviewer point: "
-                "strongly_agree means the reviewer point is clearly valid and important; agree means mostly valid; "
-                "mixed means partly valid, unclear, or evidence-limited; disagree means overstated or weakly supported; "
-                "strongly_disagree means the manuscript evidence clearly answers or undermines the reviewer point. "
-                "Return a direct SecondOpinion take for the end user; do not mention internal tools, prompts, or fallback logic. "
-                "The take should be persuasive by juxtaposing the reviewer wording with manuscript evidence. "
-                "Write the take in this order: first name the reviewer point, then quote the manuscript evidence, then state the conclusion. "
-                "Use phrasing like: Reviewer argues that ...; the manuscript states ...; SecondOpinion concludes ..."
-            ),
+            "content": load_prompt("single_judge_system_v0.4.md"),
         },
         {
             "role": "user",
-            "content": (
-                "Return a structured expert assessment for this reviewer point. "
-                "For comments, suggestions, and score justifications, support_score is 0-100: 0 means the reviewer point is not supported "
-                "by the supplied manuscript evidence, and 100 means it is strongly supported. "
-                "For questions, support_score should summarize overall usefulness, while answer_coverage_score says how much the manuscript "
-                "already answers the question and question_value_score says how valuable the question is as a review point. "
-                "stance is the primary user-facing judgment and must use one of: strongly_disagree, disagree, mixed, agree, strongly_agree. "
-                "second_opinion_take should be one clear paragraph for a nontechnical user interface. "
-                "It must explicitly refer to the reviewer point and quote manuscript evidence before giving the conclusion. "
-                "quoted_manuscript_evidence should be a short exact quote or close excerpt from the retrieved evidence when available. "
-                "Keep reasoning_summary concise and evidence-grounded.\n\n"
-                f"Audit input JSON:\n{json.dumps(payload, ensure_ascii=False, indent=2)}"
+            "content": load_prompt(
+                "single_judge_user_v0.4.md",
+                audit_input_json=json.dumps(payload, ensure_ascii=False, indent=2),
             ),
         },
     ]
+
+
+def build_batch_judge_messages(
+    paper: dict[str, Any],
+    review: dict[str, Any],
+    claims: list[ClaimAudit],
+) -> list[dict[str, str]]:
+    payload = {
+        "paper": {
+            "paper_id": paper.get("paper_id"),
+            "title": clean_text(paper.get("title")),
+            "abstract": clean_text(paper.get("abstract")),
+            "decision": clean_text(paper.get("decision")),
+        },
+        "review": {
+            "review_id": review.get("review_id"),
+            "rating_raw": clean_text(review.get("rating_raw")),
+            "rating_normalized": review.get("rating_normalized"),
+            "confidence_raw": clean_text(review.get("confidence_raw")),
+        },
+        "review_points": [
+            {
+                "claim_id": claim.claim_id,
+                "claim_text": claim.claim_text,
+                "claim_type": claim.claim_type,
+                "importance": claim.importance,
+                "source_field": claim.source_field,
+                "source_sentence": claim.source_sentence,
+                "baseline_verdict": claim.verdict,
+                "retrieved_evidence": [
+                    {
+                        "evidence_id": item.evidence_id,
+                        "source_type": item.source_type,
+                        "section": item.section,
+                        "page": item.page,
+                        "retrieval_score": item.score,
+                        "matched_terms": item.matched_terms,
+                        "text": item.text,
+                    }
+                    for item in claim.evidence
+                ],
+            }
+            for claim in claims
+        ],
+    }
+    return [
+        {
+            "role": "system",
+            "content": load_prompt("batch_judge_system_v0.4.md"),
+        },
+        {
+            "role": "user",
+            "content": load_prompt(
+                "batch_judge_user_v0.4.md",
+                batch_audit_input_json=json.dumps(payload, ensure_ascii=False, indent=2),
+            ),
+        },
+    ]
+
+
+def batch_judge_schema() -> dict[str, Any]:
+    claim_schema = judge_claim_schema()
+    return {
+        "type": "object",
+        "additionalProperties": False,
+        "properties": {
+            "claim_judgements": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "properties": {
+                        "claim_id": {"type": "string"},
+                        **claim_schema["properties"],
+                    },
+                    "required": ["claim_id", *claim_schema["required"]],
+                },
+            }
+        },
+        "required": ["claim_judgements"],
+    }
+
+
+def validate_batch_judge_payload(payload: dict[str, Any], claims: list[ClaimAudit]) -> dict[str, dict[str, Any]] | None:
+    raw_judgements = payload.get("claim_judgements", [])
+    if not isinstance(raw_judgements, list):
+        return None
+    by_id = {claim.claim_id: claim for claim in claims}
+    judgements = {}
+    for raw in raw_judgements:
+        if not isinstance(raw, dict):
+            continue
+        claim_id = clean_text(raw.get("claim_id"))
+        claim = by_id.get(claim_id)
+        if claim is None:
+            continue
+        judged = validate_judge_payload(raw, claim.evidence)
+        if judged is None:
+            continue
+        judgements[claim_id] = judged
+    return judgements
 
 
 def judge_claim_schema() -> dict[str, Any]:
@@ -460,6 +714,30 @@ def judge_claim_schema() -> dict[str, Any]:
             "second_opinion_take": {"type": "string"},
             "quoted_manuscript_evidence": {"type": "string"},
             "reasoning_summary": {"type": "string"},
+            "rebuttal_guidance": {
+                "type": "object",
+                "additionalProperties": False,
+                "properties": {
+                    "priority": {"type": "string", "enum": list(REBUTTAL_PRIORITIES)},
+                    "strategy": {"type": "string", "enum": list(REBUTTAL_STRATEGIES)},
+                    "suggested_response": {"type": "string"},
+                    "evidence_to_cite": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
+                    "risks_to_avoid": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
+                },
+                "required": [
+                    "priority",
+                    "strategy",
+                    "suggested_response",
+                    "evidence_to_cite",
+                    "risks_to_avoid",
+                ],
+            },
             "professionalism_score": {"type": "integer", "minimum": 0, "maximum": 100},
             "specificity_score": {"type": "integer", "minimum": 0, "maximum": 100},
             "helpfulness_score": {"type": "integer", "minimum": 0, "maximum": 100},
@@ -493,6 +771,7 @@ def judge_claim_schema() -> dict[str, Any]:
             "second_opinion_take",
             "quoted_manuscript_evidence",
             "reasoning_summary",
+            "rebuttal_guidance",
             "professionalism_score",
             "specificity_score",
             "helpfulness_score",
@@ -545,6 +824,12 @@ def validate_judge_payload(payload: dict[str, Any], evidence: list[Evidence]) ->
         quoted_manuscript_evidence = best_evidence_quote(evidence)
     if not second_opinion_take:
         second_opinion_take = default_second_opinion_take("", verdict, quoted_manuscript_evidence)
+    rebuttal_guidance = validate_rebuttal_guidance(
+        payload.get("rebuttal_guidance"),
+        verdict=verdict,
+        stance=stance,
+        evidence=evidence,
+    )
 
     professionalism_score = bounded_int(payload.get("professionalism_score"), 0, 100)
     specificity_score = bounded_int(payload.get("specificity_score"), 0, 100)
@@ -579,6 +864,7 @@ def validate_judge_payload(payload: dict[str, Any], evidence: list[Evidence]) ->
         "second_opinion_take": second_opinion_take,
         "quoted_manuscript_evidence": quoted_manuscript_evidence,
         "reasoning_summary": reasoning_summary,
+        "rebuttal_guidance": rebuttal_guidance,
         "professionalism_score": professionalism_score,
         "specificity_score": specificity_score,
         "helpfulness_score": helpfulness_score,
@@ -741,6 +1027,344 @@ def default_second_opinion_take(review_point: str, verdict: str, quote: str) -> 
     return f"{prefix}{evidence}SecondOpinion cannot make a strong support judgment from the available manuscript evidence."
 
 
+def apply_reliability_gate(claim: ClaimAudit) -> None:
+    copy_changed = sanitize_user_facing_fields(claim)
+    quote_changed = verify_claim_quote(claim)
+    confidence_changed = downgrade_evidence_limited_confidence(claim)
+    stance_changed = normalize_claim_stance_consistency(claim)
+    if quote_changed:
+        _append_flag(claim.issue_flags, "unverified-quoted-evidence")
+    if confidence_changed:
+        _append_flag(claim.issue_flags, "confidence-downgraded-evidence-limited")
+    if stance_changed:
+        _append_flag(claim.issue_flags, "stance-corrected-by-reliability-gate")
+
+
+def verify_claim_quote(claim: ClaimAudit) -> bool:
+    quote = clean_text(claim.quoted_manuscript_evidence)
+    if not quote:
+        return False
+    if quote_in_evidence(quote, claim.evidence):
+        return False
+    replacement = best_evidence_quote(claim.evidence)
+    claim.quoted_manuscript_evidence = replacement
+    claim.second_opinion_take = default_second_opinion_take(claim.claim_text, claim.verdict, replacement)
+    return True
+
+
+def quote_in_evidence(quote: str, evidence: list[Evidence]) -> bool:
+    normalized_quote = normalize_for_evidence_match(quote)
+    if not normalized_quote:
+        return False
+    for item in evidence:
+        normalized_text = normalize_for_evidence_match(item.text)
+        if normalized_quote and normalized_quote in normalized_text:
+            return True
+    return False
+
+
+def normalize_for_evidence_match(text: str) -> str:
+    text = clean_text(text).lower()
+    return " ".join(tokens(text))
+
+
+def downgrade_evidence_limited_confidence(claim: ClaimAudit) -> bool:
+    if claim.audit_confidence != "high":
+        return False
+    limited_verdict = claim.verdict in {"insufficient", "vague_or_not_checkable", "needs_human_check"}
+    weak_evidence = claim.evidence_support is None or claim.evidence_support <= 1 or not claim.evidence
+    if not (limited_verdict or weak_evidence):
+        return False
+    claim.audit_confidence = "low" if claim.verdict in {"insufficient", "needs_human_check"} or not claim.evidence else "medium"
+    return True
+
+
+def normalize_claim_stance_consistency(claim: ClaimAudit) -> bool:
+    expected = reliability_stance_for_verdict(claim.verdict)
+    changed = False
+    if claim.verdict in {"insufficient", "vague_or_not_checkable", "needs_human_check"} and (
+        claim.support_score is not None and claim.support_score > 60
+    ):
+        claim.support_score = 40 if claim.verdict == "vague_or_not_checkable" else 30
+        changed = True
+    incompatible = {
+        "supported": {"disagree", "strongly_disagree"},
+        "partially_supported": {"strongly_agree", "strongly_disagree"},
+        "possibly_contradicted": {"agree", "strongly_agree"},
+        "insufficient": {"strongly_agree"},
+        "vague_or_not_checkable": {"strongly_agree"},
+        "needs_human_check": {"strongly_agree"},
+    }
+    if claim.stance not in SECONDOPINION_STANCES:
+        claim.stance = expected
+        return True
+    if claim.stance in incompatible.get(claim.verdict, set()):
+        claim.stance = expected
+        return True
+    return changed
+
+
+def reliability_stance_for_verdict(verdict: str) -> str:
+    if verdict == "supported":
+        return "agree"
+    if verdict == "partially_supported":
+        return "mixed"
+    if verdict == "possibly_contradicted":
+        return "strongly_disagree"
+    if verdict in {"insufficient", "vague_or_not_checkable", "needs_human_check"}:
+        return "mixed"
+    return "mixed"
+
+
+def sanitize_user_facing_fields(claim: ClaimAudit) -> bool:
+    changed = sanitize_user_facing_take(claim)
+    for attribute in ("second_opinion_take", "reasoning_summary", "judge_rationale"):
+        original = clean_text(getattr(claim, attribute))
+        cleaned = scrub_internal_references(original)
+        if cleaned != original:
+            setattr(claim, attribute, cleaned)
+            changed = True
+    return changed
+
+
+def sanitize_user_facing_take(claim: ClaimAudit) -> bool:
+    take = clean_text(claim.second_opinion_take)
+    developer_terms = (
+        "prompt",
+        "schema",
+        "fallback",
+        "rebuttal guidance",
+        "llm",
+        "json",
+        "retrieval score",
+        "human check",
+        "internal",
+        "reviewer point:",
+        "manuscript evidence:",
+        "conclusion:",
+    )
+    if take and not any(term in take.lower() for term in developer_terms):
+        return False
+    claim.second_opinion_take = default_second_opinion_take(
+        claim.claim_text,
+        claim.verdict,
+        claim.quoted_manuscript_evidence,
+    )
+    return True
+
+
+def scrub_internal_references(text: str) -> str:
+    cleaned = clean_text(text)
+    if not cleaned:
+        return ""
+    cleaned = re.sub(
+        r"\bsimilar to\s+claim_[a-z0-9]+(?:_ev\d+)?\b",
+        "similar to another extracted review point",
+        cleaned,
+        flags=re.IGNORECASE,
+    )
+    cleaned = re.sub(
+        r"\bclaim_[a-z0-9]+_ev\d+\b",
+        "the cited evidence",
+        cleaned,
+        flags=re.IGNORECASE,
+    )
+    cleaned = re.sub(
+        r"\bclaim_[a-z0-9]+\b",
+        "another extracted review point",
+        cleaned,
+        flags=re.IGNORECASE,
+    )
+    return clean_text(cleaned)
+
+
+def default_rebuttal_guidance(
+    *,
+    claim: dict[str, Any],
+    review_point_type: str,
+    verdict: str,
+    stance: str,
+    evidence: list[Evidence],
+) -> dict[str, Any]:
+    importance = clean_text(claim.get("importance")).lower()
+    claim_type = clean_text(claim.get("claim_type")).lower()
+    citations = evidence_citation_labels(evidence)
+    citation_text = ", ".join(citations) if citations else "the most relevant manuscript passage"
+
+    if importance == "major" or stance in {"strongly_agree", "strongly_disagree"}:
+        priority = "high"
+    elif importance in {"minor", "tone-only"} and verdict not in {"possibly_contradicted", "supported"}:
+        priority = "low"
+    else:
+        priority = "medium"
+
+    if verdict == "possibly_contradicted":
+        strategy = "cite_existing_evidence"
+        suggested_response = (
+            f"Politely point to {citation_text}, quote the relevant text, and add a short clarification so the answer is easier to find."
+        )
+        risks = [
+            "Do not simply say the reviewer is wrong.",
+            "Do not cite a passage unless it directly answers the reviewer wording.",
+        ]
+    elif verdict == "supported":
+        strategy = "concede_and_fix" if review_point_type != "question" else "acknowledge_and_clarify"
+        suggested_response = (
+            "Acknowledge the concern, describe the concrete revision or clarification, and name where it will appear in the manuscript."
+        )
+        risks = [
+            "Do not over-defend a point that the evidence supports.",
+            "Do not promise experiments or edits that cannot be completed.",
+        ]
+    elif verdict == "partially_supported":
+        strategy = "acknowledge_and_clarify"
+        suggested_response = (
+            f"Acknowledge the valid part, cite {citation_text}, and clarify what the manuscript already covers versus what you will improve."
+        )
+        risks = [
+            "Do not treat partial evidence as a complete answer.",
+            "Do not ignore the actionable part of the reviewer point.",
+        ]
+    elif verdict == "needs_human_check" or claim_type in EXPERT_REQUIRED_TYPES:
+        strategy = "seek_expert_context"
+        suggested_response = (
+            "Use field-specific evidence or an expert citation, and frame the response cautiously because this point needs specialist judgment."
+        )
+        risks = [
+            "Do not rely only on the retrieved passage for a specialist claim.",
+            "Do not make broad novelty or theory claims without support.",
+        ]
+    elif verdict == "vague_or_not_checkable":
+        strategy = "explain_scope"
+        suggested_response = (
+            "Respond narrowly: state what the manuscript does cover, add a clarifying sentence if useful, and avoid expanding beyond the reviewer's wording."
+        )
+        risks = [
+            "Do not answer a broader critique than the reviewer actually made.",
+            "Do not escalate a vague point into an unnecessary major revision.",
+        ]
+    elif verdict == "insufficient":
+        strategy = "challenge_politely"
+        suggested_response = (
+            f"Give a brief, respectful response grounded in {citation_text}, and add stronger evidence only if the point is decision-relevant."
+        )
+        risks = [
+            "Do not claim the manuscript fully resolves the point without direct evidence.",
+            "Do not spend too much space on a low-specificity issue.",
+        ]
+    else:
+        strategy = "acknowledge_and_clarify"
+        suggested_response = (
+            "Acknowledge the reviewer point, cite the strongest available evidence, and state the narrow clarification or revision you can make."
+        )
+        risks = ["Do not overstate what the current manuscript evidence proves."]
+
+    if review_point_type == "suggestion" and verdict in {"supported", "partially_supported"}:
+        strategy = "add_experiment_or_analysis"
+        suggested_response = (
+            "Acknowledge the suggestion and, if feasible, add the requested experiment or analysis; otherwise explain the scope limit and cite existing evidence."
+        )
+
+    return {
+        "priority": priority,
+        "strategy": strategy,
+        "suggested_response": suggested_response,
+        "evidence_to_cite": citations,
+        "risks_to_avoid": risks,
+    }
+
+
+def validate_rebuttal_guidance(
+    value: Any,
+    *,
+    verdict: str,
+    stance: str,
+    evidence: list[Evidence],
+) -> dict[str, Any]:
+    default = default_rebuttal_guidance(
+        claim={},
+        review_point_type="",
+        verdict=verdict,
+        stance=stance,
+        evidence=evidence,
+    )
+    if not isinstance(value, dict):
+        return default
+
+    priority = clean_text(value.get("priority")).lower()
+    if priority not in REBUTTAL_PRIORITIES:
+        priority = default["priority"]
+
+    strategy = clean_text(value.get("strategy")).lower()
+    if strategy not in REBUTTAL_STRATEGIES:
+        strategy = default["strategy"]
+
+    suggested_response = clean_text(value.get("suggested_response")) or default["suggested_response"]
+    evidence_to_cite = humanize_evidence_citations(value.get("evidence_to_cite"), evidence) or default[
+        "evidence_to_cite"
+    ]
+    risks_to_avoid = clean_string_list(value.get("risks_to_avoid")) or default["risks_to_avoid"]
+
+    return {
+        "priority": priority,
+        "strategy": strategy,
+        "suggested_response": suggested_response,
+        "evidence_to_cite": evidence_to_cite[:4],
+        "risks_to_avoid": risks_to_avoid[:4],
+    }
+
+
+def clean_string_list(value: Any) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    cleaned = []
+    for item in value:
+        text = clean_text(item)
+        if text and text not in cleaned:
+            cleaned.append(text)
+    return cleaned
+
+
+def humanize_evidence_citations(value: Any, evidence: list[Evidence]) -> list[str]:
+    raw_items = clean_string_list(value)
+    if not raw_items:
+        return []
+    by_id = {item.evidence_id: evidence_citation_label(item) for item in evidence}
+    cleaned = []
+    for item in raw_items:
+        label = by_id.get(item, item)
+        if label.startswith("claim_") and "_ev" in label:
+            continue
+        if label and label not in cleaned:
+            cleaned.append(label)
+    return cleaned
+
+
+def evidence_citation_labels(evidence: list[Evidence], limit: int = 2) -> list[str]:
+    labels = []
+    for item in evidence[:limit]:
+        label = evidence_citation_label(item)
+        if label not in labels:
+            labels.append(label)
+    return labels
+
+
+def evidence_citation_label(item: Evidence) -> str:
+    if item.source_type == "rebuttal":
+        label = "Author response"
+    elif item.section == "title":
+        label = "Paper title"
+    elif item.section == "abstract":
+        label = "Paper abstract"
+    elif item.section:
+        label = f"Section {item.section}"
+    else:
+        label = "Manuscript"
+    if item.page:
+        label = f"{label} p.{item.page}"
+    return label
+
+
 def score_review_text_consistency(review: dict[str, Any], claims: list[ClaimAudit]) -> tuple[int, bool]:
     rating = review.get("rating_normalized")
     if rating is None:
@@ -779,11 +1403,25 @@ def audit_review(
             paper,
             review,
             claim,
-            judge_llm_client=judge_llm_client,
-            judge_model=judge_model,
         )
         for claim in extracted
     ]
+    if judge_llm_client is not None and claims:
+        batch_result = judge_review_claims_with_llm(
+            paper,
+            review,
+            claims,
+            llm_client=judge_llm_client,
+            model=judge_model,
+        )
+        apply_batch_judgements_with_single_retry(
+            paper,
+            review,
+            claims,
+            batch_result,
+            judge_llm_client=judge_llm_client,
+            judge_model=judge_model,
+        )
     review_text = review.get("review_text") or ""
     lowered = review_text.lower()
 

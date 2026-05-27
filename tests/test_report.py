@@ -4,10 +4,12 @@ from tempfile import TemporaryDirectory
 
 from secondopinion.report import (
     claim_assessment_text,
+    claim_reasoning_text,
     claim_source_label,
     claim_type_label,
     evidence_label,
     flag_label,
+    rebuttal_guidance_text,
     review_rating_label,
     reviewer_confidence_label,
     stance_label,
@@ -89,13 +91,39 @@ class ReportTests(unittest.TestCase):
             {
                 "verdict": "possibly_contradicted",
                 "audit_confidence": "medium",
-                "judge_version": "review-point-judge-v0.2",
+                "judge_version": "review-point-judge-v0.4",
                 "judge_rationale": "The paper gives the requested setup details.",
                 "evidence": [],
             }
         )
         self.assertIn("Rationale", assessment)
         self.assertIn("requested setup details", assessment)
+
+    def test_rebuttal_guidance_text_is_user_facing(self):
+        guidance = rebuttal_guidance_text(
+            {
+                "rebuttal_guidance": {
+                    "priority": "high",
+                    "strategy": "cite_existing_evidence",
+                    "suggested_response": "Point to Section 2 and clarify the setup.",
+                    "evidence_to_cite": ["Section 2"],
+                    "risks_to_avoid": ["Do not say the reviewer is wrong."],
+                }
+            }
+        )
+        self.assertIn("High priority", guidance)
+        self.assertIn("Cite existing evidence", guidance)
+        self.assertIn("Section 2", guidance)
+
+    def test_claim_reasoning_text_combines_summary_and_rationale(self):
+        reasoning = claim_reasoning_text(
+            {
+                "reasoning_summary": "The manuscript mentions ablations and baselines.",
+                "judge_rationale": "The reviewer overstates complete absence.",
+            }
+        )
+        self.assertIn("mentions ablations", reasoning)
+        self.assertIn("overstates", reasoning)
 
     def test_html_report_strips_pdf_control_characters(self):
         audit = {
@@ -124,6 +152,14 @@ class ReportTests(unittest.TestCase):
                             "verdict": "supported",
                             "audit_confidence": "high",
                             "judge_version": "rule-baseline-v0.1",
+                            "reasoning_summary": "The manuscript text directly supports the assessment.",
+                            "rebuttal_guidance": {
+                                "priority": "medium",
+                                "strategy": "concede_and_fix",
+                                "suggested_response": "Acknowledge the concern and clarify the missing details.",
+                                "evidence_to_cite": ["Section 2"],
+                                "risks_to_avoid": ["Do not over-defend."],
+                            },
                             "issue_flags": [],
                             "evidence": [
                                 {
@@ -148,9 +184,14 @@ class ReportTests(unittest.TestCase):
         self.assertIn(b"bad pdf text", data)
         self.assertIn(b"Reviewer rating", data)
         self.assertIn(b"Final decision", data)
-        self.assertIn(b"SecondOpinion take", data)
+        self.assertIn(b"Review Assessment", data)
+        self.assertIn(b"Judgment Basis", data)
+        self.assertIn(b"directly supports", data)
+        self.assertIn(b"Rebuttal Guidance", data)
+        self.assertIn(b"Concede and fix", data)
         self.assertIn(b"Strongly agree", data)
         self.assertIn(b"Reference material", data)
+        self.assertNotIn(b"SecondOpinion take", data)
         self.assertNotIn(b"Reviewer source", data)
         self.assertNotIn(b"System verdict", data)
         self.assertNotIn(b"LLM judge", data)

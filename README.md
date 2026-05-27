@@ -78,7 +78,7 @@ MVP 输出：
 4. 用论文摘要、可扩展 PDF evidence chunks 和外部学术证据做 review-time evidence retrieval；author response 保留给 post-review / rebuttal guidance。
 5. 输出 claim-level verdict、issue flags、Review Quality Score 和 Markdown / HTML 报告。
 
-当前 claim extraction 使用 `claim-extraction-llm-v0.1`：LLM 负责从 review 原文中抽取、拆分和分类 claim，系统只做 deterministic validation。每条 claim 必须带 `source_field` 和可回指到原文的 `source_sentence`；匹配不到原文的 claim 会被丢弃。
+当前 claim extraction 使用 `claim-extraction-llm-v0.3`：LLM 负责从 review 原文中抽取、拆分和分类 claim，系统会做 deterministic validation 和本地语义过滤。每条 claim 必须带 `source_field` 和可回指到原文的 `source_sentence`；匹配不到原文、或只是中性摘要 / 纯表扬的 claim 会被丢弃。核心提示词保存在 `src/secondopinion/prompts/claim_extraction_*_v0.3.md`。
 
 当前 evidence retrieval 使用 `section-aware-bm25-v0.2`：review assessment 阶段只使用 review-time evidence，例如 abstract、PDF evidence chunks 和 appendix，不使用 author response、final decision 或后续修订来给 reviewer 打分。author response 只应进入 post-review / rebuttal guidance 阶段。retrieval 会按 claim 类型给 section 加权，并在报告中保留 page、section label 和 snippet。默认 verdict 仍使用 `rule-baseline-v0.1`，偏保守；打开 LLM judge 后会生成面向用户的 SecondOpinion take，并用统一 stance 展示 SecondOpinion 对 reviewer point 的态度：`strongly_disagree` / `disagree` / `mixed` / `agree` / `strongly_agree`。
 
@@ -168,7 +168,7 @@ PYTHONPATH=src python3 -m secondopinion audit \
 PYTHONPATH=src python3 -m secondopinion audit --input data/derived/iclr_2024_with_evidence.json
 ```
 
-`--llm-judge` 使用 `review-point-judge-v0.2`：LLM 不重新决定论文是否该 accept，而是判断单条 reviewer point 是否被 review-time evidence 支持。当前 review assessment 不使用 author response、final decision 或后续修订来给 reviewer 打分。每条 point 会记录 `review_point_type`、`stance`、`support_score`、`answer_coverage_score`、`question_value_score`、`second_opinion_take`、`quoted_manuscript_evidence`、`reasoning_summary`、`professionalism_score`、`specificity_score`、`helpfulness_score` 和 `fairness_score`。其中 `stance` 是主展示维度，表示 SecondOpinion 是否同意 reviewer point；其他分数保留给排序、调试和后续 calibration。如果调用失败，系统会保留 rule baseline verdict，并给 claim 加上 `llm-judge-failed` flag。
+`--llm-judge` 使用 `review-point-judge-v0.4`：LLM 不重新决定论文是否该 accept，而是按 review 批量判断 reviewer points 是否被 review-time evidence 支持。当前 review assessment 不使用 author response、final decision 或后续修订来给 reviewer 打分；author response 只进入 post-review / rebuttal guidance 阶段。每条 point 会记录 `review_point_type`、`stance`、`support_score`、`answer_coverage_score`、`question_value_score`、`second_opinion_take`、`quoted_manuscript_evidence`、`reasoning_summary`、`rebuttal_guidance`、`professionalism_score`、`specificity_score`、`helpfulness_score` 和 `fairness_score`。其中 `stance` 是主展示维度，表示 SecondOpinion 是否同意 reviewer point；其他分数保留给排序、调试和后续 calibration。系统还会做最小 reliability gate：替换无法回指到 retrieved evidence 的 quote，降低 evidence-limited 高置信结论，并修正明显冲突的 stance。核心提示词保存在 `src/secondopinion/prompts/batch_judge_*_v0.4.md` 和 `src/secondopinion/prompts/single_judge_*_v0.4.md`。如果调用失败，系统会保留 rule baseline verdict，并给 claim 加上 `llm-judge-failed` flag。
 
 ## 标注与校准
 

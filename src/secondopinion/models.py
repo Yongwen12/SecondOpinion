@@ -53,6 +53,7 @@ class ClaimAudit:
     second_opinion_take: str = ""
     quoted_manuscript_evidence: str = ""
     reasoning_summary: str = ""
+    rebuttal_guidance: dict[str, Any] = field(default_factory=dict)
     professionalism_score: int | None = None
     specificity_score: int | None = None
     helpfulness_score: int | None = None
