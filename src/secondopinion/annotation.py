@@ -155,6 +155,11 @@ def claim_task(run_id: str, audit: dict[str, Any], claim: dict[str, Any], proven
     task["context"] = {
         "source_field": claim.get("source_field"),
         "source_sentence_index": claim.get("source_sentence_index"),
+        "source_locator": claim.get("source_locator"),
+        "source_char_start": claim.get("source_char_start"),
+        "source_char_end": claim.get("source_char_end"),
+        "source_paragraph_index": claim.get("source_paragraph_index"),
+        "source_bullet_index": claim.get("source_bullet_index"),
         "source_sentence": claim.get("source_sentence"),
         "review_summary": audit.get("summary"),
     }

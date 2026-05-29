@@ -25,6 +25,10 @@ class ReportTests(unittest.TestCase):
             claim_source_label({"source_field": "weaknesses", "source_sentence_index": 3}),
             "Weaknesses section, sentence 4",
         )
+        self.assertEqual(
+            claim_source_label({"source_field": "weaknesses", "source_bullet_index": 1, "source_char_start": 20, "source_char_end": 42}),
+            "Weaknesses section, bullet 2",
+        )
         self.assertIn("unclear", claim_type_label("clarity"))
         self.assertIn("grounded", verdict_label("supported").lower())
         self.assertIn("limited guidance", flag_label("missing-actionable-suggestions"))
@@ -62,6 +66,24 @@ class ReportTests(unittest.TestCase):
         )
         self.assertEqual(pdf_label, "Manuscript section 2.2 MODELS p.4")
         self.assertEqual(rebuttal_label, "Author response")
+
+    def test_evidence_label_distinguishes_external_sources(self):
+        guideline_label = evidence_label(
+            {
+                "source_type": "venue_guideline",
+                "section": "ICLR review criteria: empirical validation",
+                "metadata": {"venue": "ICLR"},
+            }
+        )
+        external_label = evidence_label(
+            {
+                "source_type": "external_reference",
+                "section": "OpenAlex related paper: Retrieval Baselines",
+                "metadata": {"title": "Retrieval Baselines", "publication_year": 2022},
+            }
+        )
+        self.assertEqual(guideline_label, "ICLR guideline: ICLR review criteria: empirical validation")
+        self.assertEqual(external_label, "External reference: Retrieval Baselines (2022)")
 
     def test_support_percent_measures_support_for_review_point(self):
         self.assertGreaterEqual(support_percent({"verdict": "supported", "evidence_support": 3}), 80)

@@ -648,8 +648,20 @@ def _h(value: Any) -> str:
 def evidence_label(evidence: dict[str, Any]) -> str:
     source_type = str(evidence.get("source_type") or "paper")
     section = str(evidence.get("section") or "unknown")
+    metadata = evidence.get("metadata") if isinstance(evidence.get("metadata"), dict) else {}
     if source_type == "rebuttal":
         label = "Author response"
+    elif source_type == "venue_guideline":
+        venue = metadata.get("venue") or "Venue"
+        label = f"{venue} guideline: {section}"
+    elif source_type == "external_reference":
+        title = metadata.get("title") or section.replace("OpenAlex related paper:", "").strip()
+        year = metadata.get("publication_year")
+        label = f"External reference: {title}"
+        if year:
+            label = f"{label} ({year})"
+    elif source_type == "field_consensus":
+        label = f"Field context: {section}"
     elif section == "title":
         label = "Paper title"
     elif section == "abstract":
@@ -664,6 +676,35 @@ def evidence_label(evidence: dict[str, Any]) -> str:
 def claim_source_label(claim: dict[str, Any]) -> str:
     source = str(claim.get("source_field") or "review")
     source = SOURCE_FIELD_LABELS.get(source, source.replace("_", " "))
+    bullet_index = claim.get("source_bullet_index")
+    if bullet_index is None and isinstance(claim.get("source_locator"), dict):
+        bullet_index = claim["source_locator"].get("bullet_index")
+    if bullet_index is not None:
+        try:
+            return f"{source}, bullet {int(bullet_index) + 1}"
+        except (TypeError, ValueError):
+            pass
+
+    paragraph_index = claim.get("source_paragraph_index")
+    if paragraph_index is None and isinstance(claim.get("source_locator"), dict):
+        paragraph_index = claim["source_locator"].get("paragraph_index")
+    if paragraph_index is not None:
+        try:
+            return f"{source}, paragraph {int(paragraph_index) + 1}"
+        except (TypeError, ValueError):
+            pass
+
+    char_start = claim.get("source_char_start")
+    char_end = claim.get("source_char_end")
+    if char_start is None and isinstance(claim.get("source_locator"), dict):
+        char_start = claim["source_locator"].get("char_start")
+        char_end = claim["source_locator"].get("char_end")
+    if char_start is not None and char_end is not None:
+        try:
+            return f"{source}, chars {int(char_start)}-{int(char_end)}"
+        except (TypeError, ValueError):
+            pass
+
     index = claim.get("source_sentence_index")
     if index is None:
         return source

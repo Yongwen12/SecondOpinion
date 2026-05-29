@@ -1,0 +1,1047 @@
+{
+  "schema_version": "0.1",
+  "validation_version": "concern-rag-validation-v0.1",
+  "model": "gpt-5-nano",
+  "summary": {
+    "query_count": 24,
+    "top_k": 3,
+    "no_rag_match_accuracy": 0.2083,
+    "with_rag_match_accuracy": 0.4583,
+    "no_rag_quality_accuracy": 0.4167,
+    "with_rag_quality_accuracy": 0.6667
+  },
+  "rows": [
+    {
+      "task_id": "7QlKLvfVge:LsvjaIpscH:6",
+      "gold_meta_review_match": "survived",
+      "gold_concern_quality": "high",
+      "no_rag": {
+        "meta_review_match": "unsure",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "medium",
+        "confidence": "medium",
+        "rationale": "The meta-review excerpt quotes the reviewer comment about rigor and using consequences in the middle of the proof, but does not clearly indicate whether this claim was addressed or accepted. The segment shows the concern was raised and echoed, but there is no explicit statement that the claim was endorsed, resolved, or refuted. Therefore, match is unsure. The ac_treatment is neutrally noting the mention in the meta-review. The concern quality is medium because it reflects a specific critique; confidence is medium due to incomplete evidence of resolution."
+      },
+      "with_rag": {
+        "meta_review_match": "survived",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "medium",
+        "confidence": "high",
+        "rationale": "The meta-review text mentions the specific concern raised by Reviewer niUP: “The proof needs to be more rigorous. Why use the consequence of the proof in the middle of the proof?” as part of the reviewers’ raised concerns. It is referenced in the meta-review as an issue to address, indicating that the concern is acknowledged and considered. The mention is not presented as endorsed or resolved, but it is explicitly cited, so it is at least neutrally acknowledged. The overall concern quality is medium because the meta-review confirms the existence of the concern but does not elaborate on its validity or provide guidance beyond noting it, and the evidence supports it being recognized but not strongly argued within the meta-review context."
+      },
+      "retrieved": [
+        {
+          "source_task_id": "rp5vfyp5Np:YktI8n3TeZ:5",
+          "match": "survived",
+          "quality": "high",
+          "claim": "The intent policy learning relies on human preferences, which may introduce uncertainty and cost; need discussion on practicality and data requirements."
+        },
+        {
+          "source_task_id": "9L9j5bQPIY:91NkdJpVId:2",
+          "match": "not_found",
+          "quality": "low",
+          "claim": "It is unclear why we need unitwise and interunit meta-autoencoders."
+        },
+        {
+          "source_task_id": "7vVWiCrFnd:aHtDQsXakn:3",
+          "match": "survived",
+          "quality": "high",
+          "claim": "What is the complexity of GNNs with phantom nodes or phantom edges for node classification and link prediction?"
+        }
+      ],
+      "no_rag_match_correct": false,
+      "with_rag_match_correct": true,
+      "no_rag_quality_correct": false,
+      "with_rag_quality_correct": false
+    },
+    {
+      "task_id": "eepoE7iLpL:Omfs3dIcbU:0",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "no_rag": {
+        "meta_review_match": "unsure",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "medium",
+        "confidence": "medium",
+        "rationale": "The meta-review describes a paper on neural subset selection via deep sets and notes there are weaknesses but overall acceptance. The user claim focuses on unclear objective function and post-optimization subset selection. The meta-review segment provided is high-level and does not explicitly address the specific claim about the objective function or how selection is performed, only general assessment. There is no direct statement indicating that the objective function is clearly defined or clarified in the paper, nor whether the authors discussed it in relation to Equation 4. Thus, the match between reviewer claim and meta-review evidence is uncertain. The claim is not clearly supported or contradicted by the available meta-review. Therefore result is unsure with neutral treatment of the ac_treatment, and medium concern quality given potential gap in evidence. "
+      },
+      "with_rag": {
+        "meta_review_match": "unsure",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "medium",
+        "confidence": "medium",
+        "rationale": "The excerpt shows reviewer asking about objective function and subset selection, but the meta-review text discusses novelty, clarity, and related works. The provided retrieved historical cases show similar clarity concerns, but the meta-review does not clearly state these exact points; it mentions clarity issues in general and asks for discussion of literature. Therefore, it's uncertain whether the meta-review match supports the exact claim, and the impact on novelty/clarity is mixed. The evidence partially aligns but does not definitively confirm or deny the reviewer’s specific concern."
+      },
+      "retrieved": [
+        {
+          "source_task_id": "10eQ4Cfh8p:wckxlkPL42:0",
+          "match": "partial",
+          "quality": "high",
+          "claim": "Actions (in Section 3.1) are critical, but not defined clearly. I have no problems with actions for construction heuristics, but actions for improvement heuristics are not well defined."
+        },
+        {
+          "source_task_id": "JWrl5pJCnl:A3gHHaLomn:0",
+          "match": "partial",
+          "quality": "high",
+          "claim": "The proposed work's claimed distinction with CaP is unclear. The authors write \"Unlike existing methods such as CaP (Liang et al., 2022), which directly generates policy codes, our approach generates decision-making actions that can help reduce the error rate when performing complex tasks.\" But, the proposed methodology also uses LLMs to generate Python programs, so the distinction is unclear."
+        },
+        {
+          "source_task_id": "7vVWiCrFnd:uXWt0SbIG0:2",
+          "match": "partial",
+          "quality": "high",
+          "claim": "Certain related works are missing in the paper. Recent works on Factor Graph Neural Networks (FGNN) [1] are highly related works in establishing connections between PGMs and GNNs. A small discussion on the relevance would be pertinent."
+        }
+      ],
+      "no_rag_match_correct": false,
+      "with_rag_match_correct": false,
+      "no_rag_quality_correct": false,
+      "with_rag_quality_correct": false
+    },
+    {
+      "task_id": "AOSsLRKQrX:iusxEbIueU:5",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "no_rag": {
+        "meta_review_match": "partial",
+        "ac_treatment": "endorsed_or_relied_on",
+        "concern_quality": "high",
+        "confidence": "high",
+        "rationale": "The meta-review explicitly cites substantial concerns about experimental evaluation and ablations, including that the method is not sufficiently ablated and disentanglement as the reason for improvement is not convincingly evidenced. The reviewer claim asks about ablation studies for multiple loss functions, which aligns with the meta-review's highlighted issue. The meta-review supports that ablations are critical, and the concern is high. The ac_treatment indicates that the meta-review mentions ablations as a concern and is used to inform conclusions, thus endorsed/relied_on. The match is partial because the claim is specific about ablations; the meta-review notes broader evaluation concerns but includes ablations among them. "
+      },
+      "with_rag": {
+        "meta_review_match": "partial",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "high",
+        "confidence": "high",
+        "rationale": "The meta-review explicitly notes concerns about experimental evaluation and ablations, aligning with the claim about ablation studies. While the meta-review discusses broader evaluation and clarity issues, it substantively echoes the need for ablations to support disentanglement claims. The matched_historical_cases include a similar ablation concern, supporting partial survival of the claim. The AC treatment is neutral, as it mentions concerns but does not endorse the absence of ablations. Overall, high-quality concern with strong alignment, hence high confidence."
+      },
+      "retrieved": [
+        {
+          "source_task_id": "AOSsLRKQrX:tYw6kbOlZq:1",
+          "match": "partial",
+          "quality": "high",
+          "claim": "No ablations are provided. The model contains multiple components, but there are no ablation experiments to study the effect of each component. For example, the effect of recovering object representation versus image representation, the effect of learning the slots to be a linear combination of concepts, the number of slots, number of concepts, etc. should be studied."
+        },
+        {
+          "source_task_id": "AOSsLRKQrX:tYw6kbOlZq:3",
+          "match": "partial",
+          "quality": "high",
+          "claim": "Missing experiment details. The training details including the hyperparameters are not provided. Some critical parameters (e.g. number of slots/concepts, loss weights) should be discussed."
+        },
+        {
+          "source_task_id": "10eQ4Cfh8p:wckxlkPL42:0",
+          "match": "partial",
+          "quality": "high",
+          "claim": "Actions (in Section 3.1) are critical, but not defined clearly. I have no problems with actions for construction heuristics, but actions for improvement heuristics are not well defined."
+        }
+      ],
+      "no_rag_match_correct": true,
+      "with_rag_match_correct": true,
+      "no_rag_quality_correct": true,
+      "with_rag_quality_correct": true
+    },
+    {
+      "task_id": "w73feIekdO:NLKFsY27K9:1",
+      "gold_meta_review_match": "not_found",
+      "gold_concern_quality": "medium",
+      "no_rag": {
+        "meta_review_match": "unsure",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "high",
+        "confidence": "high",
+        "rationale": "The meta-review text discusses multiple concerns: insufficient experiments, lack of comparisons, needs for introduction and related work, obscure proofs, presentation issues. The reviewer claim asks questions about central contributions and how method outperforms state of the art. The meta-review suggests the paper has novel ideas (coresets, using motion vectors) but concerns about experiments and comparisons. There is no explicit assessment of how the reviewer claim relates to them. The retrieved meta review segment mentions criticism rather than direct alignment with the claim. Thus match is unsure. Accidental classification: ac_treatment neutrally mentions. "
+      },
+      "with_rag": {
+        "meta_review_match": "partial",
+        "ac_treatment": "endorsed_or_relied_on",
+        "concern_quality": "high",
+        "confidence": "high",
+        "rationale": "The meta-review highlights multiple concerns echoed by the claim: insufficient experiments and lack of baseline comparisons; unclear methodology and usage; need for experiments against classic tracking methods. These points directly map to the reviewer claim's questions about central contributions and performance over state-of-the-art. The retrieved historical cases show similar patterns where baseline comparisons and methodological clarity are central critiques; here, the meta-review explicitly mentions these issues and the need for improvements. Therefore, the claim is supported as a high-quality concern, and the meta-review treatment is aligned with endorsing/relaying it."
+      },
+      "retrieved": [
+        {
+          "source_task_id": "i8PjQT3Uig:76XC5M0kbk:1",
+          "match": "survived",
+          "quality": "high",
+          "claim": "What benefit does it have over other world model methods (like Dreamer)?"
+        },
+        {
+          "source_task_id": "w73feIekdO:NLKFsY27K9:0",
+          "match": "partial",
+          "quality": "high",
+          "claim": "results on the two datasets are not convincing."
+        },
+        {
+          "source_task_id": "cQgjz0mf0r:3gM8OP4zZK:3",
+          "match": "partial",
+          "quality": "high",
+          "claim": "I do not understand how it should be used and how it helps to analyze the actual behavior of the deep classifier"
+        }
+      ],
+      "no_rag_match_correct": false,
+      "with_rag_match_correct": false,
+      "no_rag_quality_correct": false,
+      "with_rag_quality_correct": false
+    },
+    {
+      "task_id": "i8PjQT3Uig:76XC5M0kbk:1",
+      "gold_meta_review_match": "survived",
+      "gold_concern_quality": "high",
+      "no_rag": {
+        "meta_review_match": "unsure",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "medium",
+        "confidence": "medium",
+        "rationale": "The meta-review notes the paper does not compare to state-of-the-art baselines as a weakness, and the reviewer claim asks about benefit over other world model methods (like Dreamer). The meta-review does acknowledge the method and its contribution, but does not directly answer how it compares to Dreamer or other baselines. Therefore, the match is unclear (unsure) with respect to whether the claim is addressed, the treatment is neutral, and the concern quality is medium given partial alignment but missing explicit comparison. "
+      },
+      "with_rag": {
+        "meta_review_match": "not_found",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "medium",
+        "confidence": "medium",
+        "rationale": "The retrieved meta-review text discusses general issues about comparisons to baselines and novelty, but does not clearly state the exact reviewer claim about “What benefit over other world model methods (like Dreamer)?” nor directly maps to it. The historical cases show related but not identical concerns; thus the match is not found or only loosely connected. The concern is moderately supported by the meta-review noting lack of comparisons as a weakness, but this does not strongly confirm the specific reviewer claim. The treatment is neutrally mentioned in the meta-review. "
+      },
+      "retrieved": [
+        {
+          "source_task_id": "w73feIekdO:NLKFsY27K9:1",
+          "match": "not_found",
+          "quality": "medium",
+          "claim": "I have several questions that will help me identify what the central contributions are and on how the proposed method outperforms over other methods in the state of the art."
+        },
+        {
+          "source_task_id": "1FWDEIGm33:wXp9GL22N6:1",
+          "match": "partial",
+          "quality": "high",
+          "claim": "The paper does not clearly explain what the paper suggests beyond proposing a new metaphor and why this is critical."
+        },
+        {
+          "source_task_id": "rp5vfyp5Np:YktI8n3TeZ:2",
+          "match": "survived",
+          "quality": "high",
+          "claim": "Is it clear how the attack success rate is defined and whether it could be biased since the intention policy is an approximation of real human intention?"
+        }
+      ],
+      "no_rag_match_correct": false,
+      "with_rag_match_correct": false,
+      "no_rag_quality_correct": false,
+      "with_rag_quality_correct": false
+    },
+    {
+      "task_id": "xibcBSuuq0:zwpI0TjvXj:1",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "no_rag": {
+        "meta_review_match": "survived",
+        "ac_treatment": "endorsed_or_relied_on",
+        "concern_quality": "medium",
+        "confidence": "medium",
+        "rationale": "The reviewer claim suggests testing on more challenging MARL benchmarks. The meta-review notes calls for more effective experimental results and testing beyond cooperative settings, which aligns with the reviewer claim. The meta-review does not indicate the claim was rejected; it supports improving experiments. However, it is not the central critique, hence medium concern. No archival conflicts found in retrieved evidence."
+      },
+      "with_rag": {
+        "meta_review_match": "partial",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "high",
+        "confidence": "high",
+        "rationale": "The reviewer claim about testing on more challenging MARL benchmarks is echoed in the meta-review as a general call for better experimental results and broader testing beyond cooperative settings. The meta-review does mention need for more effective and sufficient experimental results and testing beyond cooperative ones, which aligns with the reviewer’s suggestion. However, the match is not exact wording nor a direct reiteration, and the meta-review also includes broader points about experiments; thus the match is partial rather than fully survived. The claim type is experiment, and the quality of concern is high due to relevance to experimental thoroughness."
+      },
+      "retrieved": [
+        {
+          "source_task_id": "pYmQId95iR:u5ZC4CoNyk:6",
+          "match": "not_found",
+          "quality": "high",
+          "claim": "The authors suggest categorising the aspects that make the benchmark challenging and evaluating multiple state-of-the-art algorithms per category across difficulties; this is a suggested change or experiments."
+        },
+        {
+          "source_task_id": "JWrl5pJCnl:A3gHHaLomn:0",
+          "match": "partial",
+          "quality": "high",
+          "claim": "The proposed work's claimed distinction with CaP is unclear. The authors write \"Unlike existing methods such as CaP (Liang et al., 2022), which directly generates policy codes, our approach generates decision-making actions that can help reduce the error rate when performing complex tasks.\" But, the proposed methodology also uses LLMs to generate Python programs, so the distinction is unclear."
+        },
+        {
+          "source_task_id": "UVSKuh9eK5:lo6OmS3vso:0",
+          "match": "survived",
+          "quality": "high",
+          "claim": "There is no description or motivation for the attribute selection, are those attributes randomly selected or generated? How do the authors guarantee that those attributes are not present or co-occur less in the training data?"
+        }
+      ],
+      "no_rag_match_correct": false,
+      "with_rag_match_correct": true,
+      "no_rag_quality_correct": false,
+      "with_rag_quality_correct": true
+    },
+    {
+      "task_id": "10eQ4Cfh8p:zlSWBdRAhX:0",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "no_rag": {
+        "meta_review_match": "survived",
+        "ac_treatment": "endorsed_or_relied_on",
+        "concern_quality": "high",
+        "confidence": "high",
+        "rationale": "The meta-review explicitly states lack of empirical justification for adaptability to other combinatorial problems; matched claim about no empirical evidence to justify adaptability aligns with the meta-review's weakness. The claim is not directly supported by evidence; the paper claims novelty in FJSP with potential generalization but provides no evidence. The reviewer claim is assessed as strongly reflected by meta-review. Therefore concern is high, confident."
+      },
+      "with_rag": {
+        "meta_review_match": "survived",
+        "ac_treatment": "endorsed_or_relied_on",
+        "concern_quality": "high",
+        "confidence": "high",
+        "rationale": "The reviewer claim asserts lack of empirical evidence and no explanation of how adaptation to other combinatorial optimization problems can be done. The merged meta-review text explicitly notes lack of empirical justification and adaptation to other problems, calling out that the methodology is tailored to FJSP with no evidence or explanation for adaptability. This mirrors the exact concern and is directly echoed in the meta-review, which endorses the concern as part of weaknesses. Therefore, the claim is supported (survived) with high quality and high confidence that the meta-review backs it."
+      },
+      "retrieved": [
+        {
+          "source_task_id": "eepoE7iLpL:Omfs3dIcbU:0",
+          "match": "partial",
+          "quality": "high",
+          "claim": "Equation 4 describes the neural network construction. However, I am unclear about the objective function to optimize the neural network."
+        },
+        {
+          "source_task_id": "UVSKuh9eK5:lo6OmS3vso:0",
+          "match": "survived",
+          "quality": "high",
+          "claim": "There is no description or motivation for the attribute selection, are those attributes randomly selected or generated? How do the authors guarantee that those attributes are not present or co-occur less in the training data?"
+        },
+        {
+          "source_task_id": "cQgjz0mf0r:3gM8OP4zZK:3",
+          "match": "partial",
+          "quality": "high",
+          "claim": "I do not understand how it should be used and how it helps to analyze the actual behavior of the deep classifier"
+        }
+      ],
+      "no_rag_match_correct": false,
+      "with_rag_match_correct": false,
+      "no_rag_quality_correct": true,
+      "with_rag_quality_correct": true
+    },
+    {
+      "task_id": "rp5vfyp5Np:YktI8n3TeZ:5",
+      "gold_meta_review_match": "survived",
+      "gold_concern_quality": "high",
+      "no_rag": {
+        "meta_review_match": "unsure",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "medium",
+        "confidence": "medium",
+        "rationale": "The meta-review text acknowledges complexity and uncertainty in human-preference-based intention policy learning but does not clearly map to the reviewer claim about practicality, data requirements, and costs. The matched_meta_review_segment mentions extra requirements and expensive data collection, aligning with the claim's core concern, but the overall meta-review does not provide a direct assessment of practicality or data requirements beyond listing weaknesses. Therefore, the match is uncertain, with moderate concern about practicality and data requirements being acknowledged but not deeply analyzed in the meta-review. The claim is ethics-focused, and the meta-review largely discusses strengths/weaknesses without explicit endorsing or refuting the practicality concerns. Rationale provided above reflects partial alignment and uncertainty."
+      },
+      "with_rag": {
+        "meta_review_match": "partial",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "high",
+        "confidence": "high",
+        "rationale": "The matched_meta_review_segment for the claim is "
+      },
+      "retrieved": [
+        {
+          "source_task_id": "rp5vfyp5Np:YktI8n3TeZ:2",
+          "match": "survived",
+          "quality": "high",
+          "claim": "Is it clear how the attack success rate is defined and whether it could be biased since the intention policy is an approximation of real human intention?"
+        },
+        {
+          "source_task_id": "xibcBSuuq0:zwpI0TjvXj:1",
+          "match": "partial",
+          "quality": "high",
+          "claim": "I would suggest the authors to test on more challenging MARL benchmarks, though those benchmarks often require more exploration, which may pose challenges for the proposed method."
+        },
+        {
+          "source_task_id": "7QlKLvfVge:LsvjaIpscH:6",
+          "match": "survived",
+          "quality": "high",
+          "claim": "The proof needs to be more rigorous. Why use the consequence of the proof in the middle of the proof?"
+        }
+      ],
+      "no_rag_match_correct": false,
+      "with_rag_match_correct": false,
+      "no_rag_quality_correct": false,
+      "with_rag_quality_correct": true
+    },
+    {
+      "task_id": "10eQ4Cfh8p:wckxlkPL42:0",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "no_rag": {
+        "meta_review_match": "unsure",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "high",
+        "confidence": "medium",
+        "rationale": "The meta-review notes unclear explanations for improvement step applicability and embeddings, and criticizes clarity. The matched segment mentions unclear definitions in Section 3.1-3.2. The meta-review supports concerns but does not explicitly confirm specific claims in the reviewer segment. The claim is about definitions and clarity; meta-review indicates general clarity issues. Therefore match is uncertain (unsure) about direct alignment, but quality of concern is high."
+      },
+      "with_rag": {
+        "meta_review_match": "partial",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "high",
+        "confidence": "high",
+        "rationale": "The meta-review notes clarity issues and missing explanations about the improvement step and embeddings, aligning with the reviewer claim that Section 3.1 and 3.2 descriptions are unclear. The meta-review also mentions overall clarity problems and missing arguments, which supports the claim quality. However, the meta-review does not fully focus on those exact wording issues but confirms similar concerns, hence partial match rather than full. The acknowledgment in the meta-review about unclear components and missing foundations justifies the high concern quality. Confidence is high given explicit statements in meta-review corroborating lack of clarity and missing explanations."
+      },
+      "retrieved": [
+        {
+          "source_task_id": "1FWDEIGm33:wXp9GL22N6:1",
+          "match": "partial",
+          "quality": "high",
+          "claim": "The paper does not clearly explain what the paper suggests beyond proposing a new metaphor and why this is critical."
+        },
+        {
+          "source_task_id": "JWrl5pJCnl:A3gHHaLomn:0",
+          "match": "partial",
+          "quality": "high",
+          "claim": "The proposed work's claimed distinction with CaP is unclear. The authors write \"Unlike existing methods such as CaP (Liang et al., 2022), which directly generates policy codes, our approach generates decision-making actions that can help reduce the error rate when performing complex tasks.\" But, the proposed methodology also uses LLMs to generate Python programs, so the distinction is unclear."
+        },
+        {
+          "source_task_id": "10eQ4Cfh8p:w67nfG2dMW:3",
+          "match": "survived",
+          "quality": "high",
+          "claim": "The proposed framework suggests a novel perspective for solving FJSP. Unlike the majority of iterative improving approaches that often perform improvement steps from a complete solution, the proposed framework employs \"improving\" actions during solution construction."
+        }
+      ],
+      "no_rag_match_correct": false,
+      "with_rag_match_correct": true,
+      "no_rag_quality_correct": true,
+      "with_rag_quality_correct": true
+    },
+    {
+      "task_id": "jXR5pjs1rV:dXSWosECmZ:2",
+      "gold_meta_review_match": "survived",
+      "gold_concern_quality": "high",
+      "no_rag": {
+        "meta_review_match": "unsure",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "high",
+        "confidence": "high",
+        "rationale": "The claim identifies a missing policy-level evaluation, which is explicitly noted in meta-review as a concern among reviewers. The meta-review text mentions several criticisms including lack of policy-level evaluation, so the claim matches content. However, the meta-review indicates overall quality concerns and consensus that paper isn't top-level; but the direct meta-review segment supports the claim. Notable: matched_meta_review_segment says lack of policy-level evaluation is a concern. Therefore meta_review_match = survived or not? The evidence supports the claim as addressed. The segment says lack of policy-level evaluation. So the claim is covered. So 'survived' means claim is supported by meta-review. I'll choose 'survived'. Ac_treatment: it is 'mentioned_neutrally' since meta-review mentions it as concern. concern_quality: high because it's a significant gap. confidence: high. Rationale: provide concise explanation. "
+      },
+      "with_rag": {
+        "meta_review_match": "not_found",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "high",
+        "confidence": "high",
+        "rationale": "The meta-review text discusses several concerns including lack of policy-level evaluation, but does not reproduce the exact reviewer claim text about policy-level evaluation; it is only mentioned as one of several concerns. The match is thus not found (not_found). The ac_treatment is neutral/mentioned_neutrally as the meta-review notes the concern in passing within broader critique. The quality of the concern is high due to its relevance and specificity. High confidence in this judgment."
+      },
+      "retrieved": [
+        {
+          "source_task_id": "rp5vfyp5Np:vGNqxpozDP:3",
+          "match": "partial",
+          "quality": "high",
+          "claim": "In the introduction, the paper illustrates the practical implications of targeted attacks on robotics, but the concern is raised that BATTLE is a white-box attack applying perturbations to states. In the context of robotics, its practical applicability is very limited. The paper could benefit from a more thorough clarification or discussion of this concern and its potential implications for practical applications."
+        },
+        {
+          "source_task_id": "pYmQId95iR:u5ZC4CoNyk:6",
+          "match": "not_found",
+          "quality": "high",
+          "claim": "The authors suggest categorising the aspects that make the benchmark challenging and evaluating multiple state-of-the-art algorithms per category across difficulties; this is a suggested change or experiments."
+        },
+        {
+          "source_task_id": "miGpIhquyB:yPyy646e3D:0",
+          "match": "partial",
+          "quality": "high",
+          "claim": "The heavy use of DistilBERT accuracies in the evaluation framework confounds faithfulness with the difficulty (or complexity) of the dataset, making some findings questionable."
+        }
+      ],
+      "no_rag_match_correct": false,
+      "with_rag_match_correct": false,
+      "no_rag_quality_correct": true,
+      "with_rag_quality_correct": true
+    },
+    {
+      "task_id": "ApjY32f3Xr:4e1fSBB3OO:1",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "no_rag": {
+        "meta_review_match": "unsure",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "medium",
+        "confidence": "medium",
+        "rationale": "The claim discusses susceptibility of average L2RE to skew from outlier settings. The meta-review evidence indicates overall critique focuses on lack of novelty and experimental nature; no explicit stance on how L2RE averaging is treated or whether the claim is supported or challenged. Therefore, match is unsure; treatment in meta-review is not addressing the claim directly, only the paper's contributions. The historical/reviewer context does not provide a direct endorsement or refutation of the specific claim."
+      },
+      "with_rag": {
+        "meta_review_match": "not_found",
+        "ac_treatment": "not_mentioned",
+        "concern_quality": "low",
+        "confidence": "high",
+        "rationale": "The meta-review text discusses novelty, experimental contribution, and practicality of the Pareto Frontier, but does not mention or address the specific claim about average L2RE being skewed due to some parameter settings failing. Therefore there is no direct match to the reviewer’s claim in the meta-review evidence. The assessment is uncertain with respect to this claim, and the available meta-review evidence does not provide a basis to classify it as endorsed, neutral, or resolved."
+      },
+      "retrieved": [
+        {
+          "source_task_id": "w73feIekdO:NLKFsY27K9:0",
+          "match": "partial",
+          "quality": "high",
+          "claim": "results on the two datasets are not convincing."
+        },
+        {
+          "source_task_id": "JWrl5pJCnl:A3gHHaLomn:0",
+          "match": "partial",
+          "quality": "high",
+          "claim": "The proposed work's claimed distinction with CaP is unclear. The authors write \"Unlike existing methods such as CaP (Liang et al., 2022), which directly generates policy codes, our approach generates decision-making actions that can help reduce the error rate when performing complex tasks.\" But, the proposed methodology also uses LLMs to generate Python programs, so the distinction is unclear."
+        },
+        {
+          "source_task_id": "yacRhge4zQ:pKsEW8Yja4:2",
+          "match": "partial",
+          "quality": "high",
+          "claim": "Can this PF be realized in practice? i.e., how to accurately obtain it? and if only a somewhat inaccurate one can be obtained, what are its implications?"
+        }
+      ],
+      "no_rag_match_correct": false,
+      "with_rag_match_correct": false,
+      "no_rag_quality_correct": false,
+      "with_rag_quality_correct": false
+    },
+    {
+      "task_id": "tmsqb6WpLz:KX6fDquf1N:4",
+      "gold_meta_review_match": "survived",
+      "gold_concern_quality": "high",
+      "no_rag": {
+        "meta_review_match": "partial",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "medium",
+        "confidence": "medium",
+        "rationale": "The reviewer claim questions the decomposition p(x)=p(topic, style, factual) and asks for justification. The meta-review notes this decomposition as a weakness (assumes a decomposition). This provides partial support that the claim is relevant but not fully resolved. There is no direct evidence that authors justify it; meta-review mentions weakness but not resolution. So match is partial: the meta-review acknowledges the assumption as a weakness but does not confirm justification. The claim is not contradictory with meta-review; it's echoed. The concern quality is medium because it captures a known weakness without stronger resolution. Estimate of confidence medium."
+      },
+      "with_rag": {
+        "meta_review_match": "unsure",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "medium",
+        "confidence": "low",
+        "rationale": "The meta-review text notes a weakness about decomposition into style, topic, and factual knowledge. The matched_meta_review_segment says 'Assumes a decomposition in style, topic, and factual knowledge'. The meta-review overall is positive with strengths and some weaknesses; it does not clearly address how the claim about decomposition impacts the work or if it's resolved. Therefore match is uncertain. The treatment is mentioned neutrally. The concern quality is medium given a clear concern exists but not fully analyzed. Confidence is low due to partial alignment and lack of explicit resolution in meta-review."
+      },
+      "retrieved": [
+        {
+          "source_task_id": "i8PjQT3Uig:76XC5M0kbk:1",
+          "match": "survived",
+          "quality": "high",
+          "claim": "What benefit does it have over other world model methods (like Dreamer)?"
+        },
+        {
+          "source_task_id": "yacRhge4zQ:pKsEW8Yja4:2",
+          "match": "partial",
+          "quality": "high",
+          "claim": "Can this PF be realized in practice? i.e., how to accurately obtain it? and if only a somewhat inaccurate one can be obtained, what are its implications?"
+        },
+        {
+          "source_task_id": "w73feIekdO:NLKFsY27K9:1",
+          "match": "not_found",
+          "quality": "medium",
+          "claim": "I have several questions that will help me identify what the central contributions are and on how the proposed method outperforms over other methods in the state of the art."
+        }
+      ],
+      "no_rag_match_correct": false,
+      "with_rag_match_correct": false,
+      "no_rag_quality_correct": false,
+      "with_rag_quality_correct": false
+    },
+    {
+      "task_id": "ApjY32f3Xr:C4sqXJNESI:5",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "no_rag": {
+        "meta_review_match": "unsure",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "medium",
+        "confidence": "medium",
+        "rationale": "The user claim asks to discuss limitations and future research. Meta-review emphasizes lack of novelty and that conclusions are limited; recommends rejection. The matched segment indicates criticism of lacking novelty despite rebuttal. The evidence supports that discussing limitations/future work is relevant but not directly addressed in meta-review excerpt; it is implied as missing novelty. Therefore judgement uncertain about alignment; not clearly "
+      },
+      "with_rag": {
+        "meta_review_match": "partial",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "high",
+        "confidence": "high",
+        "rationale": "The retrieved meta-review segments indicate concerns about novelty and limitations in benchmarking tool; the reviewer claim asks to discuss limitations and future research avenues. Evidence shows meta-review acknowledges limitations and lack of novel insights, implying the concern is relevant and partially supported. AC treatment is neutral/negative? The meta-review says recommend rejection, emphasizes lack of novelty; thus the claim about discussing limitations and future work aligns with critiquing limitations. But AC treatment in one segment is 'mentioned_neutrally' and another 'endorsed_or_relied_on' for specific claims. For overall claim, neutrality is acceptable. Provide rationale tying to evidence."
+      },
+      "retrieved": [
+        {
+          "source_task_id": "7vVWiCrFnd:cWeTjQ3r9w:0",
+          "match": "partial",
+          "quality": "high",
+          "claim": "Could you apply your methods on large-scale graphs?"
+        },
+        {
+          "source_task_id": "yacRhge4zQ:pKsEW8Yja4:2",
+          "match": "partial",
+          "quality": "high",
+          "claim": "Can this PF be realized in practice? i.e., how to accurately obtain it? and if only a somewhat inaccurate one can be obtained, what are its implications?"
+        },
+        {
+          "source_task_id": "10eQ4Cfh8p:zlSWBdRAhX:0",
+          "match": "partial",
+          "quality": "high",
+          "claim": "There is no empirical evidence to justify the claim that the training paradigm can be readily adapted to other combinatorial optimization problems, and there is no explanation of how this can actually be done."
+        }
+      ],
+      "no_rag_match_correct": false,
+      "with_rag_match_correct": true,
+      "no_rag_quality_correct": false,
+      "with_rag_quality_correct": true
+    },
+    {
+      "task_id": "1FWDEIGm33:wXp9GL22N6:1",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "no_rag": {
+        "meta_review_match": "survived",
+        "ac_treatment": "endorsed_or_relied_on",
+        "concern_quality": "high",
+        "confidence": "high",
+        "rationale": "The meta-review explicitly discusses that the paper proposes a new conceptual metaphor (superpositions) and perspective controllability, and notes the weakness that intuitions and implications are not clearly conveyed. The user claim asserts the paper does not explain implications beyond the new metaphor, which aligns with the meta-review weakness. The match is strong; the concern is high-quality and well-supported by the meta-review text."
+      },
+      "with_rag": {
+        "meta_review_match": "partial",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "high",
+        "confidence": "high",
+        "rationale": "The meta-review explicitly notes that the paper does not clearly convey intuitions, justifications, and implications of the proposed 'superpositions' view, matching the claim that the paper does not explain beyond a new metaphor and why it's critical. The meta-review, while broader, contains the core concern about lack of clarity and implications, and the reviewer claim is thus substantially supported. However, there are additional strengths/weaknesses in the meta-review that go beyond the precise phrasing, so the match is partial rather than exact survival."
+      },
+      "retrieved": [
+        {
+          "source_task_id": "10eQ4Cfh8p:wckxlkPL42:0",
+          "match": "partial",
+          "quality": "high",
+          "claim": "Actions (in Section 3.1) are critical, but not defined clearly. I have no problems with actions for construction heuristics, but actions for improvement heuristics are not well defined."
+        },
+        {
+          "source_task_id": "rp5vfyp5Np:YktI8n3TeZ:2",
+          "match": "survived",
+          "quality": "high",
+          "claim": "Is it clear how the attack success rate is defined and whether it could be biased since the intention policy is an approximation of real human intention?"
+        },
+        {
+          "source_task_id": "rp5vfyp5Np:vGNqxpozDP:3",
+          "match": "partial",
+          "quality": "high",
+          "claim": "In the introduction, the paper illustrates the practical implications of targeted attacks on robotics, but the concern is raised that BATTLE is a white-box attack applying perturbations to states. In the context of robotics, its practical applicability is very limited. The paper could benefit from a more thorough clarification or discussion of this concern and its potential implications for practical applications."
+        }
+      ],
+      "no_rag_match_correct": false,
+      "with_rag_match_correct": true,
+      "no_rag_quality_correct": true,
+      "with_rag_quality_correct": true
+    },
+    {
+      "task_id": "H9DYMIpz9c:Ie1VUg7cqO:6",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "no_rag": {
+        "meta_review_match": "unsure",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "medium",
+        "confidence": "medium",
+        "rationale": "The reviewer claim asks why FMLP not used as teacher in Table 1. The meta-review mentions experiments showed gains and notes concerns but does not address or cite FMLP usage or teacher network choices; no explicit treatment of the specific claim in the meta-review. Therefore match is uncertain. The meta-review neither endorses nor resolves the claim; it mentions general results and concerns but not this detail."
+      },
+      "with_rag": {
+        "meta_review_match": "unsure",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "low",
+        "confidence": "low",
+        "rationale": "The provided meta-review text mentions general issues and gains but does not clearly address whether FMLP should have been used as a teacher network in Table 1. There is no explicit match to the specific reviewer claim about teacher-network usage. The retrieved historical cases show related but not directly aligned concerns; thus the claim's alignment to the meta-review is unclear."
+      },
+      "retrieved": [
+        {
+          "source_task_id": "UVSKuh9eK5:AUeGBXg0Pe:1",
+          "match": "survived",
+          "quality": "high",
+          "claim": "Conclusion are less convincing due to the limited candidate in each experiment. For instance, in Table 1, it will be interesting to shows the NMI for a subset of LAION with the same number of data to other dataset. Also in table 2, there's only 4 results, please consider adding more variance of dataset and CLIP architecture ."
+        },
+        {
+          "source_task_id": "eepoE7iLpL:Omfs3dIcbU:0",
+          "match": "partial",
+          "quality": "high",
+          "claim": "Equation 4 describes the neural network construction. However, I am unclear about the objective function to optimize the neural network."
+        },
+        {
+          "source_task_id": "pYmQId95iR:u5ZC4CoNyk:5",
+          "match": "partial",
+          "quality": "medium",
+          "claim": "Table 3 is referenced on page 9 but does not exist."
+        }
+      ],
+      "no_rag_match_correct": false,
+      "with_rag_match_correct": false,
+      "no_rag_quality_correct": false,
+      "with_rag_quality_correct": false
+    },
+    {
+      "task_id": "BQvbL2sFQx:QiY7LeGJCD:0",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "no_rag": {
+        "meta_review_match": "unsure",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "high",
+        "confidence": "high",
+        "rationale": "Claim cites clarity issues and unclear notation, consistent with meta-review segment stating presentation needs significant improvement, algorithmic description problematic. However meta-review does not quantify impact on results; it mainly notes overall concerns and rejection recommendation. Uncertainty arises because the meta-review suggests evaluation issues but does not directly tie to specific notation definitions beyond general critique. Given strong alignment between claim and meta-review's assessment of clarity, but lack of explicit direct quote tying to Figure 1, classify as unsure about exact match; treat as high concern about clarity."
+      },
+      "with_rag": {
+        "meta_review_match": "partial",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "high",
+        "confidence": "high",
+        "rationale": "The reviewer claim about clarity of algorithmic/mathematical presentation and unclear notation mirrors the meta-review segment that presentation needs significant improvement, especially algorithmic description. The meta-review explicitly notes unclear/explained aspects and evaluation issues, but does not fully endorse or rely on every element; it mentions the need for overhaul and confirms clarity concerns. Therefore, the claim is partially found in meta-review evidence. The ac_treatment is neutral; the meta-review cites clarity concerns rather than endorsing the specific statement, and the concern quality is high due to concrete, actionable clarity issues highlighted in the meta-review. Confidence is high because the alignment between claim and meta-review is strong though not perfect. Rationale: clear alignment on presentation/clarity issues; the meta-review reinforces need for improvement, including algorithmic description; however, it also adds broader evaluation criticisms not present in the exact claim."
+      },
+      "retrieved": [
+        {
+          "source_task_id": "10eQ4Cfh8p:wckxlkPL42:0",
+          "match": "partial",
+          "quality": "high",
+          "claim": "Actions (in Section 3.1) are critical, but not defined clearly. I have no problems with actions for construction heuristics, but actions for improvement heuristics are not well defined."
+        },
+        {
+          "source_task_id": "AOSsLRKQrX:iusxEbIueU:5",
+          "match": "partial",
+          "quality": "high",
+          "claim": "The model training in Section 3.6 incorporates multiple loss functions. Have ablation studies been conducted to understand the impact of each loss function on the overall performance?"
+        },
+        {
+          "source_task_id": "cQgjz0mf0r:3gM8OP4zZK:3",
+          "match": "partial",
+          "quality": "high",
+          "claim": "I do not understand how it should be used and how it helps to analyze the actual behavior of the deep classifier"
+        }
+      ],
+      "no_rag_match_correct": false,
+      "with_rag_match_correct": true,
+      "no_rag_quality_correct": true,
+      "with_rag_quality_correct": true
+    },
+    {
+      "task_id": "DwcV654WBP:E60zlLaTes:1",
+      "gold_meta_review_match": "survived",
+      "gold_concern_quality": "high",
+      "no_rag": {
+        "meta_review_match": "unsure",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "medium",
+        "confidence": "medium",
+        "rationale": "The claim concerns an experiment about freezing shallow layers to improve zero-shot performance. Meta-review indicates the core idea is about freezing text encoder and partial fine-tuning, with debate on its significance and task-agnostic claim. The matched meta-review segment states authors claim task-agnostic video representation, but meta-review notes criticisms and limited contribution. The evidence is mixed; it's not clearly strong support or refutation of the specific claim. Therefore match is unsure; treatment neutral; concern moderate due to criticisms and limited experiments."
+      },
+      "with_rag": {
+        "meta_review_match": "partial",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "high",
+        "confidence": "high",
+        "rationale": "The meta-review discusses that freezing text encoder yields limited novelty and is an engineering trick; the retrieved historical case shows concerns about novelty and limited experiments. The user claim asserts zero-shot improvement by freezing shallow layers; meta-review notes end-to-end tuning issue and task-agnostic representation; matches partially but not fully. Therefore: meta_review_match is partial. AC treatment neutrally mentions. Concern quality high due to substantial critique. Confidence high due to clear alignment."
+      },
+      "retrieved": [
+        {
+          "source_task_id": "lNIj5FdXsC:W8u5ZMVoLw:2",
+          "match": "partial",
+          "quality": "high",
+          "claim": "The paper proposes a way to utilize RNN to adopt hidden states through multiple layers. It claims that the new method helps improve long-range information processing."
+        },
+        {
+          "source_task_id": "AZGIwqCyYY:aWxMIfTpWd:3",
+          "match": "partial",
+          "quality": "high",
+          "claim": "The paper presents an appealing goal, providing generalized Hamiltonian representations consistent across different physical domains. However, given the presented quantitative and qualitative results it is hard to judge the actual generalization and performance of the framework as detailed in the following points:"
+        },
+        {
+          "source_task_id": "jXR5pjs1rV:dXSWosECmZ:2",
+          "match": "survived",
+          "quality": "high",
+          "claim": "Lack of Policy-Level Evaluation: The paper focuses on reward-model level evaluation; including policy-level evaluations would provide a more comprehensive understanding of practical applications."
+        }
+      ],
+      "no_rag_match_correct": false,
+      "with_rag_match_correct": false,
+      "no_rag_quality_correct": false,
+      "with_rag_quality_correct": true
+    },
+    {
+      "task_id": "7vVWiCrFnd:cWeTjQ3r9w:0",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "no_rag": {
+        "meta_review_match": "partial",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "high",
+        "confidence": "high",
+        "rationale": "The meta-review notes scalability concerns and that experiments are limited to small graphs, which directly addresses the reviewer claim about applying methods on large-scale graphs. The claim is not fully supported; reviewers raised concerns about computational complexity; the meta-review acknowledges this limitation and that rebuttal addressed some comments. Therefore the claim is only partially supported by evidence, with high concern and high confidence in the assessment."
+      },
+      "with_rag": {
+        "meta_review_match": "partial",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "high",
+        "confidence": "high",
+        "rationale": "The retrieved meta-review explicitly notes scalability issues and that experiments are limited to small graphs, which aligns with the reviewer claim about applying methods to large-scale graphs. However, the meta-review does not fully endorse or rely on the exact claim; instead it neutrally mentions scalability as a limitation and discusses related concerns. Thus the claim is partially supported by the meta-review, but not wholly established as a central, endorsed conclusion. The concern is high quality due to direct relevance and actionable limitation, and confidence is high due to clear alignment between the reviewer claim and the meta-review text."
+      },
+      "retrieved": [
+        {
+          "source_task_id": "ApjY32f3Xr:C4sqXJNESI:5",
+          "match": "partial",
+          "quality": "high",
+          "claim": "Request discussion of limitations of benchmarking tool and avenues for future research to advance PINNs."
+        },
+        {
+          "source_task_id": "7vVWiCrFnd:uXWt0SbIG0:2",
+          "match": "partial",
+          "quality": "high",
+          "claim": "Certain related works are missing in the paper. Recent works on Factor Graph Neural Networks (FGNN) [1] are highly related works in establishing connections between PGMs and GNNs. A small discussion on the relevance would be pertinent."
+        },
+        {
+          "source_task_id": "xibcBSuuq0:zwpI0TjvXj:1",
+          "match": "partial",
+          "quality": "high",
+          "claim": "I would suggest the authors to test on more challenging MARL benchmarks, though those benchmarks often require more exploration, which may pose challenges for the proposed method."
+        }
+      ],
+      "no_rag_match_correct": true,
+      "with_rag_match_correct": true,
+      "no_rag_quality_correct": true,
+      "with_rag_quality_correct": true
+    },
+    {
+      "task_id": "10eQ4Cfh8p:zlSWBdRAhX:3",
+      "gold_meta_review_match": "survived",
+      "gold_concern_quality": "high",
+      "no_rag": {
+        "meta_review_match": "not_found",
+        "ac_treatment": "not_mentioned",
+        "concern_quality": "high",
+        "confidence": "high",
+        "rationale": "The meta-review text explicitly notes the weakness: Incomplete Empirical Evaluations and missing standard deviations/multiple runs. The matched meta-review segment aligns with the claim. There is no evidence in meta_review_text that the reviewer claim was addressed or endorsed; thus meta_review_match is not_found. The ac_treatment is not mentioned in meta-review. Rationale cites that the claim about lacking stddev is echoed as weakness; thus high concern. "
+      },
+      "with_rag": {
+        "meta_review_match": "partial",
+        "ac_treatment": "endorsed_or_relied_on",
+        "concern_quality": "high",
+        "confidence": "high",
+        "rationale": "The meta-review echoes the exact concern about incomplete empirical evaluations and lack of standard deviations/multiple runs. It labels missing results and robustness weaknesses, and reviewers agreed to reject (critically). The aligned meta-review segment supports that this claim is strongly supported and central to concern. The AC treatment is that the concern is endorsed/relied on in the meta-review. Overall, high confidence in the match and assessment of high-quality concern."
+      },
+      "retrieved": [
+        {
+          "source_task_id": "AOSsLRKQrX:iusxEbIueU:5",
+          "match": "partial",
+          "quality": "high",
+          "claim": "The model training in Section 3.6 incorporates multiple loss functions. Have ablation studies been conducted to understand the impact of each loss function on the overall performance?"
+        },
+        {
+          "source_task_id": "pYmQId95iR:u5ZC4CoNyk:6",
+          "match": "not_found",
+          "quality": "high",
+          "claim": "The authors suggest categorising the aspects that make the benchmark challenging and evaluating multiple state-of-the-art algorithms per category across difficulties; this is a suggested change or experiments."
+        },
+        {
+          "source_task_id": "lK2V2E2MNv:NE4BzEScxi:0",
+          "match": "survived",
+          "quality": "medium",
+          "claim": "The main concern of this work is the methodology is relatively incremental without new concepts or findings."
+        }
+      ],
+      "no_rag_match_correct": false,
+      "with_rag_match_correct": false,
+      "no_rag_quality_correct": true,
+      "with_rag_quality_correct": true
+    },
+    {
+      "task_id": "cQgjz0mf0r:JFysq9wa5A:0",
+      "gold_meta_review_match": "survived",
+      "gold_concern_quality": "high",
+      "no_rag": {
+        "meta_review_match": "survived",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "medium",
+        "confidence": "low",
+        "rationale": "The meta-review explicitly states the work lacks novelty and notes overlap with SplineCam, which supports the reviewer claim that novelty is weak. However, the historical cases array is empty, so we cannot robustly map to a prior claim category. The meta-review mentions several issues beyond novelty (writing, clarity, definition gaps), but the core concern about novelty is present and directly echoed. The evidence line \"the theoretical contributions are not sufficiently novel\" aligns with the reviewer claim. The overall assessment is mixed but leans negative on novelty; confidence is limited because the meta-review also criticizes other aspects and does not isolate novelty as the sole cause for rejection. "
+      },
+      "with_rag": {
+        "meta_review_match": "survived",
+        "ac_treatment": "endorsed_or_relied_on",
+        "concern_quality": "high",
+        "confidence": "high",
+        "rationale": "The meta-review explicitly states the novelty-related concerns (overlap with existing work, lack of strong novelty) and the AC endorses these points; the matched_meta_review_segment corroborates the claim about insufficient novelty. Therefore, the reviewer claim 'the motivation is weak' in novelty is supported by both meta-review and historical cases. High-quality concern, clear evidence, high confidence."
+      },
+      "retrieved": [
+        {
+          "source_task_id": "UVSKuh9eK5:lo6OmS3vso:0",
+          "match": "survived",
+          "quality": "high",
+          "claim": "There is no description or motivation for the attribute selection, are those attributes randomly selected or generated? How do the authors guarantee that those attributes are not present or co-occur less in the training data?"
+        },
+        {
+          "source_task_id": "23OEmHVkpq:8CzSIMq0YG:1",
+          "match": "survived",
+          "quality": "high",
+          "claim": "RTD definition should be included in the main paper."
+        },
+        {
+          "source_task_id": "lK2V2E2MNv:NE4BzEScxi:0",
+          "match": "survived",
+          "quality": "medium",
+          "claim": "The main concern of this work is the methodology is relatively incremental without new concepts or findings."
+        }
+      ],
+      "no_rag_match_correct": true,
+      "with_rag_match_correct": true,
+      "no_rag_quality_correct": false,
+      "with_rag_quality_correct": true
+    },
+    {
+      "task_id": "rp5vfyp5Np:vGNqxpozDP:3",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "no_rag": {
+        "meta_review_match": "partial",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "medium",
+        "confidence": "medium",
+        "rationale": "The meta-review notes limitations and calls for discussing limitations; reviewer claim quotes a concern about practicality of white-box attack and limited applicability. The meta-review includes suggestion to discuss limitations, which aligns with the concern. However, the meta-review's overall assessment does not fully commit to endorsing or contradicting the claim; it mentions limitations but not whether the claim is supported. So match is partial. ac_treatment is neutrally referenced in meta-review (discuss limitations). The concern quality is medium due to acknowledged limitations but not directly confirming practical impact. Provide rationale."
+      },
+      "with_rag": {
+        "meta_review_match": "survived",
+        "ac_treatment": "endorsed_or_relied_on",
+        "concern_quality": "high",
+        "confidence": "high",
+        "rationale": "The meta-review highlights major weaknesses aligned with the claim: lack of discussion on limitations and real-world practicality, especially around practicality, transparency, and evaluation scope. It explicitly calls for discussing limitations and practicality, and notes uncertainties in intention-policy learning and data requirements, which matches the claim's ethics framing about practical applicability and need for clarification."
+      },
+      "retrieved": [
+        {
+          "source_task_id": "jXR5pjs1rV:dXSWosECmZ:2",
+          "match": "survived",
+          "quality": "high",
+          "claim": "Lack of Policy-Level Evaluation: The paper focuses on reward-model level evaluation; including policy-level evaluations would provide a more comprehensive understanding of practical applications."
+        },
+        {
+          "source_task_id": "1FWDEIGm33:wXp9GL22N6:1",
+          "match": "partial",
+          "quality": "high",
+          "claim": "The paper does not clearly explain what the paper suggests beyond proposing a new metaphor and why this is critical."
+        },
+        {
+          "source_task_id": "rp5vfyp5Np:YktI8n3TeZ:5",
+          "match": "survived",
+          "quality": "high",
+          "claim": "The intent policy learning relies on human preferences, which may introduce uncertainty and cost; need discussion on practicality and data requirements."
+        }
+      ],
+      "no_rag_match_correct": true,
+      "with_rag_match_correct": false,
+      "no_rag_quality_correct": false,
+      "with_rag_quality_correct": true
+    },
+    {
+      "task_id": "rp5vfyp5Np:YktI8n3TeZ:2",
+      "gold_meta_review_match": "survived",
+      "gold_concern_quality": "high",
+      "no_rag": {
+        "meta_review_match": "unsure",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "medium",
+        "confidence": "medium",
+        "rationale": "The meta-review notes that key terms like 'intention policy' and 'success rate' are not clearly defined, which aligns with reviewer claim. However the meta-review text praises the concept and lists weaknesses, but does not clearly indicate if the specific claim about attack success rate definition is addressed. No direct match in retrieved historical cases. So status uncertain whether meta-review covers this precise claim; AC treatment is neutral about the claim's treatment in the paper. The concern quality is medium due to partial alignment but not definitive."
+      },
+      "with_rag": {
+        "meta_review_match": "survived",
+        "ac_treatment": "endorsed_or_relied_on",
+        "concern_quality": "high",
+        "confidence": "high",
+        "rationale": "The meta-review text explicitly discusses uncertainty and data requirements related to learning an intention policy from human preferences as a significant weakness (Complexity and Uncertainty in Intention Policy Learning). It treats this concern as important in evaluating weaknesses, aligning with the reviewer claim about unclear definition of attack success rate and potential bias from approximation of intention policy. The matched meta-review segment notes the importance of clear definitions of intention policy and success rate, which directly supports the claim. The AC clearly endorses or relies on this concern in its evaluation of the paper."
+      },
+      "retrieved": [
+        {
+          "source_task_id": "rp5vfyp5Np:YktI8n3TeZ:5",
+          "match": "survived",
+          "quality": "high",
+          "claim": "The intent policy learning relies on human preferences, which may introduce uncertainty and cost; need discussion on practicality and data requirements."
+        },
+        {
+          "source_task_id": "1FWDEIGm33:wXp9GL22N6:1",
+          "match": "partial",
+          "quality": "high",
+          "claim": "The paper does not clearly explain what the paper suggests beyond proposing a new metaphor and why this is critical."
+        },
+        {
+          "source_task_id": "i8PjQT3Uig:76XC5M0kbk:1",
+          "match": "survived",
+          "quality": "high",
+          "claim": "What benefit does it have over other world model methods (like Dreamer)?"
+        }
+      ],
+      "no_rag_match_correct": false,
+      "with_rag_match_correct": true,
+      "no_rag_quality_correct": false,
+      "with_rag_quality_correct": true
+    },
+    {
+      "task_id": "pYmQId95iR:u5ZC4CoNyk:5",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "medium",
+      "no_rag": {
+        "meta_review_match": "unsure",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "medium",
+        "confidence": "medium",
+        "rationale": "The reviewer_claim concerns a missing table, but the matched_meta_review_segment provided is unrelated content about RL task difficulty and benchmarking quality, not addressing the specific writing error. There is no clear evidence in meta_review_text that this claim was acknowledged or addressed. Therefore the match is unclear (unsure). The claim type is writing error; meta-review does not mention table existence. Consequently, the assessment is uncertain about whether the meta-review supports or rebuts the claim."
+      },
+      "with_rag": {
+        "meta_review_match": "not_found",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "low",
+        "confidence": "low",
+        "rationale": "The provided matched_meta_review_segment is about RL benchmarking difficulties and does not address the specific writing claim that 'Table 3 is referenced on page 9 but does not exist.' There is no direct tie between the meta-review content and the writing error claim in the retrieved segment. Therefore, the meta-review does not support or reject this claim, making the match not found. The treatment is neutral since the meta-review does not discuss table references, and the concern quality is low due to lack of alignment."
+      },
+      "retrieved": [
+        {
+          "source_task_id": "tmsqb6WpLz:KX6fDquf1N:4",
+          "match": "survived",
+          "quality": "high",
+          "claim": "The basis of the method assumes that p(x)=p(topic,style,factual), but is there a justification to that decomposition? what about arithmetic? how does it fall to this decomposition?"
+        },
+        {
+          "source_task_id": "10eQ4Cfh8p:zlSWBdRAhX:2",
+          "match": "partial",
+          "quality": "high",
+          "claim": "The experimental section lacks key baselines (RGA, 2SGA, 2 DRL baselines) and missing solution time for OR-Tools; this hinders assessment of performance."
+        },
+        {
+          "source_task_id": "rp5vfyp5Np:YktI8n3TeZ:2",
+          "match": "survived",
+          "quality": "high",
+          "claim": "Is it clear how the attack success rate is defined and whether it could be biased since the intention policy is an approximation of real human intention?"
+        }
+      ],
+      "no_rag_match_correct": false,
+      "with_rag_match_correct": false,
+      "no_rag_quality_correct": true,
+      "with_rag_quality_correct": false
+    },
+    {
+      "task_id": "10eQ4Cfh8p:zlSWBdRAhX:2",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "no_rag": {
+        "meta_review_match": "partial",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "high",
+        "confidence": "high",
+        "rationale": "The claim identifies missing baselines and missing solution time for OR-Tools, which aligns with the meta-review segment noting lack of certain baselines and incomplete empirical evaluations. The meta-review text corroborates missing baselines and lack of ablations. However, the meta-review does not explicitly mention OR-Tools solution-time, but it notes missing baselines and incomplete evaluations. The matched evidence supports concern about baselines; the precise treatment of solution time is partially supported by source sentence. Overall, judgment is that the concern is strongly supported (high)."
+      },
+      "with_rag": {
+        "meta_review_match": "partial",
+        "ac_treatment": "mentioned_neutrally",
+        "concern_quality": "high",
+        "confidence": "high",
+        "rationale": "The reviewer claim cites missing baselines and missing solution time; meta-review evidence notes Missing Ablations and Baselines and that comparisons against some RL methods and metaheuristics are not adequately presented. The matched segment supports concern but meta-review overall is critical; not fully endorsing but acknowledges. Therefore claim is supported at least partially by meta-review. High concern. "
+      },
+      "retrieved": [
+        {
+          "source_task_id": "UVSKuh9eK5:AUeGBXg0Pe:1",
+          "match": "survived",
+          "quality": "high",
+          "claim": "Conclusion are less convincing due to the limited candidate in each experiment. For instance, in Table 1, it will be interesting to shows the NMI for a subset of LAION with the same number of data to other dataset. Also in table 2, there's only 4 results, please consider adding more variance of dataset and CLIP architecture ."
+        },
+        {
+          "source_task_id": "3wL1tj3kqE:YyOvX2x0kY:0",
+          "match": "partial",
+          "quality": "high",
+          "claim": "The paper lacks comprehensive information about the training of the domain density translator G' for fairness generalization. Training G' is not straightforward due to the varying sensitive attributes across different datasets."
+        },
+        {
+          "source_task_id": "gYcft1HIaU:K0w3kEaTHx:4",
+          "match": "partial",
+          "quality": "high",
+          "claim": "Clarify why common diseases are considered in the knowledge base since ICD10-based selection cites common diseases for MedDisK."
+        }
+      ],
+      "no_rag_match_correct": true,
+      "with_rag_match_correct": true,
+      "no_rag_quality_correct": true,
+      "with_rag_quality_correct": true
+    }
+  ]
+}

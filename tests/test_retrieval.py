@@ -67,6 +67,33 @@ class RetrievalTests(unittest.TestCase):
         self.assertFalse(any(item.source_type == "rebuttal" for item in without_rebuttal))
         self.assertTrue(any(item.source_type == "rebuttal" for item in with_rebuttal))
 
+    def test_retrieval_preserves_external_reference_metadata(self):
+        paper = {
+            "paper_id": "paper1",
+            "title": "A Model for Review Auditing",
+            "abstract": "We introduce a model for review auditing.",
+            "paper_sections": [
+                {
+                    "source_type": "external_reference",
+                    "section": "OpenAlex related paper: Retrieval Baselines",
+                    "text": "Retrieval baselines include BM25, dense retrieval, and cross encoder comparisons.",
+                    "metadata": {
+                        "provider": "openalex",
+                        "title": "Retrieval Baselines",
+                        "publication_year": 2022,
+                    },
+                }
+            ],
+        }
+        evidence = retrieve_evidence(
+            "claim1",
+            "The paper lacks comparison to standard retrieval baselines.",
+            paper,
+            claim_type="baseline",
+        )
+        self.assertEqual(evidence[0].source_type, "external_reference")
+        self.assertEqual(evidence[0].metadata["provider"], "openalex")
+
     def test_retrieval_version_is_v2(self):
         self.assertEqual(RETRIEVAL_VERSION, "section-aware-bm25-v0.2")
 

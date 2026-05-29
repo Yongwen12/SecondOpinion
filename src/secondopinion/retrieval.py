@@ -64,7 +64,13 @@ def expand_query_terms(claim_text: str, claim_type: str) -> list[str]:
 def build_evidence_sources(paper: dict[str, Any], *, include_rebuttals: bool = False) -> list[dict[str, Any]]:
     sources: list[dict[str, Any]] = []
 
-    def add(source_type: str, section: str, text: Any, page: int | None = None) -> None:
+    def add(
+        source_type: str,
+        section: str,
+        text: Any,
+        page: int | None = None,
+        metadata: dict[str, Any] | None = None,
+    ) -> None:
         cleaned = clean_text(text)
         if not cleaned:
             return
@@ -74,6 +80,7 @@ def build_evidence_sources(paper: dict[str, Any], *, include_rebuttals: bool = F
                 "section": section,
                 "page": page,
                 "text": cleaned,
+                "metadata": metadata or {},
             }
         )
 
@@ -88,6 +95,7 @@ def build_evidence_sources(paper: dict[str, Any], *, include_rebuttals: bool = F
             section.get("section") or f"section_{idx}",
             section.get("text"),
             section.get("page"),
+            section.get("metadata") if isinstance(section.get("metadata"), dict) else {},
         )
     return sources
 
@@ -100,6 +108,10 @@ def section_weight(source: dict[str, Any], claim_type: str) -> float:
         weight *= 0.6
     if source_type == "rebuttal":
         weight *= 1.08
+    if source_type in {"venue_guideline", "field_consensus"}:
+        weight *= 1.05
+    if source_type == "external_reference":
+        weight *= 1.02
     if source_type == "appendix" or "appendix" in section:
         weight *= 1.12
 
@@ -184,6 +196,7 @@ def retrieve_evidence(
                 score=round(score, 3),
                 raw_score=round(raw_score, 3),
                 matched_terms=matched[:12],
+                metadata=source.get("metadata", {}),
             )
         )
     return evidence_items

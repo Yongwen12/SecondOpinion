@@ -148,6 +148,33 @@ PYTHONPATH=src python3 -m secondopinion build-evidence-store \
 
 这一步会下载 submission PDF，解析正文和 appendix，并把带有 page / section label / text 的 evidence chunks 加回 normalized dataset。PDF 文件和派生 evidence dataset 默认保存在 `data/pdfs/`、`data/derived/`，不会提交到 GitHub。
 
+接入第一版外部证据：
+
+```bash
+PYTHONPATH=src python3 -m secondopinion enrich-external-evidence \
+  --input data/derived/iclr_2024_with_evidence.json \
+  --out data/derived/iclr_2024_with_external_evidence.json \
+  --providers venue_guidelines,openalex
+```
+
+这一步会先用 `gpt-5-nano` 做低成本 claim triage / query planning / evidence grading，再按顺序接入本地 venue guideline 和 OpenAlex works metadata。OpenAlex 第一版只使用 title / abstract / publication metadata，不下载全文；默认用论文年份过滤 publication date，避免把 review 后才出现的材料放进 review-time assessment。OpenAlex 查询默认缓存到 `data/cache/openalex/`，输出 dataset 会记录 `external_evidence` manifest 和 `openalex_stats`，方便复现实验。
+
+如果要强制刷新或只使用已有缓存：
+
+```bash
+PYTHONPATH=src python3 -m secondopinion enrich-external-evidence \
+  --input data/derived/iclr_2024_with_evidence.json \
+  --out data/derived/iclr_2024_with_external_evidence.json \
+  --providers venue_guidelines,openalex \
+  --refresh-openalex-cache
+
+PYTHONPATH=src python3 -m secondopinion enrich-external-evidence \
+  --input data/derived/iclr_2024_with_evidence.json \
+  --out data/derived/iclr_2024_with_external_evidence.json \
+  --providers venue_guidelines,openalex \
+  --offline-openalex-cache
+```
+
 对归一化数据做审计：
 
 ```bash
@@ -161,6 +188,18 @@ PYTHONPATH=src python3 -m secondopinion audit \
   --input data/derived/iclr_2024_with_evidence.json \
   --llm-judge
 ```
+
+也可以在审计时直接联调外部证据 collector：
+
+```bash
+PYTHONPATH=src python3 -m secondopinion audit \
+  --input data/derived/iclr_2024_with_evidence.json \
+  --external-evidence \
+  --external-providers venue_guidelines,openalex \
+  --llm-judge
+```
+
+审计时直接联调也会使用同一个 OpenAlex 缓存；可以用 `--openalex-cache` 指定缓存目录，或用 `--offline-openalex-cache` 做离线复现。
 
 如果已经构建 evidence store，可以直接审计派生数据：
 

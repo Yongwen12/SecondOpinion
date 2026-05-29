@@ -17,6 +17,7 @@ class Evidence:
     score: float
     raw_score: float | None = None
     matched_terms: list[str] = field(default_factory=list)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -63,6 +64,13 @@ class ClaimAudit:
     judge_rationale: str = ""
     issue_flags: list[str] = field(default_factory=list)
     evidence: list[Evidence] = field(default_factory=list)
+    source_locator: dict[str, Any] = field(default_factory=dict)
+    source_char_start: int | None = None
+    source_char_end: int | None = None
+    source_paragraph_index: int | None = None
+    source_bullet_index: int | None = None
+    source_line_start: int | None = None
+    source_line_end: int | None = None
 
     def to_dict(self) -> dict[str, Any]:
         result = asdict(self)

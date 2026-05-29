@@ -4,6 +4,7 @@ from secondopinion.claim_extraction import (
     CLAIM_EXTRACTION_VERSION,
     claim_extraction_schema,
     extract_claims,
+    source_locator,
     validate_claim_payload,
 )
 
@@ -52,10 +53,37 @@ class ClaimExtractionTests(unittest.TestCase):
         self.assertEqual(len(claims), 1)
         self.assertEqual(claims[0]["claim_type"], "ablation")
         self.assertEqual(claims[0]["source_sentence_index"], 0)
+        self.assertEqual(claims[0]["source_char_start"], 0)
+        self.assertEqual(
+            claims[0]["source_char_end"],
+            len("The paper lacks any ablation study and does not compare to standard baselines."),
+        )
+        self.assertEqual(claims[0]["source_paragraph_index"], 0)
+        self.assertEqual(claims[0]["source_locator"]["match_strategy"], "exact")
         self.assertEqual(claims[0]["extraction_version"], CLAIM_EXTRACTION_VERSION)
         self.assertEqual(client.calls[0]["model"], "test-model")
         self.assertIn("Task boundary", client.calls[0]["messages"][0]["content"])
         self.assertIn("Decision procedure", client.calls[0]["messages"][1]["content"])
+
+    def test_source_locator_handles_bullets_and_wrapped_lines(self):
+        review = {
+            "weaknesses": (
+                "Intro paragraph.\n\n"
+                "* The paper lacks\n"
+                "  ablations across tasks.\n"
+                "* The baseline is missing."
+            )
+        }
+
+        locator = source_locator(review, "weaknesses", "The paper lacks ablations across tasks.")
+
+        self.assertEqual(locator["match_strategy"], "normalized")
+        self.assertIsNotNone(locator["char_start"])
+        self.assertIsNotNone(locator["char_end"])
+        self.assertEqual(locator["paragraph_index"], 1)
+        self.assertEqual(locator["bullet_index"], 0)
+        self.assertEqual(locator["line_start"], 2)
+        self.assertEqual(locator["line_end"], 3)
 
     def test_no_rule_fallback_when_llm_returns_no_claims(self):
         review = {"weaknesses": "The paper lacks ablation studies."}

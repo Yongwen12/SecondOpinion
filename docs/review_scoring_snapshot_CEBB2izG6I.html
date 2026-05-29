@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>SecondOpinion scoring snapshot</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #f7f8fa; color: #111827; font-family: Aptos, Inter, Arial, sans-serif; }
+  .wrap { width: 1180px; padding: 32px; }
+  .panel { background: white; border: 1px solid #d8dee4; border-radius: 14px; padding: 24px; box-shadow: 0 16px 40px rgba(17,24,39,.08); }
+  .head { display: grid; grid-template-columns: 1fr 148px; gap: 20px; align-items: start; border-bottom: 1px solid #e5e7eb; padding-bottom: 16px; }
+  h1 { margin: 0 0 6px; font-size: 28px; letter-spacing: 0; }
+  .sub { margin: 0; color: #5b6670; font-size: 15px; line-height: 1.35; }
+  .score { height: 118px; border-radius: 12px; background: #b91c1c; color: white; display: grid; place-items: center; text-align: center; }
+  .score b { font-size: 44px; line-height: 1; display: block; }
+  .score span { font-size: 12px; opacity: .9; }
+  .flags { display: flex; flex-wrap: wrap; gap: 7px; margin: 14px 0 18px; }
+  .flags span { background: #fff7ed; color: #b45309; border: 1px solid #fed7aa; border-radius: 999px; padding: 4px 9px; font-size: 12px; }
+  .claims { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .claim { border: 1px solid #d8dee4; border-radius: 10px; padding: 14px; background: #fbfcfd; min-height: 190px; }
+  .claim-top { display: flex; justify-content: space-between; gap: 12px; align-items: start; }
+  h3 { margin: 0; font-size: 15px; line-height: 1.25; }
+  .stance { color: white; border-radius: 999px; padding: 4px 8px; font-size: 11px; white-space: nowrap; background: #0f766e; }
+  .stance.mixed { background: #b45309; }
+  .stance.strongly_agree { background: #047857; }
+  .meta { display: flex; gap: 6px; flex-wrap: wrap; margin: 9px 0; }
+  .meta span { border: 1px solid #bae6fd; background: #f0f9ff; color: #0369a1; border-radius: 999px; padding: 3px 7px; font-size: 11px; }
+  p { margin: 8px 0 0; color: #374151; line-height: 1.38; font-size: 12.8px; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="panel">
+      <div class="head">
+        <div>
+          <h1>Detailed Scoring Snapshot</h1>
+          <p class="sub"><b>Paper:</b> TabR: Tabular Deep Learning Meets Nearest Neighbors<br>
+          <b>Review:</b> CEBB2izG6I · <b>Reviewer rating:</b> 6: marginally above the acceptance threshold</p>
+        </div>
+        <div class="score"><div><b>54</b><span>Review Quality Score</span></div></div>
+      </div>
+      <div class="flags"><span>confidence-downgraded-evidence-limited</span><span>missing-actionable-suggestions</span><span>unverified-quoted-evidence</span><span>vague-criticism</span></div>
+      <div class="claims">
+      <article class="claim">
+        <div class="claim-top">
+          <h3>Some aspects are not clear, see the questions section.</h3>
+          <span class="stance mixed">mixed</span>
+        </div>
+        <div class="meta">
+          <span>partially_supported</span>
+          <span>medium confidence</span>
+          <span>support 40</span>
+        </div>
+        <p><b>Evidence:</b> ...echniques are overall not too complex.&quot;*
+- **Experimental setup**
+ - `EnVq`: *&quot;the experiments are comprehensive&quot;*
+ - `aaV3`: *&quot;The experiments and analysis are quite extensive. Multiple datasets of differen...</p>
+        <p><b>Rebuttal guidance:</b> Clarify and consolidate unclear sections with precise motivation and definitions; point to specific sections addressing each unclear point; include a short motivation paragraph in Section 3.2 and add a glossary or notation table.</p>
+      </article>
+    
+      <article class="claim">
+        <div class="claim-top">
+          <h3>What&#x27;s the reason for choosing m to be 96? How does m affect the performance of TabR?</h3>
+          <span class="stance strongly_agree">strongly agree</span>
+        </div>
+        <div class="meta">
+          <span>supported</span>
+          <span>medium confidence</span>
+          <span>support 80</span>
+        </div>
+        <p><b>Evidence:</b> We thank the reviewer for the feedback!
+
+&gt; What&#x27;s the reason for choosing m to be 96? How does m affect the performance of TabR?
+
+**In the new PDF, this is addressed in Section A.6.** Below, we provide a summar...</p>
+        <p><b>Rebuttal guidance:</b> Provide a concise summary of how m influences performance with quantitative trends across datasets and seeds; consider adding a small ablation figure/table in main or appendix.</p>
+      </article>
+    
+      <article class="claim">
+        <div class="claim-top">
+          <h3>What&#x27;s the inference efficiency of TabR and how does it compare with other baselines (e.g., GBDT)?</h3>
+          <span class="stance strongly_agree">strongly agree</span>
+        </div>
+        <div class="meta">
+          <span>supported</span>
+          <span>medium confidence</span>
+          <span>support 80</span>
+        </div>
+        <p><b>Evidence:</b> We thank the reviewer for the feedback!
+
+&gt; What&#x27;s the reason for choosing m to be 96? How does m affect the performance of TabR?
+
+**In the new PDF, this is addressed in Section A.6.** Below, we provide a summar...</p>
+        <p><b>Rebuttal guidance:</b> Summarize inference cost, latency, and throughput in a dedicated table, and clearly state where TabR wins/loses relative to GBDT.</p>
+      </article>
+    
+      <article class="claim">
+        <div class="claim-top">
+          <h3>Is TabR applicable to categorical features? It seems like the paper only considers continuous features.</h3>
+          <span class="stance strongly_agree">strongly agree</span>
+        </div>
+        <div class="meta">
+          <span>supported</span>
+          <span>medium confidence</span>
+          <span>support 85</span>
+        </div>
+        <p><b>Evidence:</b> &gt; It seems like the paper only considers continuous features
+
+**In fact, the used datasets include both continuous and categorical features**:
+- For the default benchmark, Table 1 in the main text provides info...</p>
+        <p><b>Rebuttal guidance:</b> In manuscript, add a dedicated paragraph explicitly stating support for categorical features with brief encoding details and reference to datasets.</p>
+      </article>
+    </div>
+    </section>
+  </div>
+</body>
+</html>

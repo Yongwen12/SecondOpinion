@@ -468,6 +468,19 @@ class AuditTests(unittest.TestCase):
         self.assertNotIn("possibly-contradicted-by-paper", claim["issue_flags"])
         self.assertFalse(any(item["source_type"] == "rebuttal" for item in claim["evidence"]))
 
+    def test_external_evidence_can_be_attached_during_audit(self):
+        dataset = json.loads(Path("examples/sample_normalized_dataset.json").read_text())
+        result = audit_dataset(
+            dataset,
+            claim_llm_client=SampleClaimClient(),
+            claim_model="test-model",
+            use_external_evidence=True,
+            external_providers=("venue_guidelines",),
+        )
+        first_claim = result["audits"][0]["claims"][0]
+        self.assertEqual(result["external_evidence_version"], "external-evidence-v0.1")
+        self.assertTrue(any(item["source_type"] == "venue_guideline" for item in first_claim["evidence"]))
+
 
 if __name__ == "__main__":
     unittest.main()

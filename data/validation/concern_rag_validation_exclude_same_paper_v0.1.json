@@ -1,0 +1,6473 @@
+{
+  "schema_version": "0.1",
+  "validation_version": "concern-rag-validation-v0.1",
+  "summary": {
+    "query_count": 48,
+    "memory_count": 48,
+    "exclude_same_paper": true,
+    "gold_meta_review_match_counts": {
+      "survived": 17,
+      "partial": 27,
+      "not_found": 4
+    },
+    "gold_concern_quality_counts": {
+      "high": 43,
+      "medium": 4,
+      "low": 1
+    },
+    "memory_match_counts": {
+      "survived": 17,
+      "partial": 27,
+      "not_found": 4
+    },
+    "memory_quality_counts": {
+      "high": 43,
+      "medium": 4,
+      "low": 1
+    },
+    "match_mrr": 0.6309,
+    "quality_mrr": 0.8896,
+    "match_hit@1": 0.4583,
+    "quality_hit@1": 0.8542,
+    "type_hit@1": 0.2708,
+    "match_knn_accuracy@1": 0.4583,
+    "quality_knn_accuracy@1": 0.8542,
+    "random_match_hit@1": 0.4373,
+    "random_quality_hit@1": 0.8045,
+    "match_hit@3": 0.7917,
+    "quality_hit@3": 0.9167,
+    "type_hit@3": 0.5833,
+    "match_knn_accuracy@3": 0.4375,
+    "quality_knn_accuracy@3": 0.875,
+    "random_match_hit@3": 0.7882,
+    "random_quality_hit@3": 0.9108,
+    "match_hit@5": 0.875,
+    "quality_hit@5": 0.9375,
+    "type_hit@5": 0.75,
+    "match_knn_accuracy@5": 0.5833,
+    "quality_knn_accuracy@5": 0.8958,
+    "random_match_hit@5": 0.895,
+    "random_quality_hit@5": 0.9205
+  },
+  "by_meta_review_match": {
+    "survived": {
+      "count": 17,
+      "match_hit@1": 0.3529,
+      "match_hit@3": 0.6471,
+      "match_hit@5": 0.7647,
+      "match_knn_accuracy@1": 0.3529,
+      "match_knn_accuracy@3": 0.1765,
+      "match_knn_accuracy@5": 0.1765
+    },
+    "partial": {
+      "count": 27,
+      "match_hit@1": 0.5926,
+      "match_hit@3": 0.963,
+      "match_hit@5": 1.0,
+      "match_knn_accuracy@1": 0.5926,
+      "match_knn_accuracy@3": 0.6667,
+      "match_knn_accuracy@5": 0.9259
+    },
+    "not_found": {
+      "count": 4,
+      "match_hit@1": 0.0,
+      "match_hit@3": 0.25,
+      "match_hit@5": 0.5,
+      "match_knn_accuracy@1": 0.0,
+      "match_knn_accuracy@3": 0.0,
+      "match_knn_accuracy@5": 0.0
+    }
+  },
+  "examples": {
+    "match_hits": [
+      {
+        "task_id": "7QlKLvfVge:LsvjaIpscH:6",
+        "paper_id": "7QlKLvfVge",
+        "claim_type": "theory",
+        "gold_meta_review_match": "survived",
+        "gold_concern_quality": "high",
+        "candidate_count": 47,
+        "retrieved": [
+          {
+            "source_task_id": "rp5vfyp5Np:YktI8n3TeZ:5",
+            "paper_id": "rp5vfyp5Np",
+            "claim_type": "ethics",
+            "meta_review_match": "survived",
+            "concern_quality": "high",
+            "retrieval_score": 8.2805,
+            "matched_terms": [
+              "more",
+              "need",
+              "use",
+              "why"
+            ]
+          },
+          {
+            "source_task_id": "9L9j5bQPIY:91NkdJpVId:2",
+            "paper_id": "9L9j5bQPIY",
+            "claim_type": "methodology",
+            "meta_review_match": "not_found",
+            "concern_quality": "low",
+            "retrieval_score": 8.1334,
+            "matched_terms": [
+              "need",
+              "why"
+            ]
+          },
+          {
+            "source_task_id": "7vVWiCrFnd:aHtDQsXakn:3",
+            "paper_id": "7vVWiCrFnd",
+            "claim_type": "theory",
+            "meta_review_match": "survived",
+            "concern_quality": "high",
+            "retrieval_score": 3.9384,
+            "matched_terms": [
+              "theory"
+            ]
+          },
+          {
+            "source_task_id": "xibcBSuuq0:zwpI0TjvXj:1",
+            "paper_id": "xibcBSuuq0",
+            "claim_type": "experiment",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 3.6134,
+            "matched_terms": [
+              "more"
+            ]
+          },
+          {
+            "source_task_id": "tmsqb6WpLz:KX6fDquf1N:4",
+            "paper_id": "tmsqb6WpLz",
+            "claim_type": "theory",
+            "meta_review_match": "survived",
+            "concern_quality": "high",
+            "retrieval_score": 3.5048,
+            "matched_terms": [
+              "theory"
+            ]
+          }
+        ],
+        "match_hit@1": true,
+        "quality_hit@1": true,
+        "type_hit@1": false,
+        "match_knn@1": "survived",
+        "quality_knn@1": "high",
+        "match_knn_correct@1": true,
+        "quality_knn_correct@1": true,
+        "match_hit@3": true,
+        "quality_hit@3": true,
+        "type_hit@3": true,
+        "match_knn@3": "survived",
+        "quality_knn@3": "high",
+        "match_knn_correct@3": true,
+        "quality_knn_correct@3": true,
+        "match_hit@5": true,
+        "quality_hit@5": true,
+        "type_hit@5": true,
+        "match_knn@5": "survived",
+        "quality_knn@5": "high",
+        "match_knn_correct@5": true,
+        "quality_knn_correct@5": true,
+        "match_rr": 1.0,
+        "quality_rr": 1.0
+      },
+      {
+        "task_id": "eepoE7iLpL:Omfs3dIcbU:0",
+        "paper_id": "eepoE7iLpL",
+        "claim_type": "methodology",
+        "gold_meta_review_match": "partial",
+        "gold_concern_quality": "high",
+        "candidate_count": 47,
+        "retrieved": [
+          {
+            "source_task_id": "10eQ4Cfh8p:wckxlkPL42:0",
+            "paper_id": "10eQ4Cfh8p",
+            "claim_type": "methodology",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 10.442,
+            "matched_terms": [
+              "about",
+              "also",
+              "construction",
+              "methodology",
+              "unclear"
+            ]
+          },
+          {
+            "source_task_id": "JWrl5pJCnl:A3gHHaLomn:0",
+            "paper_id": "JWrl5pJCnl",
+            "claim_type": "novelty",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 10.0743,
+            "matched_terms": [
+              "also",
+              "methodology",
+              "unclear",
+              "use"
+            ]
+          },
+          {
+            "source_task_id": "7vVWiCrFnd:uXWt0SbIG0:2",
+            "paper_id": "7vVWiCrFnd",
+            "claim_type": "baseline",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 8.9223,
+            "matched_terms": [
+              "network",
+              "neural"
+            ]
+          },
+          {
+            "source_task_id": "H9DYMIpz9c:Ie1VUg7cqO:6",
+            "paper_id": "H9DYMIpz9c",
+            "claim_type": "experiment",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 8.701,
+            "matched_terms": [
+              "also",
+              "network"
+            ]
+          },
+          {
+            "source_task_id": "10eQ4Cfh8p:zlSWBdRAhX:0",
+            "paper_id": "10eQ4Cfh8p",
+            "claim_type": "novelty",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 8.5426,
+            "matched_terms": [
+              "how",
+              "however",
+              "optimization"
+            ]
+          }
+        ],
+        "match_hit@1": true,
+        "quality_hit@1": true,
+        "type_hit@1": true,
+        "match_knn@1": "partial",
+        "quality_knn@1": "high",
+        "match_knn_correct@1": true,
+        "quality_knn_correct@1": true,
+        "match_hit@3": true,
+        "quality_hit@3": true,
+        "type_hit@3": true,
+        "match_knn@3": "partial",
+        "quality_knn@3": "high",
+        "match_knn_correct@3": true,
+        "quality_knn_correct@3": true,
+        "match_hit@5": true,
+        "quality_hit@5": true,
+        "type_hit@5": true,
+        "match_knn@5": "partial",
+        "quality_knn@5": "high",
+        "match_knn_correct@5": true,
+        "quality_knn_correct@5": true,
+        "match_rr": 1.0,
+        "quality_rr": 1.0
+      },
+      {
+        "task_id": "AOSsLRKQrX:iusxEbIueU:5",
+        "paper_id": "AOSsLRKQrX",
+        "claim_type": "experiment",
+        "gold_meta_review_match": "partial",
+        "gold_concern_quality": "high",
+        "candidate_count": 45,
+        "retrieved": [
+          {
+            "source_task_id": "10eQ4Cfh8p:zlSWBdRAhX:3",
+            "paper_id": "10eQ4Cfh8p",
+            "claim_type": "experiment",
+            "meta_review_match": "survived",
+            "concern_quality": "high",
+            "retrieval_score": 10.1963,
+            "matched_terms": [
+              "been",
+              "experiment",
+              "multiple"
+            ]
+          },
+          {
+            "source_task_id": "10eQ4Cfh8p:wckxlkPL42:0",
+            "paper_id": "10eQ4Cfh8p",
+            "claim_type": "methodology",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 10.0087,
+            "matched_terms": [
+              "each",
+              "model",
+              "section",
+              "understand"
+            ]
+          },
+          {
+            "source_task_id": "DwcV654WBP:E60zlLaTes:1",
+            "paper_id": "DwcV654WBP",
+            "claim_type": "experiment",
+            "meta_review_match": "survived",
+            "concern_quality": "high",
+            "retrieval_score": 9.0786,
+            "matched_terms": [
+              "experiment",
+              "model",
+              "performance",
+              "training"
+            ]
+          },
+          {
+            "source_task_id": "BQvbL2sFQx:QiY7LeGJCD:0",
+            "paper_id": "BQvbL2sFQx",
+            "claim_type": "clarity",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 7.367,
+            "matched_terms": [
+              "been",
+              "understand"
+            ]
+          },
+          {
+            "source_task_id": "pYmQId95iR:u5ZC4CoNyk:6",
+            "paper_id": "pYmQId95iR",
+            "claim_type": "experiment",
+            "meta_review_match": "not_found",
+            "concern_quality": "high",
+            "retrieval_score": 6.8449,
+            "matched_terms": [
+              "each",
+              "experiment",
+              "multiple"
+            ]
+          }
+        ],
+        "match_hit@1": false,
+        "quality_hit@1": true,
+        "type_hit@1": true,
+        "match_knn@1": "survived",
+        "quality_knn@1": "high",
+        "match_knn_correct@1": false,
+        "quality_knn_correct@1": true,
+        "match_hit@3": true,
+        "quality_hit@3": true,
+        "type_hit@3": true,
+        "match_knn@3": "survived",
+        "quality_knn@3": "high",
+        "match_knn_correct@3": false,
+        "quality_knn_correct@3": true,
+        "match_hit@5": true,
+        "quality_hit@5": true,
+        "type_hit@5": true,
+        "match_knn@5": "partial",
+        "quality_knn@5": "high",
+        "match_knn_correct@5": true,
+        "quality_knn_correct@5": true,
+        "match_rr": 0.5,
+        "quality_rr": 1.0
+      },
+      {
+        "task_id": "w73feIekdO:NLKFsY27K9:1",
+        "paper_id": "w73feIekdO",
+        "claim_type": "general",
+        "gold_meta_review_match": "not_found",
+        "gold_concern_quality": "medium",
+        "candidate_count": 46,
+        "retrieved": [
+          {
+            "source_task_id": "i8PjQT3Uig:76XC5M0kbk:1",
+            "paper_id": "i8PjQT3Uig",
+            "claim_type": "baseline",
+            "meta_review_match": "survived",
+            "concern_quality": "high",
+            "retrieval_score": 15.7595,
+            "matched_terms": [
+              "method",
+              "other",
+              "over",
+              "what"
+            ]
+          },
+          {
+            "source_task_id": "cQgjz0mf0r:3gM8OP4zZK:3",
+            "paper_id": "cQgjz0mf0r",
+            "claim_type": "methodology",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 8.2482,
+            "matched_terms": [
+              "help",
+              "how",
+              "proposed"
+            ]
+          },
+          {
+            "source_task_id": "tmsqb6WpLz:KX6fDquf1N:4",
+            "paper_id": "tmsqb6WpLz",
+            "claim_type": "theory",
+            "meta_review_match": "survived",
+            "concern_quality": "high",
+            "retrieval_score": 8.2335,
+            "matched_terms": [
+              "how",
+              "method",
+              "what"
+            ]
+          },
+          {
+            "source_task_id": "JWrl5pJCnl:A3gHHaLomn:0",
+            "paper_id": "JWrl5pJCnl",
+            "claim_type": "novelty",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 7.2369,
+            "matched_terms": [
+              "help",
+              "method",
+              "proposed"
+            ]
+          },
+          {
+            "source_task_id": "1FWDEIGm33:MzDh7uJCEU:1",
+            "paper_id": "1FWDEIGm33",
+            "claim_type": "writing",
+            "meta_review_match": "not_found",
+            "concern_quality": "medium",
+            "retrieval_score": 7.1104,
+            "matched_terms": [
+              "question",
+              "will"
+            ]
+          }
+        ],
+        "match_hit@1": false,
+        "quality_hit@1": false,
+        "type_hit@1": false,
+        "match_knn@1": "survived",
+        "quality_knn@1": "high",
+        "match_knn_correct@1": false,
+        "quality_knn_correct@1": false,
+        "match_hit@3": false,
+        "quality_hit@3": false,
+        "type_hit@3": false,
+        "match_knn@3": "survived",
+        "quality_knn@3": "high",
+        "match_knn_correct@3": false,
+        "quality_knn_correct@3": false,
+        "match_hit@5": true,
+        "quality_hit@5": true,
+        "type_hit@5": false,
+        "match_knn@5": "partial",
+        "quality_knn@5": "high",
+        "match_knn_correct@5": false,
+        "quality_knn_correct@5": false,
+        "match_rr": 0.2,
+        "quality_rr": 0.2
+      },
+      {
+        "task_id": "i8PjQT3Uig:76XC5M0kbk:1",
+        "paper_id": "i8PjQT3Uig",
+        "claim_type": "baseline",
+        "gold_meta_review_match": "survived",
+        "gold_concern_quality": "high",
+        "candidate_count": 47,
+        "retrieved": [
+          {
+            "source_task_id": "w73feIekdO:NLKFsY27K9:1",
+            "paper_id": "w73feIekdO",
+            "claim_type": "general",
+            "meta_review_match": "not_found",
+            "concern_quality": "medium",
+            "retrieval_score": 14.4488,
+            "matched_terms": [
+              "method",
+              "other",
+              "over",
+              "what"
+            ]
+          },
+          {
+            "source_task_id": "1FWDEIGm33:wXp9GL22N6:1",
+            "paper_id": "1FWDEIGm33",
+            "claim_type": "novelty",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 10.8183,
+            "matched_terms": [
+              "clear",
+              "doe",
+              "like",
+              "what"
+            ]
+          },
+          {
+            "source_task_id": "rp5vfyp5Np:YktI8n3TeZ:2",
+            "paper_id": "rp5vfyp5Np",
+            "claim_type": "experiment",
+            "meta_review_match": "survived",
+            "concern_quality": "high",
+            "retrieval_score": 8.8432,
+            "matched_terms": [
+              "clear",
+              "doe",
+              "model",
+              "what"
+            ]
+          },
+          {
+            "source_task_id": "tmsqb6WpLz:KX6fDquf1N:4",
+            "paper_id": "tmsqb6WpLz",
+            "claim_type": "theory",
+            "meta_review_match": "survived",
+            "concern_quality": "high",
+            "retrieval_score": 8.7748,
+            "matched_terms": [
+              "doe",
+              "method",
+              "what"
+            ]
+          },
+          {
+            "source_task_id": "w73feIekdO:NLKFsY27K9:0",
+            "paper_id": "w73feIekdO",
+            "claim_type": "general",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 8.1868,
+            "matched_terms": [
+              "doe",
+              "method",
+              "over",
+              "should"
+            ]
+          }
+        ],
+        "match_hit@1": false,
+        "quality_hit@1": false,
+        "type_hit@1": false,
+        "match_knn@1": "not_found",
+        "quality_knn@1": "medium",
+        "match_knn_correct@1": false,
+        "quality_knn_correct@1": false,
+        "match_hit@3": true,
+        "quality_hit@3": true,
+        "type_hit@3": false,
+        "match_knn@3": "not_found",
+        "quality_knn@3": "high",
+        "match_knn_correct@3": false,
+        "quality_knn_correct@3": true,
+        "match_hit@5": true,
+        "quality_hit@5": true,
+        "type_hit@5": false,
+        "match_knn@5": "partial",
+        "quality_knn@5": "high",
+        "match_knn_correct@5": false,
+        "quality_knn_correct@5": true,
+        "match_rr": 0.3333,
+        "quality_rr": 0.5
+      },
+      {
+        "task_id": "xibcBSuuq0:zwpI0TjvXj:1",
+        "paper_id": "xibcBSuuq0",
+        "claim_type": "experiment",
+        "gold_meta_review_match": "partial",
+        "gold_concern_quality": "high",
+        "candidate_count": 47,
+        "retrieved": [
+          {
+            "source_task_id": "pYmQId95iR:u5ZC4CoNyk:6",
+            "paper_id": "pYmQId95iR",
+            "claim_type": "experiment",
+            "meta_review_match": "not_found",
+            "concern_quality": "high",
+            "retrieval_score": 18.1539,
+            "matched_terms": [
+              "author",
+              "benchmark",
+              "challenging",
+              "experiment",
+              "exploration",
+              "more",
+              "suggest"
+            ]
+          },
+          {
+            "source_task_id": "JWrl5pJCnl:A3gHHaLomn:0",
+            "paper_id": "JWrl5pJCnl",
+            "claim_type": "novelty",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 9.2752,
+            "matched_terms": [
+              "author",
+              "method",
+              "proposed",
+              "which"
+            ]
+          },
+          {
+            "source_task_id": "UVSKuh9eK5:lo6OmS3vso:0",
+            "paper_id": "UVSKuh9eK5",
+            "claim_type": "methodology",
+            "meta_review_match": "survived",
+            "concern_quality": "high",
+            "retrieval_score": 8.9345,
+            "matched_terms": [
+              "author",
+              "those"
+            ]
+          },
+          {
+            "source_task_id": "rp5vfyp5Np:YktI8n3TeZ:5",
+            "paper_id": "rp5vfyp5Np",
+            "claim_type": "ethics",
+            "meta_review_match": "survived",
+            "concern_quality": "high",
+            "retrieval_score": 8.2645,
+            "matched_terms": [
+              "may",
+              "more",
+              "which",
+              "would"
+            ]
+          },
+          {
+            "source_task_id": "rp5vfyp5Np:YktI8n3TeZ:2",
+            "paper_id": "rp5vfyp5Np",
+            "claim_type": "experiment",
+            "meta_review_match": "survived",
+            "concern_quality": "high",
+            "retrieval_score": 7.5763,
+            "matched_terms": [
+              "author",
+              "experiment",
+              "suggest",
+              "would"
+            ]
+          }
+        ],
+        "match_hit@1": false,
+        "quality_hit@1": true,
+        "type_hit@1": true,
+        "match_knn@1": "not_found",
+        "quality_knn@1": "high",
+        "match_knn_correct@1": false,
+        "quality_knn_correct@1": true,
+        "match_hit@3": true,
+        "quality_hit@3": true,
+        "type_hit@3": true,
+        "match_knn@3": "not_found",
+        "quality_knn@3": "high",
+        "match_knn_correct@3": false,
+        "quality_knn_correct@3": true,
+        "match_hit@5": true,
+        "quality_hit@5": true,
+        "type_hit@5": true,
+        "match_knn@5": "survived",
+        "quality_knn@5": "high",
+        "match_knn_correct@5": false,
+        "quality_knn_correct@5": true,
+        "match_rr": 0.5,
+        "quality_rr": 1.0
+      },
+      {
+        "task_id": "10eQ4Cfh8p:zlSWBdRAhX:0",
+        "paper_id": "10eQ4Cfh8p",
+        "claim_type": "novelty",
+        "gold_meta_review_match": "partial",
+        "gold_concern_quality": "high",
+        "candidate_count": 43,
+        "retrieved": [
+          {
+            "source_task_id": "eepoE7iLpL:Omfs3dIcbU:0",
+            "paper_id": "eepoE7iLpL",
+            "claim_type": "methodology",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 8.0158,
+            "matched_terms": [
+              "how",
+              "however",
+              "optimization"
+            ]
+          },
+          {
+            "source_task_id": "UVSKuh9eK5:lo6OmS3vso:0",
+            "paper_id": "UVSKuh9eK5",
+            "claim_type": "methodology",
+            "meta_review_match": "survived",
+            "concern_quality": "high",
+            "retrieval_score": 7.7077,
+            "matched_terms": [
+              "how",
+              "there",
+              "training"
+            ]
+          },
+          {
+            "source_task_id": "cQgjz0mf0r:3gM8OP4zZK:3",
+            "paper_id": "cQgjz0mf0r",
+            "claim_type": "methodology",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 6.5393,
+            "matched_terms": [
+              "how",
+              "however",
+              "training"
+            ]
+          },
+          {
+            "source_task_id": "1FWDEIGm33:wXp9GL22N6:1",
+            "paper_id": "1FWDEIGm33",
+            "claim_type": "novelty",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 6.2813,
+            "matched_terms": [
+              "however",
+              "novelty",
+              "problem"
+            ]
+          },
+          {
+            "source_task_id": "ApjY32f3Xr:4e1fSBB3OO:1",
+            "paper_id": "ApjY32f3Xr",
+            "claim_type": "methodology",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 6.1647,
+            "matched_terms": [
+              "can",
+              "other"
+            ]
+          }
+        ],
+        "match_hit@1": true,
+        "quality_hit@1": true,
+        "type_hit@1": false,
+        "match_knn@1": "partial",
+        "quality_knn@1": "high",
+        "match_knn_correct@1": true,
+        "quality_knn_correct@1": true,
+        "match_hit@3": true,
+        "quality_hit@3": true,
+        "type_hit@3": false,
+        "match_knn@3": "partial",
+        "quality_knn@3": "high",
+        "match_knn_correct@3": true,
+        "quality_knn_correct@3": true,
+        "match_hit@5": true,
+        "quality_hit@5": true,
+        "type_hit@5": true,
+        "match_knn@5": "partial",
+        "quality_knn@5": "high",
+        "match_knn_correct@5": true,
+        "quality_knn_correct@5": true,
+        "match_rr": 1.0,
+        "quality_rr": 1.0
+      },
+      {
+        "task_id": "rp5vfyp5Np:YktI8n3TeZ:5",
+        "paper_id": "rp5vfyp5Np",
+        "claim_type": "ethics",
+        "gold_meta_review_match": "survived",
+        "gold_concern_quality": "high",
+        "candidate_count": 45,
+        "retrieved": [
+          {
+            "source_task_id": "xibcBSuuq0:zwpI0TjvXj:1",
+            "paper_id": "xibcBSuuq0",
+            "claim_type": "experiment",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 15.3662,
+            "matched_terms": [
+              "may",
+              "more",
+              "which",
+              "would"
+            ]
+          },
+          {
+            "source_task_id": "7QlKLvfVge:LsvjaIpscH:6",
+            "paper_id": "7QlKLvfVge",
+            "claim_type": "theory",
+            "meta_review_match": "survived",
+            "concern_quality": "high",
+            "retrieval_score": 14.6071,
+            "matched_terms": [
+              "more",
+              "need",
+              "use",
+              "why"
+            ]
+          },
+          {
+            "source_task_id": "JWrl5pJCnl:A3gHHaLomn:0",
+            "paper_id": "JWrl5pJCnl",
+            "claim_type": "novelty",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 13.4004,
+            "matched_terms": [
+              "can",
+              "directly",
+              "policy",
+              "use",
+              "which"
+            ]
+          },
+          {
+            "source_task_id": "1FWDEIGm33:MzDh7uJCEU:1",
+            "paper_id": "1FWDEIGm33",
+            "claim_type": "writing",
+            "meta_review_match": "not_found",
+            "concern_quality": "medium",
+            "retrieval_score": 12.9118,
+            "matched_terms": [
+              "directly",
+              "human",
+              "may",
+              "need",
+              "not"
+            ]
+          },
+          {
+            "source_task_id": "yacRhge4zQ:pKsEW8Yja4:2",
+            "paper_id": "yacRhge4zQ",
+            "claim_type": "experiment",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 12.3113,
+            "matched_terms": [
+              "can",
+              "obtain",
+              "one"
+            ]
+          }
+        ],
+        "match_hit@1": false,
+        "quality_hit@1": true,
+        "type_hit@1": false,
+        "match_knn@1": "partial",
+        "quality_knn@1": "high",
+        "match_knn_correct@1": false,
+        "quality_knn_correct@1": true,
+        "match_hit@3": true,
+        "quality_hit@3": true,
+        "type_hit@3": false,
+        "match_knn@3": "partial",
+        "quality_knn@3": "high",
+        "match_knn_correct@3": false,
+        "quality_knn_correct@3": true,
+        "match_hit@5": true,
+        "quality_hit@5": true,
+        "type_hit@5": false,
+        "match_knn@5": "partial",
+        "quality_knn@5": "high",
+        "match_knn_correct@5": false,
+        "quality_knn_correct@5": true,
+        "match_rr": 0.5,
+        "quality_rr": 1.0
+      },
+      {
+        "task_id": "10eQ4Cfh8p:wckxlkPL42:0",
+        "paper_id": "10eQ4Cfh8p",
+        "claim_type": "methodology",
+        "gold_meta_review_match": "partial",
+        "gold_concern_quality": "high",
+        "candidate_count": 43,
+        "retrieved": [
+          {
+            "source_task_id": "1FWDEIGm33:wXp9GL22N6:1",
+            "paper_id": "1FWDEIGm33",
+            "claim_type": "novelty",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 21.6968,
+            "matched_terms": [
+              "besid",
+              "clearly",
+              "critical",
+              "not",
+              "problem",
+              "unclear",
+              "understand",
+              "why"
+            ]
+          },
+          {
+            "source_task_id": "JWrl5pJCnl:A3gHHaLomn:0",
+            "paper_id": "JWrl5pJCnl",
+            "claim_type": "novelty",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 20.2047,
+            "matched_terms": [
+              "action",
+              "also",
+              "but",
+              "method",
+              "methodology",
+              "policy",
+              "proposed",
+              "unclear"
+            ]
+          },
+          {
+            "source_task_id": "eepoE7iLpL:Omfs3dIcbU:0",
+            "paper_id": "eepoE7iLpL",
+            "claim_type": "methodology",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 15.8557,
+            "matched_terms": [
+              "about",
+              "also",
+              "construction",
+              "methodology",
+              "unclear"
+            ]
+          },
+          {
+            "source_task_id": "AOSsLRKQrX:iusxEbIueU:5",
+            "paper_id": "AOSsLRKQrX",
+            "claim_type": "experiment",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 12.8072,
+            "matched_terms": [
+              "each",
+              "model",
+              "section",
+              "understand"
+            ]
+          },
+          {
+            "source_task_id": "AOSsLRKQrX:tYw6kbOlZq:1",
+            "paper_id": "AOSsLRKQrX",
+            "claim_type": "ablation",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 12.6856,
+            "matched_terms": [
+              "but",
+              "each",
+              "model",
+              "number",
+              "there"
+            ]
+          }
+        ],
+        "match_hit@1": true,
+        "quality_hit@1": true,
+        "type_hit@1": false,
+        "match_knn@1": "partial",
+        "quality_knn@1": "high",
+        "match_knn_correct@1": true,
+        "quality_knn_correct@1": true,
+        "match_hit@3": true,
+        "quality_hit@3": true,
+        "type_hit@3": true,
+        "match_knn@3": "partial",
+        "quality_knn@3": "high",
+        "match_knn_correct@3": true,
+        "quality_knn_correct@3": true,
+        "match_hit@5": true,
+        "quality_hit@5": true,
+        "type_hit@5": true,
+        "match_knn@5": "partial",
+        "quality_knn@5": "high",
+        "match_knn_correct@5": true,
+        "quality_knn_correct@5": true,
+        "match_rr": 1.0,
+        "quality_rr": 1.0
+      },
+      {
+        "task_id": "jXR5pjs1rV:dXSWosECmZ:2",
+        "paper_id": "jXR5pjs1rV",
+        "claim_type": "experiment",
+        "gold_meta_review_match": "survived",
+        "gold_concern_quality": "high",
+        "candidate_count": 47,
+        "retrieved": [
+          {
+            "source_task_id": "rp5vfyp5Np:vGNqxpozDP:3",
+            "paper_id": "rp5vfyp5Np",
+            "claim_type": "ethics",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 12.4941,
+            "matched_terms": [
+              "application",
+              "more",
+              "practical"
+            ]
+          },
+          {
+            "source_task_id": "pYmQId95iR:u5ZC4CoNyk:6",
+            "paper_id": "pYmQId95iR",
+            "claim_type": "experiment",
+            "meta_review_match": "not_found",
+            "concern_quality": "high",
+            "retrieval_score": 12.4198,
+            "matched_terms": [
+              "experiment",
+              "level",
+              "more",
+              "provide",
+              "reward"
+            ]
+          },
+          {
+            "source_task_id": "miGpIhquyB:yPyy646e3D:0",
+            "paper_id": "miGpIhquyB",
+            "claim_type": "ethics",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 10.6817,
+            "matched_terms": [
+              "evaluation",
+              "example",
+              "model",
+              "provide"
+            ]
+          },
+          {
+            "source_task_id": "DwcV654WBP:E60zlLaTes:1",
+            "paper_id": "DwcV654WBP",
+            "claim_type": "experiment",
+            "meta_review_match": "survived",
+            "concern_quality": "high",
+            "retrieval_score": 9.3287,
+            "matched_terms": [
+              "experiment",
+              "focus",
+              "model",
+              "such"
+            ]
+          },
+          {
+            "source_task_id": "3wL1tj3kqE:YyOvX2x0kY:0",
+            "paper_id": "3wL1tj3kqE",
+            "claim_type": "methodology",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 8.9679,
+            "matched_terms": [
+              "comprehensive",
+              "lack"
+            ]
+          }
+        ],
+        "match_hit@1": false,
+        "quality_hit@1": true,
+        "type_hit@1": false,
+        "match_knn@1": "partial",
+        "quality_knn@1": "high",
+        "match_knn_correct@1": false,
+        "quality_knn_correct@1": true,
+        "match_hit@3": false,
+        "quality_hit@3": true,
+        "type_hit@3": true,
+        "match_knn@3": "partial",
+        "quality_knn@3": "high",
+        "match_knn_correct@3": false,
+        "quality_knn_correct@3": true,
+        "match_hit@5": true,
+        "quality_hit@5": true,
+        "type_hit@5": true,
+        "match_knn@5": "partial",
+        "quality_knn@5": "high",
+        "match_knn_correct@5": false,
+        "quality_knn_correct@5": true,
+        "match_rr": 0.25,
+        "quality_rr": 1.0
+      }
+    ],
+    "match_misses": [
+      {
+        "task_id": "UVSKuh9eK5:AUeGBXg0Pe:1",
+        "paper_id": "UVSKuh9eK5",
+        "claim_type": "experiment",
+        "gold_meta_review_match": "survived",
+        "gold_concern_quality": "high",
+        "candidate_count": 46,
+        "retrieved": [
+          {
+            "source_task_id": "w73feIekdO:NLKFsY27K9:0",
+            "paper_id": "w73feIekdO",
+            "claim_type": "general",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 12.7463,
+            "matched_terms": [
+              "candidate",
+              "convincing",
+              "dataset",
+              "result",
+              "there"
+            ]
+          },
+          {
+            "source_task_id": "3wL1tj3kqE:YyOvX2x0kY:0",
+            "paper_id": "3wL1tj3kqE",
+            "claim_type": "methodology",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 10.9441,
+            "matched_terms": [
+              "dataset",
+              "due",
+              "instance"
+            ]
+          },
+          {
+            "source_task_id": "gYcft1HIaU:K0w3kEaTHx:4",
+            "paper_id": "gYcft1HIaU",
+            "claim_type": "baseline",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 10.803,
+            "matched_terms": [
+              "also",
+              "consider",
+              "dataset",
+              "only",
+              "subset"
+            ]
+          },
+          {
+            "source_task_id": "AOSsLRKQrX:tYw6kbOlZq:1",
+            "paper_id": "AOSsLRKQrX",
+            "claim_type": "ablation",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 10.4197,
+            "matched_terms": [
+              "each",
+              "experiment",
+              "number",
+              "there"
+            ]
+          },
+          {
+            "source_task_id": "H9DYMIpz9c:Ie1VUg7cqO:6",
+            "paper_id": "H9DYMIpz9c",
+            "claim_type": "experiment",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 9.8248,
+            "matched_terms": [
+              "also",
+              "experiment",
+              "table"
+            ]
+          }
+        ],
+        "match_hit@1": false,
+        "quality_hit@1": true,
+        "type_hit@1": false,
+        "match_knn@1": "partial",
+        "quality_knn@1": "high",
+        "match_knn_correct@1": false,
+        "quality_knn_correct@1": true,
+        "match_hit@3": false,
+        "quality_hit@3": true,
+        "type_hit@3": false,
+        "match_knn@3": "partial",
+        "quality_knn@3": "high",
+        "match_knn_correct@3": false,
+        "quality_knn_correct@3": true,
+        "match_hit@5": false,
+        "quality_hit@5": true,
+        "type_hit@5": true,
+        "match_knn@5": "partial",
+        "quality_knn@5": "high",
+        "match_knn_correct@5": false,
+        "quality_knn_correct@5": true,
+        "match_rr": 0.0,
+        "quality_rr": 1.0
+      },
+      {
+        "task_id": "UVSKuh9eK5:lo6OmS3vso:0",
+        "paper_id": "UVSKuh9eK5",
+        "claim_type": "methodology",
+        "gold_meta_review_match": "survived",
+        "gold_concern_quality": "high",
+        "candidate_count": 46,
+        "retrieved": [
+          {
+            "source_task_id": "cQgjz0mf0r:3gM8OP4zZK:3",
+            "paper_id": "cQgjz0mf0r",
+            "claim_type": "methodology",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 11.0417,
+            "matched_terms": [
+              "data",
+              "how",
+              "methodology",
+              "not",
+              "training"
+            ]
+          },
+          {
+            "source_task_id": "3wL1tj3kqE:YyOvX2x0kY:0",
+            "paper_id": "3wL1tj3kqE",
+            "claim_type": "methodology",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 10.6008,
+            "matched_terms": [
+              "attribut",
+              "methodology",
+              "not",
+              "training"
+            ]
+          },
+          {
+            "source_task_id": "10eQ4Cfh8p:wckxlkPL42:0",
+            "paper_id": "10eQ4Cfh8p",
+            "claim_type": "methodology",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 9.7198,
+            "matched_terms": [
+              "description",
+              "methodology",
+              "not",
+              "there"
+            ]
+          },
+          {
+            "source_task_id": "10eQ4Cfh8p:zlSWBdRAhX:0",
+            "paper_id": "10eQ4Cfh8p",
+            "claim_type": "novelty",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 8.1075,
+            "matched_terms": [
+              "how",
+              "there",
+              "training"
+            ]
+          },
+          {
+            "source_task_id": "xibcBSuuq0:zwpI0TjvXj:1",
+            "paper_id": "xibcBSuuq0",
+            "claim_type": "experiment",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 7.6062,
+            "matched_terms": [
+              "author",
+              "those"
+            ]
+          }
+        ],
+        "match_hit@1": false,
+        "quality_hit@1": true,
+        "type_hit@1": true,
+        "match_knn@1": "partial",
+        "quality_knn@1": "high",
+        "match_knn_correct@1": false,
+        "quality_knn_correct@1": true,
+        "match_hit@3": false,
+        "quality_hit@3": true,
+        "type_hit@3": true,
+        "match_knn@3": "partial",
+        "quality_knn@3": "high",
+        "match_knn_correct@3": false,
+        "quality_knn_correct@3": true,
+        "match_hit@5": false,
+        "quality_hit@5": true,
+        "type_hit@5": true,
+        "match_knn@5": "partial",
+        "quality_knn@5": "high",
+        "match_knn_correct@5": false,
+        "quality_knn_correct@5": true,
+        "match_rr": 0.0,
+        "quality_rr": 1.0
+      },
+      {
+        "task_id": "yacRhge4zQ:pKsEW8Yja4:0",
+        "paper_id": "yacRhge4zQ",
+        "claim_type": "novelty",
+        "gold_meta_review_match": "survived",
+        "gold_concern_quality": "high",
+        "candidate_count": 46,
+        "retrieved": [
+          {
+            "source_task_id": "10eQ4Cfh8p:zlSWBdRAhX:2",
+            "paper_id": "10eQ4Cfh8p",
+            "claim_type": "baseline",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 6.2424,
+            "matched_terms": [
+              "difficult",
+              "key"
+            ]
+          },
+          {
+            "source_task_id": "10eQ4Cfh8p:zlSWBdRAhX:0",
+            "paper_id": "10eQ4Cfh8p",
+            "claim_type": "novelty",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 5.6688,
+            "matched_terms": [
+              "can",
+              "novelty"
+            ]
+          },
+          {
+            "source_task_id": "7vVWiCrFnd:uXWt0SbIG0:0",
+            "paper_id": "7vVWiCrFnd",
+            "claim_type": "clarity",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 4.8697,
+            "matched_terms": [
+              "among"
+            ]
+          },
+          {
+            "source_task_id": "3wL1tj3kqE:YyOvX2x0kY:0",
+            "paper_id": "3wL1tj3kqE",
+            "claim_type": "methodology",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 4.8278,
+            "matched_terms": [
+              "fairnes"
+            ]
+          },
+          {
+            "source_task_id": "BQvbL2sFQx:QiY7LeGJCD:0",
+            "paper_id": "BQvbL2sFQx",
+            "claim_type": "clarity",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 4.3091,
+            "matched_terms": [
+              "specifically"
+            ]
+          }
+        ],
+        "match_hit@1": false,
+        "quality_hit@1": true,
+        "type_hit@1": false,
+        "match_knn@1": "partial",
+        "quality_knn@1": "high",
+        "match_knn_correct@1": false,
+        "quality_knn_correct@1": true,
+        "match_hit@3": false,
+        "quality_hit@3": true,
+        "type_hit@3": true,
+        "match_knn@3": "partial",
+        "quality_knn@3": "high",
+        "match_knn_correct@3": false,
+        "quality_knn_correct@3": true,
+        "match_hit@5": false,
+        "quality_hit@5": true,
+        "type_hit@5": true,
+        "match_knn@5": "partial",
+        "quality_knn@5": "high",
+        "match_knn_correct@5": false,
+        "quality_knn_correct@5": true,
+        "match_rr": 0.0,
+        "quality_rr": 1.0
+      },
+      {
+        "task_id": "10eQ4Cfh8p:w67nfG2dMW:3",
+        "paper_id": "10eQ4Cfh8p",
+        "claim_type": "novelty",
+        "gold_meta_review_match": "survived",
+        "gold_concern_quality": "high",
+        "candidate_count": 43,
+        "retrieved": [
+          {
+            "source_task_id": "JWrl5pJCnl:A3gHHaLomn:0",
+            "paper_id": "JWrl5pJCnl",
+            "claim_type": "novelty",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 13.9667,
+            "matched_terms": [
+              "action",
+              "approach",
+              "novelty",
+              "proposed",
+              "unlike"
+            ]
+          },
+          {
+            "source_task_id": "xibcBSuuq0:zwpI0TjvXj:1",
+            "paper_id": "xibcBSuuq0",
+            "claim_type": "experiment",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 10.6863,
+            "matched_terms": [
+              "often",
+              "proposed",
+              "suggest"
+            ]
+          },
+          {
+            "source_task_id": "w73feIekdO:NLKFsY27K9:0",
+            "paper_id": "w73feIekdO",
+            "claim_type": "general",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 7.9829,
+            "matched_terms": [
+              "approach",
+              "problem",
+              "two"
+            ]
+          },
+          {
+            "source_task_id": "1FWDEIGm33:wXp9GL22N6:1",
+            "paper_id": "1FWDEIGm33",
+            "claim_type": "novelty",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 7.7055,
+            "matched_terms": [
+              "novelty",
+              "problem",
+              "suggest"
+            ]
+          },
+          {
+            "source_task_id": "miGpIhquyB:yPyy646e3D:0",
+            "paper_id": "miGpIhquyB",
+            "claim_type": "ethics",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 7.5711,
+            "matched_terms": [
+              "framework",
+              "model",
+              "proposed"
+            ]
+          }
+        ],
+        "match_hit@1": false,
+        "quality_hit@1": true,
+        "type_hit@1": true,
+        "match_knn@1": "partial",
+        "quality_knn@1": "high",
+        "match_knn_correct@1": false,
+        "quality_knn_correct@1": true,
+        "match_hit@3": false,
+        "quality_hit@3": true,
+        "type_hit@3": true,
+        "match_knn@3": "partial",
+        "quality_knn@3": "high",
+        "match_knn_correct@3": false,
+        "quality_knn_correct@3": true,
+        "match_hit@5": false,
+        "quality_hit@5": true,
+        "type_hit@5": true,
+        "match_knn@5": "partial",
+        "quality_knn@5": "high",
+        "match_knn_correct@5": false,
+        "quality_knn_correct@5": true,
+        "match_rr": 0.0,
+        "quality_rr": 1.0
+      },
+      {
+        "task_id": "pYmQId95iR:u5ZC4CoNyk:6",
+        "paper_id": "pYmQId95iR",
+        "claim_type": "experiment",
+        "gold_meta_review_match": "not_found",
+        "gold_concern_quality": "high",
+        "candidate_count": 46,
+        "retrieved": [
+          {
+            "source_task_id": "xibcBSuuq0:zwpI0TjvXj:1",
+            "paper_id": "xibcBSuuq0",
+            "claim_type": "experiment",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 27.1943,
+            "matched_terms": [
+              "author",
+              "benchmark",
+              "challenging",
+              "experiment",
+              "exploration",
+              "more",
+              "suggest"
+            ]
+          },
+          {
+            "source_task_id": "jXR5pjs1rV:dXSWosECmZ:2",
+            "paper_id": "jXR5pjs1rV",
+            "claim_type": "experiment",
+            "meta_review_match": "survived",
+            "concern_quality": "high",
+            "retrieval_score": 16.0397,
+            "matched_terms": [
+              "experiment",
+              "level",
+              "more",
+              "provide",
+              "reward"
+            ]
+          },
+          {
+            "source_task_id": "miGpIhquyB:yPyy646e3D:0",
+            "paper_id": "miGpIhquyB",
+            "claim_type": "ethics",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 11.4749,
+            "matched_terms": [
+              "author",
+              "difficulty",
+              "evaluating",
+              "provide"
+            ]
+          },
+          {
+            "source_task_id": "rp5vfyp5Np:YktI8n3TeZ:2",
+            "paper_id": "rp5vfyp5Np",
+            "claim_type": "experiment",
+            "meta_review_match": "survived",
+            "concern_quality": "high",
+            "retrieval_score": 11.0832,
+            "matched_terms": [
+              "author",
+              "evaluate",
+              "experiment",
+              "reward",
+              "suggest"
+            ]
+          },
+          {
+            "source_task_id": "10eQ4Cfh8p:zlSWBdRAhX:3",
+            "paper_id": "10eQ4Cfh8p",
+            "claim_type": "experiment",
+            "meta_review_match": "survived",
+            "concern_quality": "high",
+            "retrieval_score": 10.4619,
+            "matched_terms": [
+              "experiment",
+              "finally",
+              "multiple"
+            ]
+          }
+        ],
+        "match_hit@1": false,
+        "quality_hit@1": true,
+        "type_hit@1": true,
+        "match_knn@1": "partial",
+        "quality_knn@1": "high",
+        "match_knn_correct@1": false,
+        "quality_knn_correct@1": true,
+        "match_hit@3": false,
+        "quality_hit@3": true,
+        "type_hit@3": true,
+        "match_knn@3": "partial",
+        "quality_knn@3": "high",
+        "match_knn_correct@3": false,
+        "quality_knn_correct@3": true,
+        "match_hit@5": false,
+        "quality_hit@5": true,
+        "type_hit@5": true,
+        "match_knn@5": "survived",
+        "quality_knn@5": "high",
+        "match_knn_correct@5": false,
+        "quality_knn_correct@5": true,
+        "match_rr": 0.0,
+        "quality_rr": 1.0
+      },
+      {
+        "task_id": "9L9j5bQPIY:91NkdJpVId:2",
+        "paper_id": "9L9j5bQPIY",
+        "claim_type": "methodology",
+        "gold_meta_review_match": "not_found",
+        "gold_concern_quality": "low",
+        "candidate_count": 47,
+        "retrieved": [
+          {
+            "source_task_id": "7QlKLvfVge:LsvjaIpscH:6",
+            "paper_id": "7QlKLvfVge",
+            "claim_type": "theory",
+            "meta_review_match": "survived",
+            "concern_quality": "high",
+            "retrieval_score": 7.6217,
+            "matched_terms": [
+              "need",
+              "why"
+            ]
+          },
+          {
+            "source_task_id": "10eQ4Cfh8p:wckxlkPL42:0",
+            "paper_id": "10eQ4Cfh8p",
+            "claim_type": "methodology",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 6.2028,
+            "matched_terms": [
+              "methodology",
+              "unclear",
+              "why"
+            ]
+          },
+          {
+            "source_task_id": "eepoE7iLpL:Omfs3dIcbU:0",
+            "paper_id": "eepoE7iLpL",
+            "claim_type": "methodology",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 5.6694,
+            "matched_terms": [
+              "methodology",
+              "unclear"
+            ]
+          },
+          {
+            "source_task_id": "JWrl5pJCnl:A3gHHaLomn:0",
+            "paper_id": "JWrl5pJCnl",
+            "claim_type": "novelty",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 5.5051,
+            "matched_terms": [
+              "methodology",
+              "unclear"
+            ]
+          },
+          {
+            "source_task_id": "1FWDEIGm33:wXp9GL22N6:1",
+            "paper_id": "1FWDEIGm33",
+            "claim_type": "novelty",
+            "meta_review_match": "partial",
+            "concern_quality": "high",
+            "retrieval_score": 4.8399,
+            "matched_terms": [
+              "unclear",
+              "why"
+            ]
+          }
+        ],
+        "match_hit@1": false,
+        "quality_hit@1": false,
+        "type_hit@1": false,
+        "match_knn@1": "survived",
+        "quality_knn@1": "high",
+        "match_knn_correct@1": false,
+        "quality_knn_correct@1": false,
+        "match_hit@3": false,
+        "quality_hit@3": false,
+        "type_hit@3": true,
+        "match_knn@3": "partial",
+        "quality_knn@3": "high",
+        "match_knn_correct@3": false,
+        "quality_knn_correct@3": false,
+        "match_hit@5": false,
+        "quality_hit@5": false,
+        "type_hit@5": true,
+        "match_knn@5": "partial",
+        "quality_knn@5": "high",
+        "match_knn_correct@5": false,
+        "quality_knn_correct@5": false,
+        "match_rr": 0.0,
+        "quality_rr": 0.0
+      }
+    ]
+  },
+  "rows": [
+    {
+      "task_id": "7QlKLvfVge:LsvjaIpscH:6",
+      "paper_id": "7QlKLvfVge",
+      "claim_type": "theory",
+      "gold_meta_review_match": "survived",
+      "gold_concern_quality": "high",
+      "candidate_count": 47,
+      "retrieved": [
+        {
+          "source_task_id": "rp5vfyp5Np:YktI8n3TeZ:5",
+          "paper_id": "rp5vfyp5Np",
+          "claim_type": "ethics",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 8.2805,
+          "matched_terms": [
+            "more",
+            "need",
+            "use",
+            "why"
+          ]
+        },
+        {
+          "source_task_id": "9L9j5bQPIY:91NkdJpVId:2",
+          "paper_id": "9L9j5bQPIY",
+          "claim_type": "methodology",
+          "meta_review_match": "not_found",
+          "concern_quality": "low",
+          "retrieval_score": 8.1334,
+          "matched_terms": [
+            "need",
+            "why"
+          ]
+        },
+        {
+          "source_task_id": "7vVWiCrFnd:aHtDQsXakn:3",
+          "paper_id": "7vVWiCrFnd",
+          "claim_type": "theory",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 3.9384,
+          "matched_terms": [
+            "theory"
+          ]
+        },
+        {
+          "source_task_id": "xibcBSuuq0:zwpI0TjvXj:1",
+          "paper_id": "xibcBSuuq0",
+          "claim_type": "experiment",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 3.6134,
+          "matched_terms": [
+            "more"
+          ]
+        },
+        {
+          "source_task_id": "tmsqb6WpLz:KX6fDquf1N:4",
+          "paper_id": "tmsqb6WpLz",
+          "claim_type": "theory",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 3.5048,
+          "matched_terms": [
+            "theory"
+          ]
+        }
+      ],
+      "match_hit@1": true,
+      "quality_hit@1": true,
+      "type_hit@1": false,
+      "match_knn@1": "survived",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": true,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": true,
+      "match_knn@3": "survived",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": true,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "survived",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": true,
+      "quality_knn_correct@5": true,
+      "match_rr": 1.0,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "eepoE7iLpL:Omfs3dIcbU:0",
+      "paper_id": "eepoE7iLpL",
+      "claim_type": "methodology",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "candidate_count": 47,
+      "retrieved": [
+        {
+          "source_task_id": "10eQ4Cfh8p:wckxlkPL42:0",
+          "paper_id": "10eQ4Cfh8p",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 10.442,
+          "matched_terms": [
+            "about",
+            "also",
+            "construction",
+            "methodology",
+            "unclear"
+          ]
+        },
+        {
+          "source_task_id": "JWrl5pJCnl:A3gHHaLomn:0",
+          "paper_id": "JWrl5pJCnl",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 10.0743,
+          "matched_terms": [
+            "also",
+            "methodology",
+            "unclear",
+            "use"
+          ]
+        },
+        {
+          "source_task_id": "7vVWiCrFnd:uXWt0SbIG0:2",
+          "paper_id": "7vVWiCrFnd",
+          "claim_type": "baseline",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 8.9223,
+          "matched_terms": [
+            "network",
+            "neural"
+          ]
+        },
+        {
+          "source_task_id": "H9DYMIpz9c:Ie1VUg7cqO:6",
+          "paper_id": "H9DYMIpz9c",
+          "claim_type": "experiment",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 8.701,
+          "matched_terms": [
+            "also",
+            "network"
+          ]
+        },
+        {
+          "source_task_id": "10eQ4Cfh8p:zlSWBdRAhX:0",
+          "paper_id": "10eQ4Cfh8p",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 8.5426,
+          "matched_terms": [
+            "how",
+            "however",
+            "optimization"
+          ]
+        }
+      ],
+      "match_hit@1": true,
+      "quality_hit@1": true,
+      "type_hit@1": true,
+      "match_knn@1": "partial",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": true,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": true,
+      "match_knn@3": "partial",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": true,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": true,
+      "quality_knn_correct@5": true,
+      "match_rr": 1.0,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "AOSsLRKQrX:iusxEbIueU:5",
+      "paper_id": "AOSsLRKQrX",
+      "claim_type": "experiment",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "candidate_count": 45,
+      "retrieved": [
+        {
+          "source_task_id": "10eQ4Cfh8p:zlSWBdRAhX:3",
+          "paper_id": "10eQ4Cfh8p",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 10.1963,
+          "matched_terms": [
+            "been",
+            "experiment",
+            "multiple"
+          ]
+        },
+        {
+          "source_task_id": "10eQ4Cfh8p:wckxlkPL42:0",
+          "paper_id": "10eQ4Cfh8p",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 10.0087,
+          "matched_terms": [
+            "each",
+            "model",
+            "section",
+            "understand"
+          ]
+        },
+        {
+          "source_task_id": "DwcV654WBP:E60zlLaTes:1",
+          "paper_id": "DwcV654WBP",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 9.0786,
+          "matched_terms": [
+            "experiment",
+            "model",
+            "performance",
+            "training"
+          ]
+        },
+        {
+          "source_task_id": "BQvbL2sFQx:QiY7LeGJCD:0",
+          "paper_id": "BQvbL2sFQx",
+          "claim_type": "clarity",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 7.367,
+          "matched_terms": [
+            "been",
+            "understand"
+          ]
+        },
+        {
+          "source_task_id": "pYmQId95iR:u5ZC4CoNyk:6",
+          "paper_id": "pYmQId95iR",
+          "claim_type": "experiment",
+          "meta_review_match": "not_found",
+          "concern_quality": "high",
+          "retrieval_score": 6.8449,
+          "matched_terms": [
+            "each",
+            "experiment",
+            "multiple"
+          ]
+        }
+      ],
+      "match_hit@1": false,
+      "quality_hit@1": true,
+      "type_hit@1": true,
+      "match_knn@1": "survived",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": false,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": true,
+      "match_knn@3": "survived",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": false,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": true,
+      "quality_knn_correct@5": true,
+      "match_rr": 0.5,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "w73feIekdO:NLKFsY27K9:1",
+      "paper_id": "w73feIekdO",
+      "claim_type": "general",
+      "gold_meta_review_match": "not_found",
+      "gold_concern_quality": "medium",
+      "candidate_count": 46,
+      "retrieved": [
+        {
+          "source_task_id": "i8PjQT3Uig:76XC5M0kbk:1",
+          "paper_id": "i8PjQT3Uig",
+          "claim_type": "baseline",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 15.7595,
+          "matched_terms": [
+            "method",
+            "other",
+            "over",
+            "what"
+          ]
+        },
+        {
+          "source_task_id": "cQgjz0mf0r:3gM8OP4zZK:3",
+          "paper_id": "cQgjz0mf0r",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 8.2482,
+          "matched_terms": [
+            "help",
+            "how",
+            "proposed"
+          ]
+        },
+        {
+          "source_task_id": "tmsqb6WpLz:KX6fDquf1N:4",
+          "paper_id": "tmsqb6WpLz",
+          "claim_type": "theory",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 8.2335,
+          "matched_terms": [
+            "how",
+            "method",
+            "what"
+          ]
+        },
+        {
+          "source_task_id": "JWrl5pJCnl:A3gHHaLomn:0",
+          "paper_id": "JWrl5pJCnl",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 7.2369,
+          "matched_terms": [
+            "help",
+            "method",
+            "proposed"
+          ]
+        },
+        {
+          "source_task_id": "1FWDEIGm33:MzDh7uJCEU:1",
+          "paper_id": "1FWDEIGm33",
+          "claim_type": "writing",
+          "meta_review_match": "not_found",
+          "concern_quality": "medium",
+          "retrieval_score": 7.1104,
+          "matched_terms": [
+            "question",
+            "will"
+          ]
+        }
+      ],
+      "match_hit@1": false,
+      "quality_hit@1": false,
+      "type_hit@1": false,
+      "match_knn@1": "survived",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": false,
+      "quality_knn_correct@1": false,
+      "match_hit@3": false,
+      "quality_hit@3": false,
+      "type_hit@3": false,
+      "match_knn@3": "survived",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": false,
+      "quality_knn_correct@3": false,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": false,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": false,
+      "quality_knn_correct@5": false,
+      "match_rr": 0.2,
+      "quality_rr": 0.2
+    },
+    {
+      "task_id": "i8PjQT3Uig:76XC5M0kbk:1",
+      "paper_id": "i8PjQT3Uig",
+      "claim_type": "baseline",
+      "gold_meta_review_match": "survived",
+      "gold_concern_quality": "high",
+      "candidate_count": 47,
+      "retrieved": [
+        {
+          "source_task_id": "w73feIekdO:NLKFsY27K9:1",
+          "paper_id": "w73feIekdO",
+          "claim_type": "general",
+          "meta_review_match": "not_found",
+          "concern_quality": "medium",
+          "retrieval_score": 14.4488,
+          "matched_terms": [
+            "method",
+            "other",
+            "over",
+            "what"
+          ]
+        },
+        {
+          "source_task_id": "1FWDEIGm33:wXp9GL22N6:1",
+          "paper_id": "1FWDEIGm33",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 10.8183,
+          "matched_terms": [
+            "clear",
+            "doe",
+            "like",
+            "what"
+          ]
+        },
+        {
+          "source_task_id": "rp5vfyp5Np:YktI8n3TeZ:2",
+          "paper_id": "rp5vfyp5Np",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 8.8432,
+          "matched_terms": [
+            "clear",
+            "doe",
+            "model",
+            "what"
+          ]
+        },
+        {
+          "source_task_id": "tmsqb6WpLz:KX6fDquf1N:4",
+          "paper_id": "tmsqb6WpLz",
+          "claim_type": "theory",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 8.7748,
+          "matched_terms": [
+            "doe",
+            "method",
+            "what"
+          ]
+        },
+        {
+          "source_task_id": "w73feIekdO:NLKFsY27K9:0",
+          "paper_id": "w73feIekdO",
+          "claim_type": "general",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 8.1868,
+          "matched_terms": [
+            "doe",
+            "method",
+            "over",
+            "should"
+          ]
+        }
+      ],
+      "match_hit@1": false,
+      "quality_hit@1": false,
+      "type_hit@1": false,
+      "match_knn@1": "not_found",
+      "quality_knn@1": "medium",
+      "match_knn_correct@1": false,
+      "quality_knn_correct@1": false,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": false,
+      "match_knn@3": "not_found",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": false,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": false,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": false,
+      "quality_knn_correct@5": true,
+      "match_rr": 0.3333,
+      "quality_rr": 0.5
+    },
+    {
+      "task_id": "xibcBSuuq0:zwpI0TjvXj:1",
+      "paper_id": "xibcBSuuq0",
+      "claim_type": "experiment",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "candidate_count": 47,
+      "retrieved": [
+        {
+          "source_task_id": "pYmQId95iR:u5ZC4CoNyk:6",
+          "paper_id": "pYmQId95iR",
+          "claim_type": "experiment",
+          "meta_review_match": "not_found",
+          "concern_quality": "high",
+          "retrieval_score": 18.1539,
+          "matched_terms": [
+            "author",
+            "benchmark",
+            "challenging",
+            "experiment",
+            "exploration",
+            "more",
+            "suggest"
+          ]
+        },
+        {
+          "source_task_id": "JWrl5pJCnl:A3gHHaLomn:0",
+          "paper_id": "JWrl5pJCnl",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 9.2752,
+          "matched_terms": [
+            "author",
+            "method",
+            "proposed",
+            "which"
+          ]
+        },
+        {
+          "source_task_id": "UVSKuh9eK5:lo6OmS3vso:0",
+          "paper_id": "UVSKuh9eK5",
+          "claim_type": "methodology",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 8.9345,
+          "matched_terms": [
+            "author",
+            "those"
+          ]
+        },
+        {
+          "source_task_id": "rp5vfyp5Np:YktI8n3TeZ:5",
+          "paper_id": "rp5vfyp5Np",
+          "claim_type": "ethics",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 8.2645,
+          "matched_terms": [
+            "may",
+            "more",
+            "which",
+            "would"
+          ]
+        },
+        {
+          "source_task_id": "rp5vfyp5Np:YktI8n3TeZ:2",
+          "paper_id": "rp5vfyp5Np",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 7.5763,
+          "matched_terms": [
+            "author",
+            "experiment",
+            "suggest",
+            "would"
+          ]
+        }
+      ],
+      "match_hit@1": false,
+      "quality_hit@1": true,
+      "type_hit@1": true,
+      "match_knn@1": "not_found",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": false,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": true,
+      "match_knn@3": "not_found",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": false,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "survived",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": false,
+      "quality_knn_correct@5": true,
+      "match_rr": 0.5,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "10eQ4Cfh8p:zlSWBdRAhX:0",
+      "paper_id": "10eQ4Cfh8p",
+      "claim_type": "novelty",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "candidate_count": 43,
+      "retrieved": [
+        {
+          "source_task_id": "eepoE7iLpL:Omfs3dIcbU:0",
+          "paper_id": "eepoE7iLpL",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 8.0158,
+          "matched_terms": [
+            "how",
+            "however",
+            "optimization"
+          ]
+        },
+        {
+          "source_task_id": "UVSKuh9eK5:lo6OmS3vso:0",
+          "paper_id": "UVSKuh9eK5",
+          "claim_type": "methodology",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 7.7077,
+          "matched_terms": [
+            "how",
+            "there",
+            "training"
+          ]
+        },
+        {
+          "source_task_id": "cQgjz0mf0r:3gM8OP4zZK:3",
+          "paper_id": "cQgjz0mf0r",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 6.5393,
+          "matched_terms": [
+            "how",
+            "however",
+            "training"
+          ]
+        },
+        {
+          "source_task_id": "1FWDEIGm33:wXp9GL22N6:1",
+          "paper_id": "1FWDEIGm33",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 6.2813,
+          "matched_terms": [
+            "however",
+            "novelty",
+            "problem"
+          ]
+        },
+        {
+          "source_task_id": "ApjY32f3Xr:4e1fSBB3OO:1",
+          "paper_id": "ApjY32f3Xr",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 6.1647,
+          "matched_terms": [
+            "can",
+            "other"
+          ]
+        }
+      ],
+      "match_hit@1": true,
+      "quality_hit@1": true,
+      "type_hit@1": false,
+      "match_knn@1": "partial",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": true,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": false,
+      "match_knn@3": "partial",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": true,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": true,
+      "quality_knn_correct@5": true,
+      "match_rr": 1.0,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "rp5vfyp5Np:YktI8n3TeZ:5",
+      "paper_id": "rp5vfyp5Np",
+      "claim_type": "ethics",
+      "gold_meta_review_match": "survived",
+      "gold_concern_quality": "high",
+      "candidate_count": 45,
+      "retrieved": [
+        {
+          "source_task_id": "xibcBSuuq0:zwpI0TjvXj:1",
+          "paper_id": "xibcBSuuq0",
+          "claim_type": "experiment",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 15.3662,
+          "matched_terms": [
+            "may",
+            "more",
+            "which",
+            "would"
+          ]
+        },
+        {
+          "source_task_id": "7QlKLvfVge:LsvjaIpscH:6",
+          "paper_id": "7QlKLvfVge",
+          "claim_type": "theory",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 14.6071,
+          "matched_terms": [
+            "more",
+            "need",
+            "use",
+            "why"
+          ]
+        },
+        {
+          "source_task_id": "JWrl5pJCnl:A3gHHaLomn:0",
+          "paper_id": "JWrl5pJCnl",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 13.4004,
+          "matched_terms": [
+            "can",
+            "directly",
+            "policy",
+            "use",
+            "which"
+          ]
+        },
+        {
+          "source_task_id": "1FWDEIGm33:MzDh7uJCEU:1",
+          "paper_id": "1FWDEIGm33",
+          "claim_type": "writing",
+          "meta_review_match": "not_found",
+          "concern_quality": "medium",
+          "retrieval_score": 12.9118,
+          "matched_terms": [
+            "directly",
+            "human",
+            "may",
+            "need",
+            "not"
+          ]
+        },
+        {
+          "source_task_id": "yacRhge4zQ:pKsEW8Yja4:2",
+          "paper_id": "yacRhge4zQ",
+          "claim_type": "experiment",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 12.3113,
+          "matched_terms": [
+            "can",
+            "obtain",
+            "one"
+          ]
+        }
+      ],
+      "match_hit@1": false,
+      "quality_hit@1": true,
+      "type_hit@1": false,
+      "match_knn@1": "partial",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": false,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": false,
+      "match_knn@3": "partial",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": false,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": false,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": false,
+      "quality_knn_correct@5": true,
+      "match_rr": 0.5,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "10eQ4Cfh8p:wckxlkPL42:0",
+      "paper_id": "10eQ4Cfh8p",
+      "claim_type": "methodology",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "candidate_count": 43,
+      "retrieved": [
+        {
+          "source_task_id": "1FWDEIGm33:wXp9GL22N6:1",
+          "paper_id": "1FWDEIGm33",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 21.6968,
+          "matched_terms": [
+            "besid",
+            "clearly",
+            "critical",
+            "not",
+            "problem",
+            "unclear",
+            "understand",
+            "why"
+          ]
+        },
+        {
+          "source_task_id": "JWrl5pJCnl:A3gHHaLomn:0",
+          "paper_id": "JWrl5pJCnl",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 20.2047,
+          "matched_terms": [
+            "action",
+            "also",
+            "but",
+            "method",
+            "methodology",
+            "policy",
+            "proposed",
+            "unclear"
+          ]
+        },
+        {
+          "source_task_id": "eepoE7iLpL:Omfs3dIcbU:0",
+          "paper_id": "eepoE7iLpL",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 15.8557,
+          "matched_terms": [
+            "about",
+            "also",
+            "construction",
+            "methodology",
+            "unclear"
+          ]
+        },
+        {
+          "source_task_id": "AOSsLRKQrX:iusxEbIueU:5",
+          "paper_id": "AOSsLRKQrX",
+          "claim_type": "experiment",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 12.8072,
+          "matched_terms": [
+            "each",
+            "model",
+            "section",
+            "understand"
+          ]
+        },
+        {
+          "source_task_id": "AOSsLRKQrX:tYw6kbOlZq:1",
+          "paper_id": "AOSsLRKQrX",
+          "claim_type": "ablation",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 12.6856,
+          "matched_terms": [
+            "but",
+            "each",
+            "model",
+            "number",
+            "there"
+          ]
+        }
+      ],
+      "match_hit@1": true,
+      "quality_hit@1": true,
+      "type_hit@1": false,
+      "match_knn@1": "partial",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": true,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": true,
+      "match_knn@3": "partial",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": true,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": true,
+      "quality_knn_correct@5": true,
+      "match_rr": 1.0,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "jXR5pjs1rV:dXSWosECmZ:2",
+      "paper_id": "jXR5pjs1rV",
+      "claim_type": "experiment",
+      "gold_meta_review_match": "survived",
+      "gold_concern_quality": "high",
+      "candidate_count": 47,
+      "retrieved": [
+        {
+          "source_task_id": "rp5vfyp5Np:vGNqxpozDP:3",
+          "paper_id": "rp5vfyp5Np",
+          "claim_type": "ethics",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 12.4941,
+          "matched_terms": [
+            "application",
+            "more",
+            "practical"
+          ]
+        },
+        {
+          "source_task_id": "pYmQId95iR:u5ZC4CoNyk:6",
+          "paper_id": "pYmQId95iR",
+          "claim_type": "experiment",
+          "meta_review_match": "not_found",
+          "concern_quality": "high",
+          "retrieval_score": 12.4198,
+          "matched_terms": [
+            "experiment",
+            "level",
+            "more",
+            "provide",
+            "reward"
+          ]
+        },
+        {
+          "source_task_id": "miGpIhquyB:yPyy646e3D:0",
+          "paper_id": "miGpIhquyB",
+          "claim_type": "ethics",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 10.6817,
+          "matched_terms": [
+            "evaluation",
+            "example",
+            "model",
+            "provide"
+          ]
+        },
+        {
+          "source_task_id": "DwcV654WBP:E60zlLaTes:1",
+          "paper_id": "DwcV654WBP",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 9.3287,
+          "matched_terms": [
+            "experiment",
+            "focus",
+            "model",
+            "such"
+          ]
+        },
+        {
+          "source_task_id": "3wL1tj3kqE:YyOvX2x0kY:0",
+          "paper_id": "3wL1tj3kqE",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 8.9679,
+          "matched_terms": [
+            "comprehensive",
+            "lack"
+          ]
+        }
+      ],
+      "match_hit@1": false,
+      "quality_hit@1": true,
+      "type_hit@1": false,
+      "match_knn@1": "partial",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": false,
+      "quality_knn_correct@1": true,
+      "match_hit@3": false,
+      "quality_hit@3": true,
+      "type_hit@3": true,
+      "match_knn@3": "partial",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": false,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": false,
+      "quality_knn_correct@5": true,
+      "match_rr": 0.25,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "ApjY32f3Xr:4e1fSBB3OO:1",
+      "paper_id": "ApjY32f3Xr",
+      "claim_type": "methodology",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "candidate_count": 46,
+      "retrieved": [
+        {
+          "source_task_id": "w73feIekdO:NLKFsY27K9:0",
+          "paper_id": "w73feIekdO",
+          "claim_type": "general",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 11.8804,
+          "matched_terms": [
+            "fail",
+            "low",
+            "one",
+            "setting",
+            "while"
+          ]
+        },
+        {
+          "source_task_id": "JWrl5pJCnl:A3gHHaLomn:0",
+          "paper_id": "JWrl5pJCnl",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 10.7683,
+          "matched_terms": [
+            "can",
+            "error",
+            "methodology",
+            "such"
+          ]
+        },
+        {
+          "source_task_id": "yacRhge4zQ:pKsEW8Yja4:2",
+          "paper_id": "yacRhge4zQ",
+          "claim_type": "experiment",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 7.5944,
+          "matched_terms": [
+            "can",
+            "one"
+          ]
+        },
+        {
+          "source_task_id": "10eQ4Cfh8p:zlSWBdRAhX:0",
+          "paper_id": "10eQ4Cfh8p",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 6.2317,
+          "matched_terms": [
+            "can",
+            "other"
+          ]
+        },
+        {
+          "source_task_id": "AOSsLRKQrX:tYw6kbOlZq:3",
+          "paper_id": "AOSsLRKQrX",
+          "claim_type": "experiment",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 5.1335,
+          "matched_terms": [
+            "parameter"
+          ]
+        }
+      ],
+      "match_hit@1": true,
+      "quality_hit@1": true,
+      "type_hit@1": false,
+      "match_knn@1": "partial",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": true,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": false,
+      "match_knn@3": "partial",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": true,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": false,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": true,
+      "quality_knn_correct@5": true,
+      "match_rr": 1.0,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "tmsqb6WpLz:KX6fDquf1N:4",
+      "paper_id": "tmsqb6WpLz",
+      "claim_type": "theory",
+      "gold_meta_review_match": "survived",
+      "gold_concern_quality": "high",
+      "candidate_count": 47,
+      "retrieved": [
+        {
+          "source_task_id": "i8PjQT3Uig:76XC5M0kbk:1",
+          "paper_id": "i8PjQT3Uig",
+          "claim_type": "baseline",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 9.4422,
+          "matched_terms": [
+            "doe",
+            "method",
+            "what"
+          ]
+        },
+        {
+          "source_task_id": "yacRhge4zQ:pKsEW8Yja4:2",
+          "paper_id": "yacRhge4zQ",
+          "claim_type": "experiment",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 9.1173,
+          "matched_terms": [
+            "assum",
+            "how",
+            "what"
+          ]
+        },
+        {
+          "source_task_id": "w73feIekdO:NLKFsY27K9:1",
+          "paper_id": "w73feIekdO",
+          "claim_type": "general",
+          "meta_review_match": "not_found",
+          "concern_quality": "medium",
+          "retrieval_score": 8.6177,
+          "matched_terms": [
+            "how",
+            "method",
+            "what"
+          ]
+        },
+        {
+          "source_task_id": "10eQ4Cfh8p:wckxlkPL42:0",
+          "paper_id": "10eQ4Cfh8p",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 7.8488,
+          "matched_terms": [
+            "about",
+            "but",
+            "method",
+            "there"
+          ]
+        },
+        {
+          "source_task_id": "w73feIekdO:NLKFsY27K9:0",
+          "paper_id": "w73feIekdO",
+          "claim_type": "general",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 7.5457,
+          "matched_terms": [
+            "about",
+            "doe",
+            "how",
+            "method",
+            "there"
+          ]
+        }
+      ],
+      "match_hit@1": true,
+      "quality_hit@1": true,
+      "type_hit@1": false,
+      "match_knn@1": "survived",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": true,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": false,
+      "match_knn@3": "not_found",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": false,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": false,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": false,
+      "quality_knn_correct@5": true,
+      "match_rr": 1.0,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "ApjY32f3Xr:C4sqXJNESI:5",
+      "paper_id": "ApjY32f3Xr",
+      "claim_type": "general",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "candidate_count": 46,
+      "retrieved": [
+        {
+          "source_task_id": "7vVWiCrFnd:cWeTjQ3r9w:0",
+          "paper_id": "7vVWiCrFnd",
+          "claim_type": "experiment",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 15.5973,
+          "matched_terms": [
+            "could",
+            "you",
+            "your"
+          ]
+        },
+        {
+          "source_task_id": "yacRhge4zQ:pKsEW8Yja4:2",
+          "paper_id": "yacRhge4zQ",
+          "claim_type": "experiment",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 5.9341,
+          "matched_terms": [
+            "can",
+            "how"
+          ]
+        },
+        {
+          "source_task_id": "10eQ4Cfh8p:zlSWBdRAhX:0",
+          "paper_id": "10eQ4Cfh8p",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 5.852,
+          "matched_terms": [
+            "can",
+            "how"
+          ]
+        },
+        {
+          "source_task_id": "rp5vfyp5Np:vGNqxpozDP:3",
+          "paper_id": "rp5vfyp5Np",
+          "claim_type": "ethics",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 5.6054,
+          "matched_terms": [
+            "could",
+            "discussion"
+          ]
+        },
+        {
+          "source_task_id": "w73feIekdO:NLKFsY27K9:1",
+          "paper_id": "w73feIekdO",
+          "claim_type": "general",
+          "meta_review_match": "not_found",
+          "concern_quality": "medium",
+          "retrieval_score": 5.4018,
+          "matched_terms": [
+            "general",
+            "how"
+          ]
+        }
+      ],
+      "match_hit@1": true,
+      "quality_hit@1": true,
+      "type_hit@1": false,
+      "match_knn@1": "partial",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": true,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": false,
+      "match_knn@3": "partial",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": true,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": true,
+      "quality_knn_correct@5": true,
+      "match_rr": 1.0,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "1FWDEIGm33:wXp9GL22N6:1",
+      "paper_id": "1FWDEIGm33",
+      "claim_type": "novelty",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "candidate_count": 46,
+      "retrieved": [
+        {
+          "source_task_id": "10eQ4Cfh8p:wckxlkPL42:0",
+          "paper_id": "10eQ4Cfh8p",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 21.8625,
+          "matched_terms": [
+            "besid",
+            "clearly",
+            "critical",
+            "not",
+            "problem",
+            "unclear",
+            "understand",
+            "why"
+          ]
+        },
+        {
+          "source_task_id": "rp5vfyp5Np:YktI8n3TeZ:2",
+          "paper_id": "rp5vfyp5Np",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 17.7914,
+          "matched_terms": [
+            "clear",
+            "doe",
+            "experiment",
+            "however",
+            "human",
+            "not",
+            "suggest",
+            "what"
+          ]
+        },
+        {
+          "source_task_id": "rp5vfyp5Np:vGNqxpozDP:3",
+          "paper_id": "rp5vfyp5Np",
+          "claim_type": "ethics",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 15.273,
+          "matched_terms": [
+            "application",
+            "discussion",
+            "implication",
+            "potential"
+          ]
+        },
+        {
+          "source_task_id": "i8PjQT3Uig:76XC5M0kbk:1",
+          "paper_id": "i8PjQT3Uig",
+          "claim_type": "baseline",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 14.9511,
+          "matched_terms": [
+            "clear",
+            "doe",
+            "like",
+            "what"
+          ]
+        },
+        {
+          "source_task_id": "AOSsLRKQrX:tYw6kbOlZq:3",
+          "paper_id": "AOSsLRKQrX",
+          "claim_type": "experiment",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 13.2519,
+          "matched_terms": [
+            "critical",
+            "discussed",
+            "experiment",
+            "not"
+          ]
+        }
+      ],
+      "match_hit@1": true,
+      "quality_hit@1": true,
+      "type_hit@1": false,
+      "match_knn@1": "partial",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": true,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": false,
+      "match_knn@3": "partial",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": true,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": false,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": true,
+      "quality_knn_correct@5": true,
+      "match_rr": 1.0,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "H9DYMIpz9c:Ie1VUg7cqO:6",
+      "paper_id": "H9DYMIpz9c",
+      "claim_type": "experiment",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "candidate_count": 47,
+      "retrieved": [
+        {
+          "source_task_id": "UVSKuh9eK5:AUeGBXg0Pe:1",
+          "paper_id": "UVSKuh9eK5",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 8.676,
+          "matched_terms": [
+            "also",
+            "experiment",
+            "table"
+          ]
+        },
+        {
+          "source_task_id": "eepoE7iLpL:Omfs3dIcbU:0",
+          "paper_id": "eepoE7iLpL",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 7.9462,
+          "matched_terms": [
+            "also",
+            "network"
+          ]
+        },
+        {
+          "source_task_id": "pYmQId95iR:u5ZC4CoNyk:5",
+          "paper_id": "pYmQId95iR",
+          "claim_type": "writing",
+          "meta_review_match": "partial",
+          "concern_quality": "medium",
+          "retrieval_score": 4.6811,
+          "matched_terms": [
+            "table"
+          ]
+        },
+        {
+          "source_task_id": "cQgjz0mf0r:3gM8OP4zZK:3",
+          "paper_id": "cQgjz0mf0r",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 4.2848,
+          "matched_terms": [
+            "used"
+          ]
+        },
+        {
+          "source_task_id": "10eQ4Cfh8p:zlSWBdRAhX:2",
+          "paper_id": "10eQ4Cfh8p",
+          "claim_type": "baseline",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 4.1898,
+          "matched_terms": [
+            "also",
+            "table"
+          ]
+        }
+      ],
+      "match_hit@1": false,
+      "quality_hit@1": true,
+      "type_hit@1": true,
+      "match_knn@1": "survived",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": false,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": true,
+      "match_knn@3": "partial",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": true,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": true,
+      "quality_knn_correct@5": true,
+      "match_rr": 0.5,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "BQvbL2sFQx:QiY7LeGJCD:0",
+      "paper_id": "BQvbL2sFQx",
+      "claim_type": "clarity",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "candidate_count": 47,
+      "retrieved": [
+        {
+          "source_task_id": "10eQ4Cfh8p:wckxlkPL42:0",
+          "paper_id": "10eQ4Cfh8p",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 8.2451,
+          "matched_terms": [
+            "defined",
+            "not",
+            "understand"
+          ]
+        },
+        {
+          "source_task_id": "AOSsLRKQrX:iusxEbIueU:5",
+          "paper_id": "AOSsLRKQrX",
+          "claim_type": "experiment",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 7.7175,
+          "matched_terms": [
+            "been",
+            "understand"
+          ]
+        },
+        {
+          "source_task_id": "cQgjz0mf0r:3gM8OP4zZK:3",
+          "paper_id": "cQgjz0mf0r",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 7.545,
+          "matched_terms": [
+            "not",
+            "should",
+            "understand"
+          ]
+        },
+        {
+          "source_task_id": "AZGIwqCyYY:aWxMIfTpWd:3",
+          "paper_id": "AZGIwqCyYY",
+          "claim_type": "clarity",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 7.2365,
+          "matched_terms": [
+            "clarity",
+            "hard"
+          ]
+        },
+        {
+          "source_task_id": "23OEmHVkpq:8CzSIMq0YG:1",
+          "paper_id": "23OEmHVkpq",
+          "claim_type": "novelty",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 7.1671,
+          "matched_terms": [
+            "defined",
+            "should"
+          ]
+        }
+      ],
+      "match_hit@1": true,
+      "quality_hit@1": true,
+      "type_hit@1": false,
+      "match_knn@1": "partial",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": true,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": false,
+      "match_knn@3": "partial",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": true,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": true,
+      "quality_knn_correct@5": true,
+      "match_rr": 1.0,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "DwcV654WBP:E60zlLaTes:1",
+      "paper_id": "DwcV654WBP",
+      "claim_type": "experiment",
+      "gold_meta_review_match": "survived",
+      "gold_concern_quality": "high",
+      "candidate_count": 47,
+      "retrieved": [
+        {
+          "source_task_id": "lNIj5FdXsC:W8u5ZMVoLw:2",
+          "paper_id": "lNIj5FdXsC",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 17.1216,
+          "matched_terms": [
+            "claim",
+            "layer",
+            "propos",
+            "way"
+          ]
+        },
+        {
+          "source_task_id": "AZGIwqCyYY:aWxMIfTpWd:3",
+          "paper_id": "AZGIwqCyYY",
+          "claim_type": "clarity",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 15.1657,
+          "matched_terms": [
+            "generalization",
+            "performance",
+            "point",
+            "representation"
+          ]
+        },
+        {
+          "source_task_id": "jXR5pjs1rV:dXSWosECmZ:2",
+          "paper_id": "jXR5pjs1rV",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 11.0769,
+          "matched_terms": [
+            "experiment",
+            "focus",
+            "model",
+            "such"
+          ]
+        },
+        {
+          "source_task_id": "AOSsLRKQrX:tYw6kbOlZq:1",
+          "paper_id": "AOSsLRKQrX",
+          "claim_type": "ablation",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 10.7666,
+          "matched_terms": [
+            "experiment",
+            "learning",
+            "model",
+            "representation"
+          ]
+        },
+        {
+          "source_task_id": "AOSsLRKQrX:iusxEbIueU:5",
+          "paper_id": "AOSsLRKQrX",
+          "claim_type": "experiment",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 10.4733,
+          "matched_terms": [
+            "experiment",
+            "model",
+            "performance",
+            "training"
+          ]
+        }
+      ],
+      "match_hit@1": false,
+      "quality_hit@1": true,
+      "type_hit@1": false,
+      "match_knn@1": "partial",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": false,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": true,
+      "match_knn@3": "partial",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": false,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": false,
+      "quality_knn_correct@5": true,
+      "match_rr": 0.3333,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "7vVWiCrFnd:cWeTjQ3r9w:0",
+      "paper_id": "7vVWiCrFnd",
+      "claim_type": "experiment",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "candidate_count": 44,
+      "retrieved": [
+        {
+          "source_task_id": "ApjY32f3Xr:C4sqXJNESI:5",
+          "paper_id": "ApjY32f3Xr",
+          "claim_type": "general",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 10.5618,
+          "matched_terms": [
+            "could",
+            "you",
+            "your"
+          ]
+        },
+        {
+          "source_task_id": "rp5vfyp5Np:YktI8n3TeZ:2",
+          "paper_id": "rp5vfyp5Np",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 3.9002,
+          "matched_terms": [
+            "could",
+            "experiment"
+          ]
+        },
+        {
+          "source_task_id": "xibcBSuuq0:zwpI0TjvXj:1",
+          "paper_id": "xibcBSuuq0",
+          "claim_type": "experiment",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 3.7505,
+          "matched_terms": [
+            "experiment",
+            "method"
+          ]
+        },
+        {
+          "source_task_id": "eepoE7iLpL:Omfs3dIcbU:0",
+          "paper_id": "eepoE7iLpL",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 3.1645,
+          "matched_terms": [
+            "you"
+          ]
+        },
+        {
+          "source_task_id": "rp5vfyp5Np:vGNqxpozDP:3",
+          "paper_id": "rp5vfyp5Np",
+          "claim_type": "ethics",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 3.1637,
+          "matched_terms": [
+            "could"
+          ]
+        }
+      ],
+      "match_hit@1": true,
+      "quality_hit@1": true,
+      "type_hit@1": false,
+      "match_knn@1": "partial",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": true,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": true,
+      "match_knn@3": "partial",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": true,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": true,
+      "quality_knn_correct@5": true,
+      "match_rr": 1.0,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "10eQ4Cfh8p:zlSWBdRAhX:3",
+      "paper_id": "10eQ4Cfh8p",
+      "claim_type": "experiment",
+      "gold_meta_review_match": "survived",
+      "gold_concern_quality": "high",
+      "candidate_count": 43,
+      "retrieved": [
+        {
+          "source_task_id": "AOSsLRKQrX:iusxEbIueU:5",
+          "paper_id": "AOSsLRKQrX",
+          "claim_type": "experiment",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 8.8152,
+          "matched_terms": [
+            "been",
+            "experiment",
+            "multiple"
+          ]
+        },
+        {
+          "source_task_id": "pYmQId95iR:u5ZC4CoNyk:6",
+          "paper_id": "pYmQId95iR",
+          "claim_type": "experiment",
+          "meta_review_match": "not_found",
+          "concern_quality": "high",
+          "retrieval_score": 6.001,
+          "matched_terms": [
+            "experiment",
+            "finally",
+            "multiple"
+          ]
+        },
+        {
+          "source_task_id": "lK2V2E2MNv:NE4BzEScxi:0",
+          "paper_id": "lK2V2E2MNv",
+          "claim_type": "novelty",
+          "meta_review_match": "survived",
+          "concern_quality": "medium",
+          "retrieval_score": 4.2909,
+          "matched_terms": [
+            "concern"
+          ]
+        },
+        {
+          "source_task_id": "BQvbL2sFQx:QiY7LeGJCD:0",
+          "paper_id": "BQvbL2sFQx",
+          "claim_type": "clarity",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 4.1834,
+          "matched_terms": [
+            "been"
+          ]
+        },
+        {
+          "source_task_id": "rp5vfyp5Np:vGNqxpozDP:3",
+          "paper_id": "rp5vfyp5Np",
+          "claim_type": "ethics",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 4.1279,
+          "matched_terms": [
+            "concern"
+          ]
+        }
+      ],
+      "match_hit@1": false,
+      "quality_hit@1": true,
+      "type_hit@1": true,
+      "match_knn@1": "partial",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": false,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": true,
+      "match_knn@3": "not_found",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": false,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": false,
+      "quality_knn_correct@5": true,
+      "match_rr": 0.3333,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "cQgjz0mf0r:JFysq9wa5A:0",
+      "paper_id": "cQgjz0mf0r",
+      "claim_type": "novelty",
+      "gold_meta_review_match": "survived",
+      "gold_concern_quality": "high",
+      "candidate_count": 46,
+      "retrieved": [
+        {
+          "source_task_id": "UVSKuh9eK5:lo6OmS3vso:0",
+          "paper_id": "UVSKuh9eK5",
+          "claim_type": "methodology",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 5.0057,
+          "matched_terms": [
+            "motivation"
+          ]
+        },
+        {
+          "source_task_id": "23OEmHVkpq:8CzSIMq0YG:1",
+          "paper_id": "23OEmHVkpq",
+          "claim_type": "novelty",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 2.5567,
+          "matched_terms": [
+            "novelty"
+          ]
+        },
+        {
+          "source_task_id": "lK2V2E2MNv:NE4BzEScxi:0",
+          "paper_id": "lK2V2E2MNv",
+          "claim_type": "novelty",
+          "meta_review_match": "survived",
+          "concern_quality": "medium",
+          "retrieval_score": 2.4407,
+          "matched_terms": [
+            "novelty"
+          ]
+        },
+        {
+          "source_task_id": "10eQ4Cfh8p:zlSWBdRAhX:0",
+          "paper_id": "10eQ4Cfh8p",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 2.173,
+          "matched_terms": [
+            "novelty"
+          ]
+        },
+        {
+          "source_task_id": "yacRhge4zQ:pKsEW8Yja4:0",
+          "paper_id": "yacRhge4zQ",
+          "claim_type": "novelty",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 2.1518,
+          "matched_terms": [
+            "novelty"
+          ]
+        }
+      ],
+      "match_hit@1": true,
+      "quality_hit@1": true,
+      "type_hit@1": false,
+      "match_knn@1": "survived",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": true,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": true,
+      "match_knn@3": "survived",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": true,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "survived",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": true,
+      "quality_knn_correct@5": true,
+      "match_rr": 1.0,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "rp5vfyp5Np:vGNqxpozDP:3",
+      "paper_id": "rp5vfyp5Np",
+      "claim_type": "ethics",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "candidate_count": 45,
+      "retrieved": [
+        {
+          "source_task_id": "jXR5pjs1rV:dXSWosECmZ:2",
+          "paper_id": "jXR5pjs1rV",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 11.7939,
+          "matched_terms": [
+            "application",
+            "more",
+            "practical"
+          ]
+        },
+        {
+          "source_task_id": "1FWDEIGm33:wXp9GL22N6:1",
+          "paper_id": "1FWDEIGm33",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 10.9523,
+          "matched_terms": [
+            "application",
+            "discussion",
+            "implication",
+            "potential"
+          ]
+        },
+        {
+          "source_task_id": "UVSKuh9eK5:AUeGBXg0Pe:1",
+          "paper_id": "UVSKuh9eK5",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 6.7332,
+          "matched_terms": [
+            "limited",
+            "more"
+          ]
+        },
+        {
+          "source_task_id": "miGpIhquyB:yPyy646e3D:0",
+          "paper_id": "miGpIhquyB",
+          "claim_type": "ethics",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 6.1885,
+          "matched_terms": [
+            "but",
+            "concern",
+            "ethic"
+          ]
+        },
+        {
+          "source_task_id": "ApjY32f3Xr:C4sqXJNESI:5",
+          "paper_id": "ApjY32f3Xr",
+          "claim_type": "general",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 5.8098,
+          "matched_terms": [
+            "could",
+            "discussion"
+          ]
+        }
+      ],
+      "match_hit@1": false,
+      "quality_hit@1": true,
+      "type_hit@1": false,
+      "match_knn@1": "survived",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": false,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": false,
+      "match_knn@3": "survived",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": false,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": true,
+      "quality_knn_correct@5": true,
+      "match_rr": 0.5,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "rp5vfyp5Np:YktI8n3TeZ:2",
+      "paper_id": "rp5vfyp5Np",
+      "claim_type": "experiment",
+      "gold_meta_review_match": "survived",
+      "gold_concern_quality": "high",
+      "candidate_count": 45,
+      "retrieved": [
+        {
+          "source_task_id": "1FWDEIGm33:wXp9GL22N6:1",
+          "paper_id": "1FWDEIGm33",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 18.5614,
+          "matched_terms": [
+            "clear",
+            "doe",
+            "experiment",
+            "however",
+            "human",
+            "not",
+            "suggest",
+            "what"
+          ]
+        },
+        {
+          "source_task_id": "i8PjQT3Uig:76XC5M0kbk:1",
+          "paper_id": "i8PjQT3Uig",
+          "claim_type": "baseline",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 12.6106,
+          "matched_terms": [
+            "clear",
+            "doe",
+            "model",
+            "what"
+          ]
+        },
+        {
+          "source_task_id": "10eQ4Cfh8p:wckxlkPL42:0",
+          "paper_id": "10eQ4Cfh8p",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 11.5175,
+          "matched_terms": [
+            "but",
+            "defined",
+            "model",
+            "not",
+            "policy"
+          ]
+        },
+        {
+          "source_task_id": "pYmQId95iR:u5ZC4CoNyk:6",
+          "paper_id": "pYmQId95iR",
+          "claim_type": "experiment",
+          "meta_review_match": "not_found",
+          "concern_quality": "high",
+          "retrieval_score": 11.4639,
+          "matched_terms": [
+            "author",
+            "evaluate",
+            "experiment",
+            "reward",
+            "suggest"
+          ]
+        },
+        {
+          "source_task_id": "xibcBSuuq0:zwpI0TjvXj:1",
+          "paper_id": "xibcBSuuq0",
+          "claim_type": "experiment",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 10.9798,
+          "matched_terms": [
+            "author",
+            "experiment",
+            "suggest",
+            "would"
+          ]
+        }
+      ],
+      "match_hit@1": false,
+      "quality_hit@1": true,
+      "type_hit@1": false,
+      "match_knn@1": "partial",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": false,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": false,
+      "match_knn@3": "partial",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": false,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": false,
+      "quality_knn_correct@5": true,
+      "match_rr": 0.5,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "pYmQId95iR:u5ZC4CoNyk:5",
+      "paper_id": "pYmQId95iR",
+      "claim_type": "writing",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "medium",
+      "candidate_count": 46,
+      "retrieved": [
+        {
+          "source_task_id": "tmsqb6WpLz:KX6fDquf1N:4",
+          "paper_id": "tmsqb6WpLz",
+          "claim_type": "theory",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 5.4703,
+          "matched_terms": [
+            "but",
+            "doe"
+          ]
+        },
+        {
+          "source_task_id": "10eQ4Cfh8p:zlSWBdRAhX:2",
+          "paper_id": "10eQ4Cfh8p",
+          "claim_type": "baseline",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 4.8522,
+          "matched_terms": [
+            "but",
+            "not",
+            "table"
+          ]
+        },
+        {
+          "source_task_id": "rp5vfyp5Np:YktI8n3TeZ:2",
+          "paper_id": "rp5vfyp5Np",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 4.7017,
+          "matched_terms": [
+            "but",
+            "doe",
+            "not"
+          ]
+        },
+        {
+          "source_task_id": "H9DYMIpz9c:Ie1VUg7cqO:6",
+          "paper_id": "H9DYMIpz9c",
+          "claim_type": "experiment",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 4.5616,
+          "matched_terms": [
+            "table"
+          ]
+        },
+        {
+          "source_task_id": "10eQ4Cfh8p:wckxlkPL42:0",
+          "paper_id": "10eQ4Cfh8p",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 4.2362,
+          "matched_terms": [
+            "but",
+            "not"
+          ]
+        }
+      ],
+      "match_hit@1": false,
+      "quality_hit@1": false,
+      "type_hit@1": false,
+      "match_knn@1": "survived",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": false,
+      "quality_knn_correct@1": false,
+      "match_hit@3": true,
+      "quality_hit@3": false,
+      "type_hit@3": false,
+      "match_knn@3": "survived",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": false,
+      "quality_knn_correct@3": false,
+      "match_hit@5": true,
+      "quality_hit@5": false,
+      "type_hit@5": false,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": true,
+      "quality_knn_correct@5": false,
+      "match_rr": 0.5,
+      "quality_rr": 0.0
+    },
+    {
+      "task_id": "10eQ4Cfh8p:zlSWBdRAhX:2",
+      "paper_id": "10eQ4Cfh8p",
+      "claim_type": "baseline",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "candidate_count": 43,
+      "retrieved": [
+        {
+          "source_task_id": "UVSKuh9eK5:AUeGBXg0Pe:1",
+          "paper_id": "UVSKuh9eK5",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 13.2234,
+          "matched_terms": [
+            "also",
+            "instance",
+            "only",
+            "table"
+          ]
+        },
+        {
+          "source_task_id": "3wL1tj3kqE:YyOvX2x0kY:0",
+          "paper_id": "3wL1tj3kqE",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 11.7481,
+          "matched_terms": [
+            "instance",
+            "lack",
+            "lacking",
+            "not"
+          ]
+        },
+        {
+          "source_task_id": "gYcft1HIaU:K0w3kEaTHx:4",
+          "paper_id": "gYcft1HIaU",
+          "claim_type": "baseline",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 11.4209,
+          "matched_terms": [
+            "also",
+            "baseline",
+            "only",
+            "proposed",
+            "section",
+            "some"
+          ]
+        },
+        {
+          "source_task_id": "cQgjz0mf0r:3gM8OP4zZK:3",
+          "paper_id": "cQgjz0mf0r",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 10.7527,
+          "matched_terms": [
+            "approach",
+            "how",
+            "not",
+            "proposed",
+            "some"
+          ]
+        },
+        {
+          "source_task_id": "yacRhge4zQ:pKsEW8Yja4:0",
+          "paper_id": "yacRhge4zQ",
+          "claim_type": "novelty",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 10.4393,
+          "matched_terms": [
+            "difficult",
+            "key"
+          ]
+        }
+      ],
+      "match_hit@1": false,
+      "quality_hit@1": true,
+      "type_hit@1": false,
+      "match_knn@1": "survived",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": false,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": true,
+      "match_knn@3": "partial",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": true,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": true,
+      "quality_knn_correct@5": true,
+      "match_rr": 0.5,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "lK2V2E2MNv:NE4BzEScxi:0",
+      "paper_id": "lK2V2E2MNv",
+      "claim_type": "novelty",
+      "gold_meta_review_match": "survived",
+      "gold_concern_quality": "medium",
+      "candidate_count": 47,
+      "retrieved": [
+        {
+          "source_task_id": "23OEmHVkpq:8CzSIMq0YG:1",
+          "paper_id": "23OEmHVkpq",
+          "claim_type": "novelty",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 11.679,
+          "matched_terms": [
+            "main",
+            "novelty",
+            "work"
+          ]
+        },
+        {
+          "source_task_id": "1FWDEIGm33:wXp9GL22N6:1",
+          "paper_id": "1FWDEIGm33",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 7.9983,
+          "matched_terms": [
+            "new",
+            "novelty",
+            "work"
+          ]
+        },
+        {
+          "source_task_id": "lNIj5FdXsC:W8u5ZMVoLw:2",
+          "paper_id": "lNIj5FdXsC",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 6.5513,
+          "matched_terms": [
+            "new",
+            "novelty"
+          ]
+        },
+        {
+          "source_task_id": "miGpIhquyB:yPyy646e3D:0",
+          "paper_id": "miGpIhquyB",
+          "claim_type": "ethics",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 6.2442,
+          "matched_terms": [
+            "concern",
+            "finding"
+          ]
+        },
+        {
+          "source_task_id": "JWrl5pJCnl:A3gHHaLomn:0",
+          "paper_id": "JWrl5pJCnl",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 5.7333,
+          "matched_terms": [
+            "methodology",
+            "novelty",
+            "work"
+          ]
+        }
+      ],
+      "match_hit@1": true,
+      "quality_hit@1": false,
+      "type_hit@1": true,
+      "match_knn@1": "survived",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": true,
+      "quality_knn_correct@1": false,
+      "match_hit@3": true,
+      "quality_hit@3": false,
+      "type_hit@3": true,
+      "match_knn@3": "partial",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": false,
+      "quality_knn_correct@3": false,
+      "match_hit@5": true,
+      "quality_hit@5": false,
+      "type_hit@5": true,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": false,
+      "quality_knn_correct@5": false,
+      "match_rr": 1.0,
+      "quality_rr": 0.0
+    },
+    {
+      "task_id": "UVSKuh9eK5:AUeGBXg0Pe:1",
+      "paper_id": "UVSKuh9eK5",
+      "claim_type": "experiment",
+      "gold_meta_review_match": "survived",
+      "gold_concern_quality": "high",
+      "candidate_count": 46,
+      "retrieved": [
+        {
+          "source_task_id": "w73feIekdO:NLKFsY27K9:0",
+          "paper_id": "w73feIekdO",
+          "claim_type": "general",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 12.7463,
+          "matched_terms": [
+            "candidate",
+            "convincing",
+            "dataset",
+            "result",
+            "there"
+          ]
+        },
+        {
+          "source_task_id": "3wL1tj3kqE:YyOvX2x0kY:0",
+          "paper_id": "3wL1tj3kqE",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 10.9441,
+          "matched_terms": [
+            "dataset",
+            "due",
+            "instance"
+          ]
+        },
+        {
+          "source_task_id": "gYcft1HIaU:K0w3kEaTHx:4",
+          "paper_id": "gYcft1HIaU",
+          "claim_type": "baseline",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 10.803,
+          "matched_terms": [
+            "also",
+            "consider",
+            "dataset",
+            "only",
+            "subset"
+          ]
+        },
+        {
+          "source_task_id": "AOSsLRKQrX:tYw6kbOlZq:1",
+          "paper_id": "AOSsLRKQrX",
+          "claim_type": "ablation",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 10.4197,
+          "matched_terms": [
+            "each",
+            "experiment",
+            "number",
+            "there"
+          ]
+        },
+        {
+          "source_task_id": "H9DYMIpz9c:Ie1VUg7cqO:6",
+          "paper_id": "H9DYMIpz9c",
+          "claim_type": "experiment",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 9.8248,
+          "matched_terms": [
+            "also",
+            "experiment",
+            "table"
+          ]
+        }
+      ],
+      "match_hit@1": false,
+      "quality_hit@1": true,
+      "type_hit@1": false,
+      "match_knn@1": "partial",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": false,
+      "quality_knn_correct@1": true,
+      "match_hit@3": false,
+      "quality_hit@3": true,
+      "type_hit@3": false,
+      "match_knn@3": "partial",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": false,
+      "quality_knn_correct@3": true,
+      "match_hit@5": false,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": false,
+      "quality_knn_correct@5": true,
+      "match_rr": 0.0,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "23OEmHVkpq:8CzSIMq0YG:1",
+      "paper_id": "23OEmHVkpq",
+      "claim_type": "novelty",
+      "gold_meta_review_match": "survived",
+      "gold_concern_quality": "high",
+      "candidate_count": 47,
+      "retrieved": [
+        {
+          "source_task_id": "lK2V2E2MNv:NE4BzEScxi:0",
+          "paper_id": "lK2V2E2MNv",
+          "claim_type": "novelty",
+          "meta_review_match": "survived",
+          "concern_quality": "medium",
+          "retrieval_score": 12.0545,
+          "matched_terms": [
+            "main",
+            "novelty",
+            "work"
+          ]
+        },
+        {
+          "source_task_id": "10eQ4Cfh8p:wckxlkPL42:0",
+          "paper_id": "10eQ4Cfh8p",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 9.0323,
+          "matched_terms": [
+            "but",
+            "defined",
+            "definition"
+          ]
+        },
+        {
+          "source_task_id": "JWrl5pJCnl:A3gHHaLomn:0",
+          "paper_id": "JWrl5pJCnl",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 7.6694,
+          "matched_terms": [
+            "author",
+            "but",
+            "novelty",
+            "work"
+          ]
+        },
+        {
+          "source_task_id": "BQvbL2sFQx:QiY7LeGJCD:0",
+          "paper_id": "BQvbL2sFQx",
+          "claim_type": "clarity",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 6.5774,
+          "matched_terms": [
+            "defined",
+            "should"
+          ]
+        },
+        {
+          "source_task_id": "rp5vfyp5Np:YktI8n3TeZ:2",
+          "paper_id": "rp5vfyp5Np",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 6.5079,
+          "matched_terms": [
+            "author",
+            "but",
+            "defined"
+          ]
+        }
+      ],
+      "match_hit@1": true,
+      "quality_hit@1": false,
+      "type_hit@1": true,
+      "match_knn@1": "survived",
+      "quality_knn@1": "medium",
+      "match_knn_correct@1": true,
+      "quality_knn_correct@1": false,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": true,
+      "match_knn@3": "partial",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": false,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": false,
+      "quality_knn_correct@5": true,
+      "match_rr": 1.0,
+      "quality_rr": 0.5
+    },
+    {
+      "task_id": "3wL1tj3kqE:YyOvX2x0kY:0",
+      "paper_id": "3wL1tj3kqE",
+      "claim_type": "methodology",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "candidate_count": 47,
+      "retrieved": [
+        {
+          "source_task_id": "AZGIwqCyYY:aWxMIfTpWd:3",
+          "paper_id": "AZGIwqCyYY",
+          "claim_type": "clarity",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 18.4325,
+          "matched_terms": [
+            "acros",
+            "clarity",
+            "different",
+            "domain",
+            "generalization"
+          ]
+        },
+        {
+          "source_task_id": "UVSKuh9eK5:AUeGBXg0Pe:1",
+          "paper_id": "UVSKuh9eK5",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 11.72,
+          "matched_terms": [
+            "dataset",
+            "due",
+            "instance"
+          ]
+        },
+        {
+          "source_task_id": "UVSKuh9eK5:lo6OmS3vso:0",
+          "paper_id": "UVSKuh9eK5",
+          "claim_type": "methodology",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 11.3054,
+          "matched_terms": [
+            "attribut",
+            "methodology",
+            "not",
+            "training"
+          ]
+        },
+        {
+          "source_task_id": "AOSsLRKQrX:tYw6kbOlZq:3",
+          "paper_id": "AOSsLRKQrX",
+          "claim_type": "experiment",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 11.1029,
+          "matched_terms": [
+            "detail",
+            "not",
+            "training"
+          ]
+        },
+        {
+          "source_task_id": "10eQ4Cfh8p:zlSWBdRAhX:2",
+          "paper_id": "10eQ4Cfh8p",
+          "claim_type": "baseline",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 9.5264,
+          "matched_terms": [
+            "instance",
+            "lack",
+            "lacking",
+            "not"
+          ]
+        }
+      ],
+      "match_hit@1": true,
+      "quality_hit@1": true,
+      "type_hit@1": false,
+      "match_knn@1": "partial",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": true,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": true,
+      "match_knn@3": "survived",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": false,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": true,
+      "quality_knn_correct@5": true,
+      "match_rr": 1.0,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "w73feIekdO:NLKFsY27K9:0",
+      "paper_id": "w73feIekdO",
+      "claim_type": "general",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "candidate_count": 46,
+      "retrieved": [
+        {
+          "source_task_id": "ApjY32f3Xr:4e1fSBB3OO:1",
+          "paper_id": "ApjY32f3Xr",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 23.3574,
+          "matched_terms": [
+            "fail",
+            "low",
+            "one",
+            "setting",
+            "while"
+          ]
+        },
+        {
+          "source_task_id": "cQgjz0mf0r:3gM8OP4zZK:3",
+          "paper_id": "cQgjz0mf0r",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 22.121,
+          "matched_terms": [
+            "approach",
+            "how",
+            "however",
+            "not",
+            "region",
+            "should",
+            "understand",
+            "used"
+          ]
+        },
+        {
+          "source_task_id": "UVSKuh9eK5:AUeGBXg0Pe:1",
+          "paper_id": "UVSKuh9eK5",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 17.5942,
+          "matched_terms": [
+            "candidate",
+            "convincing",
+            "dataset",
+            "result",
+            "there"
+          ]
+        },
+        {
+          "source_task_id": "10eQ4Cfh8p:wckxlkPL42:0",
+          "paper_id": "10eQ4Cfh8p",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 14.5969,
+          "matched_terms": [
+            "about",
+            "method",
+            "not",
+            "note",
+            "problem",
+            "there",
+            "understand"
+          ]
+        },
+        {
+          "source_task_id": "tmsqb6WpLz:KX6fDquf1N:4",
+          "paper_id": "tmsqb6WpLz",
+          "claim_type": "theory",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 14.2889,
+          "matched_terms": [
+            "about",
+            "doe",
+            "how",
+            "method",
+            "there"
+          ]
+        }
+      ],
+      "match_hit@1": true,
+      "quality_hit@1": true,
+      "type_hit@1": false,
+      "match_knn@1": "partial",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": true,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": false,
+      "match_knn@3": "partial",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": true,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": false,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": true,
+      "quality_knn_correct@5": true,
+      "match_rr": 1.0,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "gYcft1HIaU:K0w3kEaTHx:4",
+      "paper_id": "gYcft1HIaU",
+      "claim_type": "baseline",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "candidate_count": 47,
+      "retrieved": [
+        {
+          "source_task_id": "UVSKuh9eK5:AUeGBXg0Pe:1",
+          "paper_id": "UVSKuh9eK5",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 16.9173,
+          "matched_terms": [
+            "also",
+            "consider",
+            "dataset",
+            "only",
+            "subset"
+          ]
+        },
+        {
+          "source_task_id": "miGpIhquyB:yPyy646e3D:0",
+          "paper_id": "miGpIhquyB",
+          "claim_type": "ethics",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 16.1299,
+          "matched_terms": [
+            "author",
+            "dataset",
+            "evaluation",
+            "proposed",
+            "some",
+            "wonder"
+          ]
+        },
+        {
+          "source_task_id": "10eQ4Cfh8p:zlSWBdRAhX:2",
+          "paper_id": "10eQ4Cfh8p",
+          "claim_type": "baseline",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 13.1606,
+          "matched_terms": [
+            "also",
+            "baseline",
+            "only",
+            "proposed",
+            "section",
+            "some"
+          ]
+        },
+        {
+          "source_task_id": "rp5vfyp5Np:YktI8n3TeZ:2",
+          "paper_id": "rp5vfyp5Np",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 12.2166,
+          "matched_terms": [
+            "author",
+            "however",
+            "since",
+            "whether"
+          ]
+        },
+        {
+          "source_task_id": "eepoE7iLpL:Omfs3dIcbU:0",
+          "paper_id": "eepoE7iLpL",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 11.6256,
+          "matched_terms": [
+            "also",
+            "however",
+            "select",
+            "subset"
+          ]
+        }
+      ],
+      "match_hit@1": false,
+      "quality_hit@1": true,
+      "type_hit@1": false,
+      "match_knn@1": "survived",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": false,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": true,
+      "match_knn@3": "partial",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": true,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": true,
+      "quality_knn_correct@5": true,
+      "match_rr": 0.5,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "miGpIhquyB:yPyy646e3D:0",
+      "paper_id": "miGpIhquyB",
+      "claim_type": "ethics",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "candidate_count": 47,
+      "retrieved": [
+        {
+          "source_task_id": "kmn0BhQk7p:aPvo3w4FSN:0",
+          "paper_id": "kmn0BhQk7p",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 15.3922,
+          "matched_terms": [
+            "accuracy",
+            "metric",
+            "some"
+          ]
+        },
+        {
+          "source_task_id": "jXR5pjs1rV:dXSWosECmZ:2",
+          "paper_id": "jXR5pjs1rV",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 15.0577,
+          "matched_terms": [
+            "evaluation",
+            "example",
+            "model",
+            "provide"
+          ]
+        },
+        {
+          "source_task_id": "gYcft1HIaU:K0w3kEaTHx:4",
+          "paper_id": "gYcft1HIaU",
+          "claim_type": "baseline",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 12.7507,
+          "matched_terms": [
+            "author",
+            "dataset",
+            "evaluation",
+            "proposed",
+            "some",
+            "wonder"
+          ]
+        },
+        {
+          "source_task_id": "pYmQId95iR:u5ZC4CoNyk:6",
+          "paper_id": "pYmQId95iR",
+          "claim_type": "experiment",
+          "meta_review_match": "not_found",
+          "concern_quality": "high",
+          "retrieval_score": 11.836,
+          "matched_terms": [
+            "author",
+            "difficulty",
+            "evaluating",
+            "provide"
+          ]
+        },
+        {
+          "source_task_id": "JWrl5pJCnl:A3gHHaLomn:0",
+          "paper_id": "JWrl5pJCnl",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 10.633,
+          "matched_terms": [
+            "author",
+            "but",
+            "can",
+            "proposed",
+            "use"
+          ]
+        }
+      ],
+      "match_hit@1": false,
+      "quality_hit@1": true,
+      "type_hit@1": false,
+      "match_knn@1": "survived",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": false,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": false,
+      "match_knn@3": "survived",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": false,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": false,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": true,
+      "quality_knn_correct@5": true,
+      "match_rr": 0.3333,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "kmn0BhQk7p:aPvo3w4FSN:0",
+      "paper_id": "kmn0BhQk7p",
+      "claim_type": "experiment",
+      "gold_meta_review_match": "survived",
+      "gold_concern_quality": "high",
+      "candidate_count": 47,
+      "retrieved": [
+        {
+          "source_task_id": "AOSsLRKQrX:tYw6kbOlZq:3",
+          "paper_id": "AOSsLRKQrX",
+          "claim_type": "experiment",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 9.9894,
+          "matched_terms": [
+            "experiment",
+            "not",
+            "should",
+            "some"
+          ]
+        },
+        {
+          "source_task_id": "miGpIhquyB:yPyy646e3D:0",
+          "paper_id": "miGpIhquyB",
+          "claim_type": "ethics",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 9.5053,
+          "matched_terms": [
+            "accuracy",
+            "metric",
+            "some"
+          ]
+        },
+        {
+          "source_task_id": "cQgjz0mf0r:3gM8OP4zZK:3",
+          "paper_id": "cQgjz0mf0r",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 6.6681,
+          "matched_terms": [
+            "not",
+            "should",
+            "some"
+          ]
+        },
+        {
+          "source_task_id": "UVSKuh9eK5:lo6OmS3vso:0",
+          "paper_id": "UVSKuh9eK5",
+          "claim_type": "methodology",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 6.4633,
+          "matched_terms": [
+            "attribut",
+            "not"
+          ]
+        },
+        {
+          "source_task_id": "3wL1tj3kqE:YyOvX2x0kY:0",
+          "paper_id": "3wL1tj3kqE",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 5.3446,
+          "matched_terms": [
+            "attribut",
+            "not"
+          ]
+        }
+      ],
+      "match_hit@1": false,
+      "quality_hit@1": true,
+      "type_hit@1": true,
+      "match_knn@1": "partial",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": false,
+      "quality_knn_correct@1": true,
+      "match_hit@3": false,
+      "quality_hit@3": true,
+      "type_hit@3": true,
+      "match_knn@3": "partial",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": false,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": false,
+      "quality_knn_correct@5": true,
+      "match_rr": 0.25,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "UVSKuh9eK5:lo6OmS3vso:0",
+      "paper_id": "UVSKuh9eK5",
+      "claim_type": "methodology",
+      "gold_meta_review_match": "survived",
+      "gold_concern_quality": "high",
+      "candidate_count": 46,
+      "retrieved": [
+        {
+          "source_task_id": "cQgjz0mf0r:3gM8OP4zZK:3",
+          "paper_id": "cQgjz0mf0r",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 11.0417,
+          "matched_terms": [
+            "data",
+            "how",
+            "methodology",
+            "not",
+            "training"
+          ]
+        },
+        {
+          "source_task_id": "3wL1tj3kqE:YyOvX2x0kY:0",
+          "paper_id": "3wL1tj3kqE",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 10.6008,
+          "matched_terms": [
+            "attribut",
+            "methodology",
+            "not",
+            "training"
+          ]
+        },
+        {
+          "source_task_id": "10eQ4Cfh8p:wckxlkPL42:0",
+          "paper_id": "10eQ4Cfh8p",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 9.7198,
+          "matched_terms": [
+            "description",
+            "methodology",
+            "not",
+            "there"
+          ]
+        },
+        {
+          "source_task_id": "10eQ4Cfh8p:zlSWBdRAhX:0",
+          "paper_id": "10eQ4Cfh8p",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 8.1075,
+          "matched_terms": [
+            "how",
+            "there",
+            "training"
+          ]
+        },
+        {
+          "source_task_id": "xibcBSuuq0:zwpI0TjvXj:1",
+          "paper_id": "xibcBSuuq0",
+          "claim_type": "experiment",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 7.6062,
+          "matched_terms": [
+            "author",
+            "those"
+          ]
+        }
+      ],
+      "match_hit@1": false,
+      "quality_hit@1": true,
+      "type_hit@1": true,
+      "match_knn@1": "partial",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": false,
+      "quality_knn_correct@1": true,
+      "match_hit@3": false,
+      "quality_hit@3": true,
+      "type_hit@3": true,
+      "match_knn@3": "partial",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": false,
+      "quality_knn_correct@3": true,
+      "match_hit@5": false,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": false,
+      "quality_knn_correct@5": true,
+      "match_rr": 0.0,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "yacRhge4zQ:pKsEW8Yja4:0",
+      "paper_id": "yacRhge4zQ",
+      "claim_type": "novelty",
+      "gold_meta_review_match": "survived",
+      "gold_concern_quality": "high",
+      "candidate_count": 46,
+      "retrieved": [
+        {
+          "source_task_id": "10eQ4Cfh8p:zlSWBdRAhX:2",
+          "paper_id": "10eQ4Cfh8p",
+          "claim_type": "baseline",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 6.2424,
+          "matched_terms": [
+            "difficult",
+            "key"
+          ]
+        },
+        {
+          "source_task_id": "10eQ4Cfh8p:zlSWBdRAhX:0",
+          "paper_id": "10eQ4Cfh8p",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 5.6688,
+          "matched_terms": [
+            "can",
+            "novelty"
+          ]
+        },
+        {
+          "source_task_id": "7vVWiCrFnd:uXWt0SbIG0:0",
+          "paper_id": "7vVWiCrFnd",
+          "claim_type": "clarity",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 4.8697,
+          "matched_terms": [
+            "among"
+          ]
+        },
+        {
+          "source_task_id": "3wL1tj3kqE:YyOvX2x0kY:0",
+          "paper_id": "3wL1tj3kqE",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 4.8278,
+          "matched_terms": [
+            "fairnes"
+          ]
+        },
+        {
+          "source_task_id": "BQvbL2sFQx:QiY7LeGJCD:0",
+          "paper_id": "BQvbL2sFQx",
+          "claim_type": "clarity",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 4.3091,
+          "matched_terms": [
+            "specifically"
+          ]
+        }
+      ],
+      "match_hit@1": false,
+      "quality_hit@1": true,
+      "type_hit@1": false,
+      "match_knn@1": "partial",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": false,
+      "quality_knn_correct@1": true,
+      "match_hit@3": false,
+      "quality_hit@3": true,
+      "type_hit@3": true,
+      "match_knn@3": "partial",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": false,
+      "quality_knn_correct@3": true,
+      "match_hit@5": false,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": false,
+      "quality_knn_correct@5": true,
+      "match_rr": 0.0,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "7vVWiCrFnd:aHtDQsXakn:3",
+      "paper_id": "7vVWiCrFnd",
+      "claim_type": "theory",
+      "gold_meta_review_match": "survived",
+      "gold_concern_quality": "high",
+      "candidate_count": 44,
+      "retrieved": [
+        {
+          "source_task_id": "tmsqb6WpLz:KX6fDquf1N:4",
+          "paper_id": "tmsqb6WpLz",
+          "claim_type": "theory",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 6.3632,
+          "matched_terms": [
+            "theory",
+            "what"
+          ]
+        },
+        {
+          "source_task_id": "miGpIhquyB:yPyy646e3D:0",
+          "paper_id": "miGpIhquyB",
+          "claim_type": "ethics",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 4.5984,
+          "matched_terms": [
+            "complexity"
+          ]
+        },
+        {
+          "source_task_id": "7QlKLvfVge:LsvjaIpscH:6",
+          "paper_id": "7QlKLvfVge",
+          "claim_type": "theory",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 3.9749,
+          "matched_terms": [
+            "theory"
+          ]
+        },
+        {
+          "source_task_id": "i8PjQT3Uig:76XC5M0kbk:1",
+          "paper_id": "i8PjQT3Uig",
+          "claim_type": "baseline",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 3.1817,
+          "matched_terms": [
+            "what"
+          ]
+        },
+        {
+          "source_task_id": "1FWDEIGm33:wXp9GL22N6:1",
+          "paper_id": "1FWDEIGm33",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 3.0884,
+          "matched_terms": [
+            "what"
+          ]
+        }
+      ],
+      "match_hit@1": true,
+      "quality_hit@1": true,
+      "type_hit@1": true,
+      "match_knn@1": "survived",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": true,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": true,
+      "match_knn@3": "survived",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": true,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "survived",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": true,
+      "quality_knn_correct@5": true,
+      "match_rr": 1.0,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "AZGIwqCyYY:aWxMIfTpWd:3",
+      "paper_id": "AZGIwqCyYY",
+      "claim_type": "clarity",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "candidate_count": 47,
+      "retrieved": [
+        {
+          "source_task_id": "3wL1tj3kqE:YyOvX2x0kY:0",
+          "paper_id": "3wL1tj3kqE",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 19.3077,
+          "matched_terms": [
+            "acros",
+            "clarity",
+            "different",
+            "domain",
+            "generalization"
+          ]
+        },
+        {
+          "source_task_id": "DwcV654WBP:E60zlLaTes:1",
+          "paper_id": "DwcV654WBP",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 11.7203,
+          "matched_terms": [
+            "generalization",
+            "performance",
+            "point",
+            "representation"
+          ]
+        },
+        {
+          "source_task_id": "miGpIhquyB:yPyy646e3D:0",
+          "paper_id": "miGpIhquyB",
+          "claim_type": "ethics",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 8.9902,
+          "matched_terms": [
+            "framework",
+            "performance",
+            "result"
+          ]
+        },
+        {
+          "source_task_id": "BQvbL2sFQx:QiY7LeGJCD:0",
+          "paper_id": "BQvbL2sFQx",
+          "claim_type": "clarity",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 8.0038,
+          "matched_terms": [
+            "clarity",
+            "hard"
+          ]
+        },
+        {
+          "source_task_id": "7vVWiCrFnd:uXWt0SbIG0:0",
+          "paper_id": "7vVWiCrFnd",
+          "claim_type": "clarity",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 7.0303,
+          "matched_terms": [
+            "clarity",
+            "different",
+            "representation"
+          ]
+        }
+      ],
+      "match_hit@1": true,
+      "quality_hit@1": true,
+      "type_hit@1": false,
+      "match_knn@1": "partial",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": true,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": false,
+      "match_knn@3": "partial",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": true,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": true,
+      "quality_knn_correct@5": true,
+      "match_rr": 1.0,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "10eQ4Cfh8p:w67nfG2dMW:3",
+      "paper_id": "10eQ4Cfh8p",
+      "claim_type": "novelty",
+      "gold_meta_review_match": "survived",
+      "gold_concern_quality": "high",
+      "candidate_count": 43,
+      "retrieved": [
+        {
+          "source_task_id": "JWrl5pJCnl:A3gHHaLomn:0",
+          "paper_id": "JWrl5pJCnl",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 13.9667,
+          "matched_terms": [
+            "action",
+            "approach",
+            "novelty",
+            "proposed",
+            "unlike"
+          ]
+        },
+        {
+          "source_task_id": "xibcBSuuq0:zwpI0TjvXj:1",
+          "paper_id": "xibcBSuuq0",
+          "claim_type": "experiment",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 10.6863,
+          "matched_terms": [
+            "often",
+            "proposed",
+            "suggest"
+          ]
+        },
+        {
+          "source_task_id": "w73feIekdO:NLKFsY27K9:0",
+          "paper_id": "w73feIekdO",
+          "claim_type": "general",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 7.9829,
+          "matched_terms": [
+            "approach",
+            "problem",
+            "two"
+          ]
+        },
+        {
+          "source_task_id": "1FWDEIGm33:wXp9GL22N6:1",
+          "paper_id": "1FWDEIGm33",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 7.7055,
+          "matched_terms": [
+            "novelty",
+            "problem",
+            "suggest"
+          ]
+        },
+        {
+          "source_task_id": "miGpIhquyB:yPyy646e3D:0",
+          "paper_id": "miGpIhquyB",
+          "claim_type": "ethics",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 7.5711,
+          "matched_terms": [
+            "framework",
+            "model",
+            "proposed"
+          ]
+        }
+      ],
+      "match_hit@1": false,
+      "quality_hit@1": true,
+      "type_hit@1": true,
+      "match_knn@1": "partial",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": false,
+      "quality_knn_correct@1": true,
+      "match_hit@3": false,
+      "quality_hit@3": true,
+      "type_hit@3": true,
+      "match_knn@3": "partial",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": false,
+      "quality_knn_correct@3": true,
+      "match_hit@5": false,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": false,
+      "quality_knn_correct@5": true,
+      "match_rr": 0.0,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "lNIj5FdXsC:W8u5ZMVoLw:2",
+      "paper_id": "lNIj5FdXsC",
+      "claim_type": "novelty",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "candidate_count": 47,
+      "retrieved": [
+        {
+          "source_task_id": "DwcV654WBP:E60zlLaTes:1",
+          "paper_id": "DwcV654WBP",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 11.9128,
+          "matched_terms": [
+            "claim",
+            "layer",
+            "propos",
+            "way"
+          ]
+        },
+        {
+          "source_task_id": "lK2V2E2MNv:NE4BzEScxi:0",
+          "paper_id": "lK2V2E2MNv",
+          "claim_type": "novelty",
+          "meta_review_match": "survived",
+          "concern_quality": "medium",
+          "retrieval_score": 7.4827,
+          "matched_terms": [
+            "new",
+            "novelty"
+          ]
+        },
+        {
+          "source_task_id": "w73feIekdO:NLKFsY27K9:1",
+          "paper_id": "w73feIekdO",
+          "claim_type": "general",
+          "meta_review_match": "not_found",
+          "concern_quality": "medium",
+          "retrieval_score": 7.2384,
+          "matched_terms": [
+            "help",
+            "method"
+          ]
+        },
+        {
+          "source_task_id": "JWrl5pJCnl:A3gHHaLomn:0",
+          "paper_id": "JWrl5pJCnl",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 6.2116,
+          "matched_terms": [
+            "help",
+            "method",
+            "novelty"
+          ]
+        },
+        {
+          "source_task_id": "1FWDEIGm33:wXp9GL22N6:1",
+          "paper_id": "1FWDEIGm33",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 5.8957,
+          "matched_terms": [
+            "new",
+            "novelty"
+          ]
+        }
+      ],
+      "match_hit@1": false,
+      "quality_hit@1": true,
+      "type_hit@1": false,
+      "match_knn@1": "survived",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": false,
+      "quality_knn_correct@1": true,
+      "match_hit@3": false,
+      "quality_hit@3": true,
+      "type_hit@3": true,
+      "match_knn@3": "survived",
+      "quality_knn@3": "medium",
+      "match_knn_correct@3": false,
+      "quality_knn_correct@3": false,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": true,
+      "quality_knn_correct@5": true,
+      "match_rr": 0.25,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "1FWDEIGm33:MzDh7uJCEU:1",
+      "paper_id": "1FWDEIGm33",
+      "claim_type": "writing",
+      "gold_meta_review_match": "not_found",
+      "gold_concern_quality": "medium",
+      "candidate_count": 46,
+      "retrieved": [
+        {
+          "source_task_id": "rp5vfyp5Np:YktI8n3TeZ:5",
+          "paper_id": "rp5vfyp5Np",
+          "claim_type": "ethics",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 14.1136,
+          "matched_terms": [
+            "directly",
+            "human",
+            "may",
+            "need",
+            "not"
+          ]
+        },
+        {
+          "source_task_id": "w73feIekdO:NLKFsY27K9:1",
+          "paper_id": "w73feIekdO",
+          "claim_type": "general",
+          "meta_review_match": "not_found",
+          "concern_quality": "medium",
+          "retrieval_score": 9.6936,
+          "matched_terms": [
+            "question",
+            "will"
+          ]
+        },
+        {
+          "source_task_id": "UVSKuh9eK5:AUeGBXg0Pe:1",
+          "paper_id": "UVSKuh9eK5",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 7.7633,
+          "matched_terms": [
+            "conclusion",
+            "will"
+          ]
+        },
+        {
+          "source_task_id": "lNIj5FdXsC:W8u5ZMVoLw:2",
+          "paper_id": "lNIj5FdXsC",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 7.4044,
+          "matched_terms": [
+            "claim",
+            "stat"
+          ]
+        },
+        {
+          "source_task_id": "pYmQId95iR:u5ZC4CoNyk:5",
+          "paper_id": "pYmQId95iR",
+          "claim_type": "writing",
+          "meta_review_match": "partial",
+          "concern_quality": "medium",
+          "retrieval_score": 7.2738,
+          "matched_terms": [
+            "not",
+            "writing"
+          ]
+        }
+      ],
+      "match_hit@1": false,
+      "quality_hit@1": false,
+      "type_hit@1": false,
+      "match_knn@1": "survived",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": false,
+      "quality_knn_correct@1": false,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": false,
+      "match_knn@3": "survived",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": false,
+      "quality_knn_correct@3": false,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": false,
+      "quality_knn_correct@5": false,
+      "match_rr": 0.5,
+      "quality_rr": 0.5
+    },
+    {
+      "task_id": "7vVWiCrFnd:uXWt0SbIG0:2",
+      "paper_id": "7vVWiCrFnd",
+      "claim_type": "baseline",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "candidate_count": 44,
+      "retrieved": [
+        {
+          "source_task_id": "eepoE7iLpL:Omfs3dIcbU:0",
+          "paper_id": "eepoE7iLpL",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 12.1928,
+          "matched_terms": [
+            "network",
+            "neural"
+          ]
+        },
+        {
+          "source_task_id": "10eQ4Cfh8p:zlSWBdRAhX:2",
+          "paper_id": "10eQ4Cfh8p",
+          "claim_type": "baseline",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 6.256,
+          "matched_terms": [
+            "baseline",
+            "missing"
+          ]
+        },
+        {
+          "source_task_id": "H9DYMIpz9c:Ie1VUg7cqO:6",
+          "paper_id": "H9DYMIpz9c",
+          "claim_type": "experiment",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 5.0692,
+          "matched_terms": [
+            "network"
+          ]
+        },
+        {
+          "source_task_id": "AOSsLRKQrX:tYw6kbOlZq:3",
+          "paper_id": "AOSsLRKQrX",
+          "claim_type": "experiment",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 4.2852,
+          "matched_terms": [
+            "missing"
+          ]
+        },
+        {
+          "source_task_id": "1FWDEIGm33:wXp9GL22N6:1",
+          "paper_id": "1FWDEIGm33",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 4.2103,
+          "matched_terms": [
+            "discussion",
+            "work"
+          ]
+        }
+      ],
+      "match_hit@1": true,
+      "quality_hit@1": true,
+      "type_hit@1": false,
+      "match_knn@1": "partial",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": true,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": true,
+      "match_knn@3": "partial",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": true,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": true,
+      "quality_knn_correct@5": true,
+      "match_rr": 1.0,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "pYmQId95iR:u5ZC4CoNyk:6",
+      "paper_id": "pYmQId95iR",
+      "claim_type": "experiment",
+      "gold_meta_review_match": "not_found",
+      "gold_concern_quality": "high",
+      "candidate_count": 46,
+      "retrieved": [
+        {
+          "source_task_id": "xibcBSuuq0:zwpI0TjvXj:1",
+          "paper_id": "xibcBSuuq0",
+          "claim_type": "experiment",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 27.1943,
+          "matched_terms": [
+            "author",
+            "benchmark",
+            "challenging",
+            "experiment",
+            "exploration",
+            "more",
+            "suggest"
+          ]
+        },
+        {
+          "source_task_id": "jXR5pjs1rV:dXSWosECmZ:2",
+          "paper_id": "jXR5pjs1rV",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 16.0397,
+          "matched_terms": [
+            "experiment",
+            "level",
+            "more",
+            "provide",
+            "reward"
+          ]
+        },
+        {
+          "source_task_id": "miGpIhquyB:yPyy646e3D:0",
+          "paper_id": "miGpIhquyB",
+          "claim_type": "ethics",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 11.4749,
+          "matched_terms": [
+            "author",
+            "difficulty",
+            "evaluating",
+            "provide"
+          ]
+        },
+        {
+          "source_task_id": "rp5vfyp5Np:YktI8n3TeZ:2",
+          "paper_id": "rp5vfyp5Np",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 11.0832,
+          "matched_terms": [
+            "author",
+            "evaluate",
+            "experiment",
+            "reward",
+            "suggest"
+          ]
+        },
+        {
+          "source_task_id": "10eQ4Cfh8p:zlSWBdRAhX:3",
+          "paper_id": "10eQ4Cfh8p",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 10.4619,
+          "matched_terms": [
+            "experiment",
+            "finally",
+            "multiple"
+          ]
+        }
+      ],
+      "match_hit@1": false,
+      "quality_hit@1": true,
+      "type_hit@1": true,
+      "match_knn@1": "partial",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": false,
+      "quality_knn_correct@1": true,
+      "match_hit@3": false,
+      "quality_hit@3": true,
+      "type_hit@3": true,
+      "match_knn@3": "partial",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": false,
+      "quality_knn_correct@3": true,
+      "match_hit@5": false,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "survived",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": false,
+      "quality_knn_correct@5": true,
+      "match_rr": 0.0,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "cQgjz0mf0r:3gM8OP4zZK:3",
+      "paper_id": "cQgjz0mf0r",
+      "claim_type": "methodology",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "candidate_count": 46,
+      "retrieved": [
+        {
+          "source_task_id": "AOSsLRKQrX:tYw6kbOlZq:3",
+          "paper_id": "AOSsLRKQrX",
+          "claim_type": "experiment",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 14.1575,
+          "matched_terms": [
+            "not",
+            "number",
+            "should",
+            "some",
+            "training"
+          ]
+        },
+        {
+          "source_task_id": "w73feIekdO:NLKFsY27K9:0",
+          "paper_id": "w73feIekdO",
+          "claim_type": "general",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 12.4222,
+          "matched_terms": [
+            "approach",
+            "how",
+            "however",
+            "not",
+            "region",
+            "should",
+            "understand",
+            "used"
+          ]
+        },
+        {
+          "source_task_id": "UVSKuh9eK5:lo6OmS3vso:0",
+          "paper_id": "UVSKuh9eK5",
+          "claim_type": "methodology",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 12.1329,
+          "matched_terms": [
+            "data",
+            "how",
+            "methodology",
+            "not",
+            "training"
+          ]
+        },
+        {
+          "source_task_id": "UVSKuh9eK5:AUeGBXg0Pe:1",
+          "paper_id": "UVSKuh9eK5",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 10.0676,
+          "matched_terms": [
+            "data",
+            "interesting",
+            "number"
+          ]
+        },
+        {
+          "source_task_id": "JWrl5pJCnl:A3gHHaLomn:0",
+          "paper_id": "JWrl5pJCnl",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 9.5928,
+          "matched_terms": [
+            "approach",
+            "help",
+            "methodology",
+            "proposed"
+          ]
+        }
+      ],
+      "match_hit@1": true,
+      "quality_hit@1": true,
+      "type_hit@1": false,
+      "match_knn@1": "partial",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": true,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": true,
+      "match_knn@3": "partial",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": true,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": true,
+      "quality_knn_correct@5": true,
+      "match_rr": 1.0,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "AOSsLRKQrX:tYw6kbOlZq:3",
+      "paper_id": "AOSsLRKQrX",
+      "claim_type": "experiment",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "candidate_count": 45,
+      "retrieved": [
+        {
+          "source_task_id": "kmn0BhQk7p:aPvo3w4FSN:0",
+          "paper_id": "kmn0BhQk7p",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 11.6946,
+          "matched_terms": [
+            "experiment",
+            "not",
+            "should",
+            "some"
+          ]
+        },
+        {
+          "source_task_id": "cQgjz0mf0r:3gM8OP4zZK:3",
+          "paper_id": "cQgjz0mf0r",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 11.5274,
+          "matched_terms": [
+            "not",
+            "number",
+            "should",
+            "some",
+            "training"
+          ]
+        },
+        {
+          "source_task_id": "1FWDEIGm33:wXp9GL22N6:1",
+          "paper_id": "1FWDEIGm33",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 10.518,
+          "matched_terms": [
+            "critical",
+            "discussed",
+            "experiment",
+            "not"
+          ]
+        },
+        {
+          "source_task_id": "3wL1tj3kqE:YyOvX2x0kY:0",
+          "paper_id": "3wL1tj3kqE",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 8.7251,
+          "matched_terms": [
+            "detail",
+            "not",
+            "training"
+          ]
+        },
+        {
+          "source_task_id": "10eQ4Cfh8p:wckxlkPL42:0",
+          "paper_id": "10eQ4Cfh8p",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 7.8795,
+          "matched_terms": [
+            "critical",
+            "not",
+            "number"
+          ]
+        }
+      ],
+      "match_hit@1": false,
+      "quality_hit@1": true,
+      "type_hit@1": true,
+      "match_knn@1": "survived",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": false,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": true,
+      "match_knn@3": "partial",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": true,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": true,
+      "quality_knn_correct@5": true,
+      "match_rr": 0.5,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "yacRhge4zQ:pKsEW8Yja4:2",
+      "paper_id": "yacRhge4zQ",
+      "claim_type": "experiment",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "candidate_count": 46,
+      "retrieved": [
+        {
+          "source_task_id": "tmsqb6WpLz:KX6fDquf1N:4",
+          "paper_id": "tmsqb6WpLz",
+          "claim_type": "theory",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 10.6023,
+          "matched_terms": [
+            "assum",
+            "how",
+            "what"
+          ]
+        },
+        {
+          "source_task_id": "gYcft1HIaU:K0w3kEaTHx:4",
+          "paper_id": "gYcft1HIaU",
+          "claim_type": "baseline",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 9.276,
+          "matched_terms": [
+            "knowledge",
+            "only",
+            "section"
+          ]
+        },
+        {
+          "source_task_id": "rp5vfyp5Np:YktI8n3TeZ:5",
+          "paper_id": "rp5vfyp5Np",
+          "claim_type": "ethics",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 7.5,
+          "matched_terms": [
+            "can",
+            "obtain",
+            "one"
+          ]
+        },
+        {
+          "source_task_id": "1FWDEIGm33:wXp9GL22N6:1",
+          "paper_id": "1FWDEIGm33",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 7.1291,
+          "matched_terms": [
+            "experiment",
+            "implication",
+            "what"
+          ]
+        },
+        {
+          "source_task_id": "ApjY32f3Xr:4e1fSBB3OO:1",
+          "paper_id": "ApjY32f3Xr",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 7.0087,
+          "matched_terms": [
+            "can",
+            "one"
+          ]
+        }
+      ],
+      "match_hit@1": false,
+      "quality_hit@1": true,
+      "type_hit@1": false,
+      "match_knn@1": "survived",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": false,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": false,
+      "match_knn@3": "survived",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": false,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": false,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": true,
+      "quality_knn_correct@5": true,
+      "match_rr": 0.5,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "9L9j5bQPIY:91NkdJpVId:2",
+      "paper_id": "9L9j5bQPIY",
+      "claim_type": "methodology",
+      "gold_meta_review_match": "not_found",
+      "gold_concern_quality": "low",
+      "candidate_count": 47,
+      "retrieved": [
+        {
+          "source_task_id": "7QlKLvfVge:LsvjaIpscH:6",
+          "paper_id": "7QlKLvfVge",
+          "claim_type": "theory",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 7.6217,
+          "matched_terms": [
+            "need",
+            "why"
+          ]
+        },
+        {
+          "source_task_id": "10eQ4Cfh8p:wckxlkPL42:0",
+          "paper_id": "10eQ4Cfh8p",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 6.2028,
+          "matched_terms": [
+            "methodology",
+            "unclear",
+            "why"
+          ]
+        },
+        {
+          "source_task_id": "eepoE7iLpL:Omfs3dIcbU:0",
+          "paper_id": "eepoE7iLpL",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 5.6694,
+          "matched_terms": [
+            "methodology",
+            "unclear"
+          ]
+        },
+        {
+          "source_task_id": "JWrl5pJCnl:A3gHHaLomn:0",
+          "paper_id": "JWrl5pJCnl",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 5.5051,
+          "matched_terms": [
+            "methodology",
+            "unclear"
+          ]
+        },
+        {
+          "source_task_id": "1FWDEIGm33:wXp9GL22N6:1",
+          "paper_id": "1FWDEIGm33",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 4.8399,
+          "matched_terms": [
+            "unclear",
+            "why"
+          ]
+        }
+      ],
+      "match_hit@1": false,
+      "quality_hit@1": false,
+      "type_hit@1": false,
+      "match_knn@1": "survived",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": false,
+      "quality_knn_correct@1": false,
+      "match_hit@3": false,
+      "quality_hit@3": false,
+      "type_hit@3": true,
+      "match_knn@3": "partial",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": false,
+      "quality_knn_correct@3": false,
+      "match_hit@5": false,
+      "quality_hit@5": false,
+      "type_hit@5": true,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": false,
+      "quality_knn_correct@5": false,
+      "match_rr": 0.0,
+      "quality_rr": 0.0
+    },
+    {
+      "task_id": "7vVWiCrFnd:uXWt0SbIG0:0",
+      "paper_id": "7vVWiCrFnd",
+      "claim_type": "clarity",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "candidate_count": 44,
+      "retrieved": [
+        {
+          "source_task_id": "JWrl5pJCnl:A3gHHaLomn:0",
+          "paper_id": "JWrl5pJCnl",
+          "claim_type": "novelty",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 10.449,
+          "matched_terms": [
+            "distinction",
+            "which",
+            "work"
+          ]
+        },
+        {
+          "source_task_id": "AZGIwqCyYY:aWxMIfTpWd:3",
+          "paper_id": "AZGIwqCyYY",
+          "claim_type": "clarity",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 9.343,
+          "matched_terms": [
+            "clarity",
+            "different",
+            "representation"
+          ]
+        },
+        {
+          "source_task_id": "BQvbL2sFQx:QiY7LeGJCD:0",
+          "paper_id": "BQvbL2sFQx",
+          "claim_type": "clarity",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 8.7462,
+          "matched_terms": [
+            "clarity",
+            "find",
+            "not"
+          ]
+        },
+        {
+          "source_task_id": "DwcV654WBP:E60zlLaTes:1",
+          "paper_id": "DwcV654WBP",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 7.7401,
+          "matched_terms": [
+            "first",
+            "representation",
+            "way"
+          ]
+        },
+        {
+          "source_task_id": "3wL1tj3kqE:YyOvX2x0kY:0",
+          "paper_id": "3wL1tj3kqE",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 7.6498,
+          "matched_terms": [
+            "clarity",
+            "different",
+            "not"
+          ]
+        }
+      ],
+      "match_hit@1": true,
+      "quality_hit@1": true,
+      "type_hit@1": false,
+      "match_knn@1": "partial",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": true,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": true,
+      "match_knn@3": "partial",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": true,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": true,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": true,
+      "quality_knn_correct@5": true,
+      "match_rr": 1.0,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "AOSsLRKQrX:tYw6kbOlZq:1",
+      "paper_id": "AOSsLRKQrX",
+      "claim_type": "ablation",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "candidate_count": 45,
+      "retrieved": [
+        {
+          "source_task_id": "10eQ4Cfh8p:wckxlkPL42:0",
+          "paper_id": "10eQ4Cfh8p",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 11.8372,
+          "matched_terms": [
+            "but",
+            "each",
+            "model",
+            "number",
+            "there"
+          ]
+        },
+        {
+          "source_task_id": "UVSKuh9eK5:AUeGBXg0Pe:1",
+          "paper_id": "UVSKuh9eK5",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 10.4425,
+          "matched_terms": [
+            "each",
+            "experiment",
+            "number",
+            "there"
+          ]
+        },
+        {
+          "source_task_id": "DwcV654WBP:E60zlLaTes:1",
+          "paper_id": "DwcV654WBP",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 9.8493,
+          "matched_terms": [
+            "experiment",
+            "learning",
+            "model",
+            "representation"
+          ]
+        },
+        {
+          "source_task_id": "rp5vfyp5Np:YktI8n3TeZ:2",
+          "paper_id": "rp5vfyp5Np",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 6.8522,
+          "matched_terms": [
+            "but",
+            "experiment",
+            "learning",
+            "model"
+          ]
+        },
+        {
+          "source_task_id": "pYmQId95iR:u5ZC4CoNyk:6",
+          "paper_id": "pYmQId95iR",
+          "claim_type": "experiment",
+          "meta_review_match": "not_found",
+          "concern_quality": "high",
+          "retrieval_score": 6.6649,
+          "matched_terms": [
+            "each",
+            "experiment",
+            "multiple"
+          ]
+        }
+      ],
+      "match_hit@1": true,
+      "quality_hit@1": true,
+      "type_hit@1": false,
+      "match_knn@1": "partial",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": true,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": false,
+      "match_knn@3": "survived",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": false,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": false,
+      "match_knn@5": "survived",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": false,
+      "quality_knn_correct@5": true,
+      "match_rr": 1.0,
+      "quality_rr": 1.0
+    },
+    {
+      "task_id": "JWrl5pJCnl:A3gHHaLomn:0",
+      "paper_id": "JWrl5pJCnl",
+      "claim_type": "novelty",
+      "gold_meta_review_match": "partial",
+      "gold_concern_quality": "high",
+      "candidate_count": 47,
+      "retrieved": [
+        {
+          "source_task_id": "10eQ4Cfh8p:wckxlkPL42:0",
+          "paper_id": "10eQ4Cfh8p",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 17.1611,
+          "matched_terms": [
+            "action",
+            "also",
+            "but",
+            "method",
+            "methodology",
+            "policy",
+            "proposed",
+            "unclear"
+          ]
+        },
+        {
+          "source_task_id": "ApjY32f3Xr:4e1fSBB3OO:1",
+          "paper_id": "ApjY32f3Xr",
+          "claim_type": "methodology",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 13.9949,
+          "matched_terms": [
+            "can",
+            "error",
+            "methodology",
+            "such"
+          ]
+        },
+        {
+          "source_task_id": "rp5vfyp5Np:YktI8n3TeZ:5",
+          "paper_id": "rp5vfyp5Np",
+          "claim_type": "ethics",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 13.1765,
+          "matched_terms": [
+            "can",
+            "directly",
+            "policy",
+            "use",
+            "which"
+          ]
+        },
+        {
+          "source_task_id": "rp5vfyp5Np:YktI8n3TeZ:2",
+          "paper_id": "rp5vfyp5Np",
+          "claim_type": "experiment",
+          "meta_review_match": "survived",
+          "concern_quality": "high",
+          "retrieval_score": 12.7037,
+          "matched_terms": [
+            "author",
+            "but",
+            "policy",
+            "rate"
+          ]
+        },
+        {
+          "source_task_id": "xibcBSuuq0:zwpI0TjvXj:1",
+          "paper_id": "xibcBSuuq0",
+          "claim_type": "experiment",
+          "meta_review_match": "partial",
+          "concern_quality": "high",
+          "retrieval_score": 11.2381,
+          "matched_terms": [
+            "author",
+            "method",
+            "proposed",
+            "which"
+          ]
+        }
+      ],
+      "match_hit@1": true,
+      "quality_hit@1": true,
+      "type_hit@1": false,
+      "match_knn@1": "partial",
+      "quality_knn@1": "high",
+      "match_knn_correct@1": true,
+      "quality_knn_correct@1": true,
+      "match_hit@3": true,
+      "quality_hit@3": true,
+      "type_hit@3": false,
+      "match_knn@3": "partial",
+      "quality_knn@3": "high",
+      "match_knn_correct@3": true,
+      "quality_knn_correct@3": true,
+      "match_hit@5": true,
+      "quality_hit@5": true,
+      "type_hit@5": false,
+      "match_knn@5": "partial",
+      "quality_knn@5": "high",
+      "match_knn_correct@5": true,
+      "quality_knn_correct@5": true,
+      "match_rr": 1.0,
+      "quality_rr": 1.0
+    }
+  ]
+}

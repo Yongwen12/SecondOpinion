@@ -346,7 +346,7 @@ def validate_claim_payload(
             continue
         seen.add(dedupe_key)
         seen_token_sets.append(token_set)
-        claim["source_sentence_index"] = source_sentence_index(review, claim["source_field"], claim["source_sentence"])
+        attach_source_locator(claim, review)
         candidates.append(claim)
     return remove_composite_duplicate_claims(candidates)[:max_claims]
 
@@ -590,3 +590,151 @@ def source_sentence_index(review: dict[str, Any], source_field: str, source_sent
         if normalize_for_match(piece) == normalized_sentence or normalized_sentence in normalize_for_match(piece):
             return index
     return None
+
+
+def attach_source_locator(claim: dict[str, Any], review: dict[str, Any]) -> None:
+    locator = source_locator(review, claim["source_field"], claim["source_sentence"])
+    claim["source_locator"] = locator
+    claim["source_sentence_index"] = locator["sentence_index"]
+    claim["source_char_start"] = locator["char_start"]
+    claim["source_char_end"] = locator["char_end"]
+    claim["source_paragraph_index"] = locator["paragraph_index"]
+    claim["source_bullet_index"] = locator["bullet_index"]
+    claim["source_line_start"] = locator["line_start"]
+    claim["source_line_end"] = locator["line_end"]
+
+
+def source_locator(review: dict[str, Any], source_field: str, source_sentence: str) -> dict[str, Any]:
+    source_text = clean_text(review.get(source_field))
+    char_start, char_end, match_strategy = source_char_span(source_text, source_sentence)
+    sentence_index = source_sentence_index(review, source_field, source_sentence)
+    line_start, line_end = source_line_range(source_text, char_start, char_end)
+    return {
+        "char_start": char_start,
+        "char_end": char_end,
+        "paragraph_index": source_paragraph_index(source_text, char_start, char_end),
+        "bullet_index": source_bullet_index(source_text, char_start, char_end),
+        "line_start": line_start,
+        "line_end": line_end,
+        "sentence_index": sentence_index,
+        "match_strategy": match_strategy,
+    }
+
+
+def source_char_span(source_text: str, source_sentence: str) -> tuple[int | None, int | None, str]:
+    source_text = clean_text(source_text)
+    source_sentence = clean_text(source_sentence)
+    if not source_text or not source_sentence:
+        return None, None, "none"
+    exact_start = source_text.find(source_sentence)
+    if exact_start >= 0:
+        return exact_start, exact_start + len(source_sentence), "exact"
+
+    normalized_text, char_map = normalize_with_char_map(source_text)
+    normalized_sentence = normalize_for_match(source_sentence)
+    normalized_start = normalized_text.find(normalized_sentence)
+    if normalized_start < 0 or not char_map:
+        return None, None, "none"
+    normalized_end = normalized_start + len(normalized_sentence) - 1
+    if normalized_end >= len(char_map):
+        return None, None, "none"
+    return char_map[normalized_start], char_map[normalized_end] + 1, "normalized"
+
+
+def normalize_with_char_map(text: str) -> tuple[str, list[int]]:
+    text = clean_text(text).lower()
+    normalized_chars: list[str] = []
+    char_map: list[int] = []
+    previous_space = False
+    for index, char in enumerate(text):
+        if char.isspace():
+            if normalized_chars and not previous_space:
+                normalized_chars.append(" ")
+                char_map.append(index)
+                previous_space = True
+            continue
+        normalized_chars.append(char)
+        char_map.append(index)
+        previous_space = False
+    if normalized_chars and normalized_chars[-1] == " ":
+        normalized_chars.pop()
+        char_map.pop()
+    return "".join(normalized_chars), char_map
+
+
+def source_line_range(source_text: str, char_start: int | None, char_end: int | None) -> tuple[int | None, int | None]:
+    if char_start is None or char_end is None:
+        return None, None
+    spans = line_spans(source_text)
+    matched = [
+        index
+        for index, (start, end, _line) in enumerate(spans)
+        if ranges_overlap(char_start, char_end, start, end)
+    ]
+    if not matched:
+        return None, None
+    return matched[0], matched[-1]
+
+
+def source_paragraph_index(source_text: str, char_start: int | None, char_end: int | None) -> int | None:
+    if char_start is None or char_end is None:
+        return None
+    for index, (start, end) in enumerate(paragraph_spans(source_text)):
+        if ranges_overlap(char_start, char_end, start, end):
+            return index
+    return None
+
+
+def source_bullet_index(source_text: str, char_start: int | None, char_end: int | None) -> int | None:
+    if char_start is None or char_end is None:
+        return None
+    bullet_index = 0
+    for start, end, line in line_spans(source_text):
+        if is_bullet_line(line):
+            if ranges_overlap(char_start, char_end, start, end):
+                return bullet_index
+            bullet_index += 1
+    return None
+
+
+def paragraph_spans(source_text: str) -> list[tuple[int, int]]:
+    spans = []
+    paragraph_start: int | None = None
+    paragraph_end: int | None = None
+    for line_start, line_end, line in line_spans(source_text):
+        if clean_text(line):
+            if paragraph_start is None:
+                paragraph_start = line_start
+            paragraph_end = line_end
+        elif paragraph_start is not None and paragraph_end is not None:
+            spans.append((paragraph_start, paragraph_end))
+            paragraph_start = None
+            paragraph_end = None
+    if paragraph_start is not None and paragraph_end is not None:
+        spans.append((paragraph_start, paragraph_end))
+    return spans
+
+
+def line_spans(source_text: str) -> list[tuple[int, int, str]]:
+    source_text = clean_text(source_text)
+    if not source_text:
+        return []
+    spans = []
+    position = 0
+    for line in source_text.splitlines(keepends=True):
+        line_without_newline = line.rstrip("\n")
+        start = position
+        end = position + len(line_without_newline)
+        spans.append((start, end, line_without_newline))
+        position += len(line)
+    if source_text and source_text[-1] == "\n":
+        spans.append((position, position, ""))
+    return spans
+
+
+def is_bullet_line(line: str) -> bool:
+    return re.match(r"^\s*(?:[-*+]\s+|\d+[.)]\s+)", line) is not None
+
+
+def ranges_overlap(first_start: int, first_end: int, second_start: int, second_end: int) -> bool:
+    return first_start < second_end and second_start < first_end

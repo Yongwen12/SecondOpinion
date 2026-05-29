@@ -16,6 +16,7 @@ node_modules/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+tmp/
 
 dist/
 build/
@@ -27,6 +28,7 @@ data/audits/
 data/pdfs/
 data/derived/
 data/annotations/
+data/cache/
 reports/*.md
 reports/*.html
 reports/annotations/

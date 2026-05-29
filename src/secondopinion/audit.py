@@ -13,6 +13,14 @@ from .claim_extraction import (
     StructuredLLMClient,
     extract_claims,
 )
+from .external_evidence import (
+    DEFAULT_COLLECTOR_MODEL,
+    EXTERNAL_CLAIM_TYPES,
+    EXTERNAL_EVIDENCE_VERSION,
+    attach_external_evidence_to_paper,
+    collect_external_evidence_for_claims,
+)
+from .external_providers.openalex import OpenAlexClient
 from .model_config import DEFAULT_CHEAP_MODEL
 from .models import ClaimAudit, Evidence, ReviewAudit
 from .prompt_assets import load_prompt
@@ -323,7 +331,8 @@ def audit_claim(
         )
 
     requires_human_expert = claim_type in EXPERT_REQUIRED_TYPES or verdict == "needs_human_check"
-    requires_external = claim_type in {"novelty", "theory"}
+    has_external_evidence = any(item.source_type in {"venue_guideline", "external_reference", "field_consensus"} for item in evidence)
+    requires_external = claim_type in EXTERNAL_CLAIM_TYPES and not has_external_evidence
 
     flags = claim_issue_flags(
         verdict=verdict,
@@ -375,6 +384,13 @@ def audit_claim(
         judge_rationale=judge_rationale,
         issue_flags=flags,
         evidence=evidence,
+        source_locator=claim.get("source_locator") if isinstance(claim.get("source_locator"), dict) else {},
+        source_char_start=claim.get("source_char_start"),
+        source_char_end=claim.get("source_char_end"),
+        source_paragraph_index=claim.get("source_paragraph_index"),
+        source_bullet_index=claim.get("source_bullet_index"),
+        source_line_start=claim.get("source_line_start"),
+        source_line_end=claim.get("source_line_end"),
     )
     apply_reliability_gate(result)
     return result
@@ -519,7 +535,8 @@ def apply_judgement_to_claim(claim: ClaimAudit, judged: dict[str, Any], *, judge
     claim.judge_model = judge_model
     claim.judge_rationale = judged["rationale"]
     claim.requires_human_expert = claim.claim_type in EXPERT_REQUIRED_TYPES or claim.verdict == "needs_human_check"
-    claim.requires_external_knowledge = claim.claim_type in {"novelty", "theory"}
+    has_external_evidence = any(item.source_type in {"venue_guideline", "external_reference", "field_consensus"} for item in claim.evidence)
+    claim.requires_external_knowledge = claim.claim_type in EXTERNAL_CLAIM_TYPES and not has_external_evidence
     claim.issue_flags = claim_issue_flags(
         verdict=claim.verdict,
         importance=claim.importance,
@@ -1352,6 +1369,17 @@ def evidence_citation_labels(evidence: list[Evidence], limit: int = 2) -> list[s
 def evidence_citation_label(item: Evidence) -> str:
     if item.source_type == "rebuttal":
         label = "Author response"
+    elif item.source_type == "venue_guideline":
+        venue = item.metadata.get("venue") or "Venue"
+        label = f"{venue} guideline"
+    elif item.source_type == "external_reference":
+        title = item.metadata.get("title") or item.section
+        year = item.metadata.get("publication_year")
+        label = f"External reference: {title}"
+        if year:
+            label = f"{label} ({year})"
+    elif item.source_type == "field_consensus":
+        label = "Field context"
     elif item.section == "title":
         label = "Paper title"
     elif item.section == "abstract":
@@ -1396,11 +1424,28 @@ def audit_review(
     judge_llm_client: StructuredLLMClient | None = None,
     judge_model: str = DEFAULT_JUDGE_MODEL,
     auditor_version: str = RULE_MODEL_VERSION,
+    use_external_evidence: bool = False,
+    external_providers: str | list[str] | tuple[str, ...] | None = None,
+    external_llm_client: StructuredLLMClient | None = None,
+    external_model: str = DEFAULT_COLLECTOR_MODEL,
+    openalex_client: OpenAlexClient | None = None,
 ) -> ReviewAudit:
     extracted = extract_claims(review, llm_client=claim_llm_client, model=claim_model)
+    paper_for_audit = paper
+    if use_external_evidence and extracted:
+        external_records, _ = collect_external_evidence_for_claims(
+            paper,
+            extracted,
+            review=review,
+            providers=external_providers,
+            llm_client=external_llm_client,
+            model=external_model,
+            openalex_client=openalex_client,
+        )
+        paper_for_audit = attach_external_evidence_to_paper(paper, external_records)
     claims = [
         audit_claim(
-            paper,
+            paper_for_audit,
             review,
             claim,
         )
@@ -1408,14 +1453,14 @@ def audit_review(
     ]
     if judge_llm_client is not None and claims:
         batch_result = judge_review_claims_with_llm(
-            paper,
+            paper_for_audit,
             review,
             claims,
             llm_client=judge_llm_client,
             model=judge_model,
         )
         apply_batch_judgements_with_single_retry(
-            paper,
+            paper_for_audit,
             review,
             claims,
             batch_result,
@@ -1527,6 +1572,11 @@ def audit_dataset(
     judge_llm_client: StructuredLLMClient | None = None,
     judge_model: str = DEFAULT_JUDGE_MODEL,
     use_llm_judge: bool = False,
+    use_external_evidence: bool = False,
+    external_providers: str | list[str] | tuple[str, ...] | None = None,
+    external_llm_client: StructuredLLMClient | None = None,
+    external_model: str = DEFAULT_COLLECTOR_MODEL,
+    openalex_client: OpenAlexClient | None = None,
 ) -> dict[str, Any]:
     audits = []
     review_count = sum(len(paper.get("reviews", [])) for paper in dataset.get("papers", []))
@@ -1549,6 +1599,11 @@ def audit_dataset(
                     judge_llm_client=judge_llm_client if use_llm_judge else None,
                     judge_model=judge_model,
                     auditor_version=auditor_version,
+                    use_external_evidence=use_external_evidence,
+                    external_providers=external_providers,
+                    external_llm_client=external_llm_client or claim_llm_client,
+                    external_model=external_model,
+                    openalex_client=openalex_client,
                 ).to_dict()
             )
     return {
@@ -1564,5 +1619,7 @@ def audit_dataset(
         "judge_version": LLM_JUDGE_VERSION if use_llm_judge else RULE_MODEL_VERSION,
         "judge_model": judge_model if use_llm_judge else "",
         "retrieval_version": RETRIEVAL_VERSION,
+        "external_evidence_version": EXTERNAL_EVIDENCE_VERSION if use_external_evidence else "",
+        "openalex_stats": openalex_client.stats_dict() if openalex_client is not None else {},
         "audits": audits,
     }
