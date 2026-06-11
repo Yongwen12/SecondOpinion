@@ -103,6 +103,32 @@ class RagValidationTests(unittest.TestCase):
         self.assertGreaterEqual(report["summary"]["match_hit@1"], 0.5)
         self.assertIn("random_match_hit@1", report["summary"])
 
+    def test_validate_concern_rag_can_filter_to_semantic_decisive_high_confidence_records(self):
+        usable = calibration_record("q1", "The paper lacks missing ablations.", "survived", "high")
+        unsure = calibration_record("q2", "The notation is unclear.", "unsure", "low", claim_type="clarity")
+        low_confidence = calibration_record("q3", "The motivation is weak.", "partial", "medium")
+        low_confidence["high_confidence_training_candidate"] = False
+        memory = [
+            calibration_record("m1", "Missing ablations weaken the evaluation.", "survived", "high", paper_id="paper2"),
+            calibration_record("m2", "Unclear notation.", "unsure", "low", claim_type="clarity", paper_id="paper2"),
+            calibration_record("m3", "Weak motivation.", "partial", "medium", paper_id="paper2"),
+        ]
+        memory[-1]["high_confidence_training_candidate"] = False
+
+        report = validate_concern_rag(
+            [usable, unsure, low_confidence],
+            memory,
+            top_ks=(1,),
+            only_decisive_meta_labels=True,
+            only_high_confidence=True,
+        )
+
+        self.assertEqual(report["summary"]["input_query_count"], 3)
+        self.assertEqual(report["summary"]["query_count"], 1)
+        self.assertEqual(report["summary"]["memory_count"], 1)
+        self.assertEqual(report["summary"]["filters"]["only_decisive_meta_labels"], True)
+        self.assertEqual(report["summary"]["majority_match_baseline"], 1.0)
+
     def test_run_rag_judgment_ablation_uses_llm_schema(self):
         record = calibration_record("q1", "The paper lacks missing ablations.", "survived", "high")
         memory = [memory_record("m1", "Missing ablations weaken the evaluation.", "survived", "high")]

@@ -1175,6 +1175,85 @@ main {
   line-height: 1.5;
 }
 
+.score-explain,
+.evidence-chain {
+  border: 1px solid var(--soft-line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.score-explain summary,
+.evidence-chain summary {
+  padding: 11px 12px;
+  cursor: pointer;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.score-explain-grid,
+.evidence-chain-grid {
+  display: grid;
+  gap: 10px;
+  padding: 0 12px 12px;
+}
+
+.score-explain-grid,
+.evidence-chain-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.score-explain-grid p,
+.evidence-node p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.score-explain-grid b {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--ink);
+}
+
+.evidence-node {
+  min-width: 0;
+  padding: 11px;
+  border: 1px solid var(--soft-line);
+  border-radius: 8px;
+  background: #fbfcfd;
+}
+
+.evidence-node.empty {
+  opacity: 0.72;
+}
+
+.evidence-node h6 {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.evidence-node blockquote {
+  margin: 0 0 8px;
+  padding: 8px 10px;
+  border-left: 3px solid var(--teal);
+  background: #fff;
+}
+
+.evidence-node blockquote:last-child {
+  margin-bottom: 0;
+}
+
+.evidence-node blockquote b {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 12px;
+}
+
 .review-card {
   display: grid;
   gap: 12px;
@@ -1366,6 +1445,31 @@ main {
   border-bottom: 0;
 }
 
+.issue-score-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.issue-score-strip span {
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--soft-line);
+  border-radius: 8px;
+  color: var(--muted);
+  background: #fbfcfd;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.issue-score-strip b {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--ink);
+  font-size: 18px;
+}
+
 .quote-list li {
   padding: 12px;
   border-left: 3px solid var(--teal);
@@ -1509,8 +1613,11 @@ main {
   .stance-map-row,
   .stance-map-main,
   .mini-distribution,
+  .issue-score-strip,
   .claim-score-grid,
-  .claim-analysis-grid {
+  .claim-analysis-grid,
+  .score-explain-grid,
+  .evidence-chain-grid {
     grid-template-columns: 1fr;
   }
 }

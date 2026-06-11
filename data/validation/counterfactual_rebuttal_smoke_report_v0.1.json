@@ -1,0 +1,265 @@
+{
+  "schema_version": "counterfactual-rebuttal-pilot-report-v0.1",
+  "preregistered_hypotheses": {
+    "H1": "Engage beats Avoid: a direct, substantive rebuttal should be preferred over evasive non-response.",
+    "H2": "Engage beats Polished-avoid: substance should beat polite length when length and tone are controlled.",
+    "H3": "The Engage advantage should be larger for answerable/fixable concerns and smaller for structural novelty/significance/framing concerns."
+  },
+  "models": {
+    "generator": "gpt-5-mini",
+    "judge": "gpt-5"
+  },
+  "design": {
+    "pair_set": "primary",
+    "judge_repeats": 1,
+    "order_swaps": 2,
+    "arms": [
+      "avoid",
+      "engage",
+      "polished_avoid"
+    ]
+  },
+  "summary": {
+    "claim_count": 1,
+    "generation_count": 3,
+    "judgment_count": 4,
+    "sample_addressability": {
+      "structurally_unresolvable": 1
+    },
+    "sample_importance": {
+      "major": 1
+    }
+  },
+  "arm_length": {
+    "avoid": {
+      "count": 1,
+      "mean_words": 57.0,
+      "min_words": 57,
+      "max_words": 57
+    },
+    "engage": {
+      "count": 1,
+      "mean_words": 140.0,
+      "min_words": 140,
+      "max_words": 140
+    },
+    "polished_avoid": {
+      "count": 1,
+      "mean_words": 124.0,
+      "min_words": 124,
+      "max_words": 124
+    }
+  },
+  "stable_pairwise": {
+    "per_claim": [
+      {
+        "claim_id": "IefMMX12yk:aj2q9ksHth:1",
+        "pair": "engage_vs_avoid",
+        "addressability": "structurally_unresolvable",
+        "importance_proxy": "major",
+        "judgment_count": 2,
+        "winner_counts": {
+          "engage": 2
+        },
+        "stable_winner": "engage"
+      },
+      {
+        "claim_id": "IefMMX12yk:aj2q9ksHth:1",
+        "pair": "engage_vs_polished_avoid",
+        "addressability": "structurally_unresolvable",
+        "importance_proxy": "major",
+        "judgment_count": 2,
+        "winner_counts": {
+          "engage": 2
+        },
+        "stable_winner": "engage"
+      }
+    ],
+    "pair_summary": {
+      "engage_vs_avoid": {
+        "engage": 1
+      },
+      "engage_vs_polished_avoid": {
+        "engage": 1
+      }
+    },
+    "pair_by_addressability": {
+      "engage_vs_avoid": {
+        "structurally_unresolvable": {
+          "engage": 1
+        }
+      },
+      "engage_vs_polished_avoid": {
+        "structurally_unresolvable": {
+          "engage": 1
+        }
+      }
+    }
+  },
+  "hypothesis_readout": {
+    "H1_engage_over_avoid": {
+      "counts": {
+        "engage": 1
+      },
+      "winner_count": 1,
+      "winner_rate": 1.0,
+      "stable_total": 1
+    },
+    "H2_engage_over_polished_avoid": {
+      "counts": {
+        "engage": 1
+      },
+      "winner_count": 1,
+      "winner_rate": 1.0,
+      "stable_total": 1
+    },
+    "H3_by_addressability": {
+      "engage_vs_avoid": {
+        "structurally_unresolvable": {
+          "engage": 1
+        }
+      },
+      "engage_vs_polished_avoid": {
+        "structurally_unresolvable": {
+          "engage": 1
+        }
+      }
+    }
+  },
+  "generations": [
+    {
+      "claim_id": "IefMMX12yk:aj2q9ksHth:1",
+      "paper_id": "IefMMX12yk",
+      "review_id": "aj2q9ksHth",
+      "claim_index": 1,
+      "arm": "avoid",
+      "model": "gpt-5-mini",
+      "response": "Thank you for this thoughtful point. We appreciate the reviewer highlighting the perceived simplicity of GNN search spaces. We acknowledge that GNNs differ from other architectures and that hyperparameter tuning is a relevant baseline. We will clarify the motivation and scope of our work in the revised manuscript and further discuss how GASSIP complements existing tuning practices.",
+      "word_count": 57,
+      "target_words": "",
+      "strategy_notes": "Evasive reply: politely acknowledges concern, promises clarification, avoids providing evidence, comparisons, mechanisms, or concrete rebuttal. Kept within 45–65 words as requested."
+    },
+    {
+      "claim_id": "IefMMX12yk:aj2q9ksHth:1",
+      "paper_id": "IefMMX12yk",
+      "review_id": "aj2q9ksHth",
+      "claim_index": 1,
+      "arm": "engage",
+      "model": "gpt-5-mini",
+      "response": "Thank you for raising this important point. We agree that GNNs often have shallow depths and a smaller set of primitive operations compared with some other domains, which makes naive NAS seem less necessary. Our motivation is that, in resource-constrained scenarios, the interaction between data sparsity (graph structure) and architecture choices becomes critical: small changes in message-passing patterns or operation selection can disproportionately affect both accuracy and efficiency when budgets are tight. GASSIP explicitly targets this joint space by coupling architecture search with curriculum graph sparsification and operation pruning, which goes beyond standalone hyperparameter tuning. To address your concern, we will add a clearer discussion in the revision explaining why simple hyperparameter search cannot capture the coupled trade-offs between graph sparsification and lightweight architecture design, and we can include a short ablation-style clarification (conceptual and methodological) to highlight this point.",
+      "word_count": 140,
+      "target_words": "",
+      "strategy_notes": "Directly acknowledged reviewer concern, reiterated paper motivation, emphasized joint graph+architecture coupling as unique contribution, promised clarification in revision and a conceptual ablation without claiming new experimental results."
+    },
+    {
+      "claim_id": "IefMMX12yk:aj2q9ksHth:1",
+      "paper_id": "IefMMX12yk",
+      "review_id": "aj2q9ksHth",
+      "claim_index": 1,
+      "arm": "polished_avoid",
+      "model": "gpt-5-mini",
+      "response": "We thank the reviewer for raising this thoughtful point about the motivation for graph NAS. We appreciate the perspective that GNNs often employ relatively few layers and a constrained operation set, and we agree that established hyperparameter tuning toolkits are valuable and relevant. Our submission focuses on a joint data–architecture approach and we recognize that framing and clarity around the specific needs and advantages of GNAS in resource-constrained settings could be further emphasized. We will revise the manuscript to better position our contribution relative to hyperparameter tuning baselines, clarify the intended scope and target use cases, and more explicitly state the practical scenarios where a tailored NAS solution is most appropriate. We welcome additional suggestions from the reviewer on where to strengthen these discussions.",
+      "word_count": 124,
+      "target_words": "130-150 words",
+      "strategy_notes": "Avoided providing concrete technical counterarguments or empirical claims. Used acknowledgments, promises to clarify and scope, and an invitation for reviewer input to meet length without adding substantive evidence."
+    }
+  ],
+  "judgments": [
+    {
+      "claim_id": "IefMMX12yk:aj2q9ksHth:1",
+      "paper_id": "IefMMX12yk",
+      "review_id": "aj2q9ksHth",
+      "claim_index": 1,
+      "addressability": "structurally_unresolvable",
+      "importance_proxy": "major",
+      "pair": "engage_vs_avoid",
+      "arm_a": "engage",
+      "arm_b": "avoid",
+      "winner": "A",
+      "winner_arm": "engage",
+      "repeat": 1,
+      "order": "forward",
+      "model": "gpt-5",
+      "confidence": "high",
+      "rationale": "Response A directly engages the concern by explaining the joint coupling between graph sparsification and architecture choices in resource-constrained settings, articulating why hyperparameter tuning alone may not capture these trade-offs, and proposing to add ablation-style clarification. Response B is generic, acknowledges the point, but does not provide substantive reasoning or evidence differentiating their approach from hyperparameter tuning.",
+      "resolution_a": "partial",
+      "resolution_b": "none",
+      "good_faith_a": "high",
+      "good_faith_b": "high",
+      "predicted_ac_helpfulness_a": 4,
+      "predicted_ac_helpfulness_b": 1
+    },
+    {
+      "claim_id": "IefMMX12yk:aj2q9ksHth:1",
+      "paper_id": "IefMMX12yk",
+      "review_id": "aj2q9ksHth",
+      "claim_index": 1,
+      "addressability": "structurally_unresolvable",
+      "importance_proxy": "major",
+      "pair": "avoid_vs_engage",
+      "arm_a": "avoid",
+      "arm_b": "engage",
+      "winner": "B",
+      "winner_arm": "engage",
+      "repeat": 1,
+      "order": "swapped",
+      "model": "gpt-5",
+      "confidence": "high",
+      "rationale": "Response B directly addresses the reviewer’s skepticism by articulating a concrete motivation: the coupled trade-offs between graph sparsification and lightweight architecture under resource constraints that simple hyperparameter tuning would miss. It ties this to GASSIP’s specific mechanisms (curriculum sparsification and operation pruning) and commits to clarifying comparisons. Response A is mostly generic, acknowledges the point, and promises clarification without explaining why NAS is needed beyond tuning. B is more substantive and credible, without making unsupported claims or fabrications.",
+      "resolution_a": "none",
+      "resolution_b": "partial",
+      "good_faith_a": "medium",
+      "good_faith_b": "high",
+      "predicted_ac_helpfulness_a": 3,
+      "predicted_ac_helpfulness_b": 5
+    },
+    {
+      "claim_id": "IefMMX12yk:aj2q9ksHth:1",
+      "paper_id": "IefMMX12yk",
+      "review_id": "aj2q9ksHth",
+      "claim_index": 1,
+      "addressability": "structurally_unresolvable",
+      "importance_proxy": "major",
+      "pair": "engage_vs_polished_avoid",
+      "arm_a": "engage",
+      "arm_b": "polished_avoid",
+      "winner": "A",
+      "winner_arm": "engage",
+      "repeat": 1,
+      "order": "forward",
+      "model": "gpt-5",
+      "confidence": "medium",
+      "rationale": "Response A directly addresses the reviewer’s skepticism by articulating a concrete technical motivation: the coupling between graph sparsification and lightweight architecture choices under resource constraints, and how GASSIP’s joint optimization with curriculum sparsification and operation pruning goes beyond standard hyperparameter tuning. It proposes adding discussion and an ablation to substantiate this. Response B is polite but mostly reframes and promises better positioning without explaining why HPO would be insufficient or what unique trade-offs GASSIP captures. Thus A more substantively engages the concern while staying credible.",
+      "resolution_a": "partial",
+      "resolution_b": "none",
+      "good_faith_a": "high",
+      "good_faith_b": "high",
+      "predicted_ac_helpfulness_a": 4,
+      "predicted_ac_helpfulness_b": 2
+    },
+    {
+      "claim_id": "IefMMX12yk:aj2q9ksHth:1",
+      "paper_id": "IefMMX12yk",
+      "review_id": "aj2q9ksHth",
+      "claim_index": 1,
+      "addressability": "structurally_unresolvable",
+      "importance_proxy": "major",
+      "pair": "polished_avoid_vs_engage",
+      "arm_a": "polished_avoid",
+      "arm_b": "engage",
+      "winner": "B",
+      "winner_arm": "engage",
+      "repeat": 1,
+      "order": "swapped",
+      "model": "gpt-5",
+      "confidence": "medium",
+      "rationale": "Response B directly addresses the reviewer’s core concern by articulating a concrete motivation: the coupled interaction between graph sparsification (data) and lightweight architecture choices under resource constraints, which hyperparameter tuning alone cannot capture. It links this to their method’s unique components (curriculum sparsification and operation pruning) and promises clarifying discussion/ablation. Response A is largely deferential and procedural, promising revisions without explaining why NAS is needed beyond HPO in this setting. B is more substantive and credible; neither fabricates results or numbers.",
+      "resolution_a": "none",
+      "resolution_b": "partial",
+      "good_faith_a": "high",
+      "good_faith_b": "high",
+      "predicted_ac_helpfulness_a": 3,
+      "predicted_ac_helpfulness_b": 5
+    }
+  ]
+}

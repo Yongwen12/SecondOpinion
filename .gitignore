@@ -29,6 +29,7 @@ data/pdfs/
 data/derived/
 data/annotations/
 data/cache/
+data/external/
 reports/*.md
 reports/*.html
 reports/annotations/

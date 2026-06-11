@@ -10,6 +10,8 @@ from .annotation import (
     DEFAULT_ANNOTATION_MODEL,
     compare_annotations,
     default_task_paths,
+    export_evidence_chain_benchmark_annotation_tasks,
+    export_evidence_chain_annotation_tasks,
     export_annotation_tasks,
     llm_label_tasks,
     read_jsonl,
@@ -43,6 +45,18 @@ from .concern_survival import (
 )
 from .data_inventory import inventory_openreview_snapshot, write_inventory_markdown
 from .external_evidence import DEFAULT_COLLECTOR_MODEL, enrich_dataset_with_external_evidence
+from .evidence_chain import (
+    build_benchmark_validation_report,
+    build_evidence_chain_benchmark,
+    build_evidence_chain_benchmark_from_calibration,
+    build_evidence_chain_demo,
+    build_pseudo_expert_labels,
+    build_pseudo_expert_report,
+    write_pseudo_expert_markdown,
+    write_benchmark_markdown,
+    write_validation_story,
+    write_json as write_evidence_chain_json,
+)
 from .external_providers.openalex import OpenAlexClient
 from .grounding_validation import (
     RetryingStructuredLLMClient,
@@ -288,6 +302,16 @@ def main(argv: list[str] | None = None) -> None:
     rag_validation.add_argument("--markdown", default="reports/validation/concern_rag_validation.md")
     rag_validation.add_argument("--top-ks", default="1,3,5")
     rag_validation.add_argument("--exclude-same-paper", action="store_true")
+    rag_validation.add_argument(
+        "--only-decisive-meta-labels",
+        action="store_true",
+        help="Drop records whose semantic meta-review match label is unsure or missing.",
+    )
+    rag_validation.add_argument(
+        "--only-high-confidence",
+        action="store_true",
+        help="Drop records that are not high-confidence calibration/training candidates.",
+    )
     rag_validation.add_argument("--llm-ablation", action="store_true")
     rag_validation.add_argument("--open-book-llm", action="store_true", help="Include current paper meta-review in LLM ablation input.")
     rag_validation.add_argument("--llm-limit", type=int, default=24)
@@ -375,6 +399,66 @@ def main(argv: list[str] | None = None) -> None:
     consensus_calibration.add_argument("--openai-timeout", type=int, default=90)
     consensus_calibration.add_argument("--retries", type=int, default=2)
 
+    evidence_chain_demo = subparsers.add_parser(
+        "build-evidence-chain-demo",
+        parents=[storage_parent],
+        help="Merge audit and reviewer-calibration outputs into frontend evidence-chain JSON.",
+    )
+    evidence_chain_demo.add_argument("--audit", required=True)
+    evidence_chain_demo.add_argument("--reviewer-calibration", default="")
+    evidence_chain_demo.add_argument("--paper-id", default="")
+    evidence_chain_demo.add_argument("--out", default="frontend/demos/evidence_chain_demo.json")
+
+    evidence_chain_benchmark = subparsers.add_parser(
+        "build-evidence-chain-benchmark",
+        parents=[storage_parent],
+        help="Create a review-only/manuscript/full-chain benchmark packet for evidence-chain ablations.",
+    )
+    evidence_chain_benchmark.add_argument("--audit", required=True)
+    evidence_chain_benchmark.add_argument("--reviewer-calibration", default="")
+    evidence_chain_benchmark.add_argument("--out", default="data/validation/evidence_chain_benchmark.json")
+    evidence_chain_benchmark.add_argument("--markdown", default="reports/validation/evidence_chain_benchmark.md")
+    evidence_chain_benchmark.add_argument("--paper-limit", type=int, default=50)
+    evidence_chain_benchmark.add_argument("--claims-per-paper", type=int, default=8)
+    evidence_chain_benchmark.add_argument("--sample-size", type=int, default=300)
+
+    evidence_chain_calibration_benchmark = subparsers.add_parser(
+        "build-evidence-chain-calibration-benchmark",
+        parents=[storage_parent],
+        help="Create an evidence-chain benchmark packet directly from reviewer calibration outputs.",
+    )
+    evidence_chain_calibration_benchmark.add_argument("--reviewer-calibration", required=True)
+    evidence_chain_calibration_benchmark.add_argument("--normalized", default="")
+    evidence_chain_calibration_benchmark.add_argument("--out", default="data/validation/evidence_chain_calibration_benchmark.json")
+    evidence_chain_calibration_benchmark.add_argument(
+        "--markdown",
+        default="reports/validation/evidence_chain_calibration_benchmark.md",
+    )
+    evidence_chain_calibration_benchmark.add_argument("--paper-limit", type=int, default=50)
+    evidence_chain_calibration_benchmark.add_argument("--claims-per-paper", type=int, default=5)
+    evidence_chain_calibration_benchmark.add_argument("--sample-size", type=int, default=150)
+
+    pseudo_expert = subparsers.add_parser(
+        "label-evidence-chain-pseudo-expert",
+        parents=[storage_parent],
+        help="Generate rule-based pseudo-expert labels and agreement report for evidence-chain annotation tasks.",
+    )
+    pseudo_expert.add_argument("--tasks", required=True)
+    pseudo_expert.add_argument("--labels-out", default="data/annotations/labels/llm/evidence_chain_pseudo_expert.jsonl")
+    pseudo_expert.add_argument("--report-out", default="data/validation/evidence_chain_pseudo_expert_report.json")
+    pseudo_expert.add_argument("--markdown", default="reports/validation/evidence_chain_pseudo_expert_report.md")
+    pseudo_expert.add_argument("--annotator-id", default="pseudo-expert:v0.1")
+
+    validation_story = subparsers.add_parser(
+        "write-evidence-chain-validation-story",
+        parents=[storage_parent],
+        help="Write a concise validation story from evidence-chain demo, benchmark, and pseudo-expert report.",
+    )
+    validation_story.add_argument("--demo", required=True)
+    validation_story.add_argument("--benchmark", required=True)
+    validation_story.add_argument("--pseudo-report", required=True)
+    validation_story.add_argument("--out", default="reports/validation/evidence_chain_validation_story_v0.1.md")
+
     demo = subparsers.add_parser(
         "demo",
         parents=[storage_parent],
@@ -395,10 +479,13 @@ def main(argv: list[str] | None = None) -> None:
         parents=[storage_parent],
         help="Export audit results into annotation tasks and a static HTML packet.",
     )
-    annotation_export.add_argument("--audit", required=True)
+    annotation_export.add_argument("--audit", default="")
+    annotation_export.add_argument("--evidence-chain-demo", default="", help="Optional evidence-chain demo JSON for expert evidence-chain tasks.")
+    annotation_export.add_argument("--evidence-chain-benchmark", default="", help="Optional evidence-chain benchmark JSON for expert evidence-chain tasks.")
     annotation_export.add_argument("--run-id", default="")
     annotation_export.add_argument("--tasks-out", default="")
     annotation_export.add_argument("--html", default="")
+    annotation_export.add_argument("--sample-size", type=int, default=None)
 
     annotation_llm = subparsers.add_parser(
         "annotation-llm-label",
@@ -468,6 +555,16 @@ def main(argv: list[str] | None = None) -> None:
         command_sample_inter_reviewer_consensus(args)
     elif args.command == "calibrate-inter-reviewer-consensus":
         command_calibrate_inter_reviewer_consensus(args)
+    elif args.command == "build-evidence-chain-demo":
+        command_build_evidence_chain_demo(args)
+    elif args.command == "build-evidence-chain-benchmark":
+        command_build_evidence_chain_benchmark(args)
+    elif args.command == "build-evidence-chain-calibration-benchmark":
+        command_build_evidence_chain_calibration_benchmark(args)
+    elif args.command == "label-evidence-chain-pseudo-expert":
+        command_label_evidence_chain_pseudo_expert(args)
+    elif args.command == "write-evidence-chain-validation-story":
+        command_write_evidence_chain_validation_story(args)
     elif args.command == "demo":
         command_demo(args)
     elif args.command == "storage-info":
@@ -806,6 +903,8 @@ def command_validate_concern_rag(args: argparse.Namespace) -> None:
         memory,
         top_ks=parse_top_ks(args.top_ks),
         exclude_same_paper=args.exclude_same_paper,
+        only_decisive_meta_labels=args.only_decisive_meta_labels,
+        only_high_confidence=args.only_high_confidence,
     )
     out = artifact_path(args.out, args)
     markdown = artifact_path(args.markdown, args)
@@ -982,6 +1081,93 @@ def command_calibrate_inter_reviewer_consensus(args: argparse.Namespace) -> None
     )
 
 
+def command_build_evidence_chain_demo(args: argparse.Namespace) -> None:
+    audit_result = read_json(artifact_path(args.audit, args))
+    reviewer_calibration = read_json(artifact_path(args.reviewer_calibration, args)) if args.reviewer_calibration else None
+    demo = build_evidence_chain_demo(
+        audit_result,
+        reviewer_calibration=reviewer_calibration,
+        paper_id=args.paper_id or None,
+    )
+    out = artifact_path(args.out, args)
+    write_evidence_chain_json(out, demo)
+    summary = demo["summary"]
+    print(
+        f"Saved evidence-chain frontend JSON to {out}. "
+        f"reviews={summary['review_count']}; claims={summary['claim_count']}; "
+        f"high_priority={summary['high_priority_claim_count']}."
+    )
+
+
+def command_build_evidence_chain_benchmark(args: argparse.Namespace) -> None:
+    audit_result = read_json(artifact_path(args.audit, args))
+    reviewer_calibration = read_json(artifact_path(args.reviewer_calibration, args)) if args.reviewer_calibration else None
+    benchmark = build_evidence_chain_benchmark(
+        audit_result,
+        reviewer_calibration=reviewer_calibration,
+        paper_limit=args.paper_limit,
+        claims_per_paper=args.claims_per_paper,
+        sample_size=args.sample_size,
+    )
+    report = build_benchmark_validation_report(benchmark)
+    out = artifact_path(args.out, args)
+    markdown = artifact_path(args.markdown, args)
+    write_evidence_chain_json(out, benchmark)
+    write_benchmark_markdown(report, markdown)
+    print(
+        f"Saved evidence-chain benchmark to {out} and {markdown}. "
+        f"items={benchmark['summary']['item_count']}; variants={benchmark['summary']['variant_count']}."
+    )
+
+
+def command_build_evidence_chain_calibration_benchmark(args: argparse.Namespace) -> None:
+    reviewer_calibration = read_json(artifact_path(args.reviewer_calibration, args))
+    normalized_dataset = read_json(artifact_path(args.normalized, args)) if args.normalized else None
+    benchmark = build_evidence_chain_benchmark_from_calibration(
+        reviewer_calibration,
+        normalized_dataset=normalized_dataset,
+        paper_limit=args.paper_limit,
+        claims_per_paper=args.claims_per_paper,
+        sample_size=args.sample_size,
+    )
+    report = build_benchmark_validation_report(benchmark)
+    out = artifact_path(args.out, args)
+    markdown = artifact_path(args.markdown, args)
+    write_evidence_chain_json(out, benchmark)
+    write_benchmark_markdown(report, markdown)
+    print(
+        f"Saved calibration evidence-chain benchmark to {out} and {markdown}. "
+        f"papers={benchmark['summary']['paper_count']}; items={benchmark['summary']['item_count']}; "
+        f"variants={benchmark['summary']['variant_count']}."
+    )
+
+
+def command_label_evidence_chain_pseudo_expert(args: argparse.Namespace) -> None:
+    tasks = read_jsonl(artifact_path(args.tasks, args))
+    labels = build_pseudo_expert_labels(tasks, annotator_id=args.annotator_id)
+    report = build_pseudo_expert_report(tasks, labels)
+    labels_out = artifact_path(args.labels_out, args)
+    report_out = artifact_path(args.report_out, args)
+    markdown = artifact_path(args.markdown, args)
+    write_jsonl(labels_out, labels)
+    write_evidence_chain_json(report_out, report)
+    write_pseudo_expert_markdown(report, markdown)
+    summary = report["summary"]
+    print(
+        f"Saved pseudo-expert labels to {labels_out}; report={report_out}; markdown={markdown}. "
+        f"labels={summary['label_count']}; exact_match={summary['exact_match_rate']:.1%}."
+    )
+
+
+def command_write_evidence_chain_validation_story(args: argparse.Namespace) -> None:
+    demo = read_json(artifact_path(args.demo, args))
+    benchmark = read_json(artifact_path(args.benchmark, args))
+    pseudo_report = read_json(artifact_path(args.pseudo_report, args))
+    out = artifact_path(args.out, args)
+    write_validation_story(out, demo, benchmark, pseudo_report)
+    print(f"Saved evidence-chain validation story to {out}.")
+
+
 def command_demo(args: argparse.Namespace) -> None:
     dataset = read_json("examples/sample_normalized_dataset.json")
     try:
@@ -1015,8 +1201,21 @@ def command_storage_info(args: argparse.Namespace) -> None:
 
 
 def command_annotation_export(args: argparse.Namespace) -> None:
-    audit_result = read_json(artifact_path(args.audit, args))
-    run_id, tasks = export_annotation_tasks(audit_result, run_id=args.run_id or None)
+    if args.evidence_chain_demo:
+        evidence_chain_demo = read_json(artifact_path(args.evidence_chain_demo, args))
+        run_id, tasks = export_evidence_chain_annotation_tasks(evidence_chain_demo, run_id=args.run_id or None)
+    elif args.evidence_chain_benchmark:
+        evidence_chain_benchmark = read_json(artifact_path(args.evidence_chain_benchmark, args))
+        run_id, tasks = export_evidence_chain_benchmark_annotation_tasks(
+            evidence_chain_benchmark,
+            run_id=args.run_id or None,
+            sample_size=args.sample_size,
+        )
+    elif args.audit:
+        audit_result = read_json(artifact_path(args.audit, args))
+        run_id, tasks = export_annotation_tasks(audit_result, run_id=args.run_id or None)
+    else:
+        raise SystemExit("annotation-export requires --audit, --evidence-chain-demo, or --evidence-chain-benchmark.")
     defaults = default_task_paths(run_id)
     tasks_out = artifact_path(args.tasks_out or defaults["tasks"], args)
     html_out = artifact_path(args.html or defaults["html"], args)

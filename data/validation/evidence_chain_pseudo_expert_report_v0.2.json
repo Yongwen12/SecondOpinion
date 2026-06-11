@@ -1,0 +1,830 @@
+{
+  "schema_version": "evidence-chain-pseudo-expert-report-v0.1",
+  "pseudo_expert_version": "evidence-chain-pseudo-expert-v0.1",
+  "summary": {
+    "task_count": 24,
+    "label_count": 24,
+    "exact_match_count": 0,
+    "exact_match_rate": 0.0,
+    "field_match_rates": {
+      "claim_extraction_correct": 1.0,
+      "claim_grounded": 1.0,
+      "claim_importance": 1.0,
+      "evidence_supports_claim": 0.0,
+      "expert_confidence": 0.2083,
+      "rebuttal_addresses_claim": 0.5417,
+      "recommended_action": 1.0
+    },
+    "recommended_action_counts": {
+      "provide_evidence": 12,
+      "clarify": 10,
+      "deprioritize": 1,
+      "must_address": 1
+    },
+    "rebuttal_address_counts": {
+      "partially_addressed": 14,
+      "generic_or_unclear": 8,
+      "not_addressed": 1,
+      "resolved": 1
+    },
+    "evidence_support_counts": {
+      "mixed": 17,
+      "supports": 5,
+      "contradicts": 2
+    }
+  },
+  "rows": [
+    {
+      "task_id": "task_38ac02f00325",
+      "paper_id": "cXs5md5wAq",
+      "review_id": "3FBIToMxSZ",
+      "claim_id": "claim_f07cc544ff",
+      "system_expected": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "insufficient",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "generic_or_unclear",
+        "recommended_action": "provide_evidence",
+        "expert_confidence": "medium"
+      },
+      "pseudo_expert": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "mixed",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "partially_addressed",
+        "recommended_action": "provide_evidence",
+        "expert_confidence": "high"
+      },
+      "field_matches": {
+        "claim_extraction_correct": true,
+        "claim_grounded": true,
+        "evidence_supports_claim": false,
+        "claim_importance": true,
+        "rebuttal_addresses_claim": false,
+        "recommended_action": true,
+        "expert_confidence": false
+      }
+    },
+    {
+      "task_id": "task_9a364b0b08d5",
+      "paper_id": "cXs5md5wAq",
+      "review_id": "3FBIToMxSZ",
+      "claim_id": "claim_6380cc8a4f",
+      "system_expected": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "insufficient",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "generic_or_unclear",
+        "recommended_action": "provide_evidence",
+        "expert_confidence": "medium"
+      },
+      "pseudo_expert": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "mixed",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "partially_addressed",
+        "recommended_action": "provide_evidence",
+        "expert_confidence": "high"
+      },
+      "field_matches": {
+        "claim_extraction_correct": true,
+        "claim_grounded": true,
+        "evidence_supports_claim": false,
+        "claim_importance": true,
+        "rebuttal_addresses_claim": false,
+        "recommended_action": true,
+        "expert_confidence": false
+      }
+    },
+    {
+      "task_id": "task_b656fcd69f85",
+      "paper_id": "cXs5md5wAq",
+      "review_id": "3FBIToMxSZ",
+      "claim_id": "claim_d23774ade5",
+      "system_expected": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "insufficient",
+        "claim_importance": "medium",
+        "rebuttal_addresses_claim": "generic_or_unclear",
+        "recommended_action": "provide_evidence",
+        "expert_confidence": "medium"
+      },
+      "pseudo_expert": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "mixed",
+        "claim_importance": "medium",
+        "rebuttal_addresses_claim": "partially_addressed",
+        "recommended_action": "provide_evidence",
+        "expert_confidence": "high"
+      },
+      "field_matches": {
+        "claim_extraction_correct": true,
+        "claim_grounded": true,
+        "evidence_supports_claim": false,
+        "claim_importance": true,
+        "rebuttal_addresses_claim": false,
+        "recommended_action": true,
+        "expert_confidence": false
+      }
+    },
+    {
+      "task_id": "task_4c5d0fd55d08",
+      "paper_id": "cXs5md5wAq",
+      "review_id": "3FBIToMxSZ",
+      "claim_id": "claim_8608a4285b",
+      "system_expected": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "insufficient",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "partially_addressed",
+        "recommended_action": "clarify",
+        "expert_confidence": "high"
+      },
+      "pseudo_expert": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "supports",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "partially_addressed",
+        "recommended_action": "clarify",
+        "expert_confidence": "high"
+      },
+      "field_matches": {
+        "claim_extraction_correct": true,
+        "claim_grounded": true,
+        "evidence_supports_claim": false,
+        "claim_importance": true,
+        "rebuttal_addresses_claim": true,
+        "recommended_action": true,
+        "expert_confidence": true
+      }
+    },
+    {
+      "task_id": "task_3c0bd75b978b",
+      "paper_id": "cXs5md5wAq",
+      "review_id": "2gTtKikoba",
+      "claim_id": "claim_76772668be",
+      "system_expected": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "insufficient",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "generic_or_unclear",
+        "recommended_action": "provide_evidence",
+        "expert_confidence": "high"
+      },
+      "pseudo_expert": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "supports",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "partially_addressed",
+        "recommended_action": "provide_evidence",
+        "expert_confidence": "high"
+      },
+      "field_matches": {
+        "claim_extraction_correct": true,
+        "claim_grounded": true,
+        "evidence_supports_claim": false,
+        "claim_importance": true,
+        "rebuttal_addresses_claim": false,
+        "recommended_action": true,
+        "expert_confidence": true
+      }
+    },
+    {
+      "task_id": "task_686793da2caf",
+      "paper_id": "cXs5md5wAq",
+      "review_id": "2gTtKikoba",
+      "claim_id": "claim_c3cdc8c2a8",
+      "system_expected": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "insufficient",
+        "claim_importance": "medium",
+        "rebuttal_addresses_claim": "generic_or_unclear",
+        "recommended_action": "provide_evidence",
+        "expert_confidence": "medium"
+      },
+      "pseudo_expert": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "contradicts",
+        "claim_importance": "medium",
+        "rebuttal_addresses_claim": "generic_or_unclear",
+        "recommended_action": "provide_evidence",
+        "expert_confidence": "high"
+      },
+      "field_matches": {
+        "claim_extraction_correct": true,
+        "claim_grounded": true,
+        "evidence_supports_claim": false,
+        "claim_importance": true,
+        "rebuttal_addresses_claim": true,
+        "recommended_action": true,
+        "expert_confidence": false
+      }
+    },
+    {
+      "task_id": "task_e687ca80c398",
+      "paper_id": "cXs5md5wAq",
+      "review_id": "2gTtKikoba",
+      "claim_id": "claim_f0d7dfdab7",
+      "system_expected": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "insufficient",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "generic_or_unclear",
+        "recommended_action": "provide_evidence",
+        "expert_confidence": "medium"
+      },
+      "pseudo_expert": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "contradicts",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "generic_or_unclear",
+        "recommended_action": "provide_evidence",
+        "expert_confidence": "high"
+      },
+      "field_matches": {
+        "claim_extraction_correct": true,
+        "claim_grounded": true,
+        "evidence_supports_claim": false,
+        "claim_importance": true,
+        "rebuttal_addresses_claim": true,
+        "recommended_action": true,
+        "expert_confidence": false
+      }
+    },
+    {
+      "task_id": "task_1eaff550785d",
+      "paper_id": "cXs5md5wAq",
+      "review_id": "2gTtKikoba",
+      "claim_id": "claim_65b9bc120c",
+      "system_expected": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "insufficient",
+        "claim_importance": "medium",
+        "rebuttal_addresses_claim": "generic_or_unclear",
+        "recommended_action": "provide_evidence",
+        "expert_confidence": "medium"
+      },
+      "pseudo_expert": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "mixed",
+        "claim_importance": "medium",
+        "rebuttal_addresses_claim": "partially_addressed",
+        "recommended_action": "provide_evidence",
+        "expert_confidence": "high"
+      },
+      "field_matches": {
+        "claim_extraction_correct": true,
+        "claim_grounded": true,
+        "evidence_supports_claim": false,
+        "claim_importance": true,
+        "rebuttal_addresses_claim": false,
+        "recommended_action": true,
+        "expert_confidence": false
+      }
+    },
+    {
+      "task_id": "task_62838b1ddb53",
+      "paper_id": "cXs5md5wAq",
+      "review_id": "2gTtKikoba",
+      "claim_id": "claim_7148e0ac80",
+      "system_expected": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "insufficient",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "partially_addressed",
+        "recommended_action": "clarify",
+        "expert_confidence": "medium"
+      },
+      "pseudo_expert": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "mixed",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "partially_addressed",
+        "recommended_action": "clarify",
+        "expert_confidence": "high"
+      },
+      "field_matches": {
+        "claim_extraction_correct": true,
+        "claim_grounded": true,
+        "evidence_supports_claim": false,
+        "claim_importance": true,
+        "rebuttal_addresses_claim": true,
+        "recommended_action": true,
+        "expert_confidence": false
+      }
+    },
+    {
+      "task_id": "task_e873148b88da",
+      "paper_id": "cXs5md5wAq",
+      "review_id": "2gTtKikoba",
+      "claim_id": "claim_cb669f8bf0",
+      "system_expected": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "insufficient",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "partially_addressed",
+        "recommended_action": "clarify",
+        "expert_confidence": "high"
+      },
+      "pseudo_expert": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "supports",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "partially_addressed",
+        "recommended_action": "clarify",
+        "expert_confidence": "high"
+      },
+      "field_matches": {
+        "claim_extraction_correct": true,
+        "claim_grounded": true,
+        "evidence_supports_claim": false,
+        "claim_importance": true,
+        "rebuttal_addresses_claim": true,
+        "recommended_action": true,
+        "expert_confidence": true
+      }
+    },
+    {
+      "task_id": "task_3b12f99e5649",
+      "paper_id": "cXs5md5wAq",
+      "review_id": "2gTtKikoba",
+      "claim_id": "claim_93ff1149d6",
+      "system_expected": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "insufficient",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "partially_addressed",
+        "recommended_action": "clarify",
+        "expert_confidence": "medium"
+      },
+      "pseudo_expert": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "mixed",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "partially_addressed",
+        "recommended_action": "clarify",
+        "expert_confidence": "high"
+      },
+      "field_matches": {
+        "claim_extraction_correct": true,
+        "claim_grounded": true,
+        "evidence_supports_claim": false,
+        "claim_importance": true,
+        "rebuttal_addresses_claim": true,
+        "recommended_action": true,
+        "expert_confidence": false
+      }
+    },
+    {
+      "task_id": "task_e1d69809ed7b",
+      "paper_id": "cXs5md5wAq",
+      "review_id": "2gTtKikoba",
+      "claim_id": "claim_150de4cf93",
+      "system_expected": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "insufficient",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "resolved",
+        "recommended_action": "deprioritize",
+        "expert_confidence": "medium"
+      },
+      "pseudo_expert": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "mixed",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "generic_or_unclear",
+        "recommended_action": "deprioritize",
+        "expert_confidence": "high"
+      },
+      "field_matches": {
+        "claim_extraction_correct": true,
+        "claim_grounded": true,
+        "evidence_supports_claim": false,
+        "claim_importance": true,
+        "rebuttal_addresses_claim": false,
+        "recommended_action": true,
+        "expert_confidence": false
+      }
+    },
+    {
+      "task_id": "task_8df5cf77fce3",
+      "paper_id": "cXs5md5wAq",
+      "review_id": "vb8QNXNzVn",
+      "claim_id": "claim_b7a28773b6",
+      "system_expected": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "insufficient",
+        "claim_importance": "medium",
+        "rebuttal_addresses_claim": "not_addressed",
+        "recommended_action": "must_address",
+        "expert_confidence": "medium"
+      },
+      "pseudo_expert": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "mixed",
+        "claim_importance": "medium",
+        "rebuttal_addresses_claim": "generic_or_unclear",
+        "recommended_action": "must_address",
+        "expert_confidence": "high"
+      },
+      "field_matches": {
+        "claim_extraction_correct": true,
+        "claim_grounded": true,
+        "evidence_supports_claim": false,
+        "claim_importance": true,
+        "rebuttal_addresses_claim": false,
+        "recommended_action": true,
+        "expert_confidence": false
+      }
+    },
+    {
+      "task_id": "task_a7aee082fff0",
+      "paper_id": "cXs5md5wAq",
+      "review_id": "vb8QNXNzVn",
+      "claim_id": "claim_da8718ecaf",
+      "system_expected": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "insufficient",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "generic_or_unclear",
+        "recommended_action": "provide_evidence",
+        "expert_confidence": "high"
+      },
+      "pseudo_expert": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "supports",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "generic_or_unclear",
+        "recommended_action": "provide_evidence",
+        "expert_confidence": "high"
+      },
+      "field_matches": {
+        "claim_extraction_correct": true,
+        "claim_grounded": true,
+        "evidence_supports_claim": false,
+        "claim_importance": true,
+        "rebuttal_addresses_claim": true,
+        "recommended_action": true,
+        "expert_confidence": true
+      }
+    },
+    {
+      "task_id": "task_a6557a7c0b08",
+      "paper_id": "cXs5md5wAq",
+      "review_id": "vb8QNXNzVn",
+      "claim_id": "claim_1638f02de6",
+      "system_expected": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "insufficient",
+        "claim_importance": "low",
+        "rebuttal_addresses_claim": "generic_or_unclear",
+        "recommended_action": "provide_evidence",
+        "expert_confidence": "medium"
+      },
+      "pseudo_expert": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "mixed",
+        "claim_importance": "low",
+        "rebuttal_addresses_claim": "partially_addressed",
+        "recommended_action": "provide_evidence",
+        "expert_confidence": "high"
+      },
+      "field_matches": {
+        "claim_extraction_correct": true,
+        "claim_grounded": true,
+        "evidence_supports_claim": false,
+        "claim_importance": true,
+        "rebuttal_addresses_claim": false,
+        "recommended_action": true,
+        "expert_confidence": false
+      }
+    },
+    {
+      "task_id": "task_d0a231144c14",
+      "paper_id": "cXs5md5wAq",
+      "review_id": "vb8QNXNzVn",
+      "claim_id": "claim_61a33e604d",
+      "system_expected": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "insufficient",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "generic_or_unclear",
+        "recommended_action": "provide_evidence",
+        "expert_confidence": "medium"
+      },
+      "pseudo_expert": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "mixed",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "generic_or_unclear",
+        "recommended_action": "provide_evidence",
+        "expert_confidence": "high"
+      },
+      "field_matches": {
+        "claim_extraction_correct": true,
+        "claim_grounded": true,
+        "evidence_supports_claim": false,
+        "claim_importance": true,
+        "rebuttal_addresses_claim": true,
+        "recommended_action": true,
+        "expert_confidence": false
+      }
+    },
+    {
+      "task_id": "task_27158322f6b6",
+      "paper_id": "cXs5md5wAq",
+      "review_id": "vb8QNXNzVn",
+      "claim_id": "claim_2e3d599f63",
+      "system_expected": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "insufficient",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "partially_addressed",
+        "recommended_action": "clarify",
+        "expert_confidence": "medium"
+      },
+      "pseudo_expert": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "mixed",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "generic_or_unclear",
+        "recommended_action": "clarify",
+        "expert_confidence": "high"
+      },
+      "field_matches": {
+        "claim_extraction_correct": true,
+        "claim_grounded": true,
+        "evidence_supports_claim": false,
+        "claim_importance": true,
+        "rebuttal_addresses_claim": false,
+        "recommended_action": true,
+        "expert_confidence": false
+      }
+    },
+    {
+      "task_id": "task_897ee60003d0",
+      "paper_id": "cXs5md5wAq",
+      "review_id": "vb8QNXNzVn",
+      "claim_id": "claim_6d7cd762ca",
+      "system_expected": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "insufficient",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "partially_addressed",
+        "recommended_action": "clarify",
+        "expert_confidence": "medium"
+      },
+      "pseudo_expert": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "mixed",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "partially_addressed",
+        "recommended_action": "clarify",
+        "expert_confidence": "high"
+      },
+      "field_matches": {
+        "claim_extraction_correct": true,
+        "claim_grounded": true,
+        "evidence_supports_claim": false,
+        "claim_importance": true,
+        "rebuttal_addresses_claim": true,
+        "recommended_action": true,
+        "expert_confidence": false
+      }
+    },
+    {
+      "task_id": "task_3f89cab09e1f",
+      "paper_id": "cXs5md5wAq",
+      "review_id": "vb8QNXNzVn",
+      "claim_id": "claim_15203a37f4",
+      "system_expected": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "insufficient",
+        "claim_importance": "medium",
+        "rebuttal_addresses_claim": "partially_addressed",
+        "recommended_action": "clarify",
+        "expert_confidence": "medium"
+      },
+      "pseudo_expert": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "mixed",
+        "claim_importance": "medium",
+        "rebuttal_addresses_claim": "not_addressed",
+        "recommended_action": "clarify",
+        "expert_confidence": "high"
+      },
+      "field_matches": {
+        "claim_extraction_correct": true,
+        "claim_grounded": true,
+        "evidence_supports_claim": false,
+        "claim_importance": true,
+        "rebuttal_addresses_claim": false,
+        "recommended_action": true,
+        "expert_confidence": false
+      }
+    },
+    {
+      "task_id": "task_9d213485d162",
+      "paper_id": "cXs5md5wAq",
+      "review_id": "whc0meFjpm",
+      "claim_id": "claim_7088238ecf",
+      "system_expected": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "insufficient",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "generic_or_unclear",
+        "recommended_action": "provide_evidence",
+        "expert_confidence": "medium"
+      },
+      "pseudo_expert": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "mixed",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "generic_or_unclear",
+        "recommended_action": "provide_evidence",
+        "expert_confidence": "high"
+      },
+      "field_matches": {
+        "claim_extraction_correct": true,
+        "claim_grounded": true,
+        "evidence_supports_claim": false,
+        "claim_importance": true,
+        "rebuttal_addresses_claim": true,
+        "recommended_action": true,
+        "expert_confidence": false
+      }
+    },
+    {
+      "task_id": "task_2fa44a78a0a4",
+      "paper_id": "cXs5md5wAq",
+      "review_id": "whc0meFjpm",
+      "claim_id": "claim_9036dc9287",
+      "system_expected": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "insufficient",
+        "claim_importance": "medium",
+        "rebuttal_addresses_claim": "generic_or_unclear",
+        "recommended_action": "provide_evidence",
+        "expert_confidence": "medium"
+      },
+      "pseudo_expert": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "mixed",
+        "claim_importance": "medium",
+        "rebuttal_addresses_claim": "resolved",
+        "recommended_action": "provide_evidence",
+        "expert_confidence": "high"
+      },
+      "field_matches": {
+        "claim_extraction_correct": true,
+        "claim_grounded": true,
+        "evidence_supports_claim": false,
+        "claim_importance": true,
+        "rebuttal_addresses_claim": false,
+        "recommended_action": true,
+        "expert_confidence": false
+      }
+    },
+    {
+      "task_id": "task_466e1e7db5c0",
+      "paper_id": "cXs5md5wAq",
+      "review_id": "whc0meFjpm",
+      "claim_id": "claim_1b0f110e59",
+      "system_expected": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "insufficient",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "partially_addressed",
+        "recommended_action": "clarify",
+        "expert_confidence": "high"
+      },
+      "pseudo_expert": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "supports",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "partially_addressed",
+        "recommended_action": "clarify",
+        "expert_confidence": "high"
+      },
+      "field_matches": {
+        "claim_extraction_correct": true,
+        "claim_grounded": true,
+        "evidence_supports_claim": false,
+        "claim_importance": true,
+        "rebuttal_addresses_claim": true,
+        "recommended_action": true,
+        "expert_confidence": true
+      }
+    },
+    {
+      "task_id": "task_a3bb6573b7c5",
+      "paper_id": "cXs5md5wAq",
+      "review_id": "whc0meFjpm",
+      "claim_id": "claim_1f276e537d",
+      "system_expected": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "insufficient",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "partially_addressed",
+        "recommended_action": "clarify",
+        "expert_confidence": "medium"
+      },
+      "pseudo_expert": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "mixed",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "partially_addressed",
+        "recommended_action": "clarify",
+        "expert_confidence": "high"
+      },
+      "field_matches": {
+        "claim_extraction_correct": true,
+        "claim_grounded": true,
+        "evidence_supports_claim": false,
+        "claim_importance": true,
+        "rebuttal_addresses_claim": true,
+        "recommended_action": true,
+        "expert_confidence": false
+      }
+    },
+    {
+      "task_id": "task_ebb1a7d770be",
+      "paper_id": "cXs5md5wAq",
+      "review_id": "whc0meFjpm",
+      "claim_id": "claim_4718e0a1be",
+      "system_expected": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "insufficient",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "partially_addressed",
+        "recommended_action": "clarify",
+        "expert_confidence": "medium"
+      },
+      "pseudo_expert": {
+        "claim_extraction_correct": "yes",
+        "claim_grounded": "yes",
+        "evidence_supports_claim": "mixed",
+        "claim_importance": "high",
+        "rebuttal_addresses_claim": "partially_addressed",
+        "recommended_action": "clarify",
+        "expert_confidence": "high"
+      },
+      "field_matches": {
+        "claim_extraction_correct": true,
+        "claim_grounded": true,
+        "evidence_supports_claim": false,
+        "claim_importance": true,
+        "rebuttal_addresses_claim": true,
+        "recommended_action": true,
+        "expert_confidence": false
+      }
+    }
+  ]
+}

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import time
 import urllib.error
 import urllib.request
 from pathlib import Path
@@ -21,10 +22,12 @@ class OpenAIChatClient:
         api_key: str,
         base_url: str = "https://api.openai.com/v1",
         timeout: int = 90,
+        max_retries: int = 2,
     ) -> None:
         self.api_key = api_key
         self.base_url = base_url.rstrip("/")
         self.timeout = timeout
+        self.max_retries = max_retries
 
     @classmethod
     def from_env(cls) -> "OpenAIChatClient":
@@ -38,6 +41,8 @@ class OpenAIChatClient:
         return cls(
             api_key=api_key,
             base_url=os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1"),
+            timeout=int(os.environ.get("OPENAI_TIMEOUT", "180")),
+            max_retries=int(os.environ.get("OPENAI_MAX_RETRIES", "2")),
         )
 
     def complete_json(
@@ -70,14 +75,24 @@ class OpenAIChatClient:
             },
             method="POST",
         )
-        try:
-            with urllib.request.urlopen(request, timeout=self.timeout) as response:
-                payload = json.loads(response.read().decode("utf-8"))
-        except urllib.error.HTTPError as exc:
-            message = exc.read().decode("utf-8", errors="replace")
-            raise LLMClientError(f"OpenAI API request failed: {message}") from exc
-        except urllib.error.URLError as exc:
-            raise LLMClientError(f"OpenAI API request failed: {exc}") from exc
+        for attempt in range(self.max_retries + 1):
+            try:
+                with urllib.request.urlopen(request, timeout=self.timeout) as response:
+                    payload = json.loads(response.read().decode("utf-8"))
+                break
+            except urllib.error.HTTPError as exc:
+                message = exc.read().decode("utf-8", errors="replace")
+                if attempt < self.max_retries and exc.code in {408, 409, 429, 500, 502, 503, 504}:
+                    time.sleep(2 ** attempt)
+                    continue
+                raise LLMClientError(f"OpenAI API request failed: {message}") from exc
+            except (TimeoutError, urllib.error.URLError) as exc:
+                if attempt < self.max_retries:
+                    time.sleep(2 ** attempt)
+                    continue
+                raise LLMClientError(f"OpenAI API request failed: {exc}") from exc
+        else:
+            raise LLMClientError("OpenAI API request failed after retries.")
 
         message = payload.get("choices", [{}])[0].get("message", {})
         if message.get("refusal"):

@@ -1,0 +1,712 @@
+{
+  "schema_version": "consensus-recalibration-v0.1",
+  "source": {
+    "calibration_version": "reviewer-calibration-v0.1",
+    "source": {
+      "survival_version": "concern-survival-meta-review-v0.1",
+      "snapshot": {
+        "snapshot_dir": "data\\raw\\openreview\\iclr\\2024\\20260522T083133Z",
+        "snapshot_id": "20260522T083133Z",
+        "source": "openreview",
+        "venue": "ICLR",
+        "year": 2024
+      },
+      "snapshot_dir": "data\\raw\\openreview\\iclr\\2024\\20260522T083133Z",
+      "llm_rebuttal_label_count": 240,
+      "llm_consensus_label_count": 120
+    }
+  },
+  "summary": {
+    "claim_count": 854,
+    "llm_consensus_claim_count": 120
+  },
+  "modes": {
+    "current_hybrid": {
+      "claim_count": 854,
+      "paper_count": 53,
+      "review_count": 202,
+      "mean_lifecycle_robustness": 0.5746,
+      "median_lifecycle_robustness": 0.5654,
+      "label_counts": {
+        "medium": 650,
+        "low": 107,
+        "high": 97
+      },
+      "mean_consensus_score": 0.5327
+    },
+    "strict_same_only_hybrid": {
+      "claim_count": 854,
+      "paper_count": 53,
+      "review_count": 202,
+      "mean_lifecycle_robustness": 0.5665,
+      "median_lifecycle_robustness": 0.5565,
+      "label_counts": {
+        "medium": 631,
+        "low": 129,
+        "high": 94
+      },
+      "mean_consensus_score": 0.4879
+    },
+    "current_labeled_only": {
+      "claim_count": 120,
+      "paper_count": 46,
+      "review_count": 89,
+      "mean_lifecycle_robustness": 0.5452,
+      "median_lifecycle_robustness": 0.5544,
+      "label_counts": {
+        "medium": 90,
+        "low": 25,
+        "high": 5
+      },
+      "mean_consensus_score": 0.385
+    },
+    "strict_same_only_labeled": {
+      "claim_count": 120,
+      "paper_count": 46,
+      "review_count": 89,
+      "mean_lifecycle_robustness": 0.4879,
+      "median_lifecycle_robustness": 0.4861,
+      "label_counts": {
+        "low": 47,
+        "medium": 71,
+        "high": 2
+      },
+      "mean_consensus_score": 0.0667
+    }
+  },
+  "comparisons": {
+    "strict_hybrid_vs_current_all_claims": {
+      "claim_count": 854,
+      "mean_score_delta": -0.0081,
+      "median_score_delta": 0.0,
+      "mean_abs_score_delta": 0.0081,
+      "label_change_count": 25,
+      "label_change_rate": 0.0293,
+      "label_changes": {
+        "medium->low": 22,
+        "high->medium": 3
+      },
+      "mean_signal_deltas": {
+        "grounding": 0.0,
+        "specificity": 0.0,
+        "consensus": -0.0447,
+        "rebuttal_robustness": 0.0,
+        "discussion_followup": 0.0,
+        "meta_review_uptake": 0.0
+      },
+      "largest_drops": [
+        {
+          "key": "AOSsLRKQrX:iusxEbIueU:0",
+          "paper_id": "AOSsLRKQrX",
+          "review_id": "iusxEbIueU",
+          "claim_text": "A comparative evaluation with another disentangled object-centric representation learning method, SysBinder, is lacking, despite its mention in the text.",
+          "left_score": 0.7123,
+          "right_score": 0.6133,
+          "delta": -0.099,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "B0wJ5oCPdB:8krLAr9E1i:5",
+          "paper_id": "B0wJ5oCPdB",
+          "review_id": "8krLAr9E1i",
+          "claim_text": "How is the computation required to further convert to chain of symbols? And how about the tasks that do not have manually annotated symbols, how to extend your CoS method to a broader range of tasks?",
+          "left_score": 0.6055,
+          "right_score": 0.5065,
+          "delta": -0.099,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "BQvbL2sFQx:ggRvsrGJrq:5",
+          "paper_id": "BQvbL2sFQx",
+          "review_id": "ggRvsrGJrq",
+          "claim_text": "Why Table 3 does not contain same baselines as Table 2? It seems that a few of the baselines in Table 2 are very effective. It may well be that APS with enhancements presented in Table 3 might be as effective or better than MASS?",
+          "left_score": 0.6115,
+          "right_score": 0.5125,
+          "delta": -0.099,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "DwcV654WBP:r3JEOduxeC:1",
+          "paper_id": "DwcV654WBP",
+          "review_id": "r3JEOduxeC",
+          "claim_text": "Considering the minor difference, I suggest the authors submit the paper as an extensive journal paper, but not a novel conference paper.",
+          "left_score": 0.6065,
+          "right_score": 0.5075,
+          "delta": -0.099,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "SLw9fp4yI6:jKZS833UEW:0",
+          "paper_id": "SLw9fp4yI6",
+          "review_id": "jKZS833UEW",
+          "claim_text": "Experimentation seems a little weak. It'd be great to compare with some of the work that's come out of UW/AI2 in the past couple of years like DExperts, which you cite but dont compare with, and Quark (Lu et al. 2022). It'd also be great to compare with GeDi and a few other baselines. That'd strengthen the experimental component.",
+          "left_score": 0.6115,
+          "right_score": 0.5125,
+          "delta": -0.099,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "gYcft1HIaU:K0w3kEaTHx:3",
+          "paper_id": "gYcft1HIaU",
+          "review_id": "K0w3kEaTHx",
+          "claim_text": "Exact name and citation of the NER model used are missing; include accuracy analysis since errors could impact evaluation results.",
+          "left_score": 0.7315,
+          "right_score": 0.6325,
+          "delta": -0.099,
+          "left_label": "high",
+          "right_label": "medium"
+        },
+        {
+          "key": "1FWDEIGm33:pfCqf1kmPM:4",
+          "paper_id": "1FWDEIGm33",
+          "review_id": "pfCqf1kmPM",
+          "claim_text": "Do you have any data about the influence of the training datasets on the experimental results that you showed in this paper?",
+          "left_score": 0.4923,
+          "right_score": 0.3933,
+          "delta": -0.099,
+          "left_label": "medium",
+          "right_label": "low"
+        },
+        {
+          "key": "23OEmHVkpq:xGgF6MfB2r:2",
+          "paper_id": "23OEmHVkpq",
+          "review_id": "xGgF6MfB2r",
+          "claim_text": "The performance of vanilla VAEs presented in this paper show high DCI performance, but other papers [b] report poor performance instead. A reasonable explanation is needed, and it would be helpful to include evaluation code in the supplementary materials.",
+          "left_score": 0.5855,
+          "right_score": 0.4865,
+          "delta": -0.099,
+          "left_label": "medium",
+          "right_label": "medium"
+        }
+      ],
+      "largest_gains": [
+        {
+          "key": "10eQ4Cfh8p:S3IqtlOGLT:0",
+          "paper_id": "10eQ4Cfh8p",
+          "review_id": "S3IqtlOGLT",
+          "claim_text": "There is no ablation study for the various embeddings and design choices; the paper lacks a clear rationale or justification for the use of various embeddings.",
+          "left_score": 0.6807,
+          "right_score": 0.6807,
+          "delta": 0.0,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "10eQ4Cfh8p:S3IqtlOGLT:1",
+          "paper_id": "10eQ4Cfh8p",
+          "review_id": "S3IqtlOGLT",
+          "claim_text": "Evaluation is limited to two public benchmarks; DRL baseline has been tested on more benchmarks, raising concerns about generalizability.",
+          "left_score": 0.7315,
+          "right_score": 0.7315,
+          "delta": 0.0,
+          "left_label": "high",
+          "right_label": "high"
+        },
+        {
+          "key": "10eQ4Cfh8p:S3IqtlOGLT:2",
+          "paper_id": "10eQ4Cfh8p",
+          "review_id": "S3IqtlOGLT",
+          "claim_text": "Need to compare decoding strategies fairly; results should include both greedy and sampling decoding for fair comparison.",
+          "left_score": 0.689,
+          "right_score": 0.689,
+          "delta": 0.0,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "10eQ4Cfh8p:S3IqtlOGLT:3",
+          "paper_id": "10eQ4Cfh8p",
+          "review_id": "S3IqtlOGLT",
+          "claim_text": "GAT module unclear whether W is shared among different u's; overall reward for each model not stated mathematically, causing ambiguity.",
+          "left_score": 0.6525,
+          "right_score": 0.6525,
+          "delta": 0.0,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "10eQ4Cfh8p:S3IqtlOGLT:4",
+          "paper_id": "10eQ4Cfh8p",
+          "review_id": "S3IqtlOGLT",
+          "claim_text": "Only two experiments (synthetic and public benchmarks); unclear extension to other scheduling or combinatorial optimization problems.",
+          "left_score": 0.774,
+          "right_score": 0.774,
+          "delta": 0.0,
+          "left_label": "high",
+          "right_label": "high"
+        },
+        {
+          "key": "10eQ4Cfh8p:w67nfG2dMW:0",
+          "paper_id": "10eQ4Cfh8p",
+          "review_id": "w67nfG2dMW",
+          "claim_text": "The performance evaluation of the proposed framework seems quite limited, especially as the baselines are overly simplified in Table 1.",
+          "left_score": 0.8275,
+          "right_score": 0.8275,
+          "delta": 0.0,
+          "left_label": "high",
+          "right_label": "high"
+        },
+        {
+          "key": "10eQ4Cfh8p:w67nfG2dMW:1",
+          "paper_id": "10eQ4Cfh8p",
+          "review_id": "w67nfG2dMW",
+          "claim_text": "What is GIM in Table 3? From the context, I assume it is the proposed method, but the acronym is never introduced.",
+          "left_score": 0.7308,
+          "right_score": 0.7308,
+          "delta": 0.0,
+          "left_label": "high",
+          "right_label": "high"
+        },
+        {
+          "key": "10eQ4Cfh8p:w67nfG2dMW:2",
+          "paper_id": "10eQ4Cfh8p",
+          "review_id": "w67nfG2dMW",
+          "claim_text": "What is \"Generate+improve\" in Table 3? Is it different from GIM?",
+          "left_score": 0.6742,
+          "right_score": 0.6742,
+          "delta": 0.0,
+          "left_label": "medium",
+          "right_label": "medium"
+        }
+      ]
+    },
+    "strict_labeled_vs_current_labeled": {
+      "claim_count": 120,
+      "mean_score_delta": -0.0573,
+      "median_score_delta": -0.099,
+      "mean_abs_score_delta": 0.0573,
+      "label_change_count": 25,
+      "label_change_rate": 0.2083,
+      "label_changes": {
+        "medium->low": 22,
+        "high->medium": 3
+      },
+      "mean_signal_deltas": {
+        "grounding": 0.0,
+        "specificity": 0.0,
+        "consensus": -0.3183,
+        "rebuttal_robustness": 0.0,
+        "discussion_followup": 0.0,
+        "meta_review_uptake": 0.0
+      },
+      "largest_drops": [
+        {
+          "key": "AOSsLRKQrX:iusxEbIueU:0",
+          "paper_id": "AOSsLRKQrX",
+          "review_id": "iusxEbIueU",
+          "claim_text": "A comparative evaluation with another disentangled object-centric representation learning method, SysBinder, is lacking, despite its mention in the text.",
+          "left_score": 0.7123,
+          "right_score": 0.6133,
+          "delta": -0.099,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "B0wJ5oCPdB:8krLAr9E1i:5",
+          "paper_id": "B0wJ5oCPdB",
+          "review_id": "8krLAr9E1i",
+          "claim_text": "How is the computation required to further convert to chain of symbols? And how about the tasks that do not have manually annotated symbols, how to extend your CoS method to a broader range of tasks?",
+          "left_score": 0.6055,
+          "right_score": 0.5065,
+          "delta": -0.099,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "BQvbL2sFQx:ggRvsrGJrq:5",
+          "paper_id": "BQvbL2sFQx",
+          "review_id": "ggRvsrGJrq",
+          "claim_text": "Why Table 3 does not contain same baselines as Table 2? It seems that a few of the baselines in Table 2 are very effective. It may well be that APS with enhancements presented in Table 3 might be as effective or better than MASS?",
+          "left_score": 0.6115,
+          "right_score": 0.5125,
+          "delta": -0.099,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "DwcV654WBP:r3JEOduxeC:1",
+          "paper_id": "DwcV654WBP",
+          "review_id": "r3JEOduxeC",
+          "claim_text": "Considering the minor difference, I suggest the authors submit the paper as an extensive journal paper, but not a novel conference paper.",
+          "left_score": 0.6065,
+          "right_score": 0.5075,
+          "delta": -0.099,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "SLw9fp4yI6:jKZS833UEW:0",
+          "paper_id": "SLw9fp4yI6",
+          "review_id": "jKZS833UEW",
+          "claim_text": "Experimentation seems a little weak. It'd be great to compare with some of the work that's come out of UW/AI2 in the past couple of years like DExperts, which you cite but dont compare with, and Quark (Lu et al. 2022). It'd also be great to compare with GeDi and a few other baselines. That'd strengthen the experimental component.",
+          "left_score": 0.6115,
+          "right_score": 0.5125,
+          "delta": -0.099,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "gYcft1HIaU:K0w3kEaTHx:3",
+          "paper_id": "gYcft1HIaU",
+          "review_id": "K0w3kEaTHx",
+          "claim_text": "Exact name and citation of the NER model used are missing; include accuracy analysis since errors could impact evaluation results.",
+          "left_score": 0.7315,
+          "right_score": 0.6325,
+          "delta": -0.099,
+          "left_label": "high",
+          "right_label": "medium"
+        },
+        {
+          "key": "1FWDEIGm33:pfCqf1kmPM:4",
+          "paper_id": "1FWDEIGm33",
+          "review_id": "pfCqf1kmPM",
+          "claim_text": "Do you have any data about the influence of the training datasets on the experimental results that you showed in this paper?",
+          "left_score": 0.4923,
+          "right_score": 0.3933,
+          "delta": -0.099,
+          "left_label": "medium",
+          "right_label": "low"
+        },
+        {
+          "key": "23OEmHVkpq:xGgF6MfB2r:2",
+          "paper_id": "23OEmHVkpq",
+          "review_id": "xGgF6MfB2r",
+          "claim_text": "The performance of vanilla VAEs presented in this paper show high DCI performance, but other papers [b] report poor performance instead. A reasonable explanation is needed, and it would be helpful to include evaluation code in the supplementary materials.",
+          "left_score": 0.5855,
+          "right_score": 0.4865,
+          "delta": -0.099,
+          "left_label": "medium",
+          "right_label": "medium"
+        }
+      ],
+      "largest_gains": [
+        {
+          "key": "10eQ4Cfh8p:zlSWBdRAhX:0",
+          "paper_id": "10eQ4Cfh8p",
+          "review_id": "zlSWBdRAhX",
+          "claim_text": "There is no empirical evidence to justify the claim that the training paradigm can be readily adapted to other combinatorial optimization problems, and there is no explanation of how this can actually be done.",
+          "left_score": 0.65,
+          "right_score": 0.65,
+          "delta": 0.0,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "1FWDEIGm33:MzDh7uJCEU:1",
+          "paper_id": "1FWDEIGm33",
+          "review_id": "MzDh7uJCEU",
+          "claim_text": "Conclusions are overstated. The paper states \"we will see that discarding the old metaphor may question the interpretation of recent studies aiming at characterizing the values, personality traits, social skills or moral values of LLMs using tools developed to measure attributes of human psychology\". The current status of the argument has not led to this conclusion directly.",
+          "left_score": 0.4375,
+          "right_score": 0.4375,
+          "delta": 0.0,
+          "left_label": "low",
+          "right_label": "low"
+        },
+        {
+          "key": "23OEmHVkpq:JJaPaIjUli:0",
+          "paper_id": "23OEmHVkpq",
+          "review_id": "JJaPaIjUli",
+          "claim_text": "The relation between the constrain on latent space and disentanglement is still unclear, the TopDis is based on VAE-framework, which is based on Probability, and the paper referred to the definition of disentanglement based Group. And the paper failed to connect the above two framework, and making the proposed TopDis only kind of an intuitive necessary condition, as shown in Figure 3.",
+          "left_score": 0.5575,
+          "right_score": 0.5575,
+          "delta": 0.0,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "7QlKLvfVge:FOfbfWgp15:1",
+          "paper_id": "7QlKLvfVge",
+          "review_id": "FOfbfWgp15",
+          "claim_text": "The backdoor attacks that this paper test is not enough. I suggest the authors to test the newest input-specific backdoor attacks in 2022. It's important to identify whether this method can achieve SOTA.",
+          "left_score": 0.7267,
+          "right_score": 0.7267,
+          "delta": 0.0,
+          "left_label": "high",
+          "right_label": "high"
+        },
+        {
+          "key": "7vVWiCrFnd:aHtDQsXakn:4",
+          "paper_id": "7vVWiCrFnd",
+          "review_id": "aHtDQsXakn",
+          "claim_text": "Hyperparameter selection details are lacking.",
+          "left_score": 0.3908,
+          "right_score": 0.3908,
+          "delta": 0.0,
+          "left_label": "low",
+          "right_label": "low"
+        },
+        {
+          "key": "9L9j5bQPIY:91NkdJpVId:2",
+          "paper_id": "9L9j5bQPIY",
+          "review_id": "91NkdJpVId",
+          "claim_text": "It is unclear why we need unitwise and interunit meta-autoencoders.",
+          "left_score": 0.59,
+          "right_score": 0.59,
+          "delta": 0.0,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "9L9j5bQPIY:ruFJeXpRL4:1",
+          "paper_id": "9L9j5bQPIY",
+          "review_id": "ruFJeXpRL4",
+          "claim_text": "Figure 1 has no proper caption, which makes it hard to read and understand the figure.",
+          "left_score": 0.4258,
+          "right_score": 0.4258,
+          "delta": 0.0,
+          "left_label": "low",
+          "right_label": "low"
+        },
+        {
+          "key": "9L9j5bQPIY:ruFJeXpRL4:2",
+          "paper_id": "9L9j5bQPIY",
+          "review_id": "ruFJeXpRL4",
+          "claim_text": "Poor experiment section: There is no comparison with other approaches. The relation of the tasks (predicting modality, predicting dataset) to intepretability is unclear.",
+          "left_score": 0.5125,
+          "right_score": 0.5125,
+          "delta": 0.0,
+          "left_label": "medium",
+          "right_label": "medium"
+        }
+      ]
+    }
+  },
+  "diagnostics": {
+    "llm_labeled_claim_count": 120,
+    "proxy_label_counts_on_labeled": {
+      "partial": 54,
+      "strong": 42,
+      "none": 24
+    },
+    "llm_consensus_label_counts": {
+      "related_but_different": 69,
+      "not_same_concern": 42,
+      "same_concern": 8,
+      "unsure": 1
+    },
+    "proxy_partial_or_strong_rate": 0.8,
+    "current_related_or_same_support_rate": 0.6417,
+    "strict_same_support_rate": 0.0667,
+    "related_demotion_count": 69,
+    "related_demotion_rate": 0.575,
+    "not_same_claim_count": 42,
+    "proxy_positive_not_same_count": 27,
+    "proxy_positive_related_but_different_count": 61
+  },
+  "examples": {
+    "related_but_different_demotions": [
+      {
+        "key": "cXs5md5wAq:2gTtKikoba:0",
+        "paper_id": "cXs5md5wAq",
+        "review_id": "2gTtKikoba",
+        "claim_text": "The methodological contribution is limited as the presented work is mostly implementing GNNs for microbial steady state predictions.",
+        "matched_review_id": "3FBIToMxSZ",
+        "matched_claim_text": "The proposed approach for using GNNs for bacterial communities is vaguely described and not well justified.",
+        "proxy_consensus_label": "partial",
+        "llm_consensus_label": "related_but_different"
+      },
+      {
+        "key": "rhgIgTSSxW:LGzAT6gNeL:0",
+        "paper_id": "rhgIgTSSxW",
+        "review_id": "LGzAT6gNeL",
+        "claim_text": "Paper doesn't go into detail describing differences with prior deep learning-based tabular methods. What might explain the performance differences?",
+        "matched_review_id": "7UJsyfPyd4",
+        "matched_claim_text": "Is it not surprising that Step-1 (adding context labels) did not help that much? One would guess that this is a big component of signal in retrieval augmentation.",
+        "proxy_consensus_label": "partial",
+        "llm_consensus_label": "related_but_different"
+      },
+      {
+        "key": "rhgIgTSSxW:CEBB2izG6I:3",
+        "paper_id": "rhgIgTSSxW",
+        "review_id": "CEBB2izG6I",
+        "claim_text": "Is TabR applicable to categorical features? It seems like the paper only considers continuous features.",
+        "matched_review_id": "yVdQ7kKCcl",
+        "matched_claim_text": "In Section 3.1, you mentioned \"continuous (i.e., continuous) features.\" Could this be a typographical error?",
+        "proxy_consensus_label": "partial",
+        "llm_consensus_label": "related_but_different"
+      },
+      {
+        "key": "kKRbAY4CXv:eSJOZmZeDG:1",
+        "paper_id": "kKRbAY4CXv",
+        "review_id": "eSJOZmZeDG",
+        "claim_text": "The method only works on semi-linear PDEs. This is actually a very strong assumption and limitation. The authors should discuss the extension to nonlinear PDEs.",
+        "matched_review_id": "uwuFudLbCi",
+        "matched_claim_text": "Unclear whether NEKM can handle nonlinear PDEs; need clarification on limitations and potential extensions to nonlinear problems.",
+        "proxy_consensus_label": "strong",
+        "llm_consensus_label": "related_but_different"
+      },
+      {
+        "key": "ApjY32f3Xr:C4sqXJNESI:4",
+        "paper_id": "ApjY32f3Xr",
+        "review_id": "C4sqXJNESI",
+        "claim_text": "How were boundary and initial conditions handled to ensure satisfaction in experiments?",
+        "matched_review_id": "CZ5Y4HIwQW",
+        "matched_claim_text": "a brief description of these methods in a single mathematical framework is missing",
+        "proxy_consensus_label": "partial",
+        "llm_consensus_label": "related_but_different"
+      },
+      {
+        "key": "eUgS9Ig8JG:6iCqDrP0HV:0",
+        "paper_id": "eUgS9Ig8JG",
+        "review_id": "6iCqDrP0HV",
+        "claim_text": "On several occasions the notion of \"non-deep baselines\" is used. What is meant by this. Could you clarify what non-deep means here, which methods are these?",
+        "matched_review_id": "4sGhXacqSF",
+        "matched_claim_text": "A clearer survey of related methods and explicit applicability of Theorems 4.1 and 4.2 to these methods would help readers understand the scope.",
+        "proxy_consensus_label": "partial",
+        "llm_consensus_label": "related_but_different"
+      },
+      {
+        "key": "eUgS9Ig8JG:6iCqDrP0HV:2",
+        "paper_id": "eUgS9Ig8JG",
+        "review_id": "6iCqDrP0HV",
+        "claim_text": "In section 4. The sentence that starts with \"The theorem implies that any arbitrary ...\" is extremely long and hard to comprehend. I suggest to split it 2 or 3 sentence to improve readability.",
+        "matched_review_id": "4sGhXacqSF",
+        "matched_claim_text": "Section 4.2 claims need clearer explanation to ensure they act on oriented features; simplicial awareness discussion is necessary and a connection to existing methods should be clarified.",
+        "proxy_consensus_label": "none",
+        "llm_consensus_label": "related_but_different"
+      },
+      {
+        "key": "qBL04XXex6:1lDRac9ePM:2",
+        "paper_id": "qBL04XXex6",
+        "review_id": "1lDRac9ePM",
+        "claim_text": "More analysis or ablation studies are also helpful.",
+        "matched_review_id": "w7bvJ5iRWP",
+        "matched_claim_text": "BoT's reasoning framework remains inherently reliant on the Tree-of-thoughts model, thereby limiting its novelty. BoT's structure is restricted to binary trees. Expanding to more complex graph structures will further improve reasoning but is not explored.",
+        "proxy_consensus_label": "none",
+        "llm_consensus_label": "related_but_different"
+      },
+      {
+        "key": "qBL04XXex6:w7bvJ5iRWP:3",
+        "paper_id": "qBL04XXex6",
+        "review_id": "w7bvJ5iRWP",
+        "claim_text": "How many reasoning chains are sampled for Complex-CoT and PHP respectively in experiments?",
+        "matched_review_id": "Fv3pXWd41e",
+        "matched_claim_text": "Clarify understanding of T and M in prompts: confirm that T=10 prompts and M=15 instances were used to generate and average over binary trees.",
+        "proxy_consensus_label": "strong",
+        "llm_consensus_label": "related_but_different"
+      },
+      {
+        "key": "rp5vfyp5Np:YktI8n3TeZ:3",
+        "paper_id": "rp5vfyp5Np",
+        "review_id": "YktI8n3TeZ",
+        "claim_text": "How are the behavior sequences generated for human preference labeling?",
+        "matched_review_id": "41kol2RnP6",
+        "matched_claim_text": "Question about experiments with real humans vs synthetic feedback; need clarification from questions field.",
+        "proxy_consensus_label": "strong",
+        "llm_consensus_label": "related_but_different"
+      },
+      {
+        "key": "miGpIhquyB:fPDC3rXMpU:3",
+        "paper_id": "miGpIhquyB",
+        "review_id": "fPDC3rXMpU",
+        "claim_text": "Have you tried variables besides temperature to test the tradeoffs?",
+        "matched_review_id": "yPyy646e3D",
+        "matched_claim_text": "Questions about the diversity metric: whether the example size or token size is kept constant when computing the value k.",
+        "proxy_consensus_label": "strong",
+        "llm_consensus_label": "related_but_different"
+      },
+      {
+        "key": "miGpIhquyB:REwQirNHgK:2",
+        "paper_id": "miGpIhquyB",
+        "review_id": "REwQirNHgK",
+        "claim_text": "Could you elaborate on why this paper primarily relies on simple prompts for target tasks, especially when recent research has emphasized advanced prompt engineering techniques for improving dataset quality? How might incorporating more sophisticated prompts affect the study's outcomes?",
+        "matched_review_id": "9c9pOV3Yi5",
+        "matched_claim_text": "Can you elaborate on the motivation behind the three metrics comparing generated and reference datasets (see MD2)?",
+        "proxy_consensus_label": "partial",
+        "llm_consensus_label": "related_but_different"
+      }
+    ],
+    "same_concern_support": [
+      {
+        "key": "kKRbAY4CXv:hZLx3fXD5m:4",
+        "paper_id": "kKRbAY4CXv",
+        "review_id": "hZLx3fXD5m",
+        "claim_text": "Scalability: The paper does not explicitly address scalability to larger or more complex scenarios.",
+        "matched_review_id": "uwuFudLbCi",
+        "matched_claim_text": "No information provided on computational cost and scalability of NEKM versus classical methods, especially for larger 3D problems; performance comparisons needed.",
+        "proxy_consensus_label": "strong",
+        "llm_consensus_label": "same_concern"
+      },
+      {
+        "key": "cQgjz0mf0r:ohnIAzeDZx:0",
+        "paper_id": "cQgjz0mf0r",
+        "review_id": "ohnIAzeDZx",
+        "claim_text": "The biggest weakness in the paper seems to be that a critical part of it is missing. The experimental setup in section 4.1 states \n> We control the size of the local neighborhood by controlling the diagonal lengths via the $r$ parameter mentioned in section 3.2\n\nBut section 3.2 makes no mention of a parameter $r$, and it is difficult to make a full evaluation of the experiments in section 4 absent a definition of $r$.",
+        "matched_review_id": "JFysq9wa5A",
+        "matched_claim_text": "There is a concern that the r parameter is important for experiments but not identified in section 3.2",
+        "proxy_consensus_label": "strong",
+        "llm_consensus_label": "same_concern"
+      },
+      {
+        "key": "7QlKLvfVge:FOfbfWgp15:1",
+        "paper_id": "7QlKLvfVge",
+        "review_id": "FOfbfWgp15",
+        "claim_text": "The backdoor attacks that this paper test is not enough. I suggest the authors to test the newest input-specific backdoor attacks in 2022. It's important to identify whether this method can achieve SOTA.",
+        "matched_review_id": "Z5ysjYl4EJ",
+        "matched_claim_text": "The experiment is pretty insufficient. It only covers one datasets with only one poisoning rate.",
+        "proxy_consensus_label": "strong",
+        "llm_consensus_label": "same_concern"
+      },
+      {
+        "key": "AOSsLRKQrX:iusxEbIueU:2",
+        "paper_id": "AOSsLRKQrX",
+        "review_id": "iusxEbIueU",
+        "claim_text": "In section 3.2, “we project each resultant block vector onto the learnable concept space and update its representation as a linear combination of the concepts via projection weights (lines 9 - 12 in Algorithm 1). This step results in discovering the disentangled representation central to our approach.”. Could you provide a more in-depth explanation or empirical evidence to support this assertion?",
+        "matched_review_id": "tYw6kbOlZq",
+        "matched_claim_text": "Not enough experiments are shown to prove the representations are “disentangled”. This disentanglement is the major advantage of the method. However, only several examples are shown in Fig. 2 to show the disentanglement. Quantitative results, or visualization of the learned slots (e.g. using t-SNE) would be preferred.",
+        "proxy_consensus_label": "none",
+        "llm_consensus_label": "same_concern"
+      },
+      {
+        "key": "lK2V2E2MNv:85dFa83C5l:3",
+        "paper_id": "lK2V2E2MNv",
+        "review_id": "85dFa83C5l",
+        "claim_text": "Could ablations with and without the assignment loss be provided to show its effectiveness?",
+        "matched_review_id": "Vjq2iwj6Mu",
+        "matched_claim_text": "-- Can the authors show ablation studies for the L_map and L_cap objectives to develop better understanding of each component?",
+        "proxy_consensus_label": "strong",
+        "llm_consensus_label": "same_concern"
+      },
+      {
+        "key": "9L9j5bQPIY:ruFJeXpRL4:1",
+        "paper_id": "9L9j5bQPIY",
+        "review_id": "ruFJeXpRL4",
+        "claim_text": "Figure 1 has no proper caption, which makes it hard to read and understand the figure.",
+        "matched_review_id": "91NkdJpVId",
+        "matched_claim_text": "In Section 4.1: Figure -> Figure 1?",
+        "proxy_consensus_label": "strong",
+        "llm_consensus_label": "same_concern"
+      },
+      {
+        "key": "9L9j5bQPIY:91NkdJpVId:2",
+        "paper_id": "9L9j5bQPIY",
+        "review_id": "91NkdJpVId",
+        "claim_text": "It is unclear why we need unitwise and interunit meta-autoencoders.",
+        "matched_review_id": "yusXpXTqb9",
+        "matched_claim_text": "2-Why is it necessary to use two different meta encoders? Can we use only one of them, such as either the \"unit-wise\" meta-autoencoder or the \"inter-unit\" meta-autoencoder only?",
+        "proxy_consensus_label": "strong",
+        "llm_consensus_label": "same_concern"
+      },
+      {
+        "key": "IefMMX12yk:MqJPeccgXL:1",
+        "paper_id": "IefMMX12yk",
+        "review_id": "MqJPeccgXL",
+        "claim_text": "Insufficient experiments on large-scale graph data: The large-scale graph data set used in the experiments of this article only contains OGBN-ARXIV. Therefore, more experiments on large-scale graph data are needed to verify the performance of the GASSIP method.",
+        "matched_review_id": "Z2Yp4ywhAo",
+        "matched_claim_text": "GNAS methods nowadays have been expanded to large-scale datasets, while the paper only showed the results on Physics and Ogbn-Arxiv datasets. Could you please give a more overall perfomance comparison with other GNAS methods like GUASS on large-scale OGB datasets?",
+        "proxy_consensus_label": "strong",
+        "llm_consensus_label": "same_concern"
+      }
+    ]
+  },
+  "notes": [
+    "`current_hybrid` mirrors the current lifecycle consensus score: same_concern=1.0, related_but_different=0.55, proxy fallback when no LLM label exists.",
+    "`strict_same_only_hybrid` only treats LLM same_concern as inter-reviewer support; related_but_different, not_same_concern, and unsure all score 0.0.",
+    "This report isolates the consensus leg. Rebuttal, discussion, grounding, specificity, and meta-review uptake use the current lifecycle-ablation scoring logic."
+  ]
+}

@@ -70,6 +70,10 @@ const stanceScale = [
 ];
 
 const demoConfigs = {
+  "paper-evidence-chain": {
+    src: "./demos/evidence_chain_demo.json",
+    format: "evidence-chain"
+  },
   "paper-microbial": {
     src: "./demos/demo_three_papers_audit_results.json",
     paperId: "cXs5md5wAq"
@@ -636,6 +640,7 @@ function renderRebuttal() {
 
         <div class="issue-detail-section">
           <p>${escapeHtml(issue.summary)}</p>
+          ${issue.scores ? renderIssueScoreStrip(issue.scores) : ""}
         </div>
 
         <div class="issue-detail-section">
@@ -649,6 +654,13 @@ function renderRebuttal() {
             ${issue.quotes.map((quote) => `<li>${escapeHtml(quote)}</li>`).join("")}
           </ul>
         </div>
+
+        ${issue.evidence_chain ? `
+          <div class="issue-detail-section">
+            <h3>Evidence chain</h3>
+            ${renderEvidenceChain(issue.evidence_chain)}
+          </div>
+        ` : ""}
 
         <div class="issue-detail-section">
           <h3>Suggested strategy</h3>
@@ -671,6 +683,22 @@ function renderRebuttal() {
       renderRebuttal();
     });
   });
+}
+
+function renderIssueScoreStrip(scores) {
+  const items = [
+    ["Grounding", scores.grounding],
+    ["Evidence", scores.evidence_support],
+    ["Rebuttal resolved", scores.rebuttal_resolution],
+    ["Robustness", scores.lifecycle_robustness]
+  ];
+  return `
+    <div class="issue-score-strip">
+      ${items
+        .map(([label, value]) => `<span><b>${formatPercent(numberOrNull(value) || 0)}</b>${escapeHtml(label)}</span>`)
+        .join("")}
+    </div>
+  `;
 }
 
 function capitalize(value) {
@@ -744,6 +772,8 @@ function renderClaimTabs(claims, selectedClaimIndex) {
 }
 
 function renderClaimCard(claim) {
+  const chainHtml = claim.evidence_chain ? renderEvidenceChain(claim.evidence_chain) : "";
+  const scoreExplanationHtml = claim.score_explanations ? renderScoreExplanations(claim.score_explanations) : "";
   return `
     <article class="claim-card">
       <div class="claim-card-head">
@@ -779,6 +809,8 @@ function renderClaimCard(claim) {
           <p>${escapeHtml(claim.rebuttal_guidance?.suggested_response || "Answer this point with the strongest available evidence and avoid overclaiming.")}</p>
         </div>
       </div>
+      ${scoreExplanationHtml}
+      ${chainHtml}
     </article>
   `;
 }
@@ -797,21 +829,31 @@ function renderClaimCards(claims) {
 }
 
 function renderClaimScoreRows(claim) {
-  const rows = [
-    ["Support", claim.support_score, 100],
-    ["Answer coverage", claim.answer_coverage_score, 100],
-    ["Question value", claim.question_value_score, 100],
-    ["Specificity", claim.specificity, 4],
-    ["Evidence support", claim.evidence_support, 4],
-    ["Actionability", claim.actionability, 4],
-    ["Fairness", claim.fairness_score, 100]
-  ].filter(([, value]) => numberOrNull(value) !== null);
+  const rows = claim.scores
+    ? [
+        ["Grounding", claim.scores.grounding, 1],
+        ["Specificity", claim.scores.specificity, 1],
+        ["Evidence support", claim.scores.evidence_support, 1],
+        ["Consensus", claim.scores.consensus, 1],
+        ["Rebuttal resolved", claim.scores.rebuttal_resolution, 1],
+        ["Lifecycle robust", claim.scores.lifecycle_robustness, 1]
+      ]
+    : [
+        ["Support", claim.support_score, 100],
+        ["Answer coverage", claim.answer_coverage_score, 100],
+        ["Question value", claim.question_value_score, 100],
+        ["Specificity", claim.specificity, 4],
+        ["Evidence support", claim.evidence_support, 4],
+        ["Actionability", claim.actionability, 4],
+        ["Fairness", claim.fairness_score, 100]
+      ];
+  const filteredRows = rows.filter(([, value]) => numberOrNull(value) !== null);
 
-  return rows
+  return filteredRows
     .map(([label, value, max]) => {
       const numeric = numberOrNull(value) || 0;
       const percent = Math.max(0, Math.min(100, Math.round((numeric / max) * 100)));
-      const display = max === 100 ? String(Math.round(numeric)) : `${numeric}/4`;
+      const display = max === 1 ? `${Math.round(percent)}%` : max === 100 ? String(Math.round(numeric)) : `${numeric}/4`;
       return `
         <div class="claim-score-row">
           <span>${escapeHtml(label)}</span>
@@ -823,6 +865,71 @@ function renderClaimScoreRows(claim) {
       `;
     })
     .join("");
+}
+
+function renderScoreExplanations(explanations) {
+  const entries = Object.entries(explanations || {}).filter(([, value]) => value);
+  if (!entries.length) {
+    return "";
+  }
+  return `
+    <details class="score-explain">
+      <summary>Score explanations</summary>
+      <div class="score-explain-grid">
+        ${entries
+          .map(([key, value]) => `<p><b>${escapeHtml(labelize(key))}</b><span>${escapeHtml(value)}</span></p>`)
+          .join("")}
+      </div>
+    </details>
+  `;
+}
+
+function renderEvidenceChain(chain) {
+  const groups = [
+    ["Original / manuscript evidence", chain.manuscript],
+    ["External evidence", chain.external],
+    ["Inter-reviewer consensus", chain.consensus],
+    ["Author rebuttal", chain.rebuttal],
+    ["Meta-review uptake", chain.meta_review],
+    ["Post-rebuttal discussion", chain.discussion]
+  ];
+  return `
+    <details class="evidence-chain" open>
+      <summary>Evidence chain</summary>
+      <div class="evidence-chain-grid">
+        ${groups
+          .map(([title, records]) => renderEvidenceGroup(title, records || []))
+          .join("")}
+      </div>
+    </details>
+  `;
+}
+
+function renderEvidenceGroup(title, records) {
+  if (!records.length) {
+    return `
+      <section class="evidence-node empty">
+        <h6>${escapeHtml(title)}</h6>
+        <p>No signal recorded.</p>
+      </section>
+    `;
+  }
+  return `
+    <section class="evidence-node">
+      <h6>${escapeHtml(title)}</h6>
+      ${records
+        .slice(0, 3)
+        .map(
+          (record) => `
+            <blockquote>
+              <b>${escapeHtml(record.label || record.source_type || "Evidence")}</b>
+              <p>${escapeHtml(truncate(record.text || "", 260))}</p>
+            </blockquote>
+          `
+        )
+        .join("")}
+    </section>
+  `;
 }
 
 function renderScoreRows(dimensions) {
@@ -934,7 +1041,86 @@ async function loadSelectedAnalysis() {
     throw new Error(`Unable to load demo dataset: ${response.status}`);
   }
   const auditResult = await response.json();
+  if (auditResult.schema_version === "evidence-chain-demo-v0.1" || demoConfig.format === "evidence-chain") {
+    return buildAnalysisFromEvidenceChainDemo(auditResult);
+  }
   return buildAnalysisFromAuditResult(auditResult, demoConfig);
+}
+
+function buildAnalysisFromEvidenceChainDemo(demo) {
+  const paper = demo.paper || {};
+  const reviewers = (demo.reviewers || []).map((reviewer, reviewerIndex) => {
+    const claims = (reviewer.claims || []).map((claim, claimIndex) => ({
+      ...claim,
+      claimIndex: claim.claim_index || claimIndex + 1,
+      claim_text: claim.claim_text,
+      normalizedStance: normalizeStance(claim.stance),
+      guidancePriority: guidancePriority(claim)
+    }));
+    const stanceBreakdown = getStanceBreakdown(claims);
+    const dominantAuditStance = getDominantStance(stanceBreakdown);
+    const qualityScore = Math.round((numberOrNull(reviewer.review_reliability_score) || 0) * 100);
+    return {
+      id: reviewer.display_id || `R${reviewerIndex + 1}`,
+      review_id: reviewer.review_id,
+      score: reviewer.rating || "n/a",
+      confidence: reviewer.confidence || "n/a",
+      qualityScore,
+      stance: "mixed",
+      potential: reviewer.high_risk_claim_count >= 2 ? "High" : reviewer.high_risk_claim_count === 1 ? "Medium" : "Low",
+      headline: reviewer.summary || "Evidence-chain reviewer analysis.",
+      auditSummary: `${reviewer.high_risk_claim_count || 0} high-risk claims. Lifecycle robustness ${formatPercent(reviewer.mean_lifecycle_robustness)}.`,
+      dominantAuditStance,
+      stanceSummary: `SecondOpinion stance distribution across ${claims.length} evidence-chain claims.`,
+      stanceBreakdown,
+      dimensions: {
+        "Reviewer reliability": qualityScore,
+        "Lifecycle robustness": Math.round((numberOrNull(reviewer.mean_lifecycle_robustness) || 0) * 100),
+        "High-risk pressure": Math.min(100, (reviewer.high_risk_claim_count || 0) * 25)
+      },
+      claims,
+      response: bestReviewerGuidance(claims)
+    };
+  });
+  const workspace = demo.rebuttal_workspace || [];
+  return {
+    paperTitle: paper.title || "Evidence-chain demo",
+    venue: paper.venue || "ICLR",
+    year: String(paper.year || "2024"),
+    metrics: [
+      [String(demo.summary?.review_count || reviewers.length), "Reviews"],
+      [String(demo.summary?.claim_count || 0), "Claims"],
+      [String(demo.summary?.high_priority_claim_count || 0), "High priority"],
+      [formatPercent(demo.summary?.mean_reviewer_reliability), "Reliability"],
+      [formatPercent(demo.summary?.mean_lifecycle_robustness), "Robustness"]
+    ],
+    overview: {
+      situation: `${demo.summary?.claim_count || 0} reviewer claims are organized into an auditable evidence chain for this paper.`,
+      leverage: workspace[0]
+        ? `${workspace[0].display_id || workspace[0].review_id} has the top rebuttal item: ${truncate(workspace[0].claim_text, 130)}`
+        : "No high-priority rebuttal item is available.",
+      strategy: "Read high-priority claim cards first, then expand evidence chains and score explanations before drafting the response."
+    },
+    reviewers,
+    priorities: workspace.slice(0, 5).map((item) => [
+      truncate(item.claim_text, 84),
+      `${labelize(item.priority)} / ${labelize(item.strategy)}: ${truncate(item.suggested_response, 140)}`
+    ]),
+    issues: workspace.slice(0, 8).map((item) => ({
+      title: truncate(item.claim_text, 82),
+      raisedBy: [item.display_id || item.review_id],
+      severity: item.priority === "must" ? "High" : "Medium",
+      fixability: item.strategy === "add_experiment" ? "Medium" : "High",
+      priority: labelize(item.priority),
+      summary: `Lifecycle robustness ${formatPercent(item.lifecycle_robustness)}.`,
+      assessment: `Recommended strategy: ${labelize(item.strategy)}.`,
+      strategy: item.suggested_response,
+      quotes: item.evidence_to_cite?.length ? item.evidence_to_cite : [item.claim_text],
+      draft: item.suggested_response,
+      scores: item.scores,
+      evidence_chain: item.evidence_chain
+    }))
+  };
 }
 
 function buildAnalysisFromAuditResult(auditResult, demoConfig = {}) {
@@ -1075,7 +1261,9 @@ function buildIssues(allClaims) {
       assessment: claim.second_opinion_take || claim.reasoning_summary || "Second Opinion assessment is available in the full report.",
       strategy: guidance.suggested_response || "Answer this point with the strongest available evidence and avoid overclaiming.",
       quotes: [claim.source_sentence || claim.claim_text || "No source quote recorded."],
-      draft: guidance.suggested_response || "Acknowledge the point, cite the relevant manuscript evidence, and state the concrete revision or clarification."
+      draft: guidance.suggested_response || "Acknowledge the point, cite the relevant manuscript evidence, and state the concrete revision or clarification.",
+      scores: claim.scores,
+      evidence_chain: claim.evidence_chain
     };
   });
   return issues.length ? issues : analysis.issues;
@@ -1140,11 +1328,11 @@ function bestReviewerGuidance(claims) {
 
 function guidancePriority(claim) {
   const priority = String(claim?.rebuttal_guidance?.priority || "medium").trim().toLowerCase();
-  return ["high", "medium", "low"].includes(priority) ? priority : "medium";
+  return ["must", "high", "medium", "low"].includes(priority) ? priority : "medium";
 }
 
 function priorityRank(priority) {
-  return { low: 1, medium: 2, high: 3 }[priority] || 2;
+  return { low: 1, medium: 2, high: 3, must: 4 }[priority] || 2;
 }
 
 function importanceRank(importance) {
@@ -1201,6 +1389,14 @@ function formatMetric(value) {
     return "n/a";
   }
   return Number.isInteger(numeric) ? String(numeric) : numeric.toFixed(1);
+}
+
+function formatPercent(value) {
+  const numeric = numberOrNull(value);
+  if (numeric === null) {
+    return "n/a";
+  }
+  return `${Math.round(numeric * 100)}%`;
 }
 
 function truncate(value, maxLength) {

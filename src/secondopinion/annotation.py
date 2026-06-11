@@ -14,7 +14,13 @@ ANNOTATION_LABEL_VERSION = "annotation-label-v0.1"
 ANNOTATION_LLM_PROMPT_VERSION = "annotation-llm-label-v0.1"
 DEFAULT_ANNOTATION_MODEL = DEFAULT_CHEAP_MODEL
 
-TASK_TYPES = ("claim_quality", "evidence_relevance", "verdict_correctness", "review_audit_quality")
+TASK_TYPES = (
+    "claim_quality",
+    "evidence_relevance",
+    "verdict_correctness",
+    "review_audit_quality",
+    "evidence_chain_quality",
+)
 EXTERNAL_EVIDENCE_SOURCE_TYPES = ("venue_guideline", "external_reference", "field_consensus")
 CLAIM_TYPES = (
     "ablation",
@@ -63,12 +69,24 @@ VERDICT_VALUES = (
     "unclear",
 )
 CONFIDENCE_VALUES = ("high", "medium", "low", "unclear")
+EXPERT_TRIAGE_VALUES = ("yes", "partial", "no")
+EVIDENCE_SUPPORT_VALUES = ("supports", "mixed", "contradicts", "insufficient")
+CLAIM_IMPORTANCE_VALUES = ("high", "medium", "low")
+REBUTTAL_ADDRESS_VALUES = ("resolved", "partially_addressed", "generic_or_unclear", "not_addressed")
+RECOMMENDED_ACTION_VALUES = ("must_address", "clarify", "provide_evidence", "deprioritize", "ignore_or_low_priority")
 
 PRIMARY_LABEL_FIELDS = {
     "claim_quality": ("claim_valid", "claim_type_correct", "correct_claim_type"),
     "evidence_relevance": ("evidence_relevance", "evidence_error_type"),
     "verdict_correctness": ("verdict_correct", "correct_verdict", "confidence_correct"),
     "review_audit_quality": ("rqs_reasonable", "main_issue_detected", "needs_human_expert"),
+    "evidence_chain_quality": (
+        "claim_extraction_correct",
+        "claim_grounded",
+        "evidence_supports_claim",
+        "rebuttal_addresses_claim",
+        "recommended_action",
+    ),
 }
 
 
@@ -128,6 +146,98 @@ def export_annotation_tasks(audit_result: dict[str, Any], *, run_id: str | None 
             if claim.get("evidence"):
                 tasks.append(evidence_task(run_id, audit, claim, claim["evidence"][0], provenance))
             tasks.append(verdict_task(run_id, audit, claim, provenance))
+    return run_id, tasks
+
+
+def export_evidence_chain_annotation_tasks(
+    evidence_chain_demo: dict[str, Any],
+    *,
+    run_id: str | None = None,
+) -> tuple[str, list[dict[str, Any]]]:
+    run_id = run_id or stable_id("evidence_chain", evidence_chain_demo.get("paper", {}), evidence_chain_demo.get("summary", {}))
+    provenance = {
+        "run_id": run_id,
+        "dataset": evidence_chain_demo.get("paper", {}).get("paper_id", "evidence-chain-demo"),
+        "audit_schema_version": evidence_chain_demo.get("source", {}).get("audit_schema_version", ""),
+        "model_version": "",
+        "rubric_version": "",
+        "claim_extraction_version": "",
+        "claim_model": "",
+        "judge_version": "",
+        "judge_model": "",
+        "retrieval_version": "",
+        "reserved_external_evidence_source_types": list(EXTERNAL_EVIDENCE_SOURCE_TYPES),
+    }
+    tasks = []
+    paper = evidence_chain_demo.get("paper", {})
+    for reviewer in evidence_chain_demo.get("reviewers", []):
+        audit = {
+            "audit_id": f"evidence-chain:{reviewer.get('review_id', '')}",
+            "paper_id": paper.get("paper_id", ""),
+            "review_id": reviewer.get("review_id", ""),
+            "summary": reviewer.get("summary", ""),
+        }
+        for claim in reviewer.get("claims", []):
+            tasks.append(evidence_chain_task(run_id, audit, claim, paper, reviewer, provenance))
+    return run_id, tasks
+
+
+def export_evidence_chain_benchmark_annotation_tasks(
+    benchmark: dict[str, Any],
+    *,
+    run_id: str | None = None,
+    sample_size: int | None = None,
+) -> tuple[str, list[dict[str, Any]]]:
+    run_id = run_id or stable_id("evidence_chain_benchmark", benchmark.get("summary", {}))
+    provenance = {
+        "run_id": run_id,
+        "dataset": "evidence-chain-benchmark",
+        "audit_schema_version": benchmark.get("schema_version", ""),
+        "model_version": "",
+        "rubric_version": "",
+        "claim_extraction_version": "",
+        "claim_model": "",
+        "judge_version": "",
+        "judge_model": "",
+        "retrieval_version": "",
+        "reserved_external_evidence_source_types": list(EXTERNAL_EVIDENCE_SOURCE_TYPES),
+    }
+    tasks = []
+    items = benchmark.get("items", [])
+    if sample_size is not None:
+        items = items[: max(0, sample_size)]
+    for item in items:
+        full = item.get("variants", {}).get("full_evidence_chain", {})
+        paper = item.get("paper", {})
+        reviewer = {
+            "review_id": item.get("review_id", ""),
+            "rating": full.get("rating"),
+            "confidence": full.get("confidence"),
+            "review_reliability_score": full.get("scores", {}).get("reviewer_reliability"),
+        }
+        claim = {
+            "claim_id": item.get("claim_id", ""),
+            "claim_text": item.get("claim_text", ""),
+            "source_sentence": item.get("source_sentence", ""),
+            "claim_type": item.get("claim_type", ""),
+            "importance": full.get("importance", ""),
+            "stance": item.get("expected", {}).get("stance", ""),
+            "verdict": "",
+            "scores": full.get("scores", {}),
+            "evidence_chain": full.get("evidence_chain", {}),
+            "system_judgment": {
+                "issue_flags": [],
+                "benchmark_expected": item.get("expected", {}),
+            },
+            "rebuttal_guidance": full.get("rebuttal_guidance", {}),
+        }
+        audit = {
+            "audit_id": f"evidence-chain-benchmark:{item.get('task_id', '')}",
+            "paper_id": paper.get("paper_id", ""),
+            "review_id": item.get("review_id", ""),
+            "summary": "",
+        }
+        tasks.append(evidence_chain_task(run_id, audit, claim, paper, reviewer, provenance))
     return run_id, tasks
 
 
@@ -247,6 +357,39 @@ def review_task(run_id: str, audit: dict[str, Any], provenance: dict[str, Any]) 
     return task
 
 
+def evidence_chain_task(
+    run_id: str,
+    audit: dict[str, Any],
+    claim: dict[str, Any],
+    paper: dict[str, Any],
+    reviewer: dict[str, Any],
+    provenance: dict[str, Any],
+) -> dict[str, Any]:
+    task = base_task(run_id, audit, claim, "evidence_chain_quality", provenance)
+    task["context"] = {
+        "paper": paper,
+        "reviewer": {
+            "review_id": reviewer.get("review_id", ""),
+            "rating": reviewer.get("rating"),
+            "confidence": reviewer.get("confidence"),
+            "review_reliability_score": reviewer.get("review_reliability_score"),
+        },
+        "claim_text": claim.get("claim_text", ""),
+        "source_sentence": claim.get("source_sentence", ""),
+        "evidence_chain": claim.get("evidence_chain", {}),
+    }
+    task["system_output"] = {
+        "stance": claim.get("stance", ""),
+        "verdict": claim.get("verdict", ""),
+        "claim_type": claim.get("claim_type", ""),
+        "importance": claim.get("importance", ""),
+        "scores": claim.get("scores", {}),
+        "system_judgment": claim.get("system_judgment", {}),
+        "rebuttal_guidance": claim.get("rebuttal_guidance", {}),
+    }
+    return task
+
+
 def read_json(path: str | Path) -> dict[str, Any]:
     with Path(path).open(encoding="utf-8") as handle:
         return json.load(handle)
@@ -362,6 +505,14 @@ def validate_label_payload(task_type: str, labels: dict[str, Any]) -> list[str]:
         usefulness = labels.get("report_usefulness")
         if not isinstance(usefulness, int) or usefulness < 1 or usefulness > 5:
             errors.append("invalid:labels.report_usefulness")
+    elif task_type == "evidence_chain_quality":
+        errors.extend(_require_enum(labels, "claim_extraction_correct", EXPERT_TRIAGE_VALUES))
+        errors.extend(_require_enum(labels, "claim_grounded", EXPERT_TRIAGE_VALUES))
+        errors.extend(_require_enum(labels, "evidence_supports_claim", EVIDENCE_SUPPORT_VALUES))
+        errors.extend(_require_enum(labels, "claim_importance", CLAIM_IMPORTANCE_VALUES))
+        errors.extend(_require_enum(labels, "rebuttal_addresses_claim", REBUTTAL_ADDRESS_VALUES))
+        errors.extend(_require_enum(labels, "recommended_action", RECOMMENDED_ACTION_VALUES))
+        errors.extend(_require_enum(labels, "expert_confidence", CONFIDENCE_VALUES[:-1]))
     else:
         errors.append("invalid:task_type")
     return errors
@@ -411,6 +562,16 @@ def label_schema_for_task(task_type: str) -> dict[str, Any]:
             "main_issue_detected": {"type": "string", "enum": list(TRIAGE_VALUES)},
             "needs_human_expert": {"type": "string", "enum": list(TRIAGE_VALUES)},
             "report_usefulness": {"type": "integer", "enum": [1, 2, 3, 4, 5]},
+        }
+    elif task_type == "evidence_chain_quality":
+        labels_properties = {
+            "claim_extraction_correct": {"type": "string", "enum": list(EXPERT_TRIAGE_VALUES)},
+            "claim_grounded": {"type": "string", "enum": list(EXPERT_TRIAGE_VALUES)},
+            "evidence_supports_claim": {"type": "string", "enum": list(EVIDENCE_SUPPORT_VALUES)},
+            "claim_importance": {"type": "string", "enum": list(CLAIM_IMPORTANCE_VALUES)},
+            "rebuttal_addresses_claim": {"type": "string", "enum": list(REBUTTAL_ADDRESS_VALUES)},
+            "recommended_action": {"type": "string", "enum": list(RECOMMENDED_ACTION_VALUES)},
+            "expert_confidence": {"type": "string", "enum": list(CONFIDENCE_VALUES[:-1])},
         }
     else:
         raise ValueError(f"Unsupported task type: {task_type}")
@@ -700,12 +861,21 @@ def write_annotation_html(tasks: list[dict[str, Any]], path: str | Path) -> None
           <label>Correct verdict</label><select data-key="correct_verdict">${{options(['supported','partially_supported','insufficient','possibly_contradicted','vague_or_not_checkable','needs_human_check','unclear'])}}</select>
           <label>Confidence correct</label><select data-key="confidence_correct">${{options(['yes','no','unclear'])}}</select>
           <label>Correct confidence</label><select data-key="correct_confidence">${{options(['high','medium','low','unclear'])}}</select>`;
-      }} else {{
+      }} else if (task.task_type === 'review_audit_quality') {{
         root.innerHTML = `
           <label>RQS reasonable</label><select data-key="rqs_reasonable">${{options(['yes','no','unclear'])}}</select>
           <label>Main issue detected</label><select data-key="main_issue_detected">${{options(['yes','no','unclear'])}}</select>
           <label>Needs human expert</label><select data-key="needs_human_expert">${{options(['yes','no','unclear'])}}</select>
           <label>Report usefulness</label><select data-key="report_usefulness">${{options(['1','2','3','4','5'], '3')}}</select>`;
+      }} else {{
+        root.innerHTML = `
+          <label>Claim extraction correct</label><select data-key="claim_extraction_correct">${{options(['yes','partial','no'])}}</select>
+          <label>Claim grounded</label><select data-key="claim_grounded">${{options(['yes','partial','no'])}}</select>
+          <label>Evidence supports claim</label><select data-key="evidence_supports_claim">${{options(['supports','mixed','contradicts','insufficient'])}}</select>
+          <label>Claim importance</label><select data-key="claim_importance">${{options(['high','medium','low'])}}</select>
+          <label>Rebuttal addresses claim</label><select data-key="rebuttal_addresses_claim">${{options(['resolved','partially_addressed','generic_or_unclear','not_addressed'])}}</select>
+          <label>Recommended action</label><select data-key="recommended_action">${{options(['must_address','clarify','provide_evidence','deprioritize','ignore_or_low_priority'])}}</select>
+          <label>Expert confidence</label><select data-key="expert_confidence">${{options(['high','medium','low'])}}</select>`;
       }}
       root.insertAdjacentHTML('beforeend', '<label>Notes</label><textarea data-notes="true"></textarea>');
     }}
@@ -773,6 +943,8 @@ def render_task_card(task: dict[str, Any]) -> str:
 def task_title(task: dict[str, Any]) -> str:
     if task["task_type"] == "review_audit_quality":
         return f"Review audit quality for {task['review_id']}"
+    if task["task_type"] == "evidence_chain_quality":
+        return str(task.get("context", {}).get("claim_text") or task["task_id"])
     return str(task.get("context", {}).get("claim_text") or task.get("system_output", {}).get("claim_text") or task["task_id"])
 
 

@@ -17,6 +17,7 @@ CONCERN_RAG_VALIDATION_VERSION = "concern-rag-validation-v0.1"
 DEFAULT_RAG_VALIDATION_MODEL = DEFAULT_CHEAP_MODEL
 MATCH_LABELS = ("survived", "partial", "not_found", "unsure")
 QUALITY_LABELS = ("high", "medium", "low", "unsure")
+DECISIVE_META_REVIEW_MATCH_LABELS = frozenset({"survived", "partial", "not_found"})
 
 
 def validate_concern_rag(
@@ -25,7 +26,21 @@ def validate_concern_rag(
     *,
     top_ks: tuple[int, ...] = (1, 3, 5),
     exclude_same_paper: bool = False,
+    only_decisive_meta_labels: bool = False,
+    only_high_confidence: bool = False,
 ) -> dict[str, Any]:
+    input_record_count = len(records)
+    input_memory_count = len(memory_records)
+    records = filter_rag_records(
+        records,
+        only_decisive_meta_labels=only_decisive_meta_labels,
+        only_high_confidence=only_high_confidence,
+    )
+    memory_records = filter_rag_records(
+        memory_records,
+        only_decisive_meta_labels=only_decisive_meta_labels,
+        only_high_confidence=only_high_confidence,
+    )
     records = [normalized_calibration_record(record) for record in records]
     memory_records = [normalize_memory_record(record) for record in memory_records]
     top_ks = tuple(sorted(set(k for k in top_ks if k > 0))) or (1, 3, 5)
@@ -48,7 +63,40 @@ def validate_concern_rag(
         memory_records=memory_records,
         top_ks=top_ks,
         exclude_same_paper=exclude_same_paper,
+        input_record_count=input_record_count,
+        input_memory_count=input_memory_count,
+        filters={
+            "only_decisive_meta_labels": only_decisive_meta_labels,
+            "only_high_confidence": only_high_confidence,
+        },
     )
+
+
+def filter_rag_records(
+    records: list[dict[str, Any]],
+    *,
+    only_decisive_meta_labels: bool = False,
+    only_high_confidence: bool = False,
+) -> list[dict[str, Any]]:
+    filtered = records
+    if only_decisive_meta_labels:
+        filtered = [record for record in filtered if record_match_label(record) in DECISIVE_META_REVIEW_MATCH_LABELS]
+    if only_high_confidence:
+        filtered = [record for record in filtered if is_high_confidence_record(record)]
+    return filtered
+
+
+def record_match_label(record: dict[str, Any]) -> str:
+    if "meta_review" in record:
+        return memory_match(record)
+    return meta_review_match(record)
+
+
+def is_high_confidence_record(record: dict[str, Any]) -> bool:
+    if "high_confidence_training_candidate" in record:
+        return bool(record.get("high_confidence_training_candidate"))
+    quality = record.get("quality", {})
+    return quality.get("confidence") == "high" and quality.get("label_evidence_strength") == "high"
 
 
 def retrieve_concern_cases(
@@ -138,17 +186,27 @@ def build_rag_validation_report(
     memory_records: list[dict[str, Any]],
     top_ks: tuple[int, ...],
     exclude_same_paper: bool,
+    input_record_count: int | None = None,
+    input_memory_count: int | None = None,
+    filters: dict[str, bool] | None = None,
 ) -> dict[str, Any]:
+    gold_match_counts = Counter(meta_review_match(record) for record in records)
+    gold_quality_counts = Counter(concern_quality(record) for record in records)
     summary: dict[str, Any] = {
         "query_count": len(rows),
         "memory_count": len(memory_records),
+        "input_query_count": input_record_count if input_record_count is not None else len(records),
+        "input_memory_count": input_memory_count if input_memory_count is not None else len(memory_records),
+        "filters": filters or {},
         "exclude_same_paper": exclude_same_paper,
-        "gold_meta_review_match_counts": dict(Counter(meta_review_match(record) for record in records)),
-        "gold_concern_quality_counts": dict(Counter(concern_quality(record) for record in records)),
+        "gold_meta_review_match_counts": dict(gold_match_counts),
+        "gold_concern_quality_counts": dict(gold_quality_counts),
         "memory_match_counts": dict(Counter(memory_match(record) for record in memory_records)),
         "memory_quality_counts": dict(Counter(memory_quality(record) for record in memory_records)),
         "match_mrr": safe_mean(row["match_rr"] for row in rows),
         "quality_mrr": safe_mean(row["quality_rr"] for row in rows),
+        "majority_match_baseline": majority_baseline(gold_match_counts),
+        "majority_quality_baseline": majority_baseline(gold_quality_counts),
     }
     random_baselines = random_baseline_rates(records, memory_records, top_ks=top_ks, exclude_same_paper=exclude_same_paper)
     for k in top_ks:
@@ -393,6 +451,7 @@ def normalize_memory_record(record: dict[str, Any]) -> dict[str, Any]:
         "review_id": record.get("review_id", ""),
         "title": record.get("title", ""),
         "decision_label": record.get("decision_label", ""),
+        "high_confidence_training_candidate": bool(record.get("high_confidence_training_candidate")),
         "claim": {
             "text": record.get("claim_text", ""),
             "type": record.get("claim_type", ""),
@@ -421,12 +480,15 @@ def write_rag_validation_markdown(report: dict[str, Any], path: str | Path) -> N
 
 def render_rag_validation_markdown(report: dict[str, Any]) -> str:
     summary = report["summary"]
-    keys = [key for key in summary if "@" in key or key.endswith("_mrr")]
+    keys = [key for key in summary if "@" in key or key.endswith("_mrr") or key.endswith("_baseline")]
     lines = [
         "# Concern RAG Validation",
         "",
         f"- Queries: {summary.get('query_count', 0)}",
         f"- Memory records: {summary.get('memory_count', 0)}",
+        f"- Input queries: {summary.get('input_query_count', summary.get('query_count', 0))}",
+        f"- Input memory records: {summary.get('input_memory_count', summary.get('memory_count', 0))}",
+        f"- Filters: `{json.dumps(summary.get('filters', {}), sort_keys=True)}`",
         f"- Exclude same paper: {summary.get('exclude_same_paper', False)}",
         "",
         "## Metrics",
@@ -516,6 +578,13 @@ def rate(rows: list[dict[str, Any]], key: str) -> float:
     if not rows:
         return 0.0
     return round(sum(1 for row in rows if row.get(key)) / len(rows), 4)
+
+
+def majority_baseline(counts: Counter[str]) -> float:
+    total = sum(counts.values())
+    if total <= 0:
+        return 0.0
+    return round(max(counts.values(), default=0) / total, 4)
 
 
 def safe_mean(values: Any) -> float:

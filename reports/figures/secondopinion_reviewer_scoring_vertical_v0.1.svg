@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="1240" viewBox="0 0 480 1240" role="img" aria-labelledby="title desc">
+  <title id="title">SecondOpinion Reviewer Opinion Scoring Framework</title>
+  <desc id="desc">Vertical diagram showing the reviewer opinion scoring workflow and scoring dimensions.</desc>
+  <defs>
+    <style>
+      .bg { fill: #ffffff; }
+      .title { font: 700 25px Georgia, "Times New Roman", serif; fill: #182542; }
+      .subtitle { font: 400 13px Georgia, "Times New Roman", serif; fill: #5f6878; }
+      .label { font: 700 11.5px Georgia, "Times New Roman", serif; letter-spacing: 2.2px; fill: #007b7b; text-transform: uppercase; }
+      .head { font: 700 16px Georgia, "Times New Roman", serif; fill: #182542; }
+      .body { font: 400 12.7px Georgia, "Times New Roman", serif; fill: #172033; }
+      .small { font: 400 11.2px Georgia, "Times New Roman", serif; fill: #5f6878; }
+      .note { font: 700 10.8px Georgia, "Times New Roman", serif; fill: #cf3d08; }
+      .card { fill: #ffffff; stroke: #d7dee8; stroke-width: 1.1; rx: 4; }
+      .mini { fill: #f8fafc; stroke: #d7dee8; stroke-width: 1; rx: 4; }
+      .mini-materiality { fill: #fdebdc; stroke: #f0c7a9; stroke-width: 1; rx: 4; }
+      .stripe-input { fill: #1b294d; }
+      .stripe-claim { fill: #007b7b; }
+      .stripe-context { fill: #007b7b; }
+      .stripe-score { fill: #007b7b; }
+      .stripe-output { fill: #d6460b; }
+      .arrow { stroke: #b6bfcc; stroke-width: 1.5; fill: none; marker-end: url(#arrowhead); }
+      .dot { fill: #007b7b; }
+      .dot-orange { fill: #d6460b; }
+      .axis-title { font: 700 12.8px Georgia, "Times New Roman", serif; fill: #182542; }
+      .axis-title-orange { font: 700 12.8px Georgia, "Times New Roman", serif; fill: #cf3d08; }
+      .axis-text { font: 400 11.4px Georgia, "Times New Roman", serif; fill: #475569; }
+      .pill { fill: #f3f6fb; stroke: #d7dee8; stroke-width: 1; rx: 4; }
+      .pill-text { font: 700 10.6px Georgia, "Times New Roman", serif; fill: #182542; }
+    </style>
+    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#b6bfcc" />
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="480" height="1240" />
+
+  <text class="title" x="32" y="42">Reviewer Opinion Scoring</text>
+  <text class="subtitle" x="32" y="64">Neutral third-party assessment of review comments</text>
+  <rect class="pill" x="318" y="38" width="112" height="24" />
+  <text class="pill-text" x="334" y="54">PPT side strip</text>
+
+  <!-- Input -->
+  <rect class="card" x="34" y="92" width="412" height="105" />
+  <rect class="stripe-input" x="34" y="92" width="7" height="105" rx="4" />
+  <text class="label" x="58" y="119">1. Review Data</text>
+  <text class="head" x="58" y="145">Official Review Package</text>
+  <text class="body" x="58" y="170">Review text, strengths, weaknesses, questions,</text>
+  <text class="body" x="58" y="188">rating and reviewer confidence.</text>
+
+  <path class="arrow" d="M240 210 V238" />
+
+  <!-- Normalize -->
+  <rect class="card" x="34" y="248" width="412" height="116" />
+  <rect class="stripe-input" x="34" y="248" width="7" height="116" rx="4" />
+  <text class="label" x="58" y="276">2. Normalize</text>
+  <text class="head" x="58" y="302">Structured Review Record</text>
+  <text class="body" x="58" y="327">Separate factual comments, questions, requests,</text>
+  <text class="body" x="58" y="346">score justifications and review metadata.</text>
+
+  <path class="arrow" d="M240 376 V404" />
+
+  <!-- Claims -->
+  <rect class="card" x="34" y="414" width="412" height="130" />
+  <rect class="stripe-claim" x="34" y="414" width="7" height="130" rx="4" />
+  <text class="label" x="58" y="442">3. Atomic Claims</text>
+  <text class="head" x="58" y="468">Extract Reviewer's Opinions</text>
+  <text class="body" x="58" y="493">Turn each review into auditable claims:</text>
+  <text class="body" x="58" y="512">criticism, question, requested experiment,</text>
+  <text class="body" x="58" y="531">clarification request or score rationale.</text>
+
+  <path class="arrow" d="M240 556 V584" />
+
+  <!-- Grounding -->
+  <rect class="card" x="34" y="594" width="412" height="112" />
+  <rect class="stripe-claim" x="34" y="594" width="7" height="112" rx="4" />
+  <text class="label" x="58" y="622">4. Source Grounding</text>
+  <text class="head" x="58" y="648">Trace Each Claim to Text</text>
+  <text class="body" x="58" y="673">Attach exact source sentence from the review.</text>
+  <text class="note" x="58" y="692">Gate, not a final quality score.</text>
+
+  <path class="arrow" d="M240 718 V746" />
+
+  <!-- Scoring dimensions -->
+  <rect class="card" x="34" y="756" width="412" height="315" />
+  <rect class="stripe-score" x="34" y="756" width="7" height="315" rx="4" />
+  <text class="label" x="58" y="784">5. Scoring Dimensions</text>
+  <text class="head" x="58" y="810">Score the Opinion, Not the Person</text>
+
+  <rect class="mini" x="58" y="833" width="176" height="72" />
+  <circle class="dot" cx="75" cy="854" r="4" />
+  <text class="axis-title" x="86" y="858">Specificity</text>
+  <text class="axis-text" x="75" y="880">Is the concern concrete,</text>
+  <text class="axis-text" x="75" y="896">localized and inspectable?</text>
+
+  <rect class="mini" x="248" y="833" width="176" height="72" />
+  <circle class="dot" cx="265" cy="854" r="4" />
+  <text class="axis-title" x="276" y="858">Substantiation</text>
+  <text class="axis-text" x="265" y="880">Does it provide reasons,</text>
+  <text class="axis-text" x="265" y="896">evidence or comparison?</text>
+
+  <rect class="mini" x="58" y="918" width="176" height="72" />
+  <circle class="dot" cx="75" cy="939" r="4" />
+  <text class="axis-title" x="86" y="943">Actionability</text>
+  <text class="axis-text" x="75" y="965">Can authors act on it</text>
+  <text class="axis-text" x="75" y="981">with a clear next step?</text>
+
+  <rect class="mini-materiality" x="248" y="918" width="176" height="72" />
+  <circle class="dot-orange" cx="265" cy="939" r="4" />
+  <text class="axis-title-orange" x="276" y="943">Materiality</text>
+  <text class="axis-text" x="265" y="965">Does it affect the core</text>
+  <text class="axis-text" x="265" y="981">claim or contribution?</text>
+
+  <rect class="mini" x="58" y="1003" width="176" height="48" />
+  <circle class="dot" cx="75" cy="1024" r="4" />
+  <text class="axis-title" x="86" y="1028">Semantic Consensus</text>
+  <text class="axis-text" x="75" y="1044">Same concern across reviews?</text>
+
+  <rect class="mini" x="248" y="1003" width="176" height="48" />
+  <circle class="dot-orange" cx="265" cy="1024" r="4" />
+  <text class="axis-title" x="276" y="1028">Tone &amp; Calibration</text>
+  <text class="axis-text" x="265" y="1044">Confidence, rating, civility.</text>
+
+  <path class="arrow" d="M240 1084 V1112" />
+
+  <!-- Output -->
+  <rect class="card" x="34" y="1122" width="412" height="132" transform="translate(0 -42)" />
+  <rect class="stripe-output" x="34" y="1080" width="7" height="132" rx="4" />
+  <text class="label" x="58" y="1108">6. Output</text>
+  <text class="head" x="58" y="1134">Reviewer Opinion Scorecard</text>
+  <text class="body" x="58" y="1159">Comment-level score plus review-level profile:</text>
+  <text class="body" x="58" y="1178">high-signal, under-supported, over-harsh,</text>
+  <text class="body" x="58" y="1197">over-lenient or needs human check.</text>
+</svg>

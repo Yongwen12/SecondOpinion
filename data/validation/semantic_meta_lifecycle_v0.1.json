@@ -1,0 +1,790 @@
+{
+  "schema_version": "semantic-meta-lifecycle-v0.1",
+  "source": {
+    "calibration_version": "reviewer-calibration-v0.1",
+    "semantic_meta_record_count": 500
+  },
+  "summary": {
+    "claim_count": 854,
+    "semantic_meta_matched_count": 500,
+    "semantic_meta_decisive_count": 421,
+    "semantic_meta_high_confidence_count": 155,
+    "semantic_meta_label_counts": {
+      "partial": 280,
+      "not_found": 134,
+      "unsure": 79,
+      "survived": 7
+    },
+    "proxy_meta_label_counts_on_semantic_records": {
+      "partial": 245,
+      "not_found": 214,
+      "survived": 41
+    },
+    "semantic_proxy_agreement_rate": 0.7458
+  },
+  "modes": {
+    "current_proxy_meta": {
+      "claim_count": 854,
+      "paper_count": 53,
+      "review_count": 202,
+      "mean_lifecycle_robustness": 0.5746,
+      "median_lifecycle_robustness": 0.5654,
+      "label_counts": {
+        "medium": 650,
+        "low": 107,
+        "high": 97
+      },
+      "mean_meta_review_uptake": 0.2831
+    },
+    "semantic_hybrid_meta": {
+      "claim_count": 854,
+      "paper_count": 53,
+      "review_count": 202,
+      "mean_lifecycle_robustness": 0.5742,
+      "median_lifecycle_robustness": 0.574,
+      "label_counts": {
+        "medium": 665,
+        "low": 108,
+        "high": 81
+      },
+      "mean_meta_review_uptake": 0.2815
+    },
+    "semantic_labeled_only": {
+      "claim_count": 421,
+      "paper_count": 53,
+      "review_count": 178,
+      "mean_lifecycle_robustness": 0.6013,
+      "median_lifecycle_robustness": 0.6175,
+      "label_counts": {
+        "medium": 332,
+        "low": 38,
+        "high": 51
+      },
+      "mean_meta_review_uptake": 0.4157
+    },
+    "semantic_high_confidence_only": {
+      "claim_count": 155,
+      "paper_count": 49,
+      "review_count": 103,
+      "mean_lifecycle_robustness": 0.6552,
+      "median_lifecycle_robustness": 0.6565,
+      "label_counts": {
+        "medium": 122,
+        "low": 2,
+        "high": 31
+      },
+      "mean_meta_review_uptake": 0.6116
+    }
+  },
+  "comparisons": {
+    "semantic_hybrid_vs_current_all_claims": {
+      "claim_count": 854,
+      "mean_score_delta": -0.0003,
+      "median_score_delta": 0.0,
+      "mean_abs_score_delta": 0.0145,
+      "mean_meta_review_uptake_delta": -0.0016,
+      "label_change_count": 37,
+      "label_change_rate": 0.0433,
+      "label_changes": {
+        "high->medium": 21,
+        "medium->high": 5,
+        "medium->low": 6,
+        "low->medium": 5
+      },
+      "largest_drops": [
+        {
+          "key": "10eQ4Cfh8p:S3IqtlOGLT:4",
+          "paper_id": "10eQ4Cfh8p",
+          "review_id": "S3IqtlOGLT",
+          "claim_text": "Only two experiments (synthetic and public benchmarks); unclear extension to other scheduling or combinatorial optimization problems.",
+          "proxy_meta_label": "survived",
+          "semantic_meta_label": "not_found",
+          "left_score": 0.774,
+          "right_score": 0.574,
+          "delta": -0.2,
+          "left_label": "high",
+          "right_label": "medium"
+        },
+        {
+          "key": "rEQ8OiBxbZ:ugAdT84dP2:2",
+          "paper_id": "rEQ8OiBxbZ",
+          "review_id": "ugAdT84dP2",
+          "claim_text": "How does the method perform on datasets like QM9?",
+          "proxy_meta_label": "survived",
+          "semantic_meta_label": "not_found",
+          "left_score": 0.7517,
+          "right_score": 0.5517,
+          "delta": -0.2,
+          "left_label": "high",
+          "right_label": "medium"
+        },
+        {
+          "key": "rp5vfyp5Np:YktI8n3TeZ:0",
+          "paper_id": "rp5vfyp5Np",
+          "review_id": "YktI8n3TeZ",
+          "claim_text": "The human preference-based intention policy learning brings extra requirement and uncertainty to the process - the collection of human preference data can be expensive.",
+          "proxy_meta_label": "survived",
+          "semantic_meta_label": "not_found",
+          "left_score": 0.7032,
+          "right_score": 0.5032,
+          "delta": -0.2,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "BQvbL2sFQx:NnBm0ZmhsP:1",
+          "paper_id": "BQvbL2sFQx",
+          "review_id": "NnBm0ZmhsP",
+          "claim_text": "The authors did not discuss on the limitations of the proposed method.",
+          "proxy_meta_label": "survived",
+          "semantic_meta_label": "not_found",
+          "left_score": 0.6673,
+          "right_score": 0.4673,
+          "delta": -0.2,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "rp5vfyp5Np:vGNqxpozDP:0",
+          "paper_id": "rp5vfyp5Np",
+          "review_id": "vGNqxpozDP",
+          "claim_text": "The presentation of experimental results is somewhat confusing. The differences of scenarios in Figure 4 and 5 are not clear, and additional explanations are required for the target coordinates mentioned for Figure 4. Captions of Figures 7 (a) and (b) might need to be swapped, and sections (c) and (d) require clearer explanations.",
+          "proxy_meta_label": "survived",
+          "semantic_meta_label": "not_found",
+          "left_score": 0.8175,
+          "right_score": 0.6175,
+          "delta": -0.2,
+          "left_label": "high",
+          "right_label": "medium"
+        },
+        {
+          "key": "rp5vfyp5Np:vGNqxpozDP:1",
+          "paper_id": "rp5vfyp5Np",
+          "review_id": "vGNqxpozDP",
+          "claim_text": "The paper lacks a discussion of limitations, which should be addressed.",
+          "proxy_meta_label": "survived",
+          "semantic_meta_label": "not_found",
+          "left_score": 0.6697,
+          "right_score": 0.4697,
+          "delta": -0.2,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "xNdE7RiRyP:5DuTHFMr8O:1",
+          "paper_id": "xNdE7RiRyP",
+          "review_id": "5DuTHFMr8O",
+          "claim_text": "- Fig. 5a is missing.",
+          "proxy_meta_label": "survived",
+          "semantic_meta_label": "not_found",
+          "left_score": 0.6767,
+          "right_score": 0.4767,
+          "delta": -0.2,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "JWrl5pJCnl:COvLA4Q4C5:4",
+          "paper_id": "JWrl5pJCnl",
+          "review_id": "COvLA4Q4C5",
+          "claim_text": "Are the example programs in the prompt fixed for every task or do they depend on the task ?",
+          "proxy_meta_label": "partial",
+          "semantic_meta_label": "not_found",
+          "left_score": 0.5732,
+          "right_score": 0.4532,
+          "delta": -0.12,
+          "left_label": "medium",
+          "right_label": "medium"
+        }
+      ],
+      "largest_gains": [
+        {
+          "key": "1FWDEIGm33:MzDh7uJCEU:0",
+          "paper_id": "1FWDEIGm33",
+          "review_id": "MzDh7uJCEU",
+          "claim_text": "The framing of the paper needs significant improvement. The argument seems to go something like this: LLMs tend to be context-dependent. Humans tend to be stable across contexts. Therefore, LLMs should not be assumed to be human-like. Probing an LLM with questions derived from a field that assumes a human subject is flawed. Making general conclusions from results based on these questions is also flawed. LLM as a superposition not an individual is proposed is a new metaphor. This new metaphor motivated the study of perspective change in LLMs, which is the focus of this paper.",
+          "proxy_meta_label": "not_found",
+          "semantic_meta_label": "survived",
+          "left_score": 0.5365,
+          "right_score": 0.7365,
+          "delta": 0.2,
+          "left_label": "medium",
+          "right_label": "high"
+        },
+        {
+          "key": "7vVWiCrFnd:aHtDQsXakn:1",
+          "paper_id": "7vVWiCrFnd",
+          "review_id": "aHtDQsXakn",
+          "claim_text": "Improvements of other baselines in the BUDDY paper, especially GNN ones, are not included.",
+          "proxy_meta_label": "not_found",
+          "semantic_meta_label": "partial",
+          "left_score": 0.565,
+          "right_score": 0.685,
+          "delta": 0.12,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "H9DYMIpz9c:KqbT3NNcP2:2",
+          "paper_id": "H9DYMIpz9c",
+          "review_id": "KqbT3NNcP2",
+          "claim_text": "My major questions concern the clarifications about the approach listed above, without which it is really hard to judge the technical correctness / soundness of the paper.",
+          "proxy_meta_label": "not_found",
+          "semantic_meta_label": "partial",
+          "left_score": 0.4875,
+          "right_score": 0.6075,
+          "delta": 0.12,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "My7lkRNnL9:MQTHAuclRi:1",
+          "paper_id": "My7lkRNnL9",
+          "review_id": "MQTHAuclRi",
+          "claim_text": "Figure readability issues hinder interpretation (hard to read figures, overlap not easily visible, colors inconspicuous).",
+          "proxy_meta_label": "not_found",
+          "semantic_meta_label": "partial",
+          "left_score": 0.3958,
+          "right_score": 0.5158,
+          "delta": 0.12,
+          "left_label": "low",
+          "right_label": "medium"
+        },
+        {
+          "key": "kKRbAY4CXv:eSJOZmZeDG:3",
+          "paper_id": "kKRbAY4CXv",
+          "review_id": "eSJOZmZeDG",
+          "claim_text": "I think some of the equation details of BINet in the related work should be moved to an appendix or background section.",
+          "proxy_meta_label": "not_found",
+          "semantic_meta_label": "partial",
+          "left_score": 0.41,
+          "right_score": 0.53,
+          "delta": 0.12,
+          "left_label": "low",
+          "right_label": "medium"
+        },
+        {
+          "key": "10eQ4Cfh8p:wckxlkPL42:7",
+          "paper_id": "10eQ4Cfh8p",
+          "review_id": "wckxlkPL42",
+          "claim_text": "Is $M_{ij} = 1$ if $O_j$ is processed on Machine $i$, or $O_j$ “can be” processed on Machine $i$? What is the concept of model designing (or why it is designed in this way)?",
+          "proxy_meta_label": "not_found",
+          "semantic_meta_label": "partial",
+          "left_score": 0.4907,
+          "right_score": 0.6107,
+          "delta": 0.12,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "1FWDEIGm33:MzDh7uJCEU:2",
+          "paper_id": "1FWDEIGm33",
+          "review_id": "MzDh7uJCEU",
+          "claim_text": "The main focus is not clearly defined. The first sentence in the methods section states, \"This paper aims at uncovering the existence of unexpected perspective shift effects i.e. how context can impact the values and personality traits expressed by LLMs in unwanted, unexpected ways\". This is the definition provided. It is unfortunately unclear.",
+          "proxy_meta_label": "not_found",
+          "semantic_meta_label": "partial",
+          "left_score": 0.6925,
+          "right_score": 0.8125,
+          "delta": 0.12,
+          "left_label": "medium",
+          "right_label": "high"
+        },
+        {
+          "key": "1FWDEIGm33:pfCqf1kmPM:1",
+          "paper_id": "1FWDEIGm33",
+          "review_id": "pfCqf1kmPM",
+          "claim_text": "What is the exact definition of cultural perspective you consider in the paper? What is the relation between cultural perspective and personal values?",
+          "proxy_meta_label": "not_found",
+          "semantic_meta_label": "partial",
+          "left_score": 0.5508,
+          "right_score": 0.6708,
+          "delta": 0.12,
+          "left_label": "medium",
+          "right_label": "medium"
+        }
+      ]
+    },
+    "semantic_labeled_vs_current_subset": {
+      "claim_count": 421,
+      "mean_score_delta": -0.0007,
+      "median_score_delta": 0.0,
+      "mean_abs_score_delta": 0.0294,
+      "mean_meta_review_uptake_delta": -0.0033,
+      "label_change_count": 37,
+      "label_change_rate": 0.0879,
+      "label_changes": {
+        "high->medium": 21,
+        "medium->high": 5,
+        "medium->low": 6,
+        "low->medium": 5
+      },
+      "largest_drops": [
+        {
+          "key": "10eQ4Cfh8p:S3IqtlOGLT:4",
+          "paper_id": "10eQ4Cfh8p",
+          "review_id": "S3IqtlOGLT",
+          "claim_text": "Only two experiments (synthetic and public benchmarks); unclear extension to other scheduling or combinatorial optimization problems.",
+          "proxy_meta_label": "survived",
+          "semantic_meta_label": "not_found",
+          "left_score": 0.774,
+          "right_score": 0.574,
+          "delta": -0.2,
+          "left_label": "high",
+          "right_label": "medium"
+        },
+        {
+          "key": "rEQ8OiBxbZ:ugAdT84dP2:2",
+          "paper_id": "rEQ8OiBxbZ",
+          "review_id": "ugAdT84dP2",
+          "claim_text": "How does the method perform on datasets like QM9?",
+          "proxy_meta_label": "survived",
+          "semantic_meta_label": "not_found",
+          "left_score": 0.7517,
+          "right_score": 0.5517,
+          "delta": -0.2,
+          "left_label": "high",
+          "right_label": "medium"
+        },
+        {
+          "key": "rp5vfyp5Np:YktI8n3TeZ:0",
+          "paper_id": "rp5vfyp5Np",
+          "review_id": "YktI8n3TeZ",
+          "claim_text": "The human preference-based intention policy learning brings extra requirement and uncertainty to the process - the collection of human preference data can be expensive.",
+          "proxy_meta_label": "survived",
+          "semantic_meta_label": "not_found",
+          "left_score": 0.7032,
+          "right_score": 0.5032,
+          "delta": -0.2,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "BQvbL2sFQx:NnBm0ZmhsP:1",
+          "paper_id": "BQvbL2sFQx",
+          "review_id": "NnBm0ZmhsP",
+          "claim_text": "The authors did not discuss on the limitations of the proposed method.",
+          "proxy_meta_label": "survived",
+          "semantic_meta_label": "not_found",
+          "left_score": 0.6673,
+          "right_score": 0.4673,
+          "delta": -0.2,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "rp5vfyp5Np:vGNqxpozDP:0",
+          "paper_id": "rp5vfyp5Np",
+          "review_id": "vGNqxpozDP",
+          "claim_text": "The presentation of experimental results is somewhat confusing. The differences of scenarios in Figure 4 and 5 are not clear, and additional explanations are required for the target coordinates mentioned for Figure 4. Captions of Figures 7 (a) and (b) might need to be swapped, and sections (c) and (d) require clearer explanations.",
+          "proxy_meta_label": "survived",
+          "semantic_meta_label": "not_found",
+          "left_score": 0.8175,
+          "right_score": 0.6175,
+          "delta": -0.2,
+          "left_label": "high",
+          "right_label": "medium"
+        },
+        {
+          "key": "rp5vfyp5Np:vGNqxpozDP:1",
+          "paper_id": "rp5vfyp5Np",
+          "review_id": "vGNqxpozDP",
+          "claim_text": "The paper lacks a discussion of limitations, which should be addressed.",
+          "proxy_meta_label": "survived",
+          "semantic_meta_label": "not_found",
+          "left_score": 0.6697,
+          "right_score": 0.4697,
+          "delta": -0.2,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "xNdE7RiRyP:5DuTHFMr8O:1",
+          "paper_id": "xNdE7RiRyP",
+          "review_id": "5DuTHFMr8O",
+          "claim_text": "- Fig. 5a is missing.",
+          "proxy_meta_label": "survived",
+          "semantic_meta_label": "not_found",
+          "left_score": 0.6767,
+          "right_score": 0.4767,
+          "delta": -0.2,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "JWrl5pJCnl:COvLA4Q4C5:4",
+          "paper_id": "JWrl5pJCnl",
+          "review_id": "COvLA4Q4C5",
+          "claim_text": "Are the example programs in the prompt fixed for every task or do they depend on the task ?",
+          "proxy_meta_label": "partial",
+          "semantic_meta_label": "not_found",
+          "left_score": 0.5732,
+          "right_score": 0.4532,
+          "delta": -0.12,
+          "left_label": "medium",
+          "right_label": "medium"
+        }
+      ],
+      "largest_gains": [
+        {
+          "key": "1FWDEIGm33:MzDh7uJCEU:0",
+          "paper_id": "1FWDEIGm33",
+          "review_id": "MzDh7uJCEU",
+          "claim_text": "The framing of the paper needs significant improvement. The argument seems to go something like this: LLMs tend to be context-dependent. Humans tend to be stable across contexts. Therefore, LLMs should not be assumed to be human-like. Probing an LLM with questions derived from a field that assumes a human subject is flawed. Making general conclusions from results based on these questions is also flawed. LLM as a superposition not an individual is proposed is a new metaphor. This new metaphor motivated the study of perspective change in LLMs, which is the focus of this paper.",
+          "proxy_meta_label": "not_found",
+          "semantic_meta_label": "survived",
+          "left_score": 0.5365,
+          "right_score": 0.7365,
+          "delta": 0.2,
+          "left_label": "medium",
+          "right_label": "high"
+        },
+        {
+          "key": "7vVWiCrFnd:aHtDQsXakn:1",
+          "paper_id": "7vVWiCrFnd",
+          "review_id": "aHtDQsXakn",
+          "claim_text": "Improvements of other baselines in the BUDDY paper, especially GNN ones, are not included.",
+          "proxy_meta_label": "not_found",
+          "semantic_meta_label": "partial",
+          "left_score": 0.565,
+          "right_score": 0.685,
+          "delta": 0.12,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "H9DYMIpz9c:KqbT3NNcP2:2",
+          "paper_id": "H9DYMIpz9c",
+          "review_id": "KqbT3NNcP2",
+          "claim_text": "My major questions concern the clarifications about the approach listed above, without which it is really hard to judge the technical correctness / soundness of the paper.",
+          "proxy_meta_label": "not_found",
+          "semantic_meta_label": "partial",
+          "left_score": 0.4875,
+          "right_score": 0.6075,
+          "delta": 0.12,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "My7lkRNnL9:MQTHAuclRi:1",
+          "paper_id": "My7lkRNnL9",
+          "review_id": "MQTHAuclRi",
+          "claim_text": "Figure readability issues hinder interpretation (hard to read figures, overlap not easily visible, colors inconspicuous).",
+          "proxy_meta_label": "not_found",
+          "semantic_meta_label": "partial",
+          "left_score": 0.3958,
+          "right_score": 0.5158,
+          "delta": 0.12,
+          "left_label": "low",
+          "right_label": "medium"
+        },
+        {
+          "key": "kKRbAY4CXv:eSJOZmZeDG:3",
+          "paper_id": "kKRbAY4CXv",
+          "review_id": "eSJOZmZeDG",
+          "claim_text": "I think some of the equation details of BINet in the related work should be moved to an appendix or background section.",
+          "proxy_meta_label": "not_found",
+          "semantic_meta_label": "partial",
+          "left_score": 0.41,
+          "right_score": 0.53,
+          "delta": 0.12,
+          "left_label": "low",
+          "right_label": "medium"
+        },
+        {
+          "key": "10eQ4Cfh8p:wckxlkPL42:7",
+          "paper_id": "10eQ4Cfh8p",
+          "review_id": "wckxlkPL42",
+          "claim_text": "Is $M_{ij} = 1$ if $O_j$ is processed on Machine $i$, or $O_j$ “can be” processed on Machine $i$? What is the concept of model designing (or why it is designed in this way)?",
+          "proxy_meta_label": "not_found",
+          "semantic_meta_label": "partial",
+          "left_score": 0.4907,
+          "right_score": 0.6107,
+          "delta": 0.12,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "1FWDEIGm33:MzDh7uJCEU:2",
+          "paper_id": "1FWDEIGm33",
+          "review_id": "MzDh7uJCEU",
+          "claim_text": "The main focus is not clearly defined. The first sentence in the methods section states, \"This paper aims at uncovering the existence of unexpected perspective shift effects i.e. how context can impact the values and personality traits expressed by LLMs in unwanted, unexpected ways\". This is the definition provided. It is unfortunately unclear.",
+          "proxy_meta_label": "not_found",
+          "semantic_meta_label": "partial",
+          "left_score": 0.6925,
+          "right_score": 0.8125,
+          "delta": 0.12,
+          "left_label": "medium",
+          "right_label": "high"
+        },
+        {
+          "key": "1FWDEIGm33:pfCqf1kmPM:1",
+          "paper_id": "1FWDEIGm33",
+          "review_id": "pfCqf1kmPM",
+          "claim_text": "What is the exact definition of cultural perspective you consider in the paper? What is the relation between cultural perspective and personal values?",
+          "proxy_meta_label": "not_found",
+          "semantic_meta_label": "partial",
+          "left_score": 0.5508,
+          "right_score": 0.6708,
+          "delta": 0.12,
+          "left_label": "medium",
+          "right_label": "medium"
+        }
+      ]
+    },
+    "semantic_high_confidence_vs_current_subset": {
+      "claim_count": 155,
+      "mean_score_delta": 0.0065,
+      "median_score_delta": 0.0,
+      "mean_abs_score_delta": 0.025,
+      "mean_meta_review_uptake_delta": 0.0323,
+      "label_change_count": 13,
+      "label_change_rate": 0.0839,
+      "label_changes": {
+        "medium->high": 3,
+        "high->medium": 9,
+        "low->medium": 1
+      },
+      "largest_drops": [
+        {
+          "key": "7QlKLvfVge:LsvjaIpscH:5",
+          "paper_id": "7QlKLvfVge",
+          "review_id": "LsvjaIpscH",
+          "claim_text": "Modifying the weight matrix may cause a performance drop in many cases. How can your projection keep the performance?",
+          "proxy_meta_label": "survived",
+          "semantic_meta_label": "partial",
+          "left_score": 0.6782,
+          "right_score": 0.5982,
+          "delta": -0.08,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "IefMMX12yk:Z2Yp4ywhAo:2",
+          "paper_id": "IefMMX12yk",
+          "review_id": "Z2Yp4ywhAo",
+          "claim_text": "The first contribution is proprosing a operation-pruned search method with learnable weight mask. However, the work of HM-NAS introduced this hierarchical masking on redundant operations, edges, and even the weights of supernet. It seems like transfering the idea on graphs. Maybe you should add this work and discuss the noble part of the first contribution compared with the learnable weight mask idea on edges in HM-NAS.",
+          "proxy_meta_label": "survived",
+          "semantic_meta_label": "partial",
+          "left_score": 0.7365,
+          "right_score": 0.6565,
+          "delta": -0.08,
+          "left_label": "high",
+          "right_label": "medium"
+        },
+        {
+          "key": "eepoE7iLpL:Omfs3dIcbU:1",
+          "paper_id": "eepoE7iLpL",
+          "review_id": "Omfs3dIcbU",
+          "claim_text": "after optimization, how do you use this neural network to select a subset?",
+          "proxy_meta_label": "survived",
+          "semantic_meta_label": "partial",
+          "left_score": 0.7032,
+          "right_score": 0.6232,
+          "delta": -0.08,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "jXR5pjs1rV:dXSWosECmZ:0",
+          "paper_id": "jXR5pjs1rV",
+          "review_id": "dXSWosECmZ",
+          "claim_text": "Limited Novelty of Baseline Approach: The baseline approach proposed for addressing this dataset is somewhat derivative, primarily building upon the work by Askell et al. (2021).",
+          "proxy_meta_label": "survived",
+          "semantic_meta_label": "partial",
+          "left_score": 0.7365,
+          "right_score": 0.6565,
+          "delta": -0.08,
+          "left_label": "high",
+          "right_label": "medium"
+        },
+        {
+          "key": "rEQ8OiBxbZ:ugAdT84dP2:0",
+          "paper_id": "rEQ8OiBxbZ",
+          "review_id": "ugAdT84dP2",
+          "claim_text": "The experimental results seem to be insufficient to support the empirical superiority of the proposed approach. In particular, the method could be further improved either through a more careful design of the backbone or enhancements of the training objective to make the results stronger.",
+          "proxy_meta_label": "survived",
+          "semantic_meta_label": "partial",
+          "left_score": 0.7125,
+          "right_score": 0.6325,
+          "delta": -0.08,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "rp5vfyp5Np:YktI8n3TeZ:6",
+          "paper_id": "rp5vfyp5Np",
+          "review_id": "YktI8n3TeZ",
+          "claim_text": "The paper suggests the method can be used to improve robustness of agents, which may require careful evaluation; include limitations.",
+          "proxy_meta_label": "survived",
+          "semantic_meta_label": "partial",
+          "left_score": 0.7497,
+          "right_score": 0.6697,
+          "delta": -0.08,
+          "left_label": "high",
+          "right_label": "medium"
+        },
+        {
+          "key": "rp5vfyp5Np:cJESK6o5Pr:0",
+          "paper_id": "rp5vfyp5Np",
+          "review_id": "cJESK6o5Pr",
+          "claim_text": "Additionally, the rationale for using preference-based RL remains unclear.",
+          "proxy_meta_label": "survived",
+          "semantic_meta_label": "partial",
+          "left_score": 0.5975,
+          "right_score": 0.5175,
+          "delta": -0.08,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "rp5vfyp5Np:cJESK6o5Pr:1",
+          "paper_id": "rp5vfyp5Np",
+          "review_id": "cJESK6o5Pr",
+          "claim_text": "The paper lacks some critical methodological details. For example, it doesn't specify how the victim policy approximator is trained or the volume of data required, leaving gaps in the understanding of the implementation.",
+          "proxy_meta_label": "survived",
+          "semantic_meta_label": "partial",
+          "left_score": 0.7365,
+          "right_score": 0.6565,
+          "delta": -0.08,
+          "left_label": "high",
+          "right_label": "medium"
+        }
+      ],
+      "largest_gains": [
+        {
+          "key": "1FWDEIGm33:MzDh7uJCEU:0",
+          "paper_id": "1FWDEIGm33",
+          "review_id": "MzDh7uJCEU",
+          "claim_text": "The framing of the paper needs significant improvement. The argument seems to go something like this: LLMs tend to be context-dependent. Humans tend to be stable across contexts. Therefore, LLMs should not be assumed to be human-like. Probing an LLM with questions derived from a field that assumes a human subject is flawed. Making general conclusions from results based on these questions is also flawed. LLM as a superposition not an individual is proposed is a new metaphor. This new metaphor motivated the study of perspective change in LLMs, which is the focus of this paper.",
+          "proxy_meta_label": "not_found",
+          "semantic_meta_label": "survived",
+          "left_score": 0.5365,
+          "right_score": 0.7365,
+          "delta": 0.2,
+          "left_label": "medium",
+          "right_label": "high"
+        },
+        {
+          "key": "1FWDEIGm33:MzDh7uJCEU:2",
+          "paper_id": "1FWDEIGm33",
+          "review_id": "MzDh7uJCEU",
+          "claim_text": "The main focus is not clearly defined. The first sentence in the methods section states, \"This paper aims at uncovering the existence of unexpected perspective shift effects i.e. how context can impact the values and personality traits expressed by LLMs in unwanted, unexpected ways\". This is the definition provided. It is unfortunately unclear.",
+          "proxy_meta_label": "not_found",
+          "semantic_meta_label": "partial",
+          "left_score": 0.6925,
+          "right_score": 0.8125,
+          "delta": 0.12,
+          "left_label": "medium",
+          "right_label": "high"
+        },
+        {
+          "key": "1FWDEIGm33:pfCqf1kmPM:1",
+          "paper_id": "1FWDEIGm33",
+          "review_id": "pfCqf1kmPM",
+          "claim_text": "What is the exact definition of cultural perspective you consider in the paper? What is the relation between cultural perspective and personal values?",
+          "proxy_meta_label": "not_found",
+          "semantic_meta_label": "partial",
+          "left_score": 0.5508,
+          "right_score": 0.6708,
+          "delta": 0.12,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "1FWDEIGm33:wXp9GL22N6:0",
+          "paper_id": "1FWDEIGm33",
+          "review_id": "wXp9GL22N6",
+          "claim_text": "It is unclear what the implications and potential applications of this work are.",
+          "proxy_meta_label": "not_found",
+          "semantic_meta_label": "partial",
+          "left_score": 0.5017,
+          "right_score": 0.6217,
+          "delta": 0.12,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "7QlKLvfVge:Z5ysjYl4EJ:0",
+          "paper_id": "7QlKLvfVge",
+          "review_id": "Z5ysjYl4EJ",
+          "claim_text": "It is unclear why the 3rd center moment would show the best performance to measure the difference. In other words, would 2nd order moment or 1st order work as well? Since 3rd order is the main metric selected, the author should explain the choice in detail.",
+          "proxy_meta_label": "not_found",
+          "semantic_meta_label": "partial",
+          "left_score": 0.5365,
+          "right_score": 0.6565,
+          "delta": 0.12,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "AOSsLRKQrX:tYw6kbOlZq:2",
+          "paper_id": "AOSsLRKQrX",
+          "review_id": "tYw6kbOlZq",
+          "claim_text": "Not enough experiments are shown to prove the representations are “disentangled”. This disentanglement is the major advantage of the method. However, only several examples are shown in Fig. 2 to show the disentanglement. Quantitative results, or visualization of the learned slots (e.g. using t-SNE) would be preferred.",
+          "proxy_meta_label": "not_found",
+          "semantic_meta_label": "partial",
+          "left_score": 0.5365,
+          "right_score": 0.6565,
+          "delta": 0.12,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "DwcV654WBP:RJ9cHExJdo:4",
+          "paper_id": "DwcV654WBP",
+          "review_id": "RJ9cHExJdo",
+          "claim_text": "While the paper discusses scalability, it lacks specific metrics on computational and memory requirements. Could you provide more detailed analyses on these aspects?",
+          "proxy_meta_label": "not_found",
+          "semantic_meta_label": "partial",
+          "left_score": 0.5198,
+          "right_score": 0.6398,
+          "delta": 0.12,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "cXs5md5wAq:3FBIToMxSZ:2",
+          "paper_id": "cXs5md5wAq",
+          "review_id": "3FBIToMxSZ",
+          "claim_text": "Overall, the proposed method - applying GNN model in a straightforward way to a very small, fully-connected graph - is poorly justified and weak on novelty.",
+          "proxy_meta_label": "not_found",
+          "semantic_meta_label": "partial",
+          "left_score": 0.5365,
+          "right_score": 0.6565,
+          "delta": 0.12,
+          "left_label": "medium",
+          "right_label": "medium"
+        }
+      ]
+    }
+  },
+  "semantic_meta_diagnostics": {
+    "matched_record_count": 500,
+    "decisive_record_count": 421,
+    "proxy_positive_rate": 0.6366,
+    "semantic_positive_rate": 0.6817,
+    "exact_agreement_rate": 0.7458,
+    "proxy_false_positive_count": 30,
+    "proxy_false_positive_rate": 0.1119,
+    "proxy_false_negative_count": 49,
+    "proxy_false_negative_rate": 0.3203,
+    "semantic_label_counts": {
+      "partial": 280,
+      "not_found": 134,
+      "unsure": 79,
+      "survived": 7
+    },
+    "proxy_label_counts_on_matched": {
+      "partial": 245,
+      "not_found": 214,
+      "survived": 41
+    }
+  },
+  "notes": [
+    "`current_proxy_meta` keeps the existing lexical meta-review uptake signal.",
+    "`semantic_hybrid_meta` replaces meta-review uptake with LLM semantic labels when decisive; missing/unsure labels fall back to proxy.",
+    "`semantic_labeled_only` reports only claims with decisive semantic meta-review labels.",
+    "`semantic_high_confidence_only` is the strictest subset: decisive semantic labels marked high-confidence training candidates.",
+    "Rebuttal and consensus still use the current hybrid LLM/proxy logic; this report isolates the meta-review uptake leg."
+  ]
+}

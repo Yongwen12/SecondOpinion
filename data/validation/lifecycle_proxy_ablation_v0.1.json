@@ -1,0 +1,776 @@
+{
+  "schema_version": "lifecycle-proxy-ablation-v0.1",
+  "source": {
+    "calibration_version": "reviewer-calibration-v0.1",
+    "source": {
+      "survival_version": "concern-survival-meta-review-v0.1",
+      "snapshot": {
+        "snapshot_dir": "data\\raw\\openreview\\iclr\\2024\\20260522T083133Z",
+        "snapshot_id": "20260522T083133Z",
+        "source": "openreview",
+        "venue": "ICLR",
+        "year": 2024
+      },
+      "snapshot_dir": "data\\raw\\openreview\\iclr\\2024\\20260522T083133Z",
+      "llm_rebuttal_label_count": 240,
+      "llm_consensus_label_count": 120
+    }
+  },
+  "summary": {
+    "claim_count": 854,
+    "llm_rebuttal_claim_count": 240,
+    "llm_consensus_claim_count": 120,
+    "any_llm_claim_count": 323,
+    "both_llm_claim_count": 37
+  },
+  "modes": {
+    "proxy_only": {
+      "claim_count": 854,
+      "paper_count": 53,
+      "review_count": 202,
+      "mean_lifecycle_robustness": 0.5645,
+      "median_lifecycle_robustness": 0.552,
+      "label_counts": {
+        "medium": 652,
+        "low": 126,
+        "high": 76
+      },
+      "llm_rebuttal_coverage": 0.281,
+      "llm_consensus_coverage": 0.1405,
+      "mean_signals": {
+        "grounding": 1.0,
+        "specificity": 0.7701,
+        "consensus": 0.5625,
+        "rebuttal_robustness": 0.5361,
+        "discussion_followup": 0.1016,
+        "meta_review_uptake": 0.2831
+      }
+    },
+    "hybrid": {
+      "claim_count": 854,
+      "paper_count": 53,
+      "review_count": 202,
+      "mean_lifecycle_robustness": 0.5746,
+      "median_lifecycle_robustness": 0.5654,
+      "label_counts": {
+        "medium": 650,
+        "low": 107,
+        "high": 97
+      },
+      "llm_rebuttal_coverage": 0.281,
+      "llm_consensus_coverage": 0.1405,
+      "mean_signals": {
+        "grounding": 1.0,
+        "specificity": 0.7701,
+        "consensus": 0.5327,
+        "rebuttal_robustness": 0.5977,
+        "discussion_followup": 0.1016,
+        "meta_review_uptake": 0.2831
+      }
+    },
+    "llm_calibrated_only": {
+      "claim_count": 323,
+      "paper_count": 53,
+      "review_count": 162,
+      "mean_lifecycle_robustness": 0.5837,
+      "median_lifecycle_robustness": 0.5865,
+      "label_counts": {
+        "low": 41,
+        "medium": 239,
+        "high": 43
+      },
+      "llm_rebuttal_coverage": 0.743,
+      "llm_consensus_coverage": 0.3715,
+      "mean_signals": {
+        "grounding": 1.0,
+        "specificity": 0.7645,
+        "consensus": 0.4898,
+        "rebuttal_robustness": 0.661,
+        "discussion_followup": 0.1084,
+        "meta_review_uptake": 0.2904
+      }
+    },
+    "strict_both_llm": {
+      "claim_count": 37,
+      "paper_count": 29,
+      "review_count": 34,
+      "mean_lifecycle_robustness": 0.5901,
+      "median_lifecycle_robustness": 0.59,
+      "label_counts": {
+        "medium": 31,
+        "high": 3,
+        "low": 3
+      },
+      "llm_rebuttal_coverage": 1.0,
+      "llm_consensus_coverage": 1.0,
+      "mean_signals": {
+        "grounding": 1.0,
+        "specificity": 0.7488,
+        "consensus": 0.423,
+        "rebuttal_robustness": 0.7324,
+        "discussion_followup": 0.1135,
+        "meta_review_uptake": 0.3027
+      }
+    }
+  },
+  "comparisons": {
+    "hybrid_vs_proxy_all_claims": {
+      "claim_count": 854,
+      "mean_score_delta": 0.01,
+      "median_score_delta": 0.0,
+      "mean_abs_score_delta": 0.0225,
+      "label_change_count": 82,
+      "label_change_rate": 0.096,
+      "label_changes": {
+        "medium->high": 31,
+        "high->medium": 10,
+        "low->medium": 30,
+        "medium->low": 11
+      },
+      "mean_signal_deltas": {
+        "grounding": 0.0,
+        "specificity": 0.0,
+        "consensus": -0.0299,
+        "rebuttal_robustness": 0.0617,
+        "discussion_followup": 0.0,
+        "meta_review_uptake": 0.0
+      },
+      "largest_drops": [
+        {
+          "key": "9L9j5bQPIY:sNTMZ9SFl1:1",
+          "paper_id": "9L9j5bQPIY",
+          "review_id": "sNTMZ9SFl1",
+          "claim_text": "the meta network does not directly assess the ability of the specific neural network but rather simply meta-classify the modality of the features.",
+          "left_score": 0.7042,
+          "right_score": 0.5242,
+          "delta": -0.18,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "H9DYMIpz9c:oklGIKdeEa:0",
+          "paper_id": "H9DYMIpz9c",
+          "review_id": "oklGIKdeEa",
+          "claim_text": "It is not clear whether this method will be practical and scale for larger language models and larger datasets.",
+          "left_score": 0.6933,
+          "right_score": 0.5133,
+          "delta": -0.18,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "dYjuJGTEbc:S9Hah6oZoZ:1",
+          "paper_id": "dYjuJGTEbc",
+          "review_id": "S9Hah6oZoZ",
+          "claim_text": "In the subsection of Results and Discussion, the authors say they employ five metrics, however, I only find AMI. If they take the results reported in appendix into account, then should clarify this in the main context.",
+          "left_score": 0.6175,
+          "right_score": 0.4375,
+          "delta": -0.18,
+          "left_label": "medium",
+          "right_label": "low"
+        },
+        {
+          "key": "rhgIgTSSxW:CEBB2izG6I:2",
+          "paper_id": "rhgIgTSSxW",
+          "review_id": "CEBB2izG6I",
+          "claim_text": "What's the inference efficiency of TabR and how does it compare with other baselines (e.g., GBDT)?",
+          "left_score": 0.7398,
+          "right_score": 0.5598,
+          "delta": -0.18,
+          "left_label": "high",
+          "right_label": "medium"
+        },
+        {
+          "key": "rp5vfyp5Np:YktI8n3TeZ:2",
+          "paper_id": "rp5vfyp5Np",
+          "review_id": "YktI8n3TeZ",
+          "claim_text": "Is it clear how the attack success rate is defined and whether it could be biased since the intention policy is an approximation of real human intention?",
+          "left_score": 0.8165,
+          "right_score": 0.6365,
+          "delta": -0.18,
+          "left_label": "high",
+          "right_label": "medium"
+        },
+        {
+          "key": "w73feIekdO:zvRFKIdLnu:0",
+          "paper_id": "w73feIekdO",
+          "review_id": "zvRFKIdLnu",
+          "claim_text": "To this end, we utilize motion vectors and clusters. What clusters authors are referring to. I believe it should be clustering algorithms/methods.",
+          "left_score": 0.7617,
+          "right_score": 0.5817,
+          "delta": -0.18,
+          "left_label": "high",
+          "right_label": "medium"
+        },
+        {
+          "key": "7vVWiCrFnd:aHtDQsXakn:4",
+          "paper_id": "7vVWiCrFnd",
+          "review_id": "aHtDQsXakn",
+          "claim_text": "Hyperparameter selection details are lacking.",
+          "left_score": 0.5708,
+          "right_score": 0.3908,
+          "delta": -0.18,
+          "left_label": "medium",
+          "right_label": "low"
+        },
+        {
+          "key": "jXR5pjs1rV:wvyBh57PMW:1",
+          "paper_id": "jXR5pjs1rV",
+          "review_id": "wvyBh57PMW",
+          "claim_text": "Clarity needs to improve.",
+          "left_score": 0.3675,
+          "right_score": 0.1875,
+          "delta": -0.18,
+          "left_label": "low",
+          "right_label": "low"
+        }
+      ],
+      "largest_gains": [
+        {
+          "key": "qBL04XXex6:1lDRac9ePM:2",
+          "paper_id": "qBL04XXex6",
+          "review_id": "1lDRac9ePM",
+          "claim_text": "More analysis or ablation studies are also helpful.",
+          "left_score": 0.2825,
+          "right_score": 0.4815,
+          "delta": 0.199,
+          "left_label": "low",
+          "right_label": "medium"
+        },
+        {
+          "key": "AOSsLRKQrX:iusxEbIueU:2",
+          "paper_id": "AOSsLRKQrX",
+          "review_id": "iusxEbIueU",
+          "claim_text": "In section 3.2, “we project each resultant block vector onto the learnable concept space and update its representation as a linear combination of the concepts via projection weights (lines 9 - 12 in Algorithm 1). This step results in discovering the disentangled representation central to our approach.”. Could you provide a more in-depth explanation or empirical evidence to support this assertion?",
+          "left_score": 0.5575,
+          "right_score": 0.7375,
+          "delta": 0.18,
+          "left_label": "medium",
+          "right_label": "high"
+        },
+        {
+          "key": "9L9j5bQPIY:ruFJeXpRL4:4",
+          "paper_id": "9L9j5bQPIY",
+          "review_id": "ruFJeXpRL4",
+          "claim_text": "Figure and method explanation needed about how the meta-network embeds ANNs in a low-dimensional latent space and what each component does (model to interpret, meta-encoder, meta-autoencoder, Knn classifier).",
+          "left_score": 0.5565,
+          "right_score": 0.7315,
+          "delta": 0.175,
+          "left_label": "medium",
+          "right_label": "high"
+        },
+        {
+          "key": "AOSsLRKQrX:iusxEbIueU:4",
+          "paper_id": "AOSsLRKQrX",
+          "review_id": "iusxEbIueU",
+          "claim_text": "In Section 3.6, there is a training phase where only the block extractor, permutation module, and decoder are trained, followed by a phase focusing solely on the dynamic model. Could you elaborate on the reasons and potential benefits of this training strategy? Did it result in improved model performance?",
+          "left_score": 0.5175,
+          "right_score": 0.6925,
+          "delta": 0.175,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "gtkFw6sZGS:5yEYAAadyY:2",
+          "paper_id": "gtkFw6sZGS",
+          "review_id": "5yEYAAadyY",
+          "claim_text": "Did you define the scenarios and categories both for fine-tune the model to perform evaluation AND test the model to perform evaluation? In that case, if we want to evaluate an LM that performs a new task that is not in the 58 categories you have defined, would Auto-J generalize to categories unseen during training?",
+          "left_score": 0.5565,
+          "right_score": 0.7315,
+          "delta": 0.175,
+          "left_label": "medium",
+          "right_label": "high"
+        },
+        {
+          "key": "miGpIhquyB:9c9pOV3Yi5:2",
+          "paper_id": "miGpIhquyB",
+          "review_id": "9c9pOV3Yi5",
+          "claim_text": "The biases in the reference datasets could also be affecting conformity, faithfulness and performance. It might help to include multiple reference datasets per domain-task combination to evaluate whether the trends hold across them.",
+          "left_score": 0.6855,
+          "right_score": 0.8605,
+          "delta": 0.175,
+          "left_label": "medium",
+          "right_label": "high"
+        },
+        {
+          "key": "yacRhge4zQ:5Yq0QwTe4B:0",
+          "paper_id": "yacRhge4zQ",
+          "review_id": "5Yq0QwTe4B",
+          "claim_text": "The assumption of a pre-calculated Pareto frontier as common knowledge does not have theoretical proofs and the discussion around the empirical evaluation in Appendix J is lacking.",
+          "left_score": 0.4325,
+          "right_score": 0.6075,
+          "delta": 0.175,
+          "left_label": "low",
+          "right_label": "medium"
+        },
+        {
+          "key": "yacRhge4zQ:5Yq0QwTe4B:3",
+          "paper_id": "yacRhge4zQ",
+          "review_id": "5Yq0QwTe4B",
+          "claim_text": "Requests for clarification of the Pareto frontier assumption.",
+          "left_score": 0.3992,
+          "right_score": 0.5742,
+          "delta": 0.175,
+          "left_label": "low",
+          "right_label": "medium"
+        }
+      ]
+    },
+    "llm_subset_hybrid_vs_proxy": {
+      "claim_count": 323,
+      "mean_score_delta": 0.0265,
+      "median_score_delta": 0.0375,
+      "mean_abs_score_delta": 0.0594,
+      "label_change_count": 82,
+      "label_change_rate": 0.2539,
+      "label_changes": {
+        "medium->high": 31,
+        "high->medium": 10,
+        "low->medium": 30,
+        "medium->low": 11
+      },
+      "mean_signal_deltas": {
+        "grounding": 0.0,
+        "specificity": 0.0,
+        "consensus": -0.0789,
+        "rebuttal_robustness": 0.163,
+        "discussion_followup": 0.0,
+        "meta_review_uptake": 0.0
+      },
+      "largest_drops": [
+        {
+          "key": "9L9j5bQPIY:sNTMZ9SFl1:1",
+          "paper_id": "9L9j5bQPIY",
+          "review_id": "sNTMZ9SFl1",
+          "claim_text": "the meta network does not directly assess the ability of the specific neural network but rather simply meta-classify the modality of the features.",
+          "left_score": 0.7042,
+          "right_score": 0.5242,
+          "delta": -0.18,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "H9DYMIpz9c:oklGIKdeEa:0",
+          "paper_id": "H9DYMIpz9c",
+          "review_id": "oklGIKdeEa",
+          "claim_text": "It is not clear whether this method will be practical and scale for larger language models and larger datasets.",
+          "left_score": 0.6933,
+          "right_score": 0.5133,
+          "delta": -0.18,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "dYjuJGTEbc:S9Hah6oZoZ:1",
+          "paper_id": "dYjuJGTEbc",
+          "review_id": "S9Hah6oZoZ",
+          "claim_text": "In the subsection of Results and Discussion, the authors say they employ five metrics, however, I only find AMI. If they take the results reported in appendix into account, then should clarify this in the main context.",
+          "left_score": 0.6175,
+          "right_score": 0.4375,
+          "delta": -0.18,
+          "left_label": "medium",
+          "right_label": "low"
+        },
+        {
+          "key": "rhgIgTSSxW:CEBB2izG6I:2",
+          "paper_id": "rhgIgTSSxW",
+          "review_id": "CEBB2izG6I",
+          "claim_text": "What's the inference efficiency of TabR and how does it compare with other baselines (e.g., GBDT)?",
+          "left_score": 0.7398,
+          "right_score": 0.5598,
+          "delta": -0.18,
+          "left_label": "high",
+          "right_label": "medium"
+        },
+        {
+          "key": "rp5vfyp5Np:YktI8n3TeZ:2",
+          "paper_id": "rp5vfyp5Np",
+          "review_id": "YktI8n3TeZ",
+          "claim_text": "Is it clear how the attack success rate is defined and whether it could be biased since the intention policy is an approximation of real human intention?",
+          "left_score": 0.8165,
+          "right_score": 0.6365,
+          "delta": -0.18,
+          "left_label": "high",
+          "right_label": "medium"
+        },
+        {
+          "key": "w73feIekdO:zvRFKIdLnu:0",
+          "paper_id": "w73feIekdO",
+          "review_id": "zvRFKIdLnu",
+          "claim_text": "To this end, we utilize motion vectors and clusters. What clusters authors are referring to. I believe it should be clustering algorithms/methods.",
+          "left_score": 0.7617,
+          "right_score": 0.5817,
+          "delta": -0.18,
+          "left_label": "high",
+          "right_label": "medium"
+        },
+        {
+          "key": "7vVWiCrFnd:aHtDQsXakn:4",
+          "paper_id": "7vVWiCrFnd",
+          "review_id": "aHtDQsXakn",
+          "claim_text": "Hyperparameter selection details are lacking.",
+          "left_score": 0.5708,
+          "right_score": 0.3908,
+          "delta": -0.18,
+          "left_label": "medium",
+          "right_label": "low"
+        },
+        {
+          "key": "jXR5pjs1rV:wvyBh57PMW:1",
+          "paper_id": "jXR5pjs1rV",
+          "review_id": "wvyBh57PMW",
+          "claim_text": "Clarity needs to improve.",
+          "left_score": 0.3675,
+          "right_score": 0.1875,
+          "delta": -0.18,
+          "left_label": "low",
+          "right_label": "low"
+        }
+      ],
+      "largest_gains": [
+        {
+          "key": "qBL04XXex6:1lDRac9ePM:2",
+          "paper_id": "qBL04XXex6",
+          "review_id": "1lDRac9ePM",
+          "claim_text": "More analysis or ablation studies are also helpful.",
+          "left_score": 0.2825,
+          "right_score": 0.4815,
+          "delta": 0.199,
+          "left_label": "low",
+          "right_label": "medium"
+        },
+        {
+          "key": "AOSsLRKQrX:iusxEbIueU:2",
+          "paper_id": "AOSsLRKQrX",
+          "review_id": "iusxEbIueU",
+          "claim_text": "In section 3.2, “we project each resultant block vector onto the learnable concept space and update its representation as a linear combination of the concepts via projection weights (lines 9 - 12 in Algorithm 1). This step results in discovering the disentangled representation central to our approach.”. Could you provide a more in-depth explanation or empirical evidence to support this assertion?",
+          "left_score": 0.5575,
+          "right_score": 0.7375,
+          "delta": 0.18,
+          "left_label": "medium",
+          "right_label": "high"
+        },
+        {
+          "key": "9L9j5bQPIY:ruFJeXpRL4:4",
+          "paper_id": "9L9j5bQPIY",
+          "review_id": "ruFJeXpRL4",
+          "claim_text": "Figure and method explanation needed about how the meta-network embeds ANNs in a low-dimensional latent space and what each component does (model to interpret, meta-encoder, meta-autoencoder, Knn classifier).",
+          "left_score": 0.5565,
+          "right_score": 0.7315,
+          "delta": 0.175,
+          "left_label": "medium",
+          "right_label": "high"
+        },
+        {
+          "key": "AOSsLRKQrX:iusxEbIueU:4",
+          "paper_id": "AOSsLRKQrX",
+          "review_id": "iusxEbIueU",
+          "claim_text": "In Section 3.6, there is a training phase where only the block extractor, permutation module, and decoder are trained, followed by a phase focusing solely on the dynamic model. Could you elaborate on the reasons and potential benefits of this training strategy? Did it result in improved model performance?",
+          "left_score": 0.5175,
+          "right_score": 0.6925,
+          "delta": 0.175,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "gtkFw6sZGS:5yEYAAadyY:2",
+          "paper_id": "gtkFw6sZGS",
+          "review_id": "5yEYAAadyY",
+          "claim_text": "Did you define the scenarios and categories both for fine-tune the model to perform evaluation AND test the model to perform evaluation? In that case, if we want to evaluate an LM that performs a new task that is not in the 58 categories you have defined, would Auto-J generalize to categories unseen during training?",
+          "left_score": 0.5565,
+          "right_score": 0.7315,
+          "delta": 0.175,
+          "left_label": "medium",
+          "right_label": "high"
+        },
+        {
+          "key": "miGpIhquyB:9c9pOV3Yi5:2",
+          "paper_id": "miGpIhquyB",
+          "review_id": "9c9pOV3Yi5",
+          "claim_text": "The biases in the reference datasets could also be affecting conformity, faithfulness and performance. It might help to include multiple reference datasets per domain-task combination to evaluate whether the trends hold across them.",
+          "left_score": 0.6855,
+          "right_score": 0.8605,
+          "delta": 0.175,
+          "left_label": "medium",
+          "right_label": "high"
+        },
+        {
+          "key": "yacRhge4zQ:5Yq0QwTe4B:0",
+          "paper_id": "yacRhge4zQ",
+          "review_id": "5Yq0QwTe4B",
+          "claim_text": "The assumption of a pre-calculated Pareto frontier as common knowledge does not have theoretical proofs and the discussion around the empirical evaluation in Appendix J is lacking.",
+          "left_score": 0.4325,
+          "right_score": 0.6075,
+          "delta": 0.175,
+          "left_label": "low",
+          "right_label": "medium"
+        },
+        {
+          "key": "yacRhge4zQ:5Yq0QwTe4B:3",
+          "paper_id": "yacRhge4zQ",
+          "review_id": "5Yq0QwTe4B",
+          "claim_text": "Requests for clarification of the Pareto frontier assumption.",
+          "left_score": 0.3992,
+          "right_score": 0.5742,
+          "delta": 0.175,
+          "left_label": "low",
+          "right_label": "medium"
+        }
+      ]
+    },
+    "strict_both_llm_hybrid_vs_proxy": {
+      "claim_count": 37,
+      "mean_score_delta": 0.0178,
+      "median_score_delta": 0.0,
+      "mean_abs_score_delta": 0.0605,
+      "label_change_count": 10,
+      "label_change_rate": 0.2703,
+      "label_changes": {
+        "low->medium": 4,
+        "medium->high": 2,
+        "medium->low": 1,
+        "high->medium": 3
+      },
+      "mean_signal_deltas": {
+        "grounding": 0.0,
+        "specificity": 0.0,
+        "consensus": -0.2257,
+        "rebuttal_robustness": 0.2338,
+        "discussion_followup": 0.0,
+        "meta_review_uptake": 0.0
+      },
+      "largest_drops": [
+        {
+          "key": "3wL1tj3kqE:6hdEd9y3Hn:3",
+          "paper_id": "3wL1tj3kqE",
+          "review_id": "6hdEd9y3Hn",
+          "claim_text": "Does data sample x include sensitive attribute c?",
+          "left_score": 0.3792,
+          "right_score": 0.2607,
+          "delta": -0.1185,
+          "left_label": "low",
+          "right_label": "low"
+        },
+        {
+          "key": "B0wJ5oCPdB:x19B7pK50x:1",
+          "paper_id": "B0wJ5oCPdB",
+          "review_id": "x19B7pK50x",
+          "claim_text": "The authors claim that they achieved a significant improvement of up to 60.8% in accuracy (from 31.8% to 92.6%) on the Brick World dataset. While this is technically correct given the results, the reported improvement is a little misleading because it's comparing zs-CoT vs. CoS and also such a dramatic gain isn't seen in most cases, especially when comparing the performance of CoS to CoT. In more realistic datasets like SPARTUN, the improvement is marginal. This suggests that the impressive gains are more about the simplicity of the Brick World dataset than any substantial leap in CoS performance. Thus, I believe the claim should be more moderate.",
+          "left_score": 0.5365,
+          "right_score": 0.4375,
+          "delta": -0.099,
+          "left_label": "medium",
+          "right_label": "low"
+        },
+        {
+          "key": "jXR5pjs1rV:wvyBh57PMW:3",
+          "paper_id": "jXR5pjs1rV",
+          "review_id": "wvyBh57PMW",
+          "claim_text": "How does this work compare to the state-of-the art in the area?",
+          "left_score": 0.6217,
+          "right_score": 0.5407,
+          "delta": -0.081,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "kKRbAY4CXv:eSJOZmZeDG:1",
+          "paper_id": "kKRbAY4CXv",
+          "review_id": "eSJOZmZeDG",
+          "claim_text": "The method only works on semi-linear PDEs. This is actually a very strong assumption and limitation. The authors should discuss the extension to nonlinear PDEs.",
+          "left_score": 0.7375,
+          "right_score": 0.6565,
+          "delta": -0.081,
+          "left_label": "high",
+          "right_label": "medium"
+        },
+        {
+          "key": "My7lkRNnL9:CAFQrSYUkW:1",
+          "paper_id": "My7lkRNnL9",
+          "review_id": "CAFQrSYUkW",
+          "claim_text": "Would performance of both algorithms match if we reduce the learning rate of PEPITA-TL? Intuitively it should, since the anti-Hebbian error terms would match.",
+          "left_score": 0.5632,
+          "right_score": 0.5017,
+          "delta": -0.0615,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "cXs5md5wAq:vb8QNXNzVn:4",
+          "paper_id": "cXs5md5wAq",
+          "review_id": "vb8QNXNzVn",
+          "claim_text": "Conclusion regarding data: Unclear why the paper does not recommend including more data; implies need for more data or assessment of GEMs as solution.",
+          "left_score": 0.7632,
+          "right_score": 0.7017,
+          "delta": -0.0615,
+          "left_label": "high",
+          "right_label": "medium"
+        },
+        {
+          "key": "rEQ8OiBxbZ:ugAdT84dP2:0",
+          "paper_id": "rEQ8OiBxbZ",
+          "review_id": "ugAdT84dP2",
+          "claim_text": "The experimental results seem to be insufficient to support the empirical superiority of the proposed approach. In particular, the method could be further improved either through a more careful design of the backbone or enhancements of the training objective to make the results stronger.",
+          "left_score": 0.774,
+          "right_score": 0.7125,
+          "delta": -0.0615,
+          "left_label": "high",
+          "right_label": "medium"
+        },
+        {
+          "key": "IefMMX12yk:aj2q9ksHth:1",
+          "paper_id": "IefMMX12yk",
+          "review_id": "aj2q9ksHth",
+          "claim_text": "I am still concerned about the motivation to work on graph NAS. Different to other neural architectures, there are only several layers in GNNs, and the number of candidate operations is limited. I believe if one only applies the popular toolkit of hyperparameter tuning, the much higher performance will be obtained.",
+          "left_score": 0.5365,
+          "right_score": 0.4875,
+          "delta": -0.049,
+          "left_label": "medium",
+          "right_label": "medium"
+        }
+      ],
+      "largest_gains": [
+        {
+          "key": "qBL04XXex6:1lDRac9ePM:2",
+          "paper_id": "qBL04XXex6",
+          "review_id": "1lDRac9ePM",
+          "claim_text": "More analysis or ablation studies are also helpful.",
+          "left_score": 0.2825,
+          "right_score": 0.4815,
+          "delta": 0.199,
+          "left_label": "low",
+          "right_label": "medium"
+        },
+        {
+          "key": "pYmQId95iR:nfcmdmKvik:2",
+          "paper_id": "pYmQId95iR",
+          "review_id": "nfcmdmKvik",
+          "claim_text": "Methods tested in this work do not include the newest development in the RL field. One method is from 2022, another from 2020, and the rest are from 2017 or older.",
+          "left_score": 0.409,
+          "right_score": 0.559,
+          "delta": 0.15,
+          "left_label": "low",
+          "right_label": "medium"
+        },
+        {
+          "key": "9L9j5bQPIY:91NkdJpVId:2",
+          "paper_id": "9L9j5bQPIY",
+          "review_id": "91NkdJpVId",
+          "claim_text": "It is unclear why we need unitwise and interunit meta-autoencoders.",
+          "left_score": 0.44,
+          "right_score": 0.59,
+          "delta": 0.15,
+          "left_label": "low",
+          "right_label": "medium"
+        },
+        {
+          "key": "eepoE7iLpL:Omfs3dIcbU:0",
+          "paper_id": "eepoE7iLpL",
+          "review_id": "Omfs3dIcbU",
+          "claim_text": "Equation 4 describes the neural network construction. However, I am unclear about the objective function to optimize the neural network.",
+          "left_score": 0.5207,
+          "right_score": 0.6707,
+          "delta": 0.15,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "DwcV654WBP:RJ9cHExJdo:0",
+          "paper_id": "DwcV654WBP",
+          "review_id": "RJ9cHExJdo",
+          "claim_text": "The paper primarily focuses on text-to-video retrieval tasks for its empirical evaluation, which may not sufficiently support its claim of being a task-agnostic foundation model.",
+          "left_score": 0.5325,
+          "right_score": 0.6315,
+          "delta": 0.099,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "B0wJ5oCPdB:ZOPmtxTnai:0",
+          "paper_id": "B0wJ5oCPdB",
+          "review_id": "ZOPmtxTnai",
+          "claim_text": "What is the fundamental explanation that this method works well?",
+          "left_score": 0.6507,
+          "right_score": 0.7447,
+          "delta": 0.094,
+          "left_label": "medium",
+          "right_label": "high"
+        },
+        {
+          "key": "SLw9fp4yI6:jKZS833UEW:0",
+          "paper_id": "SLw9fp4yI6",
+          "review_id": "jKZS833UEW",
+          "claim_text": "Experimentation seems a little weak. It'd be great to compare with some of the work that's come out of UW/AI2 in the past couple of years like DExperts, which you cite but dont compare with, and Quark (Lu et al. 2022). It'd also be great to compare with GeDi and a few other baselines. That'd strengthen the experimental component.",
+          "left_score": 0.5365,
+          "right_score": 0.6115,
+          "delta": 0.075,
+          "left_label": "medium",
+          "right_label": "medium"
+        },
+        {
+          "key": "gYcft1HIaU:K0w3kEaTHx:3",
+          "paper_id": "gYcft1HIaU",
+          "review_id": "K0w3kEaTHx",
+          "claim_text": "Exact name and citation of the NER model used are missing; include accuracy analysis since errors could impact evaluation results.",
+          "left_score": 0.6565,
+          "right_score": 0.7315,
+          "delta": 0.075,
+          "left_label": "medium",
+          "right_label": "high"
+        }
+      ]
+    }
+  },
+  "lexical_proxy_diagnostics": {
+    "rebuttal": {
+      "llm_labeled_claim_count": 240,
+      "proxy_label_counts_on_labeled": {
+        "likely_resolved_or_answered": 58,
+        "not_addressed": 51,
+        "addressed_unclear_resolution": 131
+      },
+      "llm_response_label_counts": {
+        "specifically_addressed": 63,
+        "not_addressed": 105,
+        "generic_or_unclear": 70,
+        "likely_resolved": 2
+      },
+      "llm_effect_label_counts": {
+        "partially_addresses": 73,
+        "does_not_address": 128,
+        "unclear": 31,
+        "resolved_or_weakened": 8
+      },
+      "proxy_addressed_or_resolved_rate": 0.7875,
+      "llm_specifically_addressed_or_resolved_rate": 0.2708,
+      "llm_resolved_or_weakened_rate": 0.0333,
+      "lexical_false_positive_candidate_count": 128,
+      "lexical_false_positive_candidate_rate": 0.6772
+    },
+    "consensus": {
+      "llm_labeled_claim_count": 120,
+      "proxy_label_counts_on_labeled": {
+        "partial": 54,
+        "strong": 42,
+        "none": 24
+      },
+      "llm_consensus_label_counts": {
+        "related_but_different": 69,
+        "not_same_concern": 42,
+        "same_concern": 8,
+        "unsure": 1
+      },
+      "proxy_partial_or_strong_rate": 0.8,
+      "llm_related_or_same_rate": 0.6417,
+      "llm_same_concern_rate": 0.0667,
+      "lexical_false_positive_candidate_count": 27,
+      "lexical_false_positive_candidate_rate": 0.2812
+    }
+  },
+  "notes": [
+    "`proxy_only` uses deterministic lexical-overlap labels for consensus, rebuttal, and meta-review uptake.",
+    "`hybrid` mirrors the current lifecycle logic: LLM labels are used for rebuttal/consensus when available, with proxy fallback otherwise.",
+    "`llm_calibrated_only` restricts analysis to claims with at least one LLM rebuttal or consensus label; uncalibrated components still use proxy fallback to keep the lifecycle formula comparable.",
+    "`strict_both_llm` is the small high-precision subset where both rebuttal and consensus have LLM labels. Meta-review uptake is still proxy-based in all modes."
+  ]
+}

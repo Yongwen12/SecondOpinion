@@ -1,0 +1,28 @@
+{
+  "schema_version": "addressability-report-v0.1",
+  "summary": {
+    "prepared_unique_claim_count": 240,
+    "main_claim_count": 232,
+    "control_resolved_or_weakened_count": 8,
+    "control_specifically_addressed_count": 63,
+    "paper_context_counts": {
+      "title_abstract": 240
+    },
+    "no_leakage_check": {
+      "prompt_includes_rebuttal_text": false,
+      "prompt_includes_existing_response_or_effect_labels": false,
+      "prompt_includes_importance_proxy": false
+    }
+  },
+  "test_1b_importance_resolution_independence": {
+    "judgment": "independent_model_calls",
+    "importance_source": "claim_extraction.py::build_claim_messages + claim_extraction_schema",
+    "resolution_source": "reviewer_calibration.py::rebuttal_resolution_messages",
+    "same_call": false,
+    "same_prompt": false,
+    "importance_prompt_sees_rebuttal": false,
+    "resolution_prompt_sees_importance": true,
+    "discount_test1_directional": "partially",
+    "interpretation": "Importance is produced during claim extraction from the original review only. Rebuttal resolution is produced later from reviewer-claim/author-response pairs. The Test-1 cross-tab is not confounded by a single shared model call, but importance remains an unvalidated LLM proxy and should not be treated as human-validated materiality."
+  }
+}

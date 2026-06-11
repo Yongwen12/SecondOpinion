@@ -5,6 +5,8 @@ from pathlib import Path
 from secondopinion.annotation import (
     ANNOTATION_LABEL_VERSION,
     compare_annotations,
+    export_evidence_chain_benchmark_annotation_tasks,
+    export_evidence_chain_annotation_tasks,
     export_annotation_tasks,
     label_id,
     llm_label_tasks,
@@ -194,6 +196,96 @@ class AnnotationTests(unittest.TestCase):
             write_jsonl(path, tasks)
             loaded = read_jsonl(path)
         self.assertEqual(loaded[0]["task_id"], tasks[0]["task_id"])
+
+    def test_evidence_chain_annotation_tasks_include_expert_fields(self):
+        demo = {
+            "paper": {"paper_id": "paper1", "title": "Test Paper"},
+            "summary": {"claim_count": 1},
+            "source": {"audit_schema_version": "0.1"},
+            "reviewers": [
+                {
+                    "review_id": "review1",
+                    "rating": "4",
+                    "confidence": "3",
+                    "review_reliability_score": 0.7,
+                    "claims": [
+                        {
+                            "claim_id": "claim1",
+                            "claim_text": "The paper lacks ablation studies.",
+                            "source_sentence": "The paper lacks ablation studies.",
+                            "claim_type": "ablation",
+                            "importance": "major",
+                            "stance": "agree",
+                            "verdict": "partially_supported",
+                            "scores": {"grounding": 1.0},
+                            "evidence_chain": {"manuscript": [], "external": [], "rebuttal": []},
+                            "system_judgment": {"issue_flags": []},
+                            "rebuttal_guidance": {"priority": "must", "strategy": "acknowledge_and_fix"},
+                        }
+                    ],
+                }
+            ],
+        }
+
+        _, tasks = export_evidence_chain_annotation_tasks(demo, run_id="chain1")
+        schema_task = tasks[0]
+        label = {
+            "annotation_id": label_id(schema_task["task_id"], "human", "expert1"),
+            "task_id": schema_task["task_id"],
+            "run_id": "chain1",
+            "task_type": "evidence_chain_quality",
+            "annotator_type": "human",
+            "annotator_id": "expert1",
+            "label_schema_version": ANNOTATION_LABEL_VERSION,
+            "labels": {
+                "claim_extraction_correct": "yes",
+                "claim_grounded": "yes",
+                "evidence_supports_claim": "supports",
+                "claim_importance": "high",
+                "rebuttal_addresses_claim": "not_addressed",
+                "recommended_action": "must_address",
+                "expert_confidence": "high",
+            },
+            "notes": "",
+            "created_at": "2026-05-29T00:00:00+00:00",
+            "llm_label_visible": False,
+        }
+
+        self.assertEqual(schema_task["task_type"], "evidence_chain_quality")
+        self.assertEqual(validate_labels([label]), [])
+
+    def test_evidence_chain_benchmark_annotation_tasks_can_be_sampled(self):
+        benchmark = {
+            "schema_version": "evidence-chain-benchmark-v0.1",
+            "summary": {"item_count": 2},
+            "items": [
+                {
+                    "task_id": "bench1",
+                    "paper": {"paper_id": "paper1", "title": "Test Paper"},
+                    "review_id": "review1",
+                    "claim_id": "claim1",
+                    "claim_text": "The paper lacks ablation studies.",
+                    "source_sentence": "The paper lacks ablation studies.",
+                    "claim_type": "ablation",
+                    "expected": {"stance": "", "recommended_action": "must_address"},
+                    "variants": {
+                        "full_evidence_chain": {
+                            "importance": "major",
+                            "scores": {"grounding": 1.0, "reviewer_reliability": 0.7},
+                            "evidence_chain": {"manuscript": [], "external": [], "rebuttal": []},
+                            "rebuttal_guidance": {"priority": "must", "strategy": "acknowledge_and_fix"},
+                        }
+                    },
+                }
+            ],
+        }
+
+        _, tasks = export_evidence_chain_benchmark_annotation_tasks(benchmark, run_id="bench-run", sample_size=1)
+
+        self.assertEqual(len(tasks), 1)
+        self.assertEqual(tasks[0]["run_id"], "bench-run")
+        self.assertEqual(tasks[0]["context"]["paper"]["title"], "Test Paper")
+        self.assertEqual(tasks[0]["system_output"]["rebuttal_guidance"]["priority"], "must")
 
 
 if __name__ == "__main__":

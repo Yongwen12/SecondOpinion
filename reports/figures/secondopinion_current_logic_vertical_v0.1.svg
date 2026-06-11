@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="1180" viewBox="0 0 480 1180" role="img" aria-labelledby="title desc">
+  <title id="title">SecondOpinion Current Project Logic</title>
+  <desc id="desc">Vertical workflow diagram for SecondOpinion showing data ingestion, claim extraction, evidence context, two value points, validation, and product outputs.</desc>
+  <defs>
+    <style>
+      .bg { fill: #f7f8fb; }
+      .title { font: 700 25px Arial, Helvetica, sans-serif; fill: #172033; }
+      .subtitle { font: 400 13px Arial, Helvetica, sans-serif; fill: #5a667b; }
+      .label { font: 700 12px Arial, Helvetica, sans-serif; letter-spacing: 0; fill: #526070; text-transform: uppercase; }
+      .head { font: 700 17px Arial, Helvetica, sans-serif; fill: #172033; }
+      .body { font: 400 13px Arial, Helvetica, sans-serif; fill: #334155; }
+      .note { font: 400 12px Arial, Helvetica, sans-serif; fill: #64748b; }
+      .card { fill: #ffffff; stroke: #d7dee8; stroke-width: 1.2; rx: 8; }
+      .data { stroke: #4f7cff; }
+      .core { stroke: #14a38b; }
+      .vp1 { stroke: #b76bd8; }
+      .vp2 { stroke: #e08a34; }
+      .valid { stroke: #607083; }
+      .out { stroke: #1f9fb4; }
+      .stripe-data { fill: #4f7cff; }
+      .stripe-core { fill: #14a38b; }
+      .stripe-vp1 { fill: #b76bd8; }
+      .stripe-vp2 { fill: #e08a34; }
+      .stripe-valid { fill: #607083; }
+      .stripe-out { fill: #1f9fb4; }
+      .arrow { stroke: #8b98aa; stroke-width: 1.7; fill: none; marker-end: url(#arrowhead); }
+      .branch { stroke: #a4adba; stroke-width: 1.5; fill: none; }
+      .mini { fill: #f3f6fa; stroke: #d7dee8; stroke-width: 1; rx: 7; }
+      .mini-title { font: 700 13px Arial, Helvetica, sans-serif; fill: #172033; }
+      .mini-body { font: 400 11.5px Arial, Helvetica, sans-serif; fill: #475569; }
+      .pill { fill: #eef6ff; stroke: #bfd8ff; stroke-width: 1; rx: 9; }
+      .pill-text { font: 700 11px Arial, Helvetica, sans-serif; fill: #315ba8; }
+    </style>
+    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#8b98aa" />
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="480" height="1180" />
+
+  <text class="title" x="34" y="44">SecondOpinion Logic</text>
+  <text class="subtitle" x="34" y="66">Current workflow from peer-review data to product signals</text>
+
+  <!-- 1. Data -->
+  <rect class="card data" x="34" y="92" width="412" height="112" />
+  <rect class="stripe-data" x="34" y="92" width="7" height="112" rx="4" />
+  <text class="label" x="58" y="120">Input Data</text>
+  <text class="head" x="58" y="146">Public OpenReview Package</text>
+  <text class="body" x="58" y="171">Paper, reviews, rebuttal, discussion,</text>
+  <text class="body" x="58" y="190">decision and meta-review when available.</text>
+
+  <path class="arrow" d="M240 216 V250" />
+
+  <!-- 2. Extraction -->
+  <rect class="card core" x="34" y="260" width="412" height="120" />
+  <rect class="stripe-core" x="34" y="260" width="7" height="120" rx="4" />
+  <text class="label" x="58" y="288">Claim Layer</text>
+  <text class="head" x="58" y="314">Reviewer Claim Extraction</text>
+  <text class="body" x="58" y="339">Convert long reviews into auditable concerns:</text>
+  <text class="body" x="58" y="358">claim text, type, source sentence,</text>
+  <text class="note" x="58" y="375">and an unvalidated importance proxy.</text>
+
+  <path class="arrow" d="M240 392 V426" />
+
+  <!-- 3. Evidence context -->
+  <rect class="card core" x="34" y="436" width="412" height="136" />
+  <rect class="stripe-core" x="34" y="436" width="7" height="136" rx="4" />
+  <text class="label" x="58" y="464">Evidence Context</text>
+  <text class="head" x="58" y="490">Context Builder</text>
+  <text class="body" x="58" y="515">Attach paper context, reviewer wording,</text>
+  <text class="body" x="58" y="534">matched rebuttal segments, other-reviewer</text>
+  <text class="body" x="58" y="553">claims, discussion and meta-review traces.</text>
+
+  <path class="arrow" d="M240 584 V616" />
+
+  <!-- 4. Two value points -->
+  <text class="label" x="58" y="633">Two Product Signals</text>
+  <path class="branch" d="M240 642 C240 657 142 657 142 674" />
+  <path class="branch" d="M240 642 C240 657 338 657 338 674" />
+
+  <rect class="mini vp1" x="34" y="674" width="196" height="184" />
+  <rect class="stripe-vp1" x="34" y="674" width="6" height="184" rx="4" />
+  <text class="mini-title" x="52" y="700">VP1</text>
+  <text class="head" x="52" y="724">Neutral Review</text>
+  <text class="head" x="52" y="745">Opinion Scoring</text>
+  <text class="mini-body" x="52" y="773">Scores comments,</text>
+  <text class="mini-body" x="52" y="791">not reviewer identity.</text>
+  <text class="mini-body" x="52" y="818">Specificity, support,</text>
+  <text class="mini-body" x="52" y="836">actionability, semantic</text>
+  <text class="mini-body" x="52" y="854">consensus/contradiction.</text>
+
+  <rect class="mini vp2" x="250" y="674" width="196" height="184" />
+  <rect class="stripe-vp2" x="250" y="674" width="6" height="184" rx="4" />
+  <text class="mini-title" x="268" y="700">VP2</text>
+  <text class="head" x="268" y="724">Rebuttal</text>
+  <text class="head" x="268" y="745">Pressure Test</text>
+  <text class="mini-body" x="268" y="773">After draft response:</text>
+  <text class="mini-body" x="268" y="791">did it substantively</text>
+  <text class="mini-body" x="268" y="809">resolve the concern?</text>
+  <text class="mini-body" x="268" y="836">Fixable vs framing</text>
+  <text class="mini-body" x="268" y="854">dead-end tactic.</text>
+
+  <path class="branch" d="M142 870 C142 892 240 892 240 914" />
+  <path class="branch" d="M338 870 C338 892 240 892 240 914" />
+
+  <!-- 5. Validation -->
+  <rect class="card valid" x="34" y="926" width="412" height="142" />
+  <rect class="stripe-valid" x="34" y="926" width="7" height="142" rx="4" />
+  <text class="label" x="58" y="954">Validation Layer</text>
+  <text class="head" x="58" y="980">De-proxy and Stress Test</text>
+  <text class="body" x="58" y="1005">Lexical proxy ablations, semantic labels,</text>
+  <text class="body" x="58" y="1024">external benchmarks, GPT-5 addressability,</text>
+  <text class="note" x="58" y="1043">and IAA pilot for materiality / resolution.</text>
+
+  <path class="arrow" d="M240 1080 V1104" />
+
+  <!-- 6. Output -->
+  <rect class="card out" x="34" y="1112" width="412" height="120" transform="translate(0 -28)" />
+  <rect class="stripe-out" x="34" y="1084" width="7" height="120" rx="4" />
+  <text class="label" x="58" y="1112">Product Output</text>
+  <text class="head" x="58" y="1138">Actionable Review Intelligence</text>
+  <text class="body" x="58" y="1163">Comment scorecards, author triage cards,</text>
+  <text class="body" x="58" y="1182">and rebuttal tactics for the concerns that matter.</text>
+
+  <rect class="pill" x="296" y="42" width="132" height="24" />
+  <text class="pill-text" x="313" y="58">Vertical PPT Strip</text>
+</svg>

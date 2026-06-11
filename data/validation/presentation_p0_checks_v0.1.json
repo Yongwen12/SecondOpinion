@@ -1,0 +1,485 @@
+{
+  "schema_version": "presentation-checks-v0.1",
+  "tests": {
+    "test_1_materiality_resolution": {
+      "claim_count": 240,
+      "importance_raw_counts": {
+        "question": 12,
+        "major": 182,
+        "minor": 36,
+        "medium": 10
+      },
+      "importance_counts": {
+        "low": 48,
+        "high": 182,
+        "medium": 10
+      },
+      "response_counts": {
+        "specifically_addressed": 63,
+        "not_addressed": 105,
+        "generic_or_unclear": 70,
+        "likely_resolved": 2
+      },
+      "effect_counts": {
+        "partially_addresses": 73,
+        "does_not_address": 128,
+        "unclear": 31,
+        "resolved_or_weakened": 8
+      },
+      "importance_by_effect": {
+        "high": {
+          "does_not_address": 104,
+          "partially_addresses": 51,
+          "unclear": 23,
+          "resolved_or_weakened": 4
+        },
+        "low": {
+          "partially_addresses": 20,
+          "does_not_address": 20,
+          "unclear": 5,
+          "resolved_or_weakened": 3
+        },
+        "medium": {
+          "partially_addresses": 2,
+          "does_not_address": 4,
+          "unclear": 3,
+          "resolved_or_weakened": 1
+        }
+      },
+      "response_by_effect": {
+        "generic_or_unclear": {
+          "unclear": 30,
+          "partially_addresses": 18,
+          "does_not_address": 22
+        },
+        "likely_resolved": {
+          "resolved_or_weakened": 2
+        },
+        "not_addressed": {
+          "does_not_address": 104,
+          "unclear": 1
+        },
+        "specifically_addressed": {
+          "partially_addresses": 55,
+          "resolved_or_weakened": 6,
+          "does_not_address": 2
+        }
+      },
+      "response_effect_pair_counts": {
+        "generic_or_unclear": {
+          "unclear": 30,
+          "partially_addresses": 18,
+          "does_not_address": 22
+        },
+        "likely_resolved": {
+          "resolved_or_weakened": 2
+        },
+        "not_addressed": {
+          "does_not_address": 104,
+          "unclear": 1
+        },
+        "specifically_addressed": {
+          "partially_addresses": 55,
+          "resolved_or_weakened": 6,
+          "does_not_address": 2
+        }
+      },
+      "high_importance_unresolved_or_partial_count": 155,
+      "high_importance_unresolved_or_partial_rate": 0.6458,
+      "specifically_addressed_unresolved_or_partial_count": 57,
+      "specifically_addressed_unresolved_or_partial_rate": 0.2375,
+      "axis_relation_counts": {
+        "exact": 191,
+        "adjacent": 47,
+        "conflict": 2
+      },
+      "axis_relation_rates": {
+        "exact": 0.7958,
+        "adjacent": 0.1958,
+        "conflict": 0.0083
+      },
+      "examples": {
+        "high_importance_unresolved_or_partial": [
+          {
+            "key": "cXs5md5wAq:vb8QNXNzVn:0",
+            "paper_id": "cXs5md5wAq",
+            "review_id": "vb8QNXNzVn",
+            "claim_text": "Motivation & Context: The paper's motivation needs clearer alignment with real-world applications.",
+            "importance": "high",
+            "response": "not_addressed",
+            "effect": "does_not_address"
+          },
+          {
+            "key": "cXs5md5wAq:vb8QNXNzVn:3",
+            "paper_id": "cXs5md5wAq",
+            "review_id": "vb8QNXNzVn",
+            "claim_text": "Simulation Impact: The paper should provide a clearer explanation of the effect of simulated colonies on the models' stability.",
+            "importance": "high",
+            "response": "specifically_addressed",
+            "effect": "partially_addresses"
+          },
+          {
+            "key": "cXs5md5wAq:whc0meFjpm:1",
+            "paper_id": "cXs5md5wAq",
+            "review_id": "whc0meFjpm",
+            "claim_text": "The authors should compare with standard practice of this task instead of just comparing with GraphSAGE, e.g., by fitting the mechanistic model.",
+            "importance": "high",
+            "response": "not_addressed",
+            "effect": "does_not_address"
+          },
+          {
+            "key": "rhgIgTSSxW:7UJsyfPyd4:3",
+            "paper_id": "rhgIgTSSxW",
+            "review_id": "7UJsyfPyd4",
+            "claim_text": "Is it not surprising that Step-1 (adding context labels) did not help that much? One would guess that this is a big component of signal in retrieval augmentation.",
+            "importance": "high",
+            "response": "not_addressed",
+            "effect": "does_not_address"
+          },
+          {
+            "key": "rhgIgTSSxW:CEBB2izG6I:3",
+            "paper_id": "rhgIgTSSxW",
+            "review_id": "CEBB2izG6I",
+            "claim_text": "Is TabR applicable to categorical features? It seems like the paper only considers continuous features.",
+            "importance": "high",
+            "response": "not_addressed",
+            "effect": "does_not_address"
+          },
+          {
+            "key": "kKRbAY4CXv:eSJOZmZeDG:0",
+            "paper_id": "kKRbAY4CXv",
+            "review_id": "eSJOZmZeDG",
+            "claim_text": "The authors should define earlier what they mean by evolutionary PDEs.",
+            "importance": "high",
+            "response": "specifically_addressed",
+            "effect": "partially_addresses"
+          },
+          {
+            "key": "kKRbAY4CXv:eSJOZmZeDG:1",
+            "paper_id": "kKRbAY4CXv",
+            "review_id": "eSJOZmZeDG",
+            "claim_text": "The method only works on semi-linear PDEs. This is actually a very strong assumption and limitation. The authors should discuss the extension to nonlinear PDEs.",
+            "importance": "high",
+            "response": "generic_or_unclear",
+            "effect": "partially_addresses"
+          },
+          {
+            "key": "ApjY32f3Xr:4e1fSBB3OO:1",
+            "paper_id": "ApjY32f3Xr",
+            "review_id": "4e1fSBB3OO",
+            "claim_text": "The average L2RE can be skewed if one (or few) of the parameter settings fails (i.e., have L2RE of 100%) while others have very low errors (such as ~1e-4).",
+            "importance": "high",
+            "response": "not_addressed",
+            "effect": "does_not_address"
+          },
+          {
+            "key": "eUgS9Ig8JG:4sGhXacqSF:4",
+            "paper_id": "eUgS9Ig8JG",
+            "review_id": "4sGhXacqSF",
+            "claim_text": "Many experiments for tasks other than trajectory prediction use unoriented data by assigning scalar values to high-order simplices, which is incompatible with oriented operators; unclear implementation details.",
+            "importance": "high",
+            "response": "specifically_addressed",
+            "effect": "partially_addresses"
+          },
+          {
+            "key": "qBL04XXex6:1lDRac9ePM:0",
+            "paper_id": "qBL04XXex6",
+            "review_id": "1lDRac9ePM",
+            "claim_text": "prompt engineering is often model-dependent, and the techniques may evolve as LLM capabilities improve. This may not offer long-term guidance for research unless it uncovers fundamental insights.",
+            "importance": "high",
+            "response": "not_addressed",
+            "effect": "does_not_address"
+          }
+        ],
+        "specifically_addressed_unresolved_or_partial": [
+          {
+            "key": "cXs5md5wAq:3FBIToMxSZ:3",
+            "paper_id": "cXs5md5wAq",
+            "review_id": "3FBIToMxSZ",
+            "claim_text": "What is the rationale for using a GNN on a very simple graph?",
+            "importance": "low",
+            "response": "specifically_addressed",
+            "effect": "partially_addresses"
+          },
+          {
+            "key": "cXs5md5wAq:vb8QNXNzVn:3",
+            "paper_id": "cXs5md5wAq",
+            "review_id": "vb8QNXNzVn",
+            "claim_text": "Simulation Impact: The paper should provide a clearer explanation of the effect of simulated colonies on the models' stability.",
+            "importance": "high",
+            "response": "specifically_addressed",
+            "effect": "partially_addresses"
+          },
+          {
+            "key": "kKRbAY4CXv:eSJOZmZeDG:0",
+            "paper_id": "kKRbAY4CXv",
+            "review_id": "eSJOZmZeDG",
+            "claim_text": "The authors should define earlier what they mean by evolutionary PDEs.",
+            "importance": "high",
+            "response": "specifically_addressed",
+            "effect": "partially_addresses"
+          },
+          {
+            "key": "eUgS9Ig8JG:4sGhXacqSF:4",
+            "paper_id": "eUgS9Ig8JG",
+            "review_id": "4sGhXacqSF",
+            "claim_text": "Many experiments for tasks other than trajectory prediction use unoriented data by assigning scalar values to high-order simplices, which is incompatible with oriented operators; unclear implementation details.",
+            "importance": "high",
+            "response": "specifically_addressed",
+            "effect": "partially_addresses"
+          },
+          {
+            "key": "qBL04XXex6:1lDRac9ePM:2",
+            "paper_id": "qBL04XXex6",
+            "review_id": "1lDRac9ePM",
+            "claim_text": "More analysis or ablation studies are also helpful.",
+            "importance": "high",
+            "response": "specifically_addressed",
+            "effect": "partially_addresses"
+          },
+          {
+            "key": "qBL04XXex6:ZNU7d8MOkM:0",
+            "paper_id": "qBL04XXex6",
+            "review_id": "ZNU7d8MOkM",
+            "claim_text": "Q1: In the prompt, I wonder whether the “error input” are included, or only the “experience” is included? From figure 1, I only see “error report” like “step 1 is not closer to 24”, no “error input” like what is step 1, 2, 3. How the LLM k…",
+            "importance": "high",
+            "response": "specifically_addressed",
+            "effect": "partially_addresses"
+          },
+          {
+            "key": "qBL04XXex6:Cw9UmirZBD:1",
+            "paper_id": "qBL04XXex6",
+            "review_id": "Cw9UmirZBD",
+            "claim_text": "Further experiments should be performed using statistical metrics, and statistical distribution of the results should be extracted.",
+            "importance": "high",
+            "response": "specifically_addressed",
+            "effect": "partially_addresses"
+          },
+          {
+            "key": "qBL04XXex6:Fv3pXWd41e:2",
+            "paper_id": "qBL04XXex6",
+            "review_id": "Fv3pXWd41e",
+            "claim_text": "Title/domain alignment: clarify in title or abstract that the work is focused on mathematical problems rather than general problem solving with LLMs.",
+            "importance": "low",
+            "response": "specifically_addressed",
+            "effect": "partially_addresses"
+          },
+          {
+            "key": "rp5vfyp5Np:YktI8n3TeZ:6",
+            "paper_id": "rp5vfyp5Np",
+            "review_id": "YktI8n3TeZ",
+            "claim_text": "The paper suggests the method can be used to improve robustness of agents, which may require careful evaluation; include limitations.",
+            "importance": "low",
+            "response": "specifically_addressed",
+            "effect": "partially_addresses"
+          },
+          {
+            "key": "rp5vfyp5Np:41kol2RnP6:2",
+            "paper_id": "rp5vfyp5Np",
+            "review_id": "41kol2RnP6",
+            "claim_text": "Figure 1 is unclear; arrow between reward learning and replay buffer is not understood.",
+            "importance": "low",
+            "response": "specifically_addressed",
+            "effect": "partially_addresses"
+          }
+        ]
+      },
+      "notes": [
+        "`importance` is the current system proxy (`major` mapped to high). It is useful for sizing only and is not a validated materiality gold label.",
+        "`axis_relation` compares response and effect as ordered labels: exact, adjacent, or conflict. The raw response-by-effect table should be treated as the primary evidence."
+      ]
+    },
+    "test_2_sample_size_alignment": {
+      "source_calibration_version": "reviewer-calibration-v0.1",
+      "summary_counts": {
+        "paper_count": 80,
+        "review_count": 205,
+        "claim_count": 854,
+        "llm_rebuttal_label_count": 240,
+        "llm_consensus_label_count": 120
+      },
+      "actual_nested_counts": {
+        "paper_count": 80,
+        "review_count": 205,
+        "claim_count": 854,
+        "paper_with_claim_count": 53,
+        "review_with_claim_count": 202
+      },
+      "interpretation": "Use 80 papers / 205 reviews / 854 claims for the reviewer-calibration report scope. Use 53 papers / 202 reviews / 854 claims when reporting only papers/reviews that contain claim records."
+    },
+    "test_3_grounding_check": {
+      "reviewer_calibration_grounding": {
+        "claim_count": 854,
+        "grounded_true_count": 854,
+        "grounded_false_count": 0,
+        "grounded_rate": 1.0,
+        "grounding_logic": "In reviewer_calibration.py, `grounded` is set to bool(clean_text(claim.get('source_sentence', ''))).",
+        "interpretation": "In lifecycle/reviewer-calibration, grounding is currently an extraction/source-sentence gate, not a discriminative review-quality axis.",
+        "examples": [
+          {
+            "key": "cXs5md5wAq:3FBIToMxSZ:0",
+            "paper_id": "cXs5md5wAq",
+            "review_id": "3FBIToMxSZ",
+            "claim_text": "The proposed approach for using GNNs for bacterial communities is vaguely described and not well justified.",
+            "source_sentence": "The proposed approach for using GNNs for bacterial communities is vaguely described and not well justified.",
+            "grounded": true
+          },
+          {
+            "key": "cXs5md5wAq:3FBIToMxSZ:1",
+            "paper_id": "cXs5md5wAq",
+            "review_id": "3FBIToMxSZ",
+            "claim_text": "The key methods section (2.2) provides a generic description of existing GNN approaches, and is missing key microbiome specific information (in particular, what is the topology of the graph).",
+            "source_sentence": "The key methods section (2.2) provides a generic description of existing GNN approaches, and is missing key microbiome specific information (in particular, what is the topology of the graph).",
+            "grounded": true
+          },
+          {
+            "key": "cXs5md5wAq:3FBIToMxSZ:2",
+            "paper_id": "cXs5md5wAq",
+            "review_id": "3FBIToMxSZ",
+            "claim_text": "Overall, the proposed method - applying GNN model in a straightforward way to a very small, fully-connected graph - is poorly justified and weak on novelty.",
+            "source_sentence": "Overall, the proposed method - applying GNN model in a straightforward way to a very small, fully-connected graph - is poorly justified and weak on novelty.",
+            "grounded": true
+          },
+          {
+            "key": "cXs5md5wAq:3FBIToMxSZ:3",
+            "paper_id": "cXs5md5wAq",
+            "review_id": "3FBIToMxSZ",
+            "claim_text": "What is the rationale for using a GNN on a very simple graph?",
+            "source_sentence": "What is the rationale for using a GNN on a very simple graph?",
+            "grounded": true
+          },
+          {
+            "key": "cXs5md5wAq:3FBIToMxSZ:4",
+            "paper_id": "cXs5md5wAq",
+            "review_id": "3FBIToMxSZ",
+            "claim_text": "What is the benefit of focusing on predicting steady state, instead of focusing on dynamical changes to the relative abundances (e.g., dysbiosis).",
+            "source_sentence": "What is the benefit of focusing on predicting steady state, instead of focusing on dynamical changes to the relative abundances (e.g., dysbiosis).",
+            "grounded": true
+          },
+          {
+            "key": "cXs5md5wAq:2gTtKikoba:0",
+            "paper_id": "cXs5md5wAq",
+            "review_id": "2gTtKikoba",
+            "claim_text": "The methodological contribution is limited as the presented work is mostly implementing GNNs for microbial steady state predictions.",
+            "source_sentence": "The methodological contribution is limited as the presented work is mostly implementing GNNs for microbial steady state predictions.",
+            "grounded": true
+          },
+          {
+            "key": "cXs5md5wAq:2gTtKikoba:1",
+            "paper_id": "cXs5md5wAq",
+            "review_id": "2gTtKikoba",
+            "claim_text": "This is a reasonable assumption to make. However the fact that this method works only for steady state solutions needs to be emphasized.",
+            "source_sentence": "2. The main core of the paper is based on the assumption that if there is a steady state solution to the dynamics of bacterial species, then that steady state can be predicted using the genome data of the species in the…",
+            "grounded": true
+          },
+          {
+            "key": "cXs5md5wAq:2gTtKikoba:2",
+            "paper_id": "cXs5md5wAq",
+            "review_id": "2gTtKikoba",
+            "claim_text": "Did all such simulations lead to steady state solutions? Were any simulations that did not lead to steady state solutions discarded? Do the authors also have any comments on the frequency of steady state solutions when …",
+            "source_sentence": "3. For simulations, the GLV equations along with initial conditions and parameters $\\mu_i, K_i, a_{i,j}$ drawn from different probability density functions are used to generate data. Did all such simulations lead to ste…",
+            "grounded": true
+          },
+          {
+            "key": "cXs5md5wAq:2gTtKikoba:3",
+            "paper_id": "cXs5md5wAq",
+            "review_id": "2gTtKikoba",
+            "claim_text": "The authors should square these two facts.",
+            "source_sentence": "5. The parameter $a_{i,j}$ (broken into two vectors $\\nu_i^s, \\nu_j^r$ to simulate the genome) contains information on the pairwise interaction between different species. On the other hand, the information in a genome i…",
+            "grounded": true
+          },
+          {
+            "key": "cXs5md5wAq:2gTtKikoba:4",
+            "paper_id": "cXs5md5wAq",
+            "review_id": "2gTtKikoba",
+            "claim_text": "The claim of interpretability seems to be questionable.",
+            "source_sentence": "6. A proper simulation would entail simulation of the genome data. The genome data typically do not include information on interaction between species. But for simulations, the interaction matrix was used to derive $\\nu…",
+            "grounded": true
+          }
+        ],
+        "non_grounded_examples": []
+      },
+      "grounding_validation_stats": {
+        "review_count": 200,
+        "raw_candidate_count": 1594,
+        "raw_grounding_pass_count": 1430,
+        "raw_grounding_fail_count": 164,
+        "raw_grounding_pass_rate": 0.8971,
+        "final_claim_count": 887,
+        "final_grounding_pass_count": 887,
+        "final_grounding_fail_count": 0,
+        "final_grounding_pass_rate": 1.0,
+        "raw_failure_reason_counts": {
+          "source_sentence_not_found": 164
+        }
+      },
+      "grounding_validation_failure_examples": [
+        {
+          "paper_id": "cXs5md5wAq",
+          "paper_title": "Modelling Microbial Communities with Graph Neural Networks",
+          "review_id": "2gTtKikoba",
+          "claim_text": "The steady state is entirely determined by the parameters $a_{i,j}$ and $K_i$. The authors use a vector composed of $[\\mu_i, K_i, \\nu_i^s, \\nu_i^r, random]$ to simulate the genome data in their simulation. It would be a good idea to highlight that within the simulated genome vector only the components $[K_i, \\nu_i^s, \\nu_i^r]$ determine the steady state solution.",
+          "source_field": "weaknesses",
+          "source_sentence": "4. Given the GLV equations, the steady state solutions can be found by solving a system of $|S|$ linear algebraic equations:\\n \\\\begin{equation}\\\\n \\\\sum_{j=1}^{|S|}a_{i,j}n_j = K_i.\\\\n\\end{equation}\\\\nThe steady state is entirely determined by the parameters $a_{i,j}$ and $K_i$. The authors use a vector composed of $[\\\\mu_i, K_i, \\\\nu_i^s, \\\\nu_i^r, random]$ (where $a_{i,j} \\\\approx \\\\nu_i^s. \\\\nu_j^r$) to simulate the genome data in their simulation. It would be a good idea to highlight that within the simulated genome vector only the components $[K_i, \\\\nu_i^s, \\\\nu_i^r]$ determine the s...",
+          "failure_reasons": [
+            "source_sentence_not_found"
+          ],
+          "warnings": [],
+          "grounding_pass": false
+        },
+        {
+          "paper_id": "cXs5md5wAq",
+          "paper_title": "Modelling Microbial Communities with Graph Neural Networks",
+          "review_id": "2gTtKikoba",
+          "claim_text": "The parameter $a_{i,j}$ contains information on the pairwise interaction between different species. On the other hand, the information in a genome is completely intrinsic to a particular species. The authors should square these two facts.",
+          "source_field": "weaknesses",
+          "source_sentence": "5. The parameter $a_{i,j}$ (broken into two vectors $\\\\nu_i^s, \\\\nu_j^r$ to simulate the genome) contains information on the pairwise interaction between different species. On the other hand, the information in a genome is completely intrinsic to a particular species. The authors should square these two facts.",
+          "failure_reasons": [
+            "source_sentence_not_found"
+          ],
+          "warnings": [],
+          "grounding_pass": false
+        },
+        {
+          "paper_id": "cXs5md5wAq",
+          "paper_title": "Modelling Microbial Communities with Graph Neural Networks",
+          "review_id": "2gTtKikoba",
+          "claim_text": "A proper simulation would entail simulation of the genome data. The genome data typically do not include information on interaction between species. But for simulations, the interaction matrix was used to derive $\\\\nu$ vectors. The claim of interpretability seems to be questionable.",
+          "source_field": "weaknesses",
+          "source_sentence": "6. A proper simulation would entail simulation of the genome data. The genome data typically do not include information on interaction between species. But for simulations, the interaction matrix was used to derive $\\\\nu$ vectors. The claim of interpretability seems to be questionable.",
+          "failure_reasons": [
+            "source_sentence_not_found"
+          ],
+          "warnings": [],
+          "grounding_pass": false
+        },
+        {
+          "paper_id": "cXs5md5wAq",
+          "paper_title": "Modelling Microbial Communities with Graph Neural Networks",
+          "review_id": "2gTtKikoba",
+          "claim_text": "The authors need to provide details on how the node (genome) attributes were obtained, especially $\\\\nu$'s, as in real-world data, the ground-truth interaction $a_{ij}$ is not available.",
+          "source_field": "weaknesses",
+          "source_sentence": "8. The authors need to provide details on how the node (genome) attributes were obtained, especially $\\\\nu$'s, as in real-world data, the ground-truth interaction $a_{ij}$ is not available.",
+          "failure_reasons": [
+            "source_sentence_not_found"
+          ],
+          "warnings": [],
+          "grounding_pass": false
+        },
+        {
+          "paper_id": "cXs5md5wAq",
+          "paper_title": "Modelling Microbial Communities with Graph Neural Networks",
+          "review_id": "vb8QNXNzVn",
+          "claim_text": "The largest studied communities are 26 and this needs to be put in context with the other fields, citing Wikipedia “1010 to 1011 cells per gram of intestinal content” seems far off from the estimated single colonies.",
+          "source_field": "weaknesses",
+          "source_sentence": "* The largest studied communities are 26 and this needs to be put in context with the other fields, citing Wikipedia “1010 to 1011 cells per gram of intestinal content” seems far off from the estimated single colonies.",
+          "failure_reasons": [
+            "source_sentence_not_found"
+          ],
+          "warnings": [],
+          "grounding_pass": false
+        }
+      ]
+    }
+  }
+}
