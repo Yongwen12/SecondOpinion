@@ -15,7 +15,7 @@ const pipelineLayers = [
     ]
   },
   {
-    name: "Review analysis",
+    name: "Comment scoring",
     steps: [
       {
         title: "Classify stance",
@@ -33,9 +33,9 @@ const pipelineLayers = [
         note: "Baseline and evaluation concerns overlap across multiple reviewers."
       },
       {
-        title: "Score review quality",
-        artifact: "SO scores ready",
-        note: "Novelty framing is risky, but likely addressable with clearer positioning."
+        title: "Score reviewer comments",
+        artifact: "Scorecard ready",
+        note: "Each reviewer claim is scored before it is routed into triage."
       }
     ]
   },
@@ -69,6 +69,51 @@ const stanceScale = [
   ["strongly_agree", "Well supported"]
 ];
 
+const scoreDimensions = [
+  {
+    key: "specificity",
+    label: "Specificity",
+    question: "Does the reviewer state a concrete, inspectable claim?",
+    sources: ["ReAct", "AMPERE", "ASAP-Review"],
+    status: "implemented"
+  },
+  {
+    key: "substantiation",
+    label: "Substantiation",
+    question: "Does the comment give reasons, evidence, or manuscript anchors?",
+    sources: ["SubstanReview", "ReviewCritique"],
+    status: "mapped"
+  },
+  {
+    key: "actionability",
+    label: "Actionability",
+    question: "Can the author understand what response or revision is expected?",
+    sources: ["ReAct", "BetterPR", "RbtAct"],
+    status: "implemented"
+  },
+  {
+    key: "consensus",
+    label: "Consensus / conflict",
+    question: "Do other reviewers support, overlap with, or contradict this concern?",
+    sources: ["ContraSciView", "RevCI"],
+    status: "calibrating"
+  },
+  {
+    key: "rebuttalRobustness",
+    label: "Rebuttal robustness",
+    question: "Does the concern still stand after the author response?",
+    sources: ["DISAPERE", "APE", "RbtAct", "Re²"],
+    status: "implemented"
+  },
+  {
+    key: "professionalism",
+    label: "Professionalism",
+    question: "Is the comment constructive, calibrated, and professional in tone?",
+    sources: ["PolitePEER", "HedgePeer", "BetterPR"],
+    status: "mapped"
+  }
+];
+
 const demoConfigs = {
   "paper-evidence-chain": {
     src: "./demos/evidence_chain_demo.json",
@@ -95,7 +140,7 @@ const analysis = {
   metrics: [
     ["5.25", "Avg score"],
     ["3.75", "Avg confidence"],
-    ["75.8", "Avg SO score"],
+    ["75.8", "Avg comment score"],
     ["5", "Issue clusters"],
     ["3", "High priority"]
   ],
@@ -132,11 +177,12 @@ const analysis = {
         strongly_agree: 1
       },
       dimensions: {
-        Professionalism: 92,
         Specificity: 78,
-        "Evidence grounding": 74,
+        Substantiation: 74,
         Actionability: 84,
-        Fairness: 82
+        "Consensus / conflict": 68,
+        "Rebuttal robustness": 72,
+        Professionalism: 92
       },
       response: "Thank R1 for recognizing the contribution, then make the novelty claim more concrete and cite the exact section where the method differs."
     },
@@ -159,11 +205,12 @@ const analysis = {
         strongly_agree: 0
       },
       dimensions: {
-        Professionalism: 76,
         Specificity: 67,
-        "Evidence grounding": 52,
+        Substantiation: 52,
         Actionability: 63,
-        Fairness: 49
+        "Consensus / conflict": 71,
+        "Rebuttal robustness": 79,
+        Professionalism: 76
       },
       response: "Prioritize R2. Acknowledge the baseline concern, add a compact comparison table, and state which additional experiment can be completed."
     },
@@ -186,11 +233,12 @@ const analysis = {
         strongly_agree: 0
       },
       dimensions: {
-        Professionalism: 86,
         Specificity: 69,
-        "Evidence grounding": 66,
+        Substantiation: 66,
         Actionability: 70,
-        Fairness: 71
+        "Consensus / conflict": 64,
+        "Rebuttal robustness": 67,
+        Professionalism: 86
       },
       response: "Tie the main claim to the strongest existing results. Avoid overclaiming; define the scope more tightly."
     },
@@ -213,11 +261,12 @@ const analysis = {
         strongly_agree: 2
       },
       dimensions: {
-        Professionalism: 95,
         Specificity: 84,
-        "Evidence grounding": 82,
+        Substantiation: 82,
         Actionability: 90,
-        Fairness: 88
+        "Consensus / conflict": 58,
+        "Rebuttal robustness": 62,
+        Professionalism: 95
       },
       response: "Answer briefly. Do not spend too much rebuttal budget unless the AC echoes this concern."
     }
@@ -434,7 +483,7 @@ function renderWorkspace() {
         <div class="reviewer-mini">
           <strong>${reviewer.id}<span>${reviewer.score} / ${reviewer.confidence}</span></strong>
           <div class="mini-score">
-            <span>SO score</span>
+            <span>Comment score</span>
             <b>${reviewer.qualityScore}</b>
           </div>
           <span class="mini-stance ${stanceClass(reviewer.dominantAuditStance)}">
@@ -466,20 +515,30 @@ function renderOverview() {
     <div class="overview-stack">
       <article class="surface">
         <div class="surface-head">
-          <h3>Quick summary</h3>
+          <h3>Reviewer comment scoring</h3>
           <p>${escapeHtml(activeAnalysis.overview.situation)}</p>
         </div>
         <div class="surface-body">
           <div class="summary-grid">
             <ul class="status-list">
-              <li><b>Highest leverage reviewer</b><span>${escapeHtml(activeAnalysis.overview.leverage)}</span></li>
-              <li><b>Response strategy</b><span>${escapeHtml(activeAnalysis.overview.strategy)}</span></li>
+              <li><b>Lowest-scoring reviewer</b><span>${escapeHtml(activeAnalysis.overview.leverage)}</span></li>
+              <li><b>Scoring rule</b><span>${escapeHtml(activeAnalysis.overview.strategy)}</span></li>
             </ul>
             <div class="summary-score-panel">
-              <h4>Review audit scores</h4>
+              <h4>Review-level scorecard</h4>
               ${renderReviewerScoreBoard()}
             </div>
           </div>
+        </div>
+      </article>
+
+      <article class="surface">
+        <div class="surface-head">
+          <h3>Literature-backed dimensions</h3>
+          <p>SecondOpinion scores comments first; triage is a downstream workflow using these scores.</p>
+        </div>
+        <div class="surface-body">
+          ${renderDimensionMatrix()}
         </div>
       </article>
 
@@ -575,7 +634,7 @@ function renderReviewerDetailPanel(reviewer, selectedClaimIndex) {
             </div>
             <div class="quality-score ${qualityClass(reviewer.qualityScore)}">
               <b>${reviewer.qualityScore}</b>
-              <span>SO score</span>
+              <span>Comment score</span>
             </div>
           </div>
         </div>
@@ -584,13 +643,13 @@ function renderReviewerDetailPanel(reviewer, selectedClaimIndex) {
       <div class="reviewer-detail-body">
         <div class="reviewer-audit-grid">
           <section>
-            <h4>Review quality dimensions</h4>
+            <h4>Reviewer comment score profile</h4>
             <div class="score-stack">
               ${renderScoreRows(reviewer.dimensions)}
             </div>
           </section>
           <section>
-            <h4>Rebuttal instruction</h4>
+            <h4>Downstream triage note</h4>
             <div class="draft-box">
               <p>${escapeHtml(reviewer.response)}</p>
             </div>
@@ -598,7 +657,7 @@ function renderReviewerDetailPanel(reviewer, selectedClaimIndex) {
         </div>
 
         <section>
-          <h4>Extracted claims and scores</h4>
+          <h4>Claim-level scoring</h4>
           ${renderClaimTabs(claims, selectedClaimIndex)}
         </section>
       </div>
@@ -696,6 +755,29 @@ function renderIssueScoreStrip(scores) {
     <div class="issue-score-strip">
       ${items
         .map(([label, value]) => `<span><b>${formatPercent(numberOrNull(value) || 0)}</b>${escapeHtml(label)}</span>`)
+        .join("")}
+    </div>
+  `;
+}
+
+function renderDimensionMatrix() {
+  return `
+    <div class="dimension-matrix">
+      ${scoreDimensions
+        .map(
+          (dimension) => `
+            <article class="dimension-card">
+              <div>
+                <h4>${escapeHtml(dimension.label)}</h4>
+                <p>${escapeHtml(dimension.question)}</p>
+              </div>
+              <div class="source-row">
+                ${dimension.sources.map((source) => `<span>${escapeHtml(source)}</span>`).join("")}
+              </div>
+              <b class="status-chip ${dimension.status}">${escapeHtml(labelize(dimension.status))}</b>
+            </article>
+          `
+        )
         .join("")}
     </div>
   `;
@@ -829,34 +911,17 @@ function renderClaimCards(claims) {
 }
 
 function renderClaimScoreRows(claim) {
-  const rows = claim.scores
-    ? [
-        ["Grounding", claim.scores.grounding, 1],
-        ["Specificity", claim.scores.specificity, 1],
-        ["Evidence support", claim.scores.evidence_support, 1],
-        ["Consensus", claim.scores.consensus, 1],
-        ["Rebuttal resolved", claim.scores.rebuttal_resolution, 1],
-        ["Lifecycle robust", claim.scores.lifecycle_robustness, 1]
-      ]
-    : [
-        ["Support", claim.support_score, 100],
-        ["Answer coverage", claim.answer_coverage_score, 100],
-        ["Question value", claim.question_value_score, 100],
-        ["Specificity", claim.specificity, 4],
-        ["Evidence support", claim.evidence_support, 4],
-        ["Actionability", claim.actionability, 4],
-        ["Fairness", claim.fairness_score, 100]
-      ];
-  const filteredRows = rows.filter(([, value]) => numberOrNull(value) !== null);
+  const rows = claimScoreProfile(claim);
+  const filteredRows = rows.filter((row) => numberOrNull(row.value) !== null);
 
   return filteredRows
-    .map(([label, value, max]) => {
+    .map(({ label, value, max, source }) => {
       const numeric = numberOrNull(value) || 0;
       const percent = Math.max(0, Math.min(100, Math.round((numeric / max) * 100)));
       const display = max === 1 ? `${Math.round(percent)}%` : max === 100 ? String(Math.round(numeric)) : `${numeric}/4`;
       return `
         <div class="claim-score-row">
-          <span>${escapeHtml(label)}</span>
+          <span>${escapeHtml(label)}<small>${escapeHtml(source)}</small></span>
           <div class="score-track">
             <span class="score-fill ${qualityClass(percent)}" style="width:${percent}%"></span>
           </div>
@@ -865,6 +930,29 @@ function renderClaimScoreRows(claim) {
       `;
     })
     .join("");
+}
+
+function claimScoreProfile(claim) {
+  if (claim.scores) {
+    const actionability = claim.guidancePriority === "must" ? 1 : claim.guidancePriority === "high" ? 0.82 : claim.guidancePriority === "medium" ? 0.62 : 0.45;
+    const professionalism = numberOrNull(claim.professionalism_score);
+    return [
+      { label: "Specificity", value: claim.scores.specificity, max: 1, source: "ReAct / AMPERE" },
+      { label: "Substantiation", value: claim.scores.evidence_support ?? claim.scores.grounding, max: 1, source: "SubstanReview" },
+      { label: "Actionability", value: actionability, max: 1, source: "ReAct / RbtAct" },
+      { label: "Consensus / conflict", value: claim.scores.consensus, max: 1, source: "ContraSciView" },
+      { label: "Rebuttal robustness", value: claim.scores.lifecycle_robustness ?? claim.scores.rebuttal_resolution, max: 1, source: "DISAPERE / Re²" },
+      { label: "Professionalism", value: professionalism ?? 0.86, max: 1, source: "PolitePEER" }
+    ];
+  }
+  return [
+    { label: "Specificity", value: claim.specificity, max: 4, source: "ReAct / AMPERE" },
+    { label: "Substantiation", value: claim.evidence_support ?? claim.support_score, max: claim.evidence_support ? 4 : 100, source: "SubstanReview" },
+    { label: "Actionability", value: claim.actionability ?? claim.answer_coverage_score, max: claim.actionability ? 4 : 100, source: "ReAct / RbtAct" },
+    { label: "Consensus / conflict", value: claim.consensus_score, max: 100, source: "ContraSciView" },
+    { label: "Rebuttal robustness", value: claim.fairness_score, max: 100, source: "DISAPERE / Re²" },
+    { label: "Professionalism", value: claim.professionalism_score, max: 100, source: "PolitePEER" }
+  ];
 }
 
 function renderScoreExplanations(explanations) {
@@ -1073,11 +1161,11 @@ function buildAnalysisFromEvidenceChainDemo(demo) {
       dominantAuditStance,
       stanceSummary: `SecondOpinion stance distribution across ${claims.length} evidence-chain claims.`,
       stanceBreakdown,
-      dimensions: {
-        "Reviewer reliability": qualityScore,
-        "Lifecycle robustness": Math.round((numberOrNull(reviewer.mean_lifecycle_robustness) || 0) * 100),
-        "High-risk pressure": Math.min(100, (reviewer.high_risk_claim_count || 0) * 25)
-      },
+      dimensions: reviewerScoreProfileFromClaims(claims, {
+        qualityScore,
+        robustness: numberOrNull(reviewer.mean_lifecycle_robustness),
+        highRiskCount: reviewer.high_risk_claim_count || 0
+      }),
       claims,
       response: bestReviewerGuidance(claims)
     };
@@ -1195,7 +1283,7 @@ function buildAnalysisFromAuditResult(auditResult, demoConfig = {}) {
     metrics: [
       [formatMetric(avgRating), "Avg score"],
       [formatMetric(avgConfidence), "Avg confidence"],
-      [formatMetric(avgRqs), "Avg SO score"],
+      [formatMetric(avgRqs), "Avg comment score"],
       [
         String(singlePaper ? audits.length : auditResult.paper_count || paperIds.length || 0),
         singlePaper ? "Reviews" : "Papers"
@@ -1209,7 +1297,7 @@ function buildAnalysisFromAuditResult(auditResult, demoConfig = {}) {
       leverage: lowestReviewer
         ? `${lowestReviewer.id} has the lowest Second Opinion review-quality score (${lowestReviewer.qualityScore}) and should be inspected first.`
         : "No reviewer audit is available.",
-      strategy: "Start with high-priority rebuttal guidance, then use stance colors to separate valid reviewer points from weakly grounded or contradicted claims."
+      strategy: "Score comments first across specificity, substantiation, actionability, consensus, rebuttal robustness, and professionalism; triage is generated after scoring."
     },
     reviewers,
     priorities: buildPriorities(highPriorityClaims),
@@ -1269,14 +1357,35 @@ function buildIssues(allClaims) {
   return issues.length ? issues : analysis.issues;
 }
 
+function reviewerScoreProfileFromClaims(claims, fallback = {}) {
+  const profiles = claims.map((claim) => claimScoreProfile(claim));
+  const averageDimension = (label, defaultValue) => {
+    const values = profiles
+      .map((profile) => profile.find((row) => row.label === label))
+      .map((row) => row && numberOrNull(row.value) !== null ? (numberOrNull(row.value) / row.max) * 100 : null)
+      .filter((value) => value !== null);
+    return values.length ? Math.round(average(values)) : defaultValue;
+  };
+  const robustness = numberOrNull(fallback.robustness);
+  const highRiskPressure = Math.min(18, (fallback.highRiskCount || 0) * 4);
+  return {
+    Specificity: averageDimension("Specificity", Math.round((fallback.qualityScore || 0) * 0.9)),
+    Substantiation: averageDimension("Substantiation", Math.round((fallback.qualityScore || 0) * 0.82)),
+    Actionability: averageDimension("Actionability", 68 + highRiskPressure),
+    "Consensus / conflict": averageDimension("Consensus / conflict", 58),
+    "Rebuttal robustness": averageDimension("Rebuttal robustness", robustness === null ? 60 : Math.round(robustness * 100)),
+    Professionalism: averageDimension("Professionalism", 86)
+  };
+}
+
 function mapAuditDimensions(dimensions) {
   const labels = {
     claim_accuracy_and_evidence: "Claim accuracy",
     technical_substance: "Technical substance",
     specificity: "Specificity",
-    constructiveness: "Constructiveness",
-    balance_and_fairness: "Balance and fairness",
-    professional_tone: "Professional tone",
+    constructiveness: "Actionability",
+    balance_and_fairness: "Substantiation",
+    professional_tone: "Professionalism",
     score_text_consistency: "Score consistency",
     venue_guideline_compliance: "Venue compliance"
   };
