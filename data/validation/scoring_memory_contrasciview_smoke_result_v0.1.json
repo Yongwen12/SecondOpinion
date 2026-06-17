@@ -1,0 +1,126 @@
+{
+  "dimension": "consensus_conflict",
+  "final_score": 0.47,
+  "llm_score": 0.35,
+  "llm_weight": 0.6,
+  "memory_prior": {
+    "example_count": 5,
+    "label_counts": {
+      "not_contradiction": 5
+    },
+    "mean_similarity": 0.0674,
+    "prior_score": 0.65
+  },
+  "min_similarity": 0.0,
+  "query_text": "One reviewer says the experiments are strong while another says the empirical results are insufficient.",
+  "retrieved_examples": [
+    {
+      "context_text": "soundness\npositive\nnegative",
+      "dataset": "ContraSciView",
+      "dimension": "consensus_conflict",
+      "gold_label": "not_contradiction",
+      "input_text": "the results nicely confirm the theoretical findings .\nto summarize i think this paper give some empirical support for the effectiveness of is yet the theoretical side is not ready .",
+      "mapped_score": 0.65,
+      "memory_id": "ContraSciView:consensus_conflict:contrasciview:NIPS_2016_89:5:6",
+      "metadata": {
+        "dataset": "ContraSciView",
+        "pair_id": "5",
+        "paper_id": "NIPS_2016_89",
+        "predicted_label": "not_contradiction",
+        "source_label": "n",
+        "split": "",
+        "task_id": "contrasciview:NIPS_2016_89:5:6",
+        "token_jaccard": 0.0625
+      },
+      "rationale": "",
+      "similarity": 0.0741
+    },
+    {
+      "context_text": "soundness\npositive\nnegative",
+      "dataset": "ContraSciView",
+      "dimension": "consensus_conflict",
+      "gold_label": "not_contradiction",
+      "input_text": "the experiments are reasonable and a comparision to the state of the art is provided .\nto summarize i think this paper give some empirical support for the effectiveness of is yet the theoretical side is not ready .",
+      "mapped_score": 0.65,
+      "memory_id": "ContraSciView:consensus_conflict:contrasciview:NIPS_2016_89:5:5",
+      "metadata": {
+        "dataset": "ContraSciView",
+        "pair_id": "5",
+        "paper_id": "NIPS_2016_89",
+        "predicted_label": "not_contradiction",
+        "source_label": "n",
+        "split": "",
+        "task_id": "contrasciview:NIPS_2016_89:5:5",
+        "token_jaccard": 0.0
+      },
+      "rationale": "",
+      "similarity": 0.069
+    },
+    {
+      "context_text": "soundness\npositive\nnegative",
+      "dataset": "ContraSciView",
+      "dimension": "consensus_conflict",
+      "gold_label": "not_contradiction",
+      "input_text": "this paper is decently written and the experimental results look promising .\nto summarize i think this paper give some empirical support for the effectiveness of is yet the theoretical side is not ready .",
+      "mapped_score": 0.65,
+      "memory_id": "ContraSciView:consensus_conflict:contrasciview:NIPS_2016_89:10:17",
+      "metadata": {
+        "dataset": "ContraSciView",
+        "pair_id": "10",
+        "paper_id": "NIPS_2016_89",
+        "predicted_label": "not_contradiction",
+        "source_label": "n",
+        "split": "",
+        "task_id": "contrasciview:NIPS_2016_89:10:17",
+        "token_jaccard": 0.0
+      },
+      "rationale": "",
+      "similarity": 0.069
+    },
+    {
+      "context_text": "originality\nnegative\npositive",
+      "dataset": "ContraSciView",
+      "dimension": "consensus_conflict",
+      "gold_label": "not_contradiction",
+      "input_text": "review scores reflect this reviewers impression as an extremely well executed albeit incremental contribution .\n4 .i like the key idea and the speedup is very impressive in the initial experiments reported in the main paper .",
+      "mapped_score": 0.65,
+      "memory_id": "ContraSciView:consensus_conflict:contrasciview:NIPS_2016_89:3:1",
+      "metadata": {
+        "dataset": "ContraSciView",
+        "pair_id": "3",
+        "paper_id": "NIPS_2016_89",
+        "predicted_label": "not_contradiction",
+        "source_label": "n",
+        "split": "",
+        "task_id": "contrasciview:NIPS_2016_89:3:1",
+        "token_jaccard": 0.0
+      },
+      "rationale": "",
+      "similarity": 0.0625
+    },
+    {
+      "context_text": "soundness\npositive\nnegative",
+      "dataset": "ContraSciView",
+      "dimension": "consensus_conflict",
+      "gold_label": "not_contradiction",
+      "input_text": "beyond this the experimental performance of the authors ' method seems quite good on the tasks considered and at least a substantial subset of the baselines considered are recent .\nhowever i am not entirely convinced by the empirical results .",
+      "mapped_score": 0.65,
+      "memory_id": "ContraSciView:consensus_conflict:contrasciview:ICLR_2020_1183:2:23",
+      "metadata": {
+        "dataset": "ContraSciView",
+        "pair_id": "2",
+        "paper_id": "ICLR_2020_1183",
+        "predicted_label": "not_contradiction",
+        "source_label": "n",
+        "split": "",
+        "task_id": "contrasciview:ICLR_2020_1183:2:23",
+        "token_jaccard": 0.0
+      },
+      "rationale": "",
+      "similarity": 0.0625
+    }
+  ],
+  "schema_version": "hybrid-scoring-v0.1",
+  "source": "hybrid",
+  "top_k": 5
+}

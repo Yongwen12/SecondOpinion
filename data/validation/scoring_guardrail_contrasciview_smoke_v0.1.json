@@ -1,0 +1,69 @@
+{
+  "baseline_summary": {
+    "accuracy": 0.8807,
+    "balanced_accuracy": 0.5,
+    "gold_label_counts": {
+      "contradiction": 5725,
+      "not_contradiction": 42250
+    },
+    "macro_f1": 0.4683,
+    "majority_baseline": 0.8807,
+    "predicted_label_counts": {
+      "not_contradiction": 47975
+    },
+    "record_count": 47975
+  },
+  "checks": [
+    {
+      "baseline_or_threshold": 0.5,
+      "current": 0.8594,
+      "limit": 0.5,
+      "name": "accuracy_min",
+      "passed": true,
+      "status": "pass"
+    },
+    {
+      "baseline_or_threshold": null,
+      "current": 0.5225,
+      "limit": null,
+      "name": "macro_f1_min",
+      "passed": true,
+      "status": "skipped"
+    },
+    {
+      "baseline_or_threshold": 0.8807,
+      "current": 0.8594,
+      "drop": 0.0213,
+      "limit": 0.25,
+      "name": "accuracy_drop",
+      "passed": true,
+      "status": "pass"
+    },
+    {
+      "baseline_or_threshold": 0.4683,
+      "current": 0.5225,
+      "drop": -0.0542,
+      "limit": 0.02,
+      "name": "macro_f1_drop",
+      "passed": true,
+      "status": "pass"
+    }
+  ],
+  "current_summary": {
+    "accuracy": 0.8594,
+    "balanced_accuracy": 0.5231,
+    "gold_label_counts": {
+      "contradiction": 5725,
+      "not_contradiction": 42250
+    },
+    "macro_f1": 0.5225,
+    "majority_baseline": 0.8807,
+    "predicted_label_counts": {
+      "contradiction": 1952,
+      "not_contradiction": 46023
+    },
+    "record_count": 47975
+  },
+  "schema_version": "scoring-guardrail-v0.1",
+  "status": "pass"
+}

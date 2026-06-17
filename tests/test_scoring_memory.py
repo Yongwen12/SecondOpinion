@@ -1,0 +1,109 @@
+from secondopinion.scoring_memory import (
+    build_guardrail_report,
+    build_memory_records,
+    hybrid_score,
+    retrieve_memory,
+    score_with_memory,
+)
+
+
+def test_build_memory_records_maps_external_labels_to_dimension_scores():
+    records = [
+        {
+            "task_id": "r1",
+            "dataset": "ReAct",
+            "comment": "Please compare against a standard retrieval baseline.",
+            "gold_label": "actionable",
+            "aspect": "experiment",
+        },
+        {
+            "task_id": "r2",
+            "dataset": "ReAct",
+            "comment": "The paper is not very exciting.",
+            "gold_label": "not_actionable",
+        },
+    ]
+
+    memory = build_memory_records(records, dimension="actionability", text_fields=["comment"])
+
+    assert len(memory) == 2
+    assert memory[0]["schema_version"] == "scoring-memory-v0.1"
+    assert memory[0]["dimension"] == "actionability"
+    assert memory[0]["mapped_score"] == 0.9
+    assert memory[1]["mapped_score"] == 0.15
+    assert memory[0]["context_text"] == "experiment"
+
+
+def test_retrieve_memory_and_hybrid_score_blend_prior_with_llm_score():
+    memory = build_memory_records(
+        [
+            {
+                "task_id": "a",
+                "dataset": "ReAct",
+                "comment": "Add a baseline comparison and report runtime.",
+                "gold_label": "actionable",
+            },
+            {
+                "task_id": "b",
+                "dataset": "ReAct",
+                "comment": "The submission is somewhat boring.",
+                "gold_label": "not_actionable",
+            },
+        ],
+        dimension="actionability",
+        text_fields=["comment"],
+    )
+
+    retrieved = retrieve_memory("The reviewer asks for a baseline comparison.", memory, dimension="actionability", top_k=1)
+    result = hybrid_score(llm_score=0.7, retrieved_examples=retrieved, llm_weight=0.6)
+
+    assert retrieved[0]["gold_label"] == "actionable"
+    assert result["source"] == "hybrid"
+    assert result["memory_prior"]["prior_score"] == 0.9
+    assert result["final_score"] == 0.78
+
+
+def test_score_with_memory_returns_dimension_and_examples():
+    memory = build_memory_records(
+        [
+            {
+                "task_id": "c1",
+                "dataset": "ContraSciView",
+                "premise": "The experiments are convincing.",
+                "hypothesis": "The experiments are insufficient.",
+                "gold_label": "contradiction",
+            }
+        ],
+        dimension="consensus_conflict",
+        text_fields=["premise", "hypothesis"],
+    )
+
+    result = score_with_memory(
+        query_text="One reviewer says experiments are convincing while another says they are insufficient.",
+        memory_records=memory,
+        dimension="consensus_conflict",
+        llm_score=0.3,
+        top_k=3,
+    )
+
+    assert result["dimension"] == "consensus_conflict"
+    assert result["retrieved_examples"]
+    assert result["memory_prior"]["label_counts"] == {"contradiction": 1}
+
+
+def test_guardrail_report_fails_on_metric_regression():
+    current = {"summary": {"accuracy": 0.71, "macro_f1": 0.62}}
+    baseline = {"summary": {"accuracy": 0.76, "macro_f1": 0.68}}
+
+    report = build_guardrail_report(
+        current,
+        baseline_report=baseline,
+        min_accuracy=0.7,
+        min_macro_f1=0.6,
+        max_accuracy_drop=0.02,
+        max_macro_f1_drop=0.02,
+    )
+
+    assert report["status"] == "fail"
+    failed = {check["name"] for check in report["checks"] if check["status"] == "fail"}
+    assert failed == {"accuracy_drop", "macro_f1_drop"}

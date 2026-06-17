@@ -94,6 +94,18 @@ from .reviewer_calibration import (
     write_rebuttal_resolution_calibration_markdown,
     write_reviewer_calibration_markdown,
 )
+from .scoring_memory import (
+    build_guardrail_report,
+    build_memory_records,
+    parse_fields,
+    parse_label_score_map,
+    read_json as read_scoring_json,
+    read_jsonl as read_scoring_jsonl,
+    render_guardrail_markdown,
+    score_with_memory,
+    write_json as write_scoring_json,
+    write_jsonl as write_scoring_jsonl,
+)
 from .snapshot import normalize_snapshot, save_openreview_snapshot
 from .storage import resolve_artifact_path, storage_root, suggested_drive_storage_root
 
@@ -459,6 +471,50 @@ def main(argv: list[str] | None = None) -> None:
     validation_story.add_argument("--pseudo-report", required=True)
     validation_story.add_argument("--out", default="reports/validation/evidence_chain_validation_story_v0.1.md")
 
+    scoring_memory = subparsers.add_parser(
+        "build-scoring-memory",
+        parents=[storage_parent],
+        help="Convert normalized external benchmark records into scoring-memory examples.",
+    )
+    scoring_memory.add_argument("--input", required=True)
+    scoring_memory.add_argument("--out", default="data/scoring_memory/scoring_memory.jsonl")
+    scoring_memory.add_argument("--dimension", required=True)
+    scoring_memory.add_argument("--dataset", default="")
+    scoring_memory.add_argument("--text-fields", default="input_text,comment,claim_text,premise,hypothesis,review_text")
+    scoring_memory.add_argument("--context-fields", default="context_text,paper_title,aspect,rebuttal,response")
+    scoring_memory.add_argument("--label-field", default="gold_label")
+    scoring_memory.add_argument("--score-field", default="")
+    scoring_memory.add_argument("--label-score", action="append", default=[])
+    scoring_memory.add_argument("--limit", type=int, default=None)
+
+    score_memory = subparsers.add_parser(
+        "score-with-memory",
+        parents=[storage_parent],
+        help="Retrieve external scoring-memory examples and combine their prior with an optional LLM score.",
+    )
+    score_memory.add_argument("--memory", required=True)
+    score_memory.add_argument("--query", required=True)
+    score_memory.add_argument("--dimension", required=True)
+    score_memory.add_argument("--out", default="data/validation/scoring_memory_result.json")
+    score_memory.add_argument("--top-k", type=int, default=5)
+    score_memory.add_argument("--llm-score", type=float, default=None)
+    score_memory.add_argument("--llm-weight", type=float, default=0.6)
+    score_memory.add_argument("--min-similarity", type=float, default=0.0)
+
+    scoring_guardrail = subparsers.add_parser(
+        "scoring-guardrail",
+        parents=[storage_parent],
+        help="Fail/pass a component benchmark against thresholds or a previous benchmark report.",
+    )
+    scoring_guardrail.add_argument("--current", required=True)
+    scoring_guardrail.add_argument("--baseline", default="")
+    scoring_guardrail.add_argument("--out", default="data/validation/scoring_guardrail.json")
+    scoring_guardrail.add_argument("--markdown", default="reports/validation/scoring_guardrail.md")
+    scoring_guardrail.add_argument("--min-accuracy", type=float, default=None)
+    scoring_guardrail.add_argument("--min-macro-f1", type=float, default=None)
+    scoring_guardrail.add_argument("--max-accuracy-drop", type=float, default=0.02)
+    scoring_guardrail.add_argument("--max-macro-f1-drop", type=float, default=0.02)
+
     demo = subparsers.add_parser(
         "demo",
         parents=[storage_parent],
@@ -565,6 +621,12 @@ def main(argv: list[str] | None = None) -> None:
         command_label_evidence_chain_pseudo_expert(args)
     elif args.command == "write-evidence-chain-validation-story":
         command_write_evidence_chain_validation_story(args)
+    elif args.command == "build-scoring-memory":
+        command_build_scoring_memory(args)
+    elif args.command == "score-with-memory":
+        command_score_with_memory(args)
+    elif args.command == "scoring-guardrail":
+        command_scoring_guardrail(args)
     elif args.command == "demo":
         command_demo(args)
     elif args.command == "storage-info":
@@ -1166,6 +1228,63 @@ def command_write_evidence_chain_validation_story(args: argparse.Namespace) -> N
     out = artifact_path(args.out, args)
     write_validation_story(out, demo, benchmark, pseudo_report)
     print(f"Saved evidence-chain validation story to {out}.")
+
+
+def command_build_scoring_memory(args: argparse.Namespace) -> None:
+    records = read_scoring_jsonl(artifact_path(args.input, args))
+    memory = build_memory_records(
+        records,
+        dimension=args.dimension,
+        dataset=args.dataset,
+        text_fields=parse_fields(args.text_fields),
+        context_fields=parse_fields(args.context_fields),
+        label_field=args.label_field,
+        score_field=args.score_field,
+        label_score_map=parse_label_score_map(args.label_score) or None,
+        limit=args.limit,
+    )
+    out = artifact_path(args.out, args)
+    write_scoring_jsonl(out, memory)
+    print(f"Saved {len(memory)} scoring-memory records to {out}.")
+
+
+def command_score_with_memory(args: argparse.Namespace) -> None:
+    memory = read_scoring_jsonl(artifact_path(args.memory, args))
+    result = score_with_memory(
+        query_text=args.query,
+        memory_records=memory,
+        dimension=args.dimension,
+        llm_score=args.llm_score,
+        top_k=args.top_k,
+        llm_weight=args.llm_weight,
+        min_similarity=args.min_similarity,
+    )
+    out = artifact_path(args.out, args)
+    write_scoring_json(out, result)
+    print(
+        f"Saved scoring-memory result to {out}. "
+        f"source={result['source']}; final_score={result['final_score']}; "
+        f"examples={len(result['retrieved_examples'])}."
+    )
+
+
+def command_scoring_guardrail(args: argparse.Namespace) -> None:
+    current = read_scoring_json(artifact_path(args.current, args))
+    baseline = read_scoring_json(artifact_path(args.baseline, args)) if args.baseline else None
+    report = build_guardrail_report(
+        current,
+        baseline_report=baseline,
+        min_accuracy=args.min_accuracy,
+        min_macro_f1=args.min_macro_f1,
+        max_accuracy_drop=args.max_accuracy_drop,
+        max_macro_f1_drop=args.max_macro_f1_drop,
+    )
+    out = artifact_path(args.out, args)
+    markdown = artifact_path(args.markdown, args)
+    write_scoring_json(out, report)
+    markdown.parent.mkdir(parents=True, exist_ok=True)
+    markdown.write_text(render_guardrail_markdown(report), encoding="utf-8")
+    print(f"Scoring guardrail {report['status']}: saved to {out} and {markdown}.")
 
 
 def command_demo(args: argparse.Namespace) -> None:
