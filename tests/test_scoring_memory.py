@@ -1,8 +1,12 @@
 from secondopinion.scoring_memory import (
+    build_scoring_benchmark_suite,
     build_guardrail_report,
     build_memory_records,
+    build_memory_records_from_normalized,
     hybrid_score,
     retrieve_memory,
+    render_scoring_suite_markdown,
+    score_dimensions_with_memory,
     score_with_memory,
 )
 
@@ -91,6 +95,79 @@ def test_score_with_memory_returns_dimension_and_examples():
     assert result["memory_prior"]["label_counts"] == {"contradiction": 1}
 
 
+def test_score_dimensions_with_memory_returns_hybrid_scores_by_dimension():
+    memory = build_memory_records(
+        [
+            {
+                "task_id": "a",
+                "dataset": "ReAct",
+                "input_text": "Add a baseline comparison.",
+                "gold_label": "actionable",
+            },
+            {
+                "task_id": "s",
+                "dataset": "SubstanReview",
+                "input_text": "The reviewer cites Table 2 as evidence.",
+                "gold_label": "substantiated",
+            },
+        ],
+        dimension="actionability",
+        text_fields=["input_text"],
+    )
+    memory.extend(
+        build_memory_records(
+            [
+                {
+                    "task_id": "s",
+                    "dataset": "SubstanReview",
+                    "input_text": "The reviewer cites Table 2 as evidence.",
+                    "gold_label": "substantiated",
+                }
+            ],
+            dimension="substantiation",
+            text_fields=["input_text"],
+        )
+    )
+
+    result = score_dimensions_with_memory(
+        query_text="Please add a baseline comparison and cite the table.",
+        memory_records=memory,
+        llm_scores={"actionability": 0.8, "substantiation": 0.6},
+        dimensions=["actionability", "substantiation"],
+    )
+
+    assert result["schema_version"] == "hybrid-scoring-v0.1"
+    assert set(result["hybrid_scores"]) == {"actionability", "substantiation"}
+    assert result["overall_score"] is not None
+    assert result["hybrid_scores"]["actionability"]["source"] == "hybrid"
+
+
+def test_build_memory_records_from_normalized_uses_record_dimension():
+    memory = build_memory_records_from_normalized(
+        [
+            {
+                "task_id": "a",
+                "dataset": "ReAct",
+                "dimension": "actionability",
+                "input_text": "Add a baseline.",
+                "gold_label": "actionable",
+                "mapped_score": 0.9,
+            },
+            {
+                "task_id": "s",
+                "dataset": "SubstanReview",
+                "dimension": "substantiation",
+                "input_text": "The reviewer cites Table 2.",
+                "gold_label": "substantiated",
+                "mapped_score": 0.9,
+            },
+        ]
+    )
+
+    assert {record["dimension"] for record in memory} == {"actionability", "substantiation"}
+    assert all(record["mapped_score"] == 0.9 for record in memory)
+
+
 def test_guardrail_report_fails_on_metric_regression():
     current = {"summary": {"accuracy": 0.71, "macro_f1": 0.62}}
     baseline = {"summary": {"accuracy": 0.76, "macro_f1": 0.68}}
@@ -107,3 +184,30 @@ def test_guardrail_report_fails_on_metric_regression():
     assert report["status"] == "fail"
     failed = {check["name"] for check in report["checks"] if check["status"] == "fail"}
     assert failed == {"accuracy_drop", "macro_f1_drop"}
+
+
+def test_scoring_benchmark_suite_groups_by_dimension():
+    report = build_scoring_benchmark_suite(
+        [
+            {
+                "task_id": "1",
+                "dataset": "ReAct",
+                "dimension": "actionability",
+                "gold_label": "actionable",
+                "predicted_label": "actionable",
+            },
+            {
+                "task_id": "2",
+                "dataset": "SubstanReview",
+                "dimension": "substantiation",
+                "gold_label": "substantiated",
+                "predicted_label": "unsubstantiated",
+            },
+        ]
+    )
+    markdown = render_scoring_suite_markdown(report)
+
+    assert report["schema_version"] == "scoring-benchmark-suite-v0.1"
+    assert report["summary"]["dimension_count"] == 2
+    assert "actionability" in report["by_dimension"]
+    assert "# Scoring Memory Benchmark Suite" in markdown

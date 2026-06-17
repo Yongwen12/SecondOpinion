@@ -6,11 +6,13 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
+from .component_benchmark import benchmark_classification
 from .retrieval import token_list
 
 
 SCORING_MEMORY_VERSION = "scoring-memory-v0.1"
 HYBRID_SCORING_VERSION = "hybrid-scoring-v0.1"
+SCORING_SUITE_VERSION = "scoring-benchmark-suite-v0.1"
 
 DEFAULT_LABEL_SCORE_MAPS: dict[str, dict[str, float]] = {
     "specificity": {
@@ -99,6 +101,42 @@ def build_memory_records(
                 "rationale": str(record.get("rationale", "") or record.get("explanation", "") or ""),
                 "metadata": compact_metadata(record, exclude=set(text_fields + context_fields + [label_field, score_field])),
             }
+        )
+    return memory
+
+
+def build_memory_records_from_normalized(
+    records: list[dict[str, Any]],
+    *,
+    dimension_field: str = "dimension",
+    dataset: str = "",
+    text_fields: list[str] | None = None,
+    context_fields: list[str] | None = None,
+    label_field: str = "gold_label",
+    score_field: str = "mapped_score",
+    limit: int | None = None,
+) -> list[dict[str, Any]]:
+    by_dimension: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for record in records:
+        dimension = str(record.get(dimension_field, "") or "").strip()
+        if dimension:
+            by_dimension[dimension].append(record)
+    memory = []
+    for dimension, items in sorted(by_dimension.items()):
+        remaining = None if limit is None else max(0, limit - len(memory))
+        if remaining == 0:
+            break
+        memory.extend(
+            build_memory_records(
+                items,
+                dimension=dimension,
+                dataset=dataset,
+                text_fields=text_fields or ["input_text"],
+                context_fields=context_fields or ["context_text"],
+                label_field=label_field,
+                score_field=score_field,
+                limit=remaining,
+            )
         )
     return memory
 
@@ -222,6 +260,104 @@ def score_with_memory(
     return result
 
 
+def score_dimensions_with_memory(
+    *,
+    query_text: str,
+    memory_records: list[dict[str, Any]],
+    llm_scores: dict[str, float | None] | None = None,
+    dimensions: list[str] | None = None,
+    top_k: int = 5,
+    llm_weight: float = 0.6,
+    min_similarity: float = 0.0,
+) -> dict[str, Any]:
+    dimensions = dimensions or list(DEFAULT_LABEL_SCORE_MAPS)
+    llm_scores = llm_scores or {}
+    scores = {}
+    for dimension in dimensions:
+        scores[dimension] = score_with_memory(
+            query_text=query_text,
+            memory_records=memory_records,
+            dimension=dimension,
+            llm_score=llm_scores.get(dimension),
+            top_k=top_k,
+            llm_weight=llm_weight,
+            min_similarity=min_similarity,
+        )
+    final_scores = [
+        result["final_score"]
+        for result in scores.values()
+        if result.get("final_score") is not None
+    ]
+    return {
+        "schema_version": HYBRID_SCORING_VERSION,
+        "query_text": query_text,
+        "top_k": top_k,
+        "llm_weight": round(min(1.0, max(0.0, llm_weight)), 4),
+        "overall_score": round(sum(final_scores) / len(final_scores), 4) if final_scores else None,
+        "hybrid_scores": scores,
+    }
+
+
+def build_scoring_benchmark_suite(records: list[dict[str, Any]]) -> dict[str, Any]:
+    by_dimension: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for record in records:
+        by_dimension[str(record.get("dimension", "") or "unknown")].append(record)
+    dimension_reports = {
+        dimension: benchmark_classification(rows)
+        for dimension, rows in sorted(by_dimension.items())
+    }
+    overall = benchmark_classification(records)
+    return {
+        "schema_version": SCORING_SUITE_VERSION,
+        "task_type": "scoring_dimension_classification",
+        "summary": {
+            "record_count": len(records),
+            "dimension_count": len(dimension_reports),
+            "dimensions": sorted(dimension_reports),
+            "accuracy": overall["summary"]["accuracy"],
+            "macro_f1": overall["summary"]["macro_f1"],
+            "gold_label_counts": overall["summary"]["gold_label_counts"],
+            "predicted_label_counts": overall["summary"]["predicted_label_counts"],
+        },
+        "overall": overall,
+        "by_dimension": dimension_reports,
+    }
+
+
+def render_scoring_suite_markdown(report: dict[str, Any]) -> str:
+    summary = report.get("summary", {})
+    lines = [
+        "# Scoring Memory Benchmark Suite",
+        "",
+        f"- Records: {summary.get('record_count', 0)}",
+        f"- Dimensions: {summary.get('dimension_count', 0)}",
+        f"- Overall accuracy: {format_optional(summary.get('accuracy'))}",
+        f"- Overall macro F1: {format_optional(summary.get('macro_f1'))}",
+        "",
+        "## By Dimension",
+        "",
+        "| Dimension | Records | Accuracy | Macro F1 | Majority baseline |",
+        "| --- | ---: | ---: | ---: | ---: |",
+    ]
+    for dimension, item in report.get("by_dimension", {}).items():
+        item_summary = item.get("summary", {})
+        lines.append(
+            f"| `{dimension}` | {item_summary.get('record_count', 0)} | "
+            f"{format_optional(item_summary.get('accuracy'))} | {format_optional(item_summary.get('macro_f1'))} | "
+            f"{format_optional(item_summary.get('majority_baseline'))} |"
+        )
+    lines.extend(
+        [
+            "",
+            "## Notes",
+            "",
+            "- This suite checks external component labels used as scoring memory.",
+            "- It is a regression guardrail for the scorer, not proof that reviewer comments are objectively correct.",
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
 def build_guardrail_report(
     current_report: dict[str, Any],
     *,
@@ -282,6 +418,12 @@ def write_json(path: str | Path, payload: Any) -> None:
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
+def write_markdown(path: str | Path, markdown: str) -> None:
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(markdown, encoding="utf-8")
+
+
 def write_jsonl(path: str | Path, records: list[dict[str, Any]]) -> None:
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -293,7 +435,7 @@ def read_json(path: str | Path) -> dict[str, Any]:
 
 
 def read_jsonl(path: str | Path) -> list[dict[str, Any]]:
-    return [json.loads(line) for line in Path(path).read_text(encoding="utf-8").splitlines() if line.strip()]
+    return [json.loads(line) for line in Path(path).read_text(encoding="utf-8-sig").splitlines() if line.strip()]
 
 
 def parse_fields(value: str) -> list[str]:

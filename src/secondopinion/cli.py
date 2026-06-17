@@ -45,6 +45,13 @@ from .concern_survival import (
 )
 from .data_inventory import inventory_openreview_snapshot, write_inventory_markdown
 from .external_evidence import DEFAULT_COLLECTOR_MODEL, enrich_dataset_with_external_evidence
+from .external_dataset_adapters import (
+    DATASET_SPECS,
+    normalize_contrasciview_csv,
+    normalize_dataset_records,
+    read_records as read_external_records,
+    summarize_normalized,
+)
 from .evidence_chain import (
     build_benchmark_validation_report,
     build_evidence_chain_benchmark,
@@ -95,14 +102,19 @@ from .reviewer_calibration import (
     write_reviewer_calibration_markdown,
 )
 from .scoring_memory import (
+    build_scoring_benchmark_suite,
     build_guardrail_report,
     build_memory_records,
+    build_memory_records_from_normalized,
     parse_fields,
     parse_label_score_map,
     read_json as read_scoring_json,
     read_jsonl as read_scoring_jsonl,
     render_guardrail_markdown,
+    render_scoring_suite_markdown,
+    score_dimensions_with_memory,
     score_with_memory,
+    write_markdown as write_scoring_markdown,
     write_json as write_scoring_json,
     write_jsonl as write_scoring_jsonl,
 )
@@ -471,6 +483,19 @@ def main(argv: list[str] | None = None) -> None:
     validation_story.add_argument("--pseudo-report", required=True)
     validation_story.add_argument("--out", default="reports/validation/evidence_chain_validation_story_v0.1.md")
 
+    normalize_external = subparsers.add_parser(
+        "normalize-external-scoring-dataset",
+        parents=[storage_parent],
+        help="Normalize external reviewer-comment datasets into the shared scoring benchmark schema.",
+    )
+    normalize_external.add_argument("--dataset", choices=["contrasciview", *sorted(DATASET_SPECS)], required=True)
+    normalize_external.add_argument("--input", required=True)
+    normalize_external.add_argument("--out", default="data/validation/external_scoring_dataset.jsonl")
+    normalize_external.add_argument("--dimension", default="")
+    normalize_external.add_argument("--baseline", choices=["polarity", "polarity_overlap", "majority"], default="polarity")
+    normalize_external.add_argument("--overlap-threshold", type=float, default=0.10)
+    normalize_external.add_argument("--limit", type=int, default=None)
+
     scoring_memory = subparsers.add_parser(
         "build-scoring-memory",
         parents=[storage_parent],
@@ -478,7 +503,7 @@ def main(argv: list[str] | None = None) -> None:
     )
     scoring_memory.add_argument("--input", required=True)
     scoring_memory.add_argument("--out", default="data/scoring_memory/scoring_memory.jsonl")
-    scoring_memory.add_argument("--dimension", required=True)
+    scoring_memory.add_argument("--dimension", required=True, help="Scoring dimension, or 'auto' to use each record's dimension field.")
     scoring_memory.add_argument("--dataset", default="")
     scoring_memory.add_argument("--text-fields", default="input_text,comment,claim_text,premise,hypothesis,review_text")
     scoring_memory.add_argument("--context-fields", default="context_text,paper_title,aspect,rebuttal,response")
@@ -500,6 +525,36 @@ def main(argv: list[str] | None = None) -> None:
     score_memory.add_argument("--llm-score", type=float, default=None)
     score_memory.add_argument("--llm-weight", type=float, default=0.6)
     score_memory.add_argument("--min-similarity", type=float, default=0.0)
+
+    score_dimensions = subparsers.add_parser(
+        "score-dimensions-with-memory",
+        parents=[storage_parent],
+        help="Score all reviewer-comment dimensions with memory priors and optional LLM scores.",
+    )
+    score_dimensions.add_argument("--memory", required=True)
+    score_dimensions.add_argument("--query", required=True)
+    score_dimensions.add_argument("--out", default="data/validation/hybrid_scoring_result.json")
+    score_dimensions.add_argument("--dimensions", default="specificity,substantiation,actionability,consensus_conflict,rebuttal_robustness,professionalism")
+    score_dimensions.add_argument("--llm-score", action="append", default=[], help="dimension=score; repeatable.")
+    score_dimensions.add_argument("--top-k", type=int, default=5)
+    score_dimensions.add_argument("--llm-weight", type=float, default=0.6)
+    score_dimensions.add_argument("--min-similarity", type=float, default=0.0)
+
+    scoring_suite = subparsers.add_parser(
+        "run-scoring-memory-suite",
+        parents=[storage_parent],
+        help="Run dimension-level benchmark and optional guardrail reports for normalized scoring records.",
+    )
+    scoring_suite.add_argument("--input", required=True)
+    scoring_suite.add_argument("--out", default="data/validation/scoring_memory_suite.json")
+    scoring_suite.add_argument("--markdown", default="reports/validation/scoring_memory_suite.md")
+    scoring_suite.add_argument("--guardrail-out", default="")
+    scoring_suite.add_argument("--guardrail-markdown", default="")
+    scoring_suite.add_argument("--baseline", default="")
+    scoring_suite.add_argument("--min-accuracy", type=float, default=None)
+    scoring_suite.add_argument("--min-macro-f1", type=float, default=None)
+    scoring_suite.add_argument("--max-accuracy-drop", type=float, default=0.02)
+    scoring_suite.add_argument("--max-macro-f1-drop", type=float, default=0.02)
 
     scoring_guardrail = subparsers.add_parser(
         "scoring-guardrail",
@@ -621,10 +676,16 @@ def main(argv: list[str] | None = None) -> None:
         command_label_evidence_chain_pseudo_expert(args)
     elif args.command == "write-evidence-chain-validation-story":
         command_write_evidence_chain_validation_story(args)
+    elif args.command == "normalize-external-scoring-dataset":
+        command_normalize_external_scoring_dataset(args)
     elif args.command == "build-scoring-memory":
         command_build_scoring_memory(args)
     elif args.command == "score-with-memory":
         command_score_with_memory(args)
+    elif args.command == "score-dimensions-with-memory":
+        command_score_dimensions_with_memory(args)
+    elif args.command == "run-scoring-memory-suite":
+        command_run_scoring_memory_suite(args)
     elif args.command == "scoring-guardrail":
         command_scoring_guardrail(args)
     elif args.command == "demo":
@@ -1230,19 +1291,55 @@ def command_write_evidence_chain_validation_story(args: argparse.Namespace) -> N
     print(f"Saved evidence-chain validation story to {out}.")
 
 
+def command_normalize_external_scoring_dataset(args: argparse.Namespace) -> None:
+    if args.dataset == "contrasciview":
+        records = normalize_contrasciview_csv(
+            artifact_path(args.input, args),
+            baseline=args.baseline,
+            overlap_threshold=args.overlap_threshold,
+            limit=args.limit,
+        )
+    else:
+        source_records = read_external_records(artifact_path(args.input, args))
+        records = normalize_dataset_records(
+            source_records,
+            dataset_key=args.dataset,
+            dimension=args.dimension or None,
+            limit=args.limit,
+        )
+    out = artifact_path(args.out, args)
+    write_scoring_jsonl(out, records)
+    summary = summarize_normalized(records)
+    print(
+        f"Saved {summary['record_count']} normalized scoring records to {out}. "
+        f"datasets={summary['dataset_counts']}; dimensions={summary['dimension_counts']}."
+    )
+
+
 def command_build_scoring_memory(args: argparse.Namespace) -> None:
     records = read_scoring_jsonl(artifact_path(args.input, args))
-    memory = build_memory_records(
-        records,
-        dimension=args.dimension,
-        dataset=args.dataset,
-        text_fields=parse_fields(args.text_fields),
-        context_fields=parse_fields(args.context_fields),
-        label_field=args.label_field,
-        score_field=args.score_field,
-        label_score_map=parse_label_score_map(args.label_score) or None,
-        limit=args.limit,
-    )
+    if args.dimension == "auto":
+        memory = build_memory_records_from_normalized(
+            records,
+            dataset=args.dataset,
+            text_fields=parse_fields(args.text_fields),
+            context_fields=parse_fields(args.context_fields),
+            label_field=args.label_field,
+            score_field=args.score_field or "mapped_score",
+            limit=args.limit,
+        )
+    else:
+        memory = build_memory_records(
+            records,
+            dimension=args.dimension,
+            dataset=args.dataset,
+            text_fields=parse_fields(args.text_fields),
+            context_fields=parse_fields(args.context_fields),
+            label_field=args.label_field,
+            score_field=args.score_field,
+            label_score_map=parse_label_score_map(args.label_score) or None,
+            limit=args.limit,
+        )
     out = artifact_path(args.out, args)
     write_scoring_jsonl(out, memory)
     print(f"Saved {len(memory)} scoring-memory records to {out}.")
@@ -1268,6 +1365,53 @@ def command_score_with_memory(args: argparse.Namespace) -> None:
     )
 
 
+def command_score_dimensions_with_memory(args: argparse.Namespace) -> None:
+    memory = read_scoring_jsonl(artifact_path(args.memory, args))
+    result = score_dimensions_with_memory(
+        query_text=args.query,
+        memory_records=memory,
+        llm_scores=parse_dimension_scores(args.llm_score),
+        dimensions=parse_fields(args.dimensions),
+        top_k=args.top_k,
+        llm_weight=args.llm_weight,
+        min_similarity=args.min_similarity,
+    )
+    out = artifact_path(args.out, args)
+    write_scoring_json(out, result)
+    print(
+        f"Saved hybrid dimension scores to {out}. "
+        f"overall_score={result['overall_score']}; dimensions={len(result['hybrid_scores'])}."
+    )
+
+
+def command_run_scoring_memory_suite(args: argparse.Namespace) -> None:
+    records = read_scoring_jsonl(artifact_path(args.input, args))
+    report = build_scoring_benchmark_suite(records)
+    out = artifact_path(args.out, args)
+    markdown = artifact_path(args.markdown, args)
+    write_scoring_json(out, report)
+    write_scoring_markdown(markdown, render_scoring_suite_markdown(report))
+    print(
+        f"Saved scoring benchmark suite to {out} and {markdown}. "
+        f"records={report['summary']['record_count']}; accuracy={report['summary']['accuracy']:.1%}."
+    )
+    if args.guardrail_out:
+        baseline = read_scoring_json(artifact_path(args.baseline, args)) if args.baseline else None
+        guardrail = build_guardrail_report(
+            report,
+            baseline_report=baseline,
+            min_accuracy=args.min_accuracy,
+            min_macro_f1=args.min_macro_f1,
+            max_accuracy_drop=args.max_accuracy_drop,
+            max_macro_f1_drop=args.max_macro_f1_drop,
+        )
+        guardrail_out = artifact_path(args.guardrail_out, args)
+        write_scoring_json(guardrail_out, guardrail)
+        if args.guardrail_markdown:
+            write_scoring_markdown(artifact_path(args.guardrail_markdown, args), render_guardrail_markdown(guardrail))
+        print(f"Scoring suite guardrail {guardrail['status']}: saved to {guardrail_out}.")
+
+
 def command_scoring_guardrail(args: argparse.Namespace) -> None:
     current = read_scoring_json(artifact_path(args.current, args))
     baseline = read_scoring_json(artifact_path(args.baseline, args)) if args.baseline else None
@@ -1285,6 +1429,16 @@ def command_scoring_guardrail(args: argparse.Namespace) -> None:
     markdown.parent.mkdir(parents=True, exist_ok=True)
     markdown.write_text(render_guardrail_markdown(report), encoding="utf-8")
     print(f"Scoring guardrail {report['status']}: saved to {out} and {markdown}.")
+
+
+def parse_dimension_scores(items: list[str] | None) -> dict[str, float]:
+    scores = {}
+    for item in items or []:
+        if "=" not in item:
+            raise SystemExit(f"Expected --llm-score dimension=score, got {item!r}")
+        dimension, score = item.split("=", 1)
+        scores[dimension.strip()] = float(score)
+    return scores
 
 
 def command_demo(args: argparse.Namespace) -> None:

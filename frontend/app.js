@@ -115,6 +115,10 @@ const scoreDimensions = [
 ];
 
 const demoConfigs = {
+  "paper-hybrid-memory": {
+    src: "./demos/hybrid_scoring_demo.json",
+    format: "hybrid-scoring-demo"
+  },
   "paper-evidence-chain": {
     src: "./demos/evidence_chain_demo.json",
     format: "evidence-chain"
@@ -700,6 +704,7 @@ function renderRebuttal() {
         <div class="issue-detail-section">
           <p>${escapeHtml(issue.summary)}</p>
           ${issue.scores ? renderIssueScoreStrip(issue.scores) : ""}
+          ${issue.hybrid_scores ? renderHybridMemoryPanel(issue.hybrid_scores) : ""}
         </div>
 
         <div class="issue-detail-section">
@@ -856,6 +861,7 @@ function renderClaimTabs(claims, selectedClaimIndex) {
 function renderClaimCard(claim) {
   const chainHtml = claim.evidence_chain ? renderEvidenceChain(claim.evidence_chain) : "";
   const scoreExplanationHtml = claim.score_explanations ? renderScoreExplanations(claim.score_explanations) : "";
+  const hybridMemoryHtml = claim.hybrid_scores ? renderHybridMemoryPanel(claim.hybrid_scores) : "";
   return `
     <article class="claim-card">
       <div class="claim-card-head">
@@ -892,6 +898,7 @@ function renderClaimCard(claim) {
         </div>
       </div>
       ${scoreExplanationHtml}
+      ${hybridMemoryHtml}
       ${chainHtml}
     </article>
   `;
@@ -933,6 +940,9 @@ function renderClaimScoreRows(claim) {
 }
 
 function claimScoreProfile(claim) {
+  if (claim.hybrid_scores) {
+    return hybridScoreRows(claim.hybrid_scores);
+  }
   if (claim.scores) {
     const actionability = claim.guidancePriority === "must" ? 1 : claim.guidancePriority === "high" ? 0.82 : claim.guidancePriority === "medium" ? 0.62 : 0.45;
     const professionalism = numberOrNull(claim.professionalism_score);
@@ -953,6 +963,106 @@ function claimScoreProfile(claim) {
     { label: "Rebuttal robustness", value: claim.fairness_score, max: 100, source: "DISAPERE / Re²" },
     { label: "Professionalism", value: claim.professionalism_score, max: 100, source: "PolitePEER" }
   ];
+}
+
+function hybridScoreRows(hybridScores) {
+  const dimensions = [
+    ["specificity", "Specificity"],
+    ["substantiation", "Substantiation"],
+    ["actionability", "Actionability"],
+    ["consensus_conflict", "Consensus / conflict"],
+    ["rebuttal_robustness", "Rebuttal robustness"],
+    ["professionalism", "Professionalism"]
+  ];
+  return dimensions.map(([key, label]) => {
+    const score = hybridScores[key] || {};
+    return {
+      label,
+      value: score.final_score,
+      max: 1,
+      source: hybridSourceLabel(score)
+    };
+  });
+}
+
+function hybridSourceLabel(score) {
+  const examples = score.retrieved_examples || [];
+  const datasets = unique(examples.map((example) => example.dataset).filter(Boolean));
+  const source = labelize(score.source || "missing");
+  if (!datasets.length) {
+    return source;
+  }
+  return `${source}: ${datasets.slice(0, 2).join(" / ")}`;
+}
+
+function renderHybridMemoryPanel(hybridScores) {
+  const entries = Object.entries(hybridScores || {});
+  if (!entries.length) {
+    return "";
+  }
+  return `
+    <details class="hybrid-memory-panel" open>
+      <summary>Hybrid scoring evidence</summary>
+      <div class="hybrid-memory-grid">
+        ${entries
+          .map(([dimension, score]) => renderHybridMemoryCard(dimension, score))
+          .join("")}
+      </div>
+    </details>
+  `;
+}
+
+function renderHybridMemoryCard(dimension, score) {
+  const examples = score.retrieved_examples || [];
+  const prior = score.memory_prior || {};
+  const bestExample = examples[0];
+  return `
+    <section class="hybrid-memory-card">
+      <div class="hybrid-memory-card-head">
+        <b>${escapeHtml(labelize(dimension))}</b>
+        <span>${escapeHtml(labelize(score.source || "missing"))}</span>
+      </div>
+      <div class="hybrid-score-parts">
+        <span><b>${formatScore(score.final_score)}</b>Final</span>
+        <span><b>${formatScore(score.llm_score)}</b>LLM</span>
+        <span><b>${formatScore(prior.prior_score)}</b>Memory</span>
+      </div>
+      ${
+        bestExample
+          ? `<p><strong>${escapeHtml(bestExample.dataset)}</strong>: ${escapeHtml(truncate(bestExample.input_text, 120))}</p>`
+          : `<p>No external memory example retrieved for this dimension yet.</p>`
+      }
+    </section>
+  `;
+}
+
+function averageHybridDimensions(claims) {
+  const labels = {
+    specificity: "Specificity",
+    substantiation: "Substantiation",
+    actionability: "Actionability",
+    consensus_conflict: "Consensus / conflict",
+    rebuttal_robustness: "Rebuttal robustness",
+    professionalism: "Professionalism"
+  };
+  const dimensions = {};
+  for (const [key, label] of Object.entries(labels)) {
+    const values = claims
+      .map((claim) => numberOrNull(claim.hybrid_scores?.[key]?.final_score))
+      .filter((value) => value !== null);
+    dimensions[label] = values.length ? Math.round(average(values) * 100) : 0;
+  }
+  return dimensions;
+}
+
+function hybridOverallScore(claim) {
+  if (numberOrNull(claim.hybrid_overall_score) !== null) {
+    return numberOrNull(claim.hybrid_overall_score);
+  }
+  const values = Object.values(claim.hybrid_scores || {})
+    .map((score) => numberOrNull(score.final_score))
+    .filter((value) => value !== null);
+  return values.length ? average(values) : 0;
 }
 
 function renderScoreExplanations(explanations) {
@@ -1129,10 +1239,79 @@ async function loadSelectedAnalysis() {
     throw new Error(`Unable to load demo dataset: ${response.status}`);
   }
   const auditResult = await response.json();
+  if (auditResult.schema_version === "hybrid-scoring-demo-v0.1" || demoConfig.format === "hybrid-scoring-demo") {
+    return buildAnalysisFromHybridScoringDemo(auditResult);
+  }
   if (auditResult.schema_version === "evidence-chain-demo-v0.1" || demoConfig.format === "evidence-chain") {
     return buildAnalysisFromEvidenceChainDemo(auditResult);
   }
   return buildAnalysisFromAuditResult(auditResult, demoConfig);
+}
+
+function buildAnalysisFromHybridScoringDemo(demo) {
+  const reviewers = (demo.reviewers || []).map((reviewer, reviewerIndex) => {
+    const claims = (reviewer.claims || []).map((claim, claimIndex) => ({
+      ...claim,
+      claimIndex: claim.claim_index || claimIndex + 1,
+      normalizedStance: normalizeStance(claim.stance),
+      guidancePriority: guidancePriority(claim)
+    }));
+    const stanceBreakdown = getStanceBreakdown(claims);
+    const dominantAuditStance = getDominantStance(stanceBreakdown);
+    const qualityScore = Math.round(average(claims.map((claim) => hybridOverallScore(claim))) * 100);
+    return {
+      id: reviewer.display_id || `R${reviewerIndex + 1}`,
+      score: reviewer.rating || "n/a",
+      confidence: reviewer.confidence || "n/a",
+      qualityScore,
+      stance: reviewer.stance || "mixed",
+      potential: reviewer.potential || (claims.some((claim) => guidancePriority(claim) === "must") ? "High" : "Medium"),
+      headline: reviewer.summary || "Hybrid scoring completed from external scoring memory.",
+      auditSummary: `${claims.length} claims scored with retrieval priors and LLM estimates.`,
+      dominantAuditStance,
+      stanceSummary: `SecondOpinion scored ${claims.length} claims before downstream triage.`,
+      stanceBreakdown,
+      dimensions: averageHybridDimensions(claims),
+      claims,
+      response: bestReviewerGuidance(claims)
+    };
+  });
+  const allClaims = reviewers.flatMap((reviewer) => reviewer.claims.map((claim) => ({ claim, reviewer })));
+  return {
+    paperTitle: demo.paper?.title || "Hybrid scoring memory demo",
+    venue: demo.paper?.venue || "ICLR",
+    year: String(demo.paper?.year || "2026"),
+    metrics: [
+      [String(reviewers.length), "Reviews"],
+      [String(allClaims.length), "Claims"],
+      [formatPercent(demo.summary?.mean_hybrid_score), "Hybrid score"],
+      [String(demo.summary?.memory_dimensions || 0), "Memory dims"],
+      [String(demo.summary?.guardrail_status || "pass"), "Guardrail"]
+    ],
+    overview: {
+      situation: demo.summary?.situation || "External scoring memory is attached to the reviewer comment scorecard.",
+      leverage: demo.summary?.leverage || "Inspect the claim-level score rows to see LLM score, memory prior, and final hybrid score.",
+      strategy: "Score comments first using hybrid scoring; triage uses those scores after the fact."
+    },
+    reviewers,
+    priorities: allClaims.slice(0, 5).map(({ claim, reviewer }) => [
+      truncate(claim.claim_text, 84),
+      `${reviewer.id}: ${claim.rebuttal_guidance?.suggested_response || "Use the hybrid score breakdown before drafting."}`
+    ]),
+    issues: allClaims.slice(0, 8).map(({ claim, reviewer }) => ({
+      title: truncate(claim.claim_text || "Reviewer claim", 82),
+      raisedBy: [reviewer.id],
+      severity: hybridOverallScore(claim) < 0.62 ? "High" : "Medium",
+      fixability: guidancePriority(claim) === "must" ? "Medium" : "High",
+      priority: capitalize(guidancePriority(claim)),
+      summary: claim.source_sentence || claim.claim_text || "Reviewer claim scored with external scoring memory.",
+      assessment: claim.second_opinion_take || "Hybrid scoring combines the LLM estimate with retrieved external benchmark examples.",
+      strategy: claim.rebuttal_guidance?.suggested_response || "Answer with concrete evidence and note what will change.",
+      quotes: [claim.source_sentence || claim.claim_text || "No source quote recorded."],
+      draft: claim.rebuttal_guidance?.suggested_response || "Acknowledge the issue, cite evidence, and state the concrete response.",
+      hybrid_scores: claim.hybrid_scores
+    }))
+  };
 }
 
 function buildAnalysisFromEvidenceChainDemo(demo) {
@@ -1498,6 +1677,14 @@ function formatMetric(value) {
     return "n/a";
   }
   return Number.isInteger(numeric) ? String(numeric) : numeric.toFixed(1);
+}
+
+function formatScore(value) {
+  const numeric = numberOrNull(value);
+  if (numeric === null) {
+    return "n/a";
+  }
+  return `${Math.round(numeric * 100)}%`;
 }
 
 function formatPercent(value) {

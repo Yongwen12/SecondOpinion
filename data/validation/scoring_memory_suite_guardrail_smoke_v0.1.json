@@ -1,0 +1,73 @@
+{
+  "baseline_summary": {},
+  "checks": [
+    {
+      "baseline_or_threshold": 0.5,
+      "current": 0.8,
+      "limit": 0.5,
+      "name": "accuracy_min",
+      "passed": true,
+      "status": "pass"
+    },
+    {
+      "baseline_or_threshold": 0.4,
+      "current": 0.7333,
+      "limit": 0.4,
+      "name": "macro_f1_min",
+      "passed": true,
+      "status": "pass"
+    },
+    {
+      "baseline_or_threshold": null,
+      "current": 0.8,
+      "limit": 0.02,
+      "name": "accuracy_drop",
+      "passed": true,
+      "status": "skipped"
+    },
+    {
+      "baseline_or_threshold": null,
+      "current": 0.7333,
+      "limit": 0.02,
+      "name": "macro_f1_drop",
+      "passed": true,
+      "status": "skipped"
+    }
+  ],
+  "current_summary": {
+    "accuracy": 0.8,
+    "dimension_count": 4,
+    "dimensions": [
+      "actionability",
+      "rebuttal_robustness",
+      "specificity",
+      "substantiation"
+    ],
+    "gold_label_counts": {
+      "actionable": 1,
+      "generic_or_unclear": 1,
+      "not_actionable": 1,
+      "not_addressed": 1,
+      "partially_addresses": 1,
+      "resolved_or_weakened": 1,
+      "specific": 1,
+      "substantiated": 1,
+      "unsubstantiated": 1,
+      "vague": 1
+    },
+    "macro_f1": 0.7333,
+    "predicted_label_counts": {
+      "actionable": 1,
+      "generic_or_unclear": 2,
+      "not_actionable": 1,
+      "resolved_or_weakened": 2,
+      "specific": 1,
+      "substantiated": 1,
+      "unsubstantiated": 1,
+      "vague": 1
+    },
+    "record_count": 10
+  },
+  "schema_version": "scoring-guardrail-v0.1",
+  "status": "pass"
+}

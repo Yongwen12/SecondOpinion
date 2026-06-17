@@ -1,0 +1,2 @@
+{"task_id":"rbtact-smoke-1","review_comment":"Clarify the theorem assumptions.","response_text":"We revised the theorem statement and added assumptions.","rebuttal_action":"revision"}
+{"task_id":"rbtact-smoke-2","review_comment":"Add a broader ablation study.","response_text":"We believe the current study is enough.","rebuttal_action":"defended"}

@@ -1,0 +1,2 @@
+{"id":"react-smoke-1","comment_text":"Please add a comparison with a standard retrieval baseline and report runtime.","actionability_label":"actionable","aspect":"experiments"}
+{"id":"react-smoke-2","comment_text":"The paper is not very exciting.","actionability_label":"not_actionable","aspect":"overall"}

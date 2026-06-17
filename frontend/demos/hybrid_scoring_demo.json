@@ -1,0 +1,217 @@
+{
+  "schema_version": "hybrid-scoring-demo-v0.1",
+  "paper": {
+    "title": "Hybrid Scoring Memory Demo Submission",
+    "venue": "ICLR",
+    "year": 2026
+  },
+  "summary": {
+    "mean_hybrid_score": 0.74,
+    "memory_dimensions": 4,
+    "guardrail_status": "pass",
+    "situation": "Reviewer comments are scored first with a retrieval prior from external peer-review datasets, then routed into triage.",
+    "leverage": "The baseline and theorem-assumption concerns show how LLM scores, external memory, and final hybrid scores are separated."
+  },
+  "reviewers": [
+    {
+      "display_id": "R1",
+      "rating": 5,
+      "confidence": 4,
+      "stance": "mixed",
+      "potential": "High",
+      "summary": "Actionable review with concrete experimental requests.",
+      "claims": [
+        {
+          "claim_index": 1,
+          "claim_text": "The paper should compare against a standard retrieval baseline and report runtime.",
+          "source_sentence": "The evaluation would be stronger with a direct retrieval baseline and runtime numbers.",
+          "stance": "agree",
+          "claim_type": "experiment_request",
+          "importance": "major",
+          "verdict": "well_supported",
+          "second_opinion_take": "This is concrete, answerable, and strongly supported by external actionability examples.",
+          "rebuttal_guidance": {
+            "priority": "must",
+            "suggested_response": "Add a compact baseline table, report runtime, and state exactly what the comparison does and does not prove."
+          },
+          "hybrid_scores": {
+            "specificity": {
+              "final_score": 0.79,
+              "llm_score": 0.72,
+              "source": "hybrid",
+              "memory_prior": { "prior_score": 0.9, "example_count": 2 },
+              "retrieved_examples": [
+                {
+                  "dataset": "ReAct",
+                  "input_text": "Section 4 should report confidence intervals for Table 2.",
+                  "gold_label": "specific",
+                  "mapped_score": 0.9,
+                  "similarity": 0.22
+                }
+              ]
+            },
+            "substantiation": {
+              "final_score": 0.77,
+              "llm_score": 0.68,
+              "source": "hybrid",
+              "memory_prior": { "prior_score": 0.9, "example_count": 2 },
+              "retrieved_examples": [
+                {
+                  "dataset": "SubstanReview",
+                  "input_text": "The claimed improvement is under-supported.",
+                  "gold_label": "substantiated",
+                  "mapped_score": 0.9,
+                  "similarity": 0.08
+                }
+              ]
+            },
+            "actionability": {
+              "final_score": 0.88,
+              "llm_score": 0.86,
+              "source": "hybrid",
+              "memory_prior": { "prior_score": 0.9, "example_count": 2 },
+              "retrieved_examples": [
+                {
+                  "dataset": "ReAct",
+                  "input_text": "Please add a comparison with a standard retrieval baseline and report runtime.",
+                  "gold_label": "actionable",
+                  "mapped_score": 0.9,
+                  "similarity": 0.2
+                }
+              ]
+            },
+            "consensus_conflict": {
+              "final_score": 0.58,
+              "llm_score": 0.58,
+              "source": "llm_only",
+              "memory_prior": { "prior_score": null, "example_count": 0 },
+              "retrieved_examples": []
+            },
+            "rebuttal_robustness": {
+              "final_score": 0.55,
+              "llm_score": 0.62,
+              "source": "hybrid",
+              "memory_prior": { "prior_score": 0.45, "example_count": 4 },
+              "retrieved_examples": [
+                {
+                  "dataset": "DISAPERE",
+                  "input_text": "The baseline comparison is missing.",
+                  "gold_label": "partially_addresses",
+                  "mapped_score": 0.5,
+                  "similarity": 0.1
+                }
+              ]
+            },
+            "professionalism": {
+              "final_score": 0.88,
+              "llm_score": 0.88,
+              "source": "llm_only",
+              "memory_prior": { "prior_score": null, "example_count": 0 },
+              "retrieved_examples": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "display_id": "R2",
+      "rating": 4,
+      "confidence": 3,
+      "stance": "skeptical",
+      "potential": "Medium",
+      "summary": "Raises a real rebuttal-survival risk but with weaker substantiation.",
+      "claims": [
+        {
+          "claim_index": 1,
+          "claim_text": "The theorem assumptions remain unclear after the rebuttal.",
+          "source_sentence": "Even after the response, I am not sure which assumptions the theorem requires.",
+          "stance": "mixed",
+          "claim_type": "clarification_request",
+          "importance": "medium",
+          "verdict": "partly_supported",
+          "second_opinion_take": "The point is specific, but the current response only partially addresses it.",
+          "rebuttal_guidance": {
+            "priority": "high",
+            "suggested_response": "Quote the theorem assumption list, say what was revised, and explicitly separate fixed wording from remaining limitations."
+          },
+          "hybrid_scores": {
+            "specificity": {
+              "final_score": 0.81,
+              "llm_score": 0.75,
+              "source": "hybrid",
+              "memory_prior": { "prior_score": 0.9, "example_count": 2 },
+              "retrieved_examples": [
+                {
+                  "dataset": "ReAct",
+                  "input_text": "Section 4 should report confidence intervals for Table 2.",
+                  "gold_label": "specific",
+                  "mapped_score": 0.9,
+                  "similarity": 0.12
+                }
+              ]
+            },
+            "substantiation": {
+              "final_score": 0.56,
+              "llm_score": 0.62,
+              "source": "hybrid",
+              "memory_prior": { "prior_score": 0.47, "example_count": 2 },
+              "retrieved_examples": [
+                {
+                  "dataset": "SubstanReview",
+                  "input_text": "The method is weak.",
+                  "gold_label": "unsubstantiated",
+                  "mapped_score": 0.15,
+                  "similarity": 0.03
+                }
+              ]
+            },
+            "actionability": {
+              "final_score": 0.74,
+              "llm_score": 0.78,
+              "source": "hybrid",
+              "memory_prior": { "prior_score": 0.68, "example_count": 2 },
+              "retrieved_examples": [
+                {
+                  "dataset": "ReAct",
+                  "input_text": "Please add a comparison with a standard retrieval baseline and report runtime.",
+                  "gold_label": "actionable",
+                  "mapped_score": 0.9,
+                  "similarity": 0.05
+                }
+              ]
+            },
+            "consensus_conflict": {
+              "final_score": 0.52,
+              "llm_score": 0.52,
+              "source": "llm_only",
+              "memory_prior": { "prior_score": null, "example_count": 0 },
+              "retrieved_examples": []
+            },
+            "rebuttal_robustness": {
+              "final_score": 0.5,
+              "llm_score": 0.6,
+              "source": "hybrid",
+              "memory_prior": { "prior_score": 0.35, "example_count": 4 },
+              "retrieved_examples": [
+                {
+                  "dataset": "RbtAct",
+                  "input_text": "Clarify the theorem assumptions.",
+                  "gold_label": "resolved_or_weakened",
+                  "mapped_score": 0.1,
+                  "similarity": 0.14
+                }
+              ]
+            },
+            "professionalism": {
+              "final_score": 0.82,
+              "llm_score": 0.82,
+              "source": "llm_only",
+              "memory_prior": { "prior_score": null, "example_count": 0 },
+              "retrieved_examples": []
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

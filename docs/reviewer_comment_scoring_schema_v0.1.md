@@ -322,3 +322,39 @@ The current public demo exposes these dimensions as:
 
 The demo should keep this order. Scoring is the engine; triage is the application.
 
+## Implementation Addendum: Short-Term Target 2+3
+
+Date: 2026-06-17
+
+Short-term target 2+3 is now implemented as an external-memory scoring path:
+
+- External datasets are normalized into a shared JSONL schema:
+  - `task_id`
+  - `dataset`
+  - `dimension`
+  - `input_text`
+  - `context_text`
+  - `gold_label`
+  - `mapped_score`
+  - `metadata`
+- `build-scoring-memory --dimension auto` converts the normalized records into scoring-memory examples grouped by each record's `dimension`.
+- `score-dimensions-with-memory` returns six-dimensional `hybrid_scores` with:
+  - `llm_score`
+  - `memory_prior`
+  - `final_score`
+  - `source`
+  - `retrieved_examples`
+- `run-scoring-memory-suite` creates the benchmark report and optional guardrail report.
+
+Current smoke coverage:
+
+| Dimension | External memory source in smoke path | Status |
+|---|---|---|
+| Specificity | ReAct-style specificity fixture | Wired |
+| Substantiation | SubstanReview fixture | Wired |
+| Actionability | ReAct fixture | Wired |
+| Consensus / conflict | ContraSciView adapter exists; not in combined smoke memory yet | Adapter available |
+| Rebuttal robustness | DISAPERE + RbtAct fixtures | Wired |
+| Professionalism | No P0 memory yet; remains LLM-only in the demo | Deferred |
+
+The demo at `frontend/demos/hybrid_scoring_demo.json` uses backend-shaped `hybrid_scores` and shows final, LLM, memory-prior, and retrieved-example evidence. This is still a smoke integration, not a full external dataset import. Full raw datasets should remain under `data/external/` and out of Git.

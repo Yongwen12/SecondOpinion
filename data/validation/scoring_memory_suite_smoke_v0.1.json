@@ -1,0 +1,591 @@
+{
+  "by_dimension": {
+    "actionability": {
+      "by_dataset": {
+        "ReAct": {
+          "accuracy": 1.0,
+          "record_count": 2
+        }
+      },
+      "by_split": {},
+      "examples": {
+        "errors": []
+      },
+      "per_label": {
+        "actionable": {
+          "f1": 1.0,
+          "fn": 0,
+          "fp": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "tp": 1
+        },
+        "not_actionable": {
+          "f1": 1.0,
+          "fn": 0,
+          "fp": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "tp": 1
+        }
+      },
+      "rows": [
+        {
+          "correct": true,
+          "dataset": "ReAct",
+          "gold_label": "actionable",
+          "predicted_label": "actionable",
+          "split": "",
+          "task_id": "react-smoke-1"
+        },
+        {
+          "correct": true,
+          "dataset": "ReAct",
+          "gold_label": "not_actionable",
+          "predicted_label": "not_actionable",
+          "split": "",
+          "task_id": "react-smoke-2"
+        }
+      ],
+      "schema_version": "component-benchmark-v0.1",
+      "summary": {
+        "accuracy": 1.0,
+        "balanced_accuracy": 1.0,
+        "gold_label_counts": {
+          "actionable": 1,
+          "not_actionable": 1
+        },
+        "macro_f1": 1.0,
+        "majority_baseline": 0.5,
+        "predicted_label_counts": {
+          "actionable": 1,
+          "not_actionable": 1
+        },
+        "record_count": 2
+      },
+      "task_type": "classification"
+    },
+    "rebuttal_robustness": {
+      "by_dataset": {
+        "DISAPERE": {
+          "accuracy": 0.0,
+          "record_count": 2
+        },
+        "RbtAct": {
+          "accuracy": 1.0,
+          "record_count": 2
+        }
+      },
+      "by_split": {},
+      "examples": {
+        "errors": [
+          {
+            "correct": false,
+            "dataset": "DISAPERE",
+            "gold_label": "partially_addresses",
+            "predicted_label": "resolved_or_weakened",
+            "split": "",
+            "task_id": "disapere-smoke-1"
+          },
+          {
+            "correct": false,
+            "dataset": "DISAPERE",
+            "gold_label": "not_addressed",
+            "predicted_label": "generic_or_unclear",
+            "split": "",
+            "task_id": "disapere-smoke-2"
+          }
+        ]
+      },
+      "per_label": {
+        "generic_or_unclear": {
+          "f1": 0.6667,
+          "fn": 0,
+          "fp": 1,
+          "precision": 0.5,
+          "recall": 1.0,
+          "tp": 1
+        },
+        "not_addressed": {
+          "f1": 0.0,
+          "fn": 1,
+          "fp": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "tp": 0
+        },
+        "partially_addresses": {
+          "f1": 0.0,
+          "fn": 1,
+          "fp": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "tp": 0
+        },
+        "resolved_or_weakened": {
+          "f1": 0.6667,
+          "fn": 0,
+          "fp": 1,
+          "precision": 0.5,
+          "recall": 1.0,
+          "tp": 1
+        }
+      },
+      "rows": [
+        {
+          "correct": false,
+          "dataset": "DISAPERE",
+          "gold_label": "partially_addresses",
+          "predicted_label": "resolved_or_weakened",
+          "split": "",
+          "task_id": "disapere-smoke-1"
+        },
+        {
+          "correct": false,
+          "dataset": "DISAPERE",
+          "gold_label": "not_addressed",
+          "predicted_label": "generic_or_unclear",
+          "split": "",
+          "task_id": "disapere-smoke-2"
+        },
+        {
+          "correct": true,
+          "dataset": "RbtAct",
+          "gold_label": "resolved_or_weakened",
+          "predicted_label": "resolved_or_weakened",
+          "split": "",
+          "task_id": "rbtact-smoke-1"
+        },
+        {
+          "correct": true,
+          "dataset": "RbtAct",
+          "gold_label": "generic_or_unclear",
+          "predicted_label": "generic_or_unclear",
+          "split": "",
+          "task_id": "rbtact-smoke-2"
+        }
+      ],
+      "schema_version": "component-benchmark-v0.1",
+      "summary": {
+        "accuracy": 0.5,
+        "balanced_accuracy": 0.5,
+        "gold_label_counts": {
+          "generic_or_unclear": 1,
+          "not_addressed": 1,
+          "partially_addresses": 1,
+          "resolved_or_weakened": 1
+        },
+        "macro_f1": 0.3333,
+        "majority_baseline": 0.25,
+        "predicted_label_counts": {
+          "generic_or_unclear": 2,
+          "resolved_or_weakened": 2
+        },
+        "record_count": 4
+      },
+      "task_type": "classification"
+    },
+    "specificity": {
+      "by_dataset": {
+        "ReAct": {
+          "accuracy": 1.0,
+          "record_count": 2
+        }
+      },
+      "by_split": {},
+      "examples": {
+        "errors": []
+      },
+      "per_label": {
+        "specific": {
+          "f1": 1.0,
+          "fn": 0,
+          "fp": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "tp": 1
+        },
+        "vague": {
+          "f1": 1.0,
+          "fn": 0,
+          "fp": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "tp": 1
+        }
+      },
+      "rows": [
+        {
+          "correct": true,
+          "dataset": "ReAct",
+          "gold_label": "specific",
+          "predicted_label": "specific",
+          "split": "",
+          "task_id": "react-specificity-smoke-1"
+        },
+        {
+          "correct": true,
+          "dataset": "ReAct",
+          "gold_label": "vague",
+          "predicted_label": "vague",
+          "split": "",
+          "task_id": "react-specificity-smoke-2"
+        }
+      ],
+      "schema_version": "component-benchmark-v0.1",
+      "summary": {
+        "accuracy": 1.0,
+        "balanced_accuracy": 1.0,
+        "gold_label_counts": {
+          "specific": 1,
+          "vague": 1
+        },
+        "macro_f1": 1.0,
+        "majority_baseline": 0.5,
+        "predicted_label_counts": {
+          "specific": 1,
+          "vague": 1
+        },
+        "record_count": 2
+      },
+      "task_type": "classification"
+    },
+    "substantiation": {
+      "by_dataset": {
+        "SubstanReview": {
+          "accuracy": 1.0,
+          "record_count": 2
+        }
+      },
+      "by_split": {},
+      "examples": {
+        "errors": []
+      },
+      "per_label": {
+        "substantiated": {
+          "f1": 1.0,
+          "fn": 0,
+          "fp": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "tp": 1
+        },
+        "unsubstantiated": {
+          "f1": 1.0,
+          "fn": 0,
+          "fp": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "tp": 1
+        }
+      },
+      "rows": [
+        {
+          "correct": true,
+          "dataset": "SubstanReview",
+          "gold_label": "substantiated",
+          "predicted_label": "substantiated",
+          "split": "",
+          "task_id": "substan-smoke-1"
+        },
+        {
+          "correct": true,
+          "dataset": "SubstanReview",
+          "gold_label": "unsubstantiated",
+          "predicted_label": "unsubstantiated",
+          "split": "",
+          "task_id": "substan-smoke-2"
+        }
+      ],
+      "schema_version": "component-benchmark-v0.1",
+      "summary": {
+        "accuracy": 1.0,
+        "balanced_accuracy": 1.0,
+        "gold_label_counts": {
+          "substantiated": 1,
+          "unsubstantiated": 1
+        },
+        "macro_f1": 1.0,
+        "majority_baseline": 0.5,
+        "predicted_label_counts": {
+          "substantiated": 1,
+          "unsubstantiated": 1
+        },
+        "record_count": 2
+      },
+      "task_type": "classification"
+    }
+  },
+  "overall": {
+    "by_dataset": {
+      "DISAPERE": {
+        "accuracy": 0.0,
+        "record_count": 2
+      },
+      "RbtAct": {
+        "accuracy": 1.0,
+        "record_count": 2
+      },
+      "ReAct": {
+        "accuracy": 1.0,
+        "record_count": 4
+      },
+      "SubstanReview": {
+        "accuracy": 1.0,
+        "record_count": 2
+      }
+    },
+    "by_split": {},
+    "examples": {
+      "errors": [
+        {
+          "correct": false,
+          "dataset": "DISAPERE",
+          "gold_label": "partially_addresses",
+          "predicted_label": "resolved_or_weakened",
+          "split": "",
+          "task_id": "disapere-smoke-1"
+        },
+        {
+          "correct": false,
+          "dataset": "DISAPERE",
+          "gold_label": "not_addressed",
+          "predicted_label": "generic_or_unclear",
+          "split": "",
+          "task_id": "disapere-smoke-2"
+        }
+      ]
+    },
+    "per_label": {
+      "actionable": {
+        "f1": 1.0,
+        "fn": 0,
+        "fp": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "tp": 1
+      },
+      "generic_or_unclear": {
+        "f1": 0.6667,
+        "fn": 0,
+        "fp": 1,
+        "precision": 0.5,
+        "recall": 1.0,
+        "tp": 1
+      },
+      "not_actionable": {
+        "f1": 1.0,
+        "fn": 0,
+        "fp": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "tp": 1
+      },
+      "not_addressed": {
+        "f1": 0.0,
+        "fn": 1,
+        "fp": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "tp": 0
+      },
+      "partially_addresses": {
+        "f1": 0.0,
+        "fn": 1,
+        "fp": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "tp": 0
+      },
+      "resolved_or_weakened": {
+        "f1": 0.6667,
+        "fn": 0,
+        "fp": 1,
+        "precision": 0.5,
+        "recall": 1.0,
+        "tp": 1
+      },
+      "specific": {
+        "f1": 1.0,
+        "fn": 0,
+        "fp": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "tp": 1
+      },
+      "substantiated": {
+        "f1": 1.0,
+        "fn": 0,
+        "fp": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "tp": 1
+      },
+      "unsubstantiated": {
+        "f1": 1.0,
+        "fn": 0,
+        "fp": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "tp": 1
+      },
+      "vague": {
+        "f1": 1.0,
+        "fn": 0,
+        "fp": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "tp": 1
+      }
+    },
+    "rows": [
+      {
+        "correct": true,
+        "dataset": "ReAct",
+        "gold_label": "actionable",
+        "predicted_label": "actionable",
+        "split": "",
+        "task_id": "react-smoke-1"
+      },
+      {
+        "correct": true,
+        "dataset": "ReAct",
+        "gold_label": "not_actionable",
+        "predicted_label": "not_actionable",
+        "split": "",
+        "task_id": "react-smoke-2"
+      },
+      {
+        "correct": true,
+        "dataset": "ReAct",
+        "gold_label": "specific",
+        "predicted_label": "specific",
+        "split": "",
+        "task_id": "react-specificity-smoke-1"
+      },
+      {
+        "correct": true,
+        "dataset": "ReAct",
+        "gold_label": "vague",
+        "predicted_label": "vague",
+        "split": "",
+        "task_id": "react-specificity-smoke-2"
+      },
+      {
+        "correct": true,
+        "dataset": "SubstanReview",
+        "gold_label": "substantiated",
+        "predicted_label": "substantiated",
+        "split": "",
+        "task_id": "substan-smoke-1"
+      },
+      {
+        "correct": true,
+        "dataset": "SubstanReview",
+        "gold_label": "unsubstantiated",
+        "predicted_label": "unsubstantiated",
+        "split": "",
+        "task_id": "substan-smoke-2"
+      },
+      {
+        "correct": false,
+        "dataset": "DISAPERE",
+        "gold_label": "partially_addresses",
+        "predicted_label": "resolved_or_weakened",
+        "split": "",
+        "task_id": "disapere-smoke-1"
+      },
+      {
+        "correct": false,
+        "dataset": "DISAPERE",
+        "gold_label": "not_addressed",
+        "predicted_label": "generic_or_unclear",
+        "split": "",
+        "task_id": "disapere-smoke-2"
+      },
+      {
+        "correct": true,
+        "dataset": "RbtAct",
+        "gold_label": "resolved_or_weakened",
+        "predicted_label": "resolved_or_weakened",
+        "split": "",
+        "task_id": "rbtact-smoke-1"
+      },
+      {
+        "correct": true,
+        "dataset": "RbtAct",
+        "gold_label": "generic_or_unclear",
+        "predicted_label": "generic_or_unclear",
+        "split": "",
+        "task_id": "rbtact-smoke-2"
+      }
+    ],
+    "schema_version": "component-benchmark-v0.1",
+    "summary": {
+      "accuracy": 0.8,
+      "balanced_accuracy": 0.8,
+      "gold_label_counts": {
+        "actionable": 1,
+        "generic_or_unclear": 1,
+        "not_actionable": 1,
+        "not_addressed": 1,
+        "partially_addresses": 1,
+        "resolved_or_weakened": 1,
+        "specific": 1,
+        "substantiated": 1,
+        "unsubstantiated": 1,
+        "vague": 1
+      },
+      "macro_f1": 0.7333,
+      "majority_baseline": 0.1,
+      "predicted_label_counts": {
+        "actionable": 1,
+        "generic_or_unclear": 2,
+        "not_actionable": 1,
+        "resolved_or_weakened": 2,
+        "specific": 1,
+        "substantiated": 1,
+        "unsubstantiated": 1,
+        "vague": 1
+      },
+      "record_count": 10
+    },
+    "task_type": "classification"
+  },
+  "schema_version": "scoring-benchmark-suite-v0.1",
+  "summary": {
+    "accuracy": 0.8,
+    "dimension_count": 4,
+    "dimensions": [
+      "actionability",
+      "rebuttal_robustness",
+      "specificity",
+      "substantiation"
+    ],
+    "gold_label_counts": {
+      "actionable": 1,
+      "generic_or_unclear": 1,
+      "not_actionable": 1,
+      "not_addressed": 1,
+      "partially_addresses": 1,
+      "resolved_or_weakened": 1,
+      "specific": 1,
+      "substantiated": 1,
+      "unsubstantiated": 1,
+      "vague": 1
+    },
+    "macro_f1": 0.7333,
+    "predicted_label_counts": {
+      "actionable": 1,
+      "generic_or_unclear": 2,
+      "not_actionable": 1,
+      "resolved_or_weakened": 2,
+      "specific": 1,
+      "substantiated": 1,
+      "unsubstantiated": 1,
+      "vague": 1
+    },
+    "record_count": 10
+  },
+  "task_type": "scoring_dimension_classification"
+}
