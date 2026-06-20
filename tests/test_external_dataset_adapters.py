@@ -1,7 +1,16 @@
 from secondopinion.external_dataset_adapters import (
+    normalize_ampere_records,
+    normalize_ape_records,
+    normalize_aries_records,
+    normalize_asap_review_records,
+    normalize_betterpr_records,
     normalize_contrasciview_csv,
     normalize_disapere_records,
+    normalize_politepeer_records,
     normalize_react_records,
+    normalize_re2_records,
+    normalize_reviewcritique_records,
+    normalize_revci_records,
     normalize_rbtact_records,
     normalize_substanreview_records,
 )
@@ -136,3 +145,119 @@ def test_normalize_disapere_and_rbtact_to_rebuttal_robustness():
     assert disapere[0]["gold_label"] == "partially_addresses"
     assert rbtact[0]["dataset"] == "RbtAct"
     assert rbtact[0]["gold_label"] == "resolved_or_weakened"
+
+
+def test_normalize_reviewcritique_betterpr_politepeer_revci():
+    reviewcritique = normalize_reviewcritique_records(
+        [
+            {
+                "task_id": "rc-1",
+                "segment_text": "The review gives a broad weakness without evidence.",
+                "deficiency": "yes",
+                "explanation": "Missing concrete support.",
+            }
+        ]
+    )
+    betterpr = normalize_betterpr_records(
+        [
+            {
+                "task_id": "bp-1",
+                "comment_text": "Please clarify the baseline and add an ablation.",
+                "constructive_label": "constructive",
+            }
+        ]
+    )
+    politepeer = normalize_politepeer_records(
+        [
+            {
+                "task_id": "pp-1",
+                "comment_text": "The authors may want to clarify this limitation.",
+                "politeness_level": "high",
+            }
+        ]
+    )
+    revci = normalize_revci_records(
+        [
+            {
+                "task_id": "revci-1",
+                "comment_a": "The experiments are sufficient.",
+                "comment_b": "The experiments are not sufficient.",
+                "conflict_label": "strong_contradiction",
+                "intensity": "strong",
+            }
+        ]
+    )
+
+    assert reviewcritique[0]["dataset"] == "ReviewCritique"
+    assert reviewcritique[0]["gold_label"] == "deficient"
+    assert reviewcritique[0]["mapped_score"] == 0.2
+    assert betterpr[0]["dimension"] == "actionability"
+    assert betterpr[0]["gold_label"] == "constructive"
+    assert politepeer[0]["dimension"] == "professionalism"
+    assert politepeer[0]["gold_label"] == "polite"
+    assert revci[0]["dimension"] == "consensus_conflict"
+    assert revci[0]["gold_label"] == "contradiction"
+
+
+def test_normalize_structural_memory_datasets():
+    ampere = normalize_ampere_records(
+        [
+            {
+                "task_id": "amp-1",
+                "proposition_text": "The authors should add a stronger baseline.",
+                "proposition_type": "request",
+                "aspect": "experiment",
+            }
+        ]
+    )
+    asap = normalize_asap_review_records(
+        [
+            {
+                "task_id": "asap-1",
+                "sentence": "The experiments do not compare to the most relevant baseline.",
+                "aspect_label": "meaningful_comparison",
+                "sentiment": "negative",
+            }
+        ]
+    )
+    ape = normalize_ape_records(
+        [
+            {
+                "task_id": "ape-1",
+                "review_argument": "The notation is unclear.",
+                "rebuttal_argument": "We clarified the notation in Section 2.",
+                "is_pair": "yes",
+            }
+        ]
+    )
+    aries = normalize_aries_records(
+        [
+            {
+                "task_id": "aries-1",
+                "review_comment": "Add the missing ablation.",
+                "paper_edit": "Added ablation results in Table 3.",
+                "is_linked": "yes",
+            }
+        ]
+    )
+    re2 = normalize_re2_records(
+        [
+            {
+                "task_id": "re2-1",
+                "review_comment": "The rebuttal does not address the baseline issue.",
+                "rebuttal_text": "We will add a short comparison.",
+                "response_status": "partially_addresses",
+            }
+        ]
+    )
+
+    assert ampere[0]["dimension"] == "argument_role"
+    assert ampere[0]["gold_label"] == "request"
+    assert asap[0]["dimension"] == "review_aspect"
+    assert asap[0]["gold_label"] == "meaningful_comparison"
+    assert ape[0]["dimension"] == "rebuttal_alignment"
+    assert ape[0]["gold_label"] == "matched"
+    assert aries[0]["dimension"] == "revision_alignment"
+    assert aries[0]["gold_label"] == "linked_edit"
+    assert re2[0]["dataset"] == "Re2"
+    assert re2[0]["gold_label"] == "partially_addresses"

@@ -1,0 +1,2 @@
+{"task_id":"ampere-smoke-1","proposition_text":"The authors should add a stronger retrieval baseline.","proposition_type":"request","aspect":"experiments"}
+{"task_id":"ampere-smoke-2","proposition_text":"The proposed objective improves robustness on noisy labels.","proposition_type":"evaluation","aspect":"soundness"}

@@ -53,6 +53,78 @@ DATASET_SPECS: dict[str, dict[str, Any]] = {
         "label_fields": ["gold_label", "label", "rebuttal_action", "action_label", "impact_label"],
         "predicted_fields": ["predicted_label", "prediction", "baseline_label"],
     },
+    "reviewcritique": {
+        "dataset": "ReviewCritique",
+        "default_dimension": "substantiation",
+        "text_fields": ["segment_text", "review_segment", "comment", "review_comment", "claim", "claim_text", "text"],
+        "context_fields": ["explanation", "rationale", "error_type", "deficiency_type", "paper_title", "section"],
+        "label_fields": ["gold_label", "label", "deficiency_label", "deficiency", "is_deficient", "quality_label"],
+        "predicted_fields": ["predicted_label", "prediction", "baseline_label"],
+    },
+    "betterpr": {
+        "dataset": "BetterPR",
+        "default_dimension": "actionability",
+        "text_fields": ["comment", "comment_text", "review_comment", "review_text", "sentence", "text"],
+        "context_fields": ["aspect", "paper_title", "section", "review_id"],
+        "label_fields": ["gold_label", "label", "constructiveness", "constructive_label", "is_constructive"],
+        "predicted_fields": ["predicted_label", "prediction", "baseline_label"],
+    },
+    "politepeer": {
+        "dataset": "PolitePEER",
+        "default_dimension": "professionalism",
+        "text_fields": ["comment", "comment_text", "review_comment", "review_text", "sentence", "text"],
+        "context_fields": ["politeness_strategy", "tone_cue", "paper_title", "section"],
+        "label_fields": ["gold_label", "label", "politeness", "politeness_label", "politeness_level", "tone_label"],
+        "predicted_fields": ["predicted_label", "prediction", "baseline_label"],
+    },
+    "revci": {
+        "dataset": "RevCI",
+        "default_dimension": "consensus_conflict",
+        "text_fields": ["premise", "hypothesis", "comment_a", "comment_b", "review_comment", "text"],
+        "context_fields": ["aspect", "evidence", "evidence_text", "paper_title", "intensity"],
+        "label_fields": ["gold_label", "label", "contradiction_label", "relation", "conflict_label", "intensity_label"],
+        "predicted_fields": ["predicted_label", "prediction", "baseline_label"],
+    },
+    "ampere": {
+        "dataset": "AMPERE",
+        "default_dimension": "argument_role",
+        "text_fields": ["proposition", "proposition_text", "segment_text", "comment", "review_text", "sentence", "text"],
+        "context_fields": ["aspect", "paper_title", "section", "review_id"],
+        "label_fields": ["gold_label", "label", "argument_type", "proposition_type", "role"],
+        "predicted_fields": ["predicted_label", "prediction", "baseline_label"],
+    },
+    "asap_review": {
+        "dataset": "ASAP-Review",
+        "default_dimension": "review_aspect",
+        "text_fields": ["sentence", "comment", "review_comment", "review_text", "text"],
+        "context_fields": ["sentiment", "paper_title", "section", "review_id"],
+        "label_fields": ["gold_label", "label", "aspect", "aspect_label", "category"],
+        "predicted_fields": ["predicted_label", "prediction", "baseline_label"],
+    },
+    "ape": {
+        "dataset": "APE",
+        "default_dimension": "rebuttal_alignment",
+        "text_fields": ["review_argument", "review_comment", "comment", "claim", "claim_text", "text"],
+        "context_fields": ["rebuttal_argument", "rebuttal", "response", "response_text", "paper_title"],
+        "label_fields": ["gold_label", "label", "alignment_label", "pair_label", "is_pair", "matched"],
+        "predicted_fields": ["predicted_label", "prediction", "baseline_label"],
+    },
+    "aries": {
+        "dataset": "ARIES",
+        "default_dimension": "revision_alignment",
+        "text_fields": ["review_comment", "comment", "feedback", "claim", "claim_text", "text"],
+        "context_fields": ["paper_edit", "edit_text", "revision", "revised_text", "paper_title"],
+        "label_fields": ["gold_label", "label", "edit_label", "revision_label", "is_linked", "linked"],
+        "predicted_fields": ["predicted_label", "prediction", "baseline_label"],
+    },
+    "re2": {
+        "dataset": "Re2",
+        "default_dimension": "rebuttal_robustness",
+        "text_fields": ["review_comment", "comment", "review_text", "claim", "claim_text", "text"],
+        "context_fields": ["rebuttal", "rebuttal_text", "discussion", "response", "response_text", "paper_title"],
+        "label_fields": ["gold_label", "label", "response_status", "rebuttal_label", "resolution_label"],
+        "predicted_fields": ["predicted_label", "prediction", "baseline_label"],
+    },
 }
 
 LABEL_NORMALIZERS = {
@@ -74,15 +146,21 @@ LABEL_NORMALIZERS = {
         "yes": "substantiated",
         "1": "substantiated",
         "partially_substantiated": "partially_substantiated",
+        "partially_supported": "partially_substantiated",
         "partial": "partially_substantiated",
         "mixed": "partially_substantiated",
         "unsubstantiated": "unsubstantiated",
         "unsupported": "unsubstantiated",
+        "not_substantiated": "unsubstantiated",
         "false": "unsubstantiated",
         "no": "unsubstantiated",
         "0": "unsubstantiated",
         "deficient": "deficient",
+        "has_deficiency": "deficient",
+        "not substantiated": "unsubstantiated",
         "not_deficient": "not_deficient",
+        "no_deficiency": "not_deficient",
+        "non_deficient": "not_deficient",
     },
     "actionability": {
         "actionable": "actionable",
@@ -97,11 +175,30 @@ LABEL_NORMALIZERS = {
         "non_actionable": "not_actionable",
         "non_constructive": "non_constructive",
         "not constructive": "non_constructive",
+        "not_constructive": "non_constructive",
+        "unconstructive": "non_constructive",
         "no": "not_actionable",
         "false": "not_actionable",
         "0": "not_actionable",
     },
-    "consensus_conflict": CONTRASCIVIEW_LABELS,
+    "consensus_conflict": {
+        **CONTRASCIVIEW_LABELS,
+        "same_concern": "same_concern",
+        "same": "same_concern",
+        "agreement": "same_concern",
+        "agree": "same_concern",
+        "support": "same_concern",
+        "related": "related_but_different",
+        "related_but_different": "related_but_different",
+        "not_same": "not_same_concern",
+        "not_same_concern": "not_same_concern",
+        "conflict": "contradiction",
+        "contradictory": "contradiction",
+        "strong_contradiction": "contradiction",
+        "weak_contradiction": "contradiction",
+        "no_contradiction": "not_contradiction",
+        "non_contradiction": "not_contradiction",
+    },
     "rebuttal_robustness": {
         "not_addressed": "not_addressed",
         "does_not_address": "not_addressed",
@@ -113,23 +210,89 @@ LABEL_NORMALIZERS = {
         "partial": "partially_addresses",
         "partially_addressed": "partially_addresses",
         "specifically_addressed": "specifically_addressed",
+        "specific": "specifically_addressed",
         "addressed": "specifically_addressed",
+        "accepted": "specifically_addressed",
         "revision": "resolved_or_weakened",
         "revised": "resolved_or_weakened",
         "resolved": "resolved_or_weakened",
         "resolved_or_weakened": "resolved_or_weakened",
         "likely_resolved": "likely_resolved",
+        "unresolved": "not_addressed",
         "defended": "generic_or_unclear",
         "rejected": "not_addressed",
     },
     "professionalism": {
         "professional": "professional",
         "polite": "polite",
+        "high": "polite",
         "constructive": "professional",
         "neutral": "neutral",
+        "medium": "neutral",
         "unprofessional": "unprofessional",
         "impolite": "impolite",
+        "low": "impolite",
+        "rude": "impolite",
         "toxic": "unprofessional",
+    },
+    "argument_role": {
+        "request": "request",
+        "suggestion": "request",
+        "evaluation": "evaluation",
+        "fact": "fact",
+        "reference": "reference",
+        "quote": "quote",
+        "summary": "summary",
+        "non_argument": "non_argument",
+        "other": "other",
+    },
+    "review_aspect": {
+        "clarity": "clarity",
+        "soundness": "soundness",
+        "substance": "substance",
+        "originality": "originality",
+        "novelty": "originality",
+        "meaningful_comparison": "meaningful_comparison",
+        "comparison": "meaningful_comparison",
+        "motivation": "motivation",
+        "reproducibility": "reproducibility",
+        "presentation": "presentation",
+        "overall": "overall",
+    },
+    "rebuttal_alignment": {
+        "matched": "matched",
+        "match": "matched",
+        "aligned": "matched",
+        "linked": "matched",
+        "pair": "matched",
+        "true": "matched",
+        "yes": "matched",
+        "1": "matched",
+        "partial_match": "partial_match",
+        "partial": "partial_match",
+        "unmatched": "unmatched",
+        "not_matched": "unmatched",
+        "not_aligned": "unmatched",
+        "false": "unmatched",
+        "no": "unmatched",
+        "0": "unmatched",
+    },
+    "revision_alignment": {
+        "linked_edit": "linked_edit",
+        "linked": "linked_edit",
+        "edit": "linked_edit",
+        "edited": "linked_edit",
+        "revision": "linked_edit",
+        "true": "linked_edit",
+        "yes": "linked_edit",
+        "1": "linked_edit",
+        "indirect_edit": "indirect_edit",
+        "partial_edit": "indirect_edit",
+        "no_edit": "no_edit",
+        "unlinked": "no_edit",
+        "false": "no_edit",
+        "no": "no_edit",
+        "0": "no_edit",
     },
 }
 
@@ -149,7 +312,13 @@ MAPPED_SCORES = {
         "constructive": 0.85,
         "non_constructive": 0.2,
     },
-    "consensus_conflict": {"not_contradiction": 0.65, "contradiction": 0.1},
+    "consensus_conflict": {
+        "same_concern": 0.9,
+        "related_but_different": 0.55,
+        "not_same_concern": 0.15,
+        "not_contradiction": 0.65,
+        "contradiction": 0.1,
+    },
     "rebuttal_robustness": {
         "not_addressed": 0.9,
         "generic_or_unclear": 0.7,
@@ -159,6 +328,29 @@ MAPPED_SCORES = {
         "likely_resolved": 0.1,
     },
     "professionalism": {"professional": 0.9, "polite": 0.85, "neutral": 0.55, "unprofessional": 0.15, "impolite": 0.15},
+    "argument_role": {
+        "request": 0.85,
+        "evaluation": 0.7,
+        "fact": 0.65,
+        "reference": 0.75,
+        "quote": 0.75,
+        "summary": 0.45,
+        "other": 0.4,
+        "non_argument": 0.15,
+    },
+    "review_aspect": {
+        "clarity": 0.6,
+        "soundness": 0.75,
+        "substance": 0.75,
+        "originality": 0.7,
+        "meaningful_comparison": 0.8,
+        "motivation": 0.6,
+        "reproducibility": 0.65,
+        "presentation": 0.55,
+        "overall": 0.5,
+    },
+    "rebuttal_alignment": {"matched": 0.85, "partial_match": 0.55, "unmatched": 0.15},
+    "revision_alignment": {"linked_edit": 0.9, "indirect_edit": 0.65, "no_edit": 0.15},
 }
 
 
@@ -255,6 +447,78 @@ def normalize_rbtact_records(
     return normalize_dataset_records(records, dataset_key="rbtact", dimension="rebuttal_robustness", limit=limit)
 
 
+def normalize_reviewcritique_records(
+    records: Iterable[dict[str, Any]],
+    *,
+    limit: int | None = None,
+) -> list[dict[str, Any]]:
+    return normalize_dataset_records(records, dataset_key="reviewcritique", dimension="substantiation", limit=limit)
+
+
+def normalize_betterpr_records(
+    records: Iterable[dict[str, Any]],
+    *,
+    limit: int | None = None,
+) -> list[dict[str, Any]]:
+    return normalize_dataset_records(records, dataset_key="betterpr", dimension="actionability", limit=limit)
+
+
+def normalize_politepeer_records(
+    records: Iterable[dict[str, Any]],
+    *,
+    limit: int | None = None,
+) -> list[dict[str, Any]]:
+    return normalize_dataset_records(records, dataset_key="politepeer", dimension="professionalism", limit=limit)
+
+
+def normalize_revci_records(
+    records: Iterable[dict[str, Any]],
+    *,
+    limit: int | None = None,
+) -> list[dict[str, Any]]:
+    return normalize_dataset_records(records, dataset_key="revci", dimension="consensus_conflict", limit=limit)
+
+
+def normalize_ampere_records(
+    records: Iterable[dict[str, Any]],
+    *,
+    limit: int | None = None,
+) -> list[dict[str, Any]]:
+    return normalize_dataset_records(records, dataset_key="ampere", dimension="argument_role", limit=limit)
+
+
+def normalize_asap_review_records(
+    records: Iterable[dict[str, Any]],
+    *,
+    limit: int | None = None,
+) -> list[dict[str, Any]]:
+    return normalize_dataset_records(records, dataset_key="asap_review", dimension="review_aspect", limit=limit)
+
+
+def normalize_ape_records(
+    records: Iterable[dict[str, Any]],
+    *,
+    limit: int | None = None,
+) -> list[dict[str, Any]]:
+    return normalize_dataset_records(records, dataset_key="ape", dimension="rebuttal_alignment", limit=limit)
+
+
+def normalize_aries_records(
+    records: Iterable[dict[str, Any]],
+    *,
+    limit: int | None = None,
+) -> list[dict[str, Any]]:
+    return normalize_dataset_records(records, dataset_key="aries", dimension="revision_alignment", limit=limit)
+
+
+def normalize_re2_records(
+    records: Iterable[dict[str, Any]],
+    *,
+    limit: int | None = None,
+) -> list[dict[str, Any]]:
+    return normalize_dataset_records(records, dataset_key="re2", dimension="rebuttal_robustness", limit=limit)
+
+
 def normalize_dataset_records(
     records: Iterable[dict[str, Any]],
     *,
@@ -268,10 +532,17 @@ def normalize_dataset_records(
     for index, row in enumerate(records):
         if limit is not None and len(normalized) >= limit:
             break
-        gold_label = normalize_dimension_label(first_value(row, spec["label_fields"]), dimension)
+        gold_field, gold_value = first_field_value(row, spec["label_fields"])
+        gold_label = normalize_source_label(gold_value, dimension=dimension, dataset_key=dataset_key, field_name=gold_field)
         if not gold_label:
             continue
-        predicted_label = normalize_dimension_label(first_value(row, spec["predicted_fields"]), dimension)
+        predicted_field, predicted_value = first_field_value(row, spec["predicted_fields"])
+        predicted_label = normalize_source_label(
+            predicted_value,
+            dimension=dimension,
+            dataset_key=dataset_key,
+            field_name=predicted_field,
+        )
         if not predicted_label:
             predicted_label = heuristic_prediction(row, dataset_key=dataset_key, dimension=dimension, gold_label=gold_label)
         input_text = join_fields(row, spec["text_fields"])
@@ -356,6 +627,16 @@ def normalize_dimension_label(value: Any, dimension: str) -> str:
     return ""
 
 
+def normalize_source_label(value: Any, *, dimension: str, dataset_key: str, field_name: str) -> str:
+    text = clean_value(value).lower().replace("-", "_").replace(" ", "_")
+    if dataset_key == "reviewcritique" and "deficien" in field_name:
+        if text in {"true", "yes", "1", "deficient", "has_deficiency"}:
+            return "deficient"
+        if text in {"false", "no", "0", "not_deficient", "no_deficiency", "non_deficient"}:
+            return "not_deficient"
+    return normalize_dimension_label(value, dimension)
+
+
 def contrasciview_baseline_prediction(row: dict[str, Any], *, baseline: str, overlap_threshold: float = 0.10) -> str:
     if baseline == "majority":
         return "not_contradiction"
@@ -409,6 +690,14 @@ def first_value(row: dict[str, Any], fields: list[str]) -> Any:
         if clean_value(value):
             return value
     return ""
+
+
+def first_field_value(row: dict[str, Any], fields: list[str]) -> tuple[str, Any]:
+    for field in fields:
+        value = row.get(field)
+        if clean_value(value):
+            return field, value
+    return "", ""
 
 
 def join_fields(row: dict[str, Any], fields: list[str]) -> str:

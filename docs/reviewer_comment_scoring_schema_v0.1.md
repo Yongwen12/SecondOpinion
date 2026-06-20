@@ -1,6 +1,6 @@
 # SecondOpinion Reviewer Comment Scoring Schema v0.1
 
-Date: 2026-06-17
+Date: 2026-06-20
 
 This document defines the current six-dimension reviewer comment scoring schema. It is the product-level scoring engine behind the demo.
 
@@ -12,12 +12,12 @@ Core principle:
 
 | Dimension | What It Scores | Current Implementation | Literature / Dataset Sources | Adapter Status | Confidence |
 |---|---|---|---|---|---|
-| Specificity | Whether the reviewer states a concrete, inspectable claim | Implemented from claim extraction and reviewer calibration specificity signals | ReAct, AMPERE, ASAP-Review / ReviewAdvisor | Not yet fully adapted | Medium |
-| Substantiation | Whether the comment gives reasons, evidence, or manuscript anchors | Partly implemented through evidence support, grounding, and evidence-chain scores | SubstanReview, ReviewCritique | Not yet adapted | Medium-low |
-| Actionability | Whether the author can understand what response or revision is expected | Implemented in demo from guidance priority and rebuttal guidance; addressability classifier exists | ReAct, BetterPR, RbtAct, ARIES | Partly implemented internally; external adapters pending | Medium |
-| Consensus / conflict | Whether other reviewers support, overlap with, or contradict the concern | Implemented as proxy + LLM calibration; lexical proxy risk documented | ContraSciView, RevCI | ContraSciView benchmark adapter exists; scoring integration pending | Medium |
-| Rebuttal robustness | Whether the concern still stands after author response | Implemented through rebuttal resolution labels and lifecycle robustness | DISAPERE, APE, RbtAct, Re2, DEFEND | Internal LLM calibration implemented; external adapters pending | Medium |
-| Professionalism | Whether the comment is constructive, calibrated, and professional in tone | Basic legacy tone/professionalism fields; mostly display-level today | PolitePEER, HedgePeer, BetterPR | Pending | Low-medium |
+| Specificity | Whether the reviewer states a concrete, inspectable claim | Implemented from claim extraction and reviewer calibration specificity signals | ReAct, AMPERE, ASAP-Review / ReviewAdvisor | ReAct smoke memory wired; AMPERE/ASAP wired as structural memory | Medium |
+| Substantiation | Whether the comment gives reasons, evidence, or manuscript anchors | Implemented through evidence support, grounding, evidence-chain scores, and external memory prior | SubstanReview, ReviewCritique | SubstanReview + ReviewCritique smoke memory wired | Medium |
+| Actionability | Whether the author can understand what response or revision is expected | Implemented in demo from guidance priority, rebuttal guidance, addressability classifier, and external memory prior | ReAct, BetterPR, RbtAct, ARIES | ReAct + BetterPR smoke memory wired; RbtAct/ARIES wired for response/edit alignment | Medium |
+| Consensus / conflict | Whether other reviewers support, overlap with, or contradict the concern | Implemented as proxy + LLM calibration, with external contradiction memory guardrail | ContraSciView, RevCI | ContraSciView + RevCI adapters wired into smoke memory | Medium |
+| Rebuttal robustness | Whether the concern still stands after author response | Implemented through rebuttal resolution labels, lifecycle robustness, and external memory prior | DISAPERE, APE, RbtAct, Re2, DEFEND | DISAPERE + RbtAct + Re2 smoke memory wired; APE wired for alignment memory | Medium |
+| Professionalism | Whether the comment is constructive, calibrated, and professional in tone | Legacy tone/professionalism fields plus external politeness memory prior in demo | PolitePEER, HedgePeer, BetterPR | PolitePEER smoke memory wired; HedgePeer pending | Low-medium |
 
 ## Dimension Definitions
 
@@ -52,8 +52,9 @@ Research sources:
 
 Adapter status:
 
-- No full external-data adapter is wired into the production score yet.
-- Existing implementation is usable as a product score, but should be benchmarked against ReAct / AMPERE-style labels.
+- ReAct specificity smoke memory is wired into `score-dimensions-with-memory`.
+- AMPERE and ASAP-Review are wired as structural memory for proposition role and review aspect; they do not directly change the six-dimensional total unless those dimensions are requested.
+- Full raw datasets are still external-local only and not committed to Git.
 
 ### 2. Substantiation
 
@@ -85,8 +86,9 @@ Research sources:
 
 Adapter status:
 
-- Pending.
-- This should be one of the first external benchmark mappings because it directly supports comment quality scoring.
+- SubstanReview smoke memory is wired.
+- ReviewCritique deficiency smoke memory is wired as a substantiation/deficiency prior.
+- Full raw datasets are still external-local only and not committed to Git.
 
 ### 3. Actionability
 
@@ -123,8 +125,9 @@ Research sources:
 Adapter status:
 
 - Internal addressability is implemented.
-- External adapters are pending.
-- ReAct and RbtAct are the most useful first mappings.
+- ReAct actionability smoke memory is wired.
+- BetterPR constructiveness smoke memory is wired.
+- RbtAct and ARIES are wired for rebuttal/revision alignment support, not as direct actionability replacements.
 
 ### 4. Consensus / Conflict
 
@@ -164,8 +167,8 @@ Research sources:
 Adapter status:
 
 - ContraSciView-derived benchmark artifacts exist in `data/validation`.
-- Full replacement of lexical consensus scoring is pending.
-- This is a high-priority adapter because it directly fixes a known proxy weakness.
+- RevCI smoke memory is wired into the combined external-memory corpus.
+- Full replacement of lexical consensus scoring is still pending; current path is a retrieval prior, not a hard replacement.
 
 ### 5. Rebuttal Robustness
 
@@ -209,8 +212,9 @@ Research sources:
 Adapter status:
 
 - Internal LLM calibration is implemented.
-- External mapping is pending.
-- RbtAct / DISAPERE / APE are the most practical first adapters.
+- DISAPERE, RbtAct, and Re2 smoke memory are wired for rebuttal robustness.
+- APE is wired as review-comment to rebuttal alignment memory.
+- DEFEND remains pending because it is small and not needed for the current smoke target.
 
 ### 6. Professionalism
 
@@ -243,8 +247,9 @@ Research sources:
 
 Adapter status:
 
-- Pending.
-- Keep as auxiliary for now. It should not dominate the overall score.
+- PolitePEER smoke memory is wired into the demo path.
+- HedgePeer remains pending.
+- Keep professionalism auxiliary for now. It should not dominate the overall score.
 
 ## Current Overall Score Policy
 
@@ -295,22 +300,21 @@ Review comment score =
 
 ## Adapter Priority
 
-### P0
+### Wired In Current Smoke Path
 
 1. ContraSciView / RevCI for consensus and conflict.
-2. ReAct for actionability.
-3. SubstanReview for substantiation.
+2. ReAct / BetterPR for actionability and constructiveness.
+3. SubstanReview / ReviewCritique for substantiation and deficiency.
+4. DISAPERE / RbtAct / Re2 for rebuttal robustness.
+5. PolitePEER for professionalism.
+6. APE / ARIES / AMPERE / ASAP-Review for alignment, revision, proposition role, and review aspect memory.
 
-### P1
+### Remaining Priority
 
-4. DISAPERE / APE / RbtAct for rebuttal response mapping.
-5. ReviewCritique for broad deficiency / quality labels.
-6. ARIES for revision-linked actionability.
-
-### P2
-
-7. PolitePEER / HedgePeer for tone and confidence.
-8. ASAP-Review / AMPERE for aspect and proposition typing benchmarks.
+1. Download and normalize full raw datasets under `data/external/<dataset>/`.
+2. Keep full data out of Git and commit only adapters, tiny fixtures, normalized smoke outputs, and reports.
+3. Add HedgePeer once we want uncertainty/hedging as a separate auxiliary signal.
+4. Decide later whether structural memory should influence the six-dimensional total or stay as diagnostic context.
 
 ## Demo Mapping
 
@@ -324,7 +328,7 @@ The demo should keep this order. Scoring is the engine; triage is the applicatio
 
 ## Implementation Addendum: Short-Term Target 2+3
 
-Date: 2026-06-17
+Date: 2026-06-20
 
 Short-term target 2+3 is now implemented as an external-memory scoring path:
 
@@ -351,10 +355,28 @@ Current smoke coverage:
 | Dimension | External memory source in smoke path | Status |
 |---|---|---|
 | Specificity | ReAct-style specificity fixture | Wired |
-| Substantiation | SubstanReview fixture | Wired |
-| Actionability | ReAct fixture | Wired |
-| Consensus / conflict | ContraSciView adapter exists; not in combined smoke memory yet | Adapter available |
-| Rebuttal robustness | DISAPERE + RbtAct fixtures | Wired |
-| Professionalism | No P0 memory yet; remains LLM-only in the demo | Deferred |
+| Substantiation | SubstanReview + ReviewCritique fixtures | Wired |
+| Actionability | ReAct + BetterPR fixtures | Wired |
+| Consensus / conflict | ContraSciView adapter + RevCI fixture | Wired |
+| Rebuttal robustness | DISAPERE + RbtAct + Re2 fixtures | Wired |
+| Professionalism | PolitePEER fixture | Wired |
 
-The demo at `frontend/demos/hybrid_scoring_demo.json` uses backend-shaped `hybrid_scores` and shows final, LLM, memory-prior, and retrieved-example evidence. This is still a smoke integration, not a full external dataset import. Full raw datasets should remain under `data/external/` and out of Git.
+Additional structural / lifecycle smoke coverage:
+
+| Dimension | External memory source in smoke path | Status |
+|---|---|---|
+| Argument role | AMPERE fixture | Wired as structural memory |
+| Review aspect | ASAP-Review fixture | Wired as structural memory |
+| Rebuttal alignment | APE fixture | Wired as alignment memory |
+| Revision alignment | ARIES fixture | Wired as lifecycle memory |
+
+The expanded smoke corpus and reports are:
+
+- `data/validation/external_scoring_memory_expanded_smoke_corpus_v0.1.jsonl`
+- `data/validation/scoring_memory_external_expanded_smoke_v0.1.jsonl`
+- `data/validation/scoring_memory_expanded_suite_smoke_v0.1.json`
+- `reports/validation/scoring_memory_expanded_suite_smoke_v0.1.md`
+- `data/validation/scoring_memory_expanded_suite_guardrail_smoke_v0.1.json`
+- `reports/validation/scoring_memory_expanded_suite_guardrail_smoke_v0.1.md`
+
+The demo at `frontend/demos/hybrid_scoring_demo.json` uses backend-shaped `hybrid_scores` and now shows all six product dimensions as memory-backed. This is still a smoke integration, not a full external dataset import. Full raw datasets should remain under `data/external/` and out of Git.

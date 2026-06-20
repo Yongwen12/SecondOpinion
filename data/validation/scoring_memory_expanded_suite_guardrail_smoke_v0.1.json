@@ -1,0 +1,107 @@
+{
+  "baseline_summary": {},
+  "checks": [
+    {
+      "baseline_or_threshold": 0.4,
+      "current": 0.75,
+      "limit": 0.4,
+      "name": "accuracy_min",
+      "passed": true,
+      "status": "pass"
+    },
+    {
+      "baseline_or_threshold": 0.25,
+      "current": 0.6987,
+      "limit": 0.25,
+      "name": "macro_f1_min",
+      "passed": true,
+      "status": "pass"
+    },
+    {
+      "baseline_or_threshold": null,
+      "current": 0.75,
+      "limit": 0.02,
+      "name": "accuracy_drop",
+      "passed": true,
+      "status": "skipped"
+    },
+    {
+      "baseline_or_threshold": null,
+      "current": 0.6987,
+      "limit": 0.02,
+      "name": "macro_f1_drop",
+      "passed": true,
+      "status": "skipped"
+    }
+  ],
+  "current_summary": {
+    "accuracy": 0.75,
+    "dimension_count": 10,
+    "dimensions": [
+      "actionability",
+      "argument_role",
+      "consensus_conflict",
+      "professionalism",
+      "rebuttal_alignment",
+      "rebuttal_robustness",
+      "review_aspect",
+      "revision_alignment",
+      "specificity",
+      "substantiation"
+    ],
+    "gold_label_counts": {
+      "actionable": 1,
+      "clarity": 1,
+      "constructive": 1,
+      "contradiction": 1,
+      "deficient": 1,
+      "evaluation": 1,
+      "generic_or_unclear": 1,
+      "impolite": 1,
+      "linked_edit": 1,
+      "matched": 1,
+      "meaningful_comparison": 1,
+      "no_edit": 1,
+      "non_constructive": 1,
+      "not_actionable": 1,
+      "not_addressed": 1,
+      "not_deficient": 1,
+      "partially_addresses": 2,
+      "polite": 1,
+      "request": 1,
+      "resolved_or_weakened": 2,
+      "same_concern": 1,
+      "specific": 1,
+      "substantiated": 1,
+      "unmatched": 1,
+      "unsubstantiated": 1,
+      "vague": 1
+    },
+    "macro_f1": 0.6987,
+    "predicted_label_counts": {
+      "actionable": 2,
+      "clarity": 1,
+      "contradiction": 1,
+      "evaluation": 1,
+      "generic_or_unclear": 2,
+      "impolite": 1,
+      "linked_edit": 1,
+      "matched": 1,
+      "meaningful_comparison": 1,
+      "no_edit": 1,
+      "not_actionable": 2,
+      "polite": 1,
+      "request": 1,
+      "resolved_or_weakened": 4,
+      "same_concern": 1,
+      "specific": 1,
+      "substantiated": 3,
+      "unmatched": 1,
+      "unsubstantiated": 1,
+      "vague": 1
+    },
+    "record_count": 28
+  },
+  "schema_version": "scoring-guardrail-v0.1",
+  "status": "pass"
+}

@@ -1,0 +1,2 @@
+{"task_id":"revci-smoke-1","comment_a":"The experiments are sufficient for the claim.","comment_b":"The experiments are not sufficient for the claim.","conflict_label":"strong_contradiction","aspect":"experiments","intensity":"strong"}
+{"task_id":"revci-smoke-2","comment_a":"The notation in Section 3 is unclear.","comment_b":"The method description needs clearer notation.","relation":"agreement","aspect":"clarity","intensity":"medium"}

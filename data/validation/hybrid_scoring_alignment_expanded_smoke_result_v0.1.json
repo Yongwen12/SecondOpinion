@@ -1,0 +1,241 @@
+{
+  "hybrid_scores": {
+    "argument_role": {
+      "dimension": "argument_role",
+      "final_score": 0.808,
+      "llm_score": 0.78,
+      "llm_weight": 0.6,
+      "memory_prior": {
+        "example_count": 2,
+        "label_counts": {
+          "evaluation": 1,
+          "request": 1
+        },
+        "mean_similarity": 0.0312,
+        "prior_score": 0.85
+      },
+      "min_similarity": 0.0,
+      "query_text": "The review argument is matched by a rebuttal response and linked to an edit that adds the requested ablation.",
+      "retrieved_examples": [
+        {
+          "context_text": "experiments",
+          "dataset": "AMPERE",
+          "dimension": "argument_role",
+          "gold_label": "request",
+          "input_text": "The authors should add a stronger retrieval baseline.",
+          "mapped_score": 0.85,
+          "memory_id": "AMPERE:argument_role:ampere-smoke-1",
+          "metadata": {
+            "dataset": "AMPERE",
+            "dimension": "argument_role",
+            "predicted_label": "request",
+            "schema_version": "external-scoring-record-v0.1",
+            "task_id": "ampere-smoke-1"
+          },
+          "rationale": "",
+          "similarity": 0.0625
+        },
+        {
+          "context_text": "soundness",
+          "dataset": "AMPERE",
+          "dimension": "argument_role",
+          "gold_label": "evaluation",
+          "input_text": "The proposed objective improves robustness on noisy labels.",
+          "mapped_score": 0.7,
+          "memory_id": "AMPERE:argument_role:ampere-smoke-2",
+          "metadata": {
+            "dataset": "AMPERE",
+            "dimension": "argument_role",
+            "predicted_label": "evaluation",
+            "schema_version": "external-scoring-record-v0.1",
+            "task_id": "ampere-smoke-2"
+          },
+          "rationale": "",
+          "similarity": 0.0
+        }
+      ],
+      "schema_version": "hybrid-scoring-v0.1",
+      "source": "hybrid",
+      "top_k": 5
+    },
+    "rebuttal_alignment": {
+      "dimension": "rebuttal_alignment",
+      "final_score": 0.692,
+      "llm_score": 0.82,
+      "llm_weight": 0.6,
+      "memory_prior": {
+        "example_count": 2,
+        "label_counts": {
+          "matched": 1,
+          "unmatched": 1
+        },
+        "mean_similarity": 0.0,
+        "prior_score": 0.5
+      },
+      "min_similarity": 0.0,
+      "query_text": "The review argument is matched by a rebuttal response and linked to an edit that adds the requested ablation.",
+      "retrieved_examples": [
+        {
+          "context_text": "We clarified the notation in Section 2 and added examples.",
+          "dataset": "APE",
+          "dimension": "rebuttal_alignment",
+          "gold_label": "matched",
+          "input_text": "The notation is unclear in Section 2.",
+          "mapped_score": 0.85,
+          "memory_id": "APE:rebuttal_alignment:ape-smoke-1",
+          "metadata": {
+            "dataset": "APE",
+            "dimension": "rebuttal_alignment",
+            "predicted_label": "matched",
+            "schema_version": "external-scoring-record-v0.1",
+            "task_id": "ape-smoke-1"
+          },
+          "rationale": "",
+          "similarity": 0.0
+        },
+        {
+          "context_text": "We thank the reviewer for the encouraging comments.",
+          "dataset": "APE",
+          "dimension": "rebuttal_alignment",
+          "gold_label": "unmatched",
+          "input_text": "The experiments miss a standard retrieval baseline.",
+          "mapped_score": 0.15,
+          "memory_id": "APE:rebuttal_alignment:ape-smoke-2",
+          "metadata": {
+            "dataset": "APE",
+            "dimension": "rebuttal_alignment",
+            "predicted_label": "unmatched",
+            "schema_version": "external-scoring-record-v0.1",
+            "task_id": "ape-smoke-2"
+          },
+          "rationale": "",
+          "similarity": 0.0
+        }
+      ],
+      "schema_version": "hybrid-scoring-v0.1",
+      "source": "hybrid",
+      "top_k": 5
+    },
+    "review_aspect": {
+      "dimension": "review_aspect",
+      "final_score": 0.7,
+      "llm_score": 0.7,
+      "llm_weight": 0.6,
+      "memory_prior": {
+        "example_count": 2,
+        "label_counts": {
+          "clarity": 1,
+          "meaningful_comparison": 1
+        },
+        "mean_similarity": 0.0,
+        "prior_score": 0.7
+      },
+      "min_similarity": 0.0,
+      "query_text": "The review argument is matched by a rebuttal response and linked to an edit that adds the requested ablation.",
+      "retrieved_examples": [
+        {
+          "context_text": "negative",
+          "dataset": "ASAP-Review",
+          "dimension": "review_aspect",
+          "gold_label": "meaningful_comparison",
+          "input_text": "The paper should compare against the most relevant retrieval baseline.",
+          "mapped_score": 0.8,
+          "memory_id": "ASAP-Review:review_aspect:asap-review-smoke-1",
+          "metadata": {
+            "dataset": "ASAP-Review",
+            "dimension": "review_aspect",
+            "predicted_label": "meaningful_comparison",
+            "schema_version": "external-scoring-record-v0.1",
+            "task_id": "asap-review-smoke-1"
+          },
+          "rationale": "",
+          "similarity": 0.0
+        },
+        {
+          "context_text": "negative",
+          "dataset": "ASAP-Review",
+          "dimension": "review_aspect",
+          "gold_label": "clarity",
+          "input_text": "The notation is difficult to follow in Section 2.",
+          "mapped_score": 0.6,
+          "memory_id": "ASAP-Review:review_aspect:asap-review-smoke-2",
+          "metadata": {
+            "dataset": "ASAP-Review",
+            "dimension": "review_aspect",
+            "predicted_label": "clarity",
+            "schema_version": "external-scoring-record-v0.1",
+            "task_id": "asap-review-smoke-2"
+          },
+          "rationale": "",
+          "similarity": 0.0
+        }
+      ],
+      "schema_version": "hybrid-scoring-v0.1",
+      "source": "hybrid",
+      "top_k": 5
+    },
+    "revision_alignment": {
+      "dimension": "revision_alignment",
+      "final_score": 0.7962,
+      "llm_score": 0.88,
+      "llm_weight": 0.6,
+      "memory_prior": {
+        "example_count": 2,
+        "label_counts": {
+          "linked_edit": 1,
+          "no_edit": 1
+        },
+        "mean_similarity": 0.096,
+        "prior_score": 0.6704
+      },
+      "min_similarity": 0.0,
+      "query_text": "The review argument is matched by a rebuttal response and linked to an edit that adds the requested ablation.",
+      "retrieved_examples": [
+        {
+          "context_text": "Added ablation results in Table 3.",
+          "dataset": "ARIES",
+          "dimension": "revision_alignment",
+          "gold_label": "linked_edit",
+          "input_text": "Add the missing ablation study.",
+          "mapped_score": 0.9,
+          "memory_id": "ARIES:revision_alignment:aries-smoke-1",
+          "metadata": {
+            "dataset": "ARIES",
+            "dimension": "revision_alignment",
+            "predicted_label": "linked_edit",
+            "schema_version": "external-scoring-record-v0.1",
+            "task_id": "aries-smoke-1"
+          },
+          "rationale": "",
+          "similarity": 0.1333
+        },
+        {
+          "context_text": "Minor grammar edits in the introduction.",
+          "dataset": "ARIES",
+          "dimension": "revision_alignment",
+          "gold_label": "no_edit",
+          "input_text": "Clarify the motivation for the loss function.",
+          "mapped_score": 0.15,
+          "memory_id": "ARIES:revision_alignment:aries-smoke-2",
+          "metadata": {
+            "dataset": "ARIES",
+            "dimension": "revision_alignment",
+            "predicted_label": "no_edit",
+            "schema_version": "external-scoring-record-v0.1",
+            "task_id": "aries-smoke-2"
+          },
+          "rationale": "",
+          "similarity": 0.0588
+        }
+      ],
+      "schema_version": "hybrid-scoring-v0.1",
+      "source": "hybrid",
+      "top_k": 5
+    }
+  },
+  "llm_weight": 0.6,
+  "overall_score": 0.749,
+  "query_text": "The review argument is matched by a rebuttal response and linked to an edit that adds the requested ablation.",
+  "schema_version": "hybrid-scoring-v0.1",
+  "top_k": 5
+}

@@ -1,0 +1,2 @@
+{"task_id":"ape-smoke-1","review_argument":"The notation is unclear in Section 2.","rebuttal_argument":"We clarified the notation in Section 2 and added examples.","is_pair":"yes"}
+{"task_id":"ape-smoke-2","review_argument":"The experiments miss a standard retrieval baseline.","rebuttal_argument":"We thank the reviewer for the encouraging comments.","is_pair":"no"}

@@ -1,0 +1,2 @@
+{"task_id":"reviewcritique-smoke-1","segment_text":"The weakness about missing ablations is asserted without evidence.","deficiency":"yes","explanation":"Missing concrete evidence for the critique.","error_type":"missing_evidence"}
+{"task_id":"reviewcritique-smoke-2","segment_text":"The reviewer cites Table 2 and the absent standard deviation when criticizing stability.","deficiency":"no","explanation":"Critique is backed by an observable missing statistic.","error_type":"supported_evidence"}

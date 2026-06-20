@@ -6,11 +6,11 @@
     "year": 2026
   },
   "summary": {
-    "mean_hybrid_score": 0.74,
-    "memory_dimensions": 4,
+    "mean_hybrid_score": 0.7,
+    "memory_dimensions": 6,
     "guardrail_status": "pass",
     "situation": "Reviewer comments are scored first with a retrieval prior from external peer-review datasets, then routed into triage.",
-    "leverage": "The baseline and theorem-assumption concerns show how LLM scores, external memory, and final hybrid scores are separated."
+    "leverage": "ReviewCritique, BetterPR, RevCI, PolitePEER, and Re2 extend the memory-backed scoring surface beyond the first adapter batch."
   },
   "reviewers": [
     {
@@ -66,11 +66,18 @@
               ]
             },
             "actionability": {
-              "final_score": 0.88,
+              "final_score": 0.86,
               "llm_score": 0.86,
               "source": "hybrid",
-              "memory_prior": { "prior_score": 0.9, "example_count": 2 },
+              "memory_prior": { "prior_score": 0.87, "example_count": 4 },
               "retrieved_examples": [
+                {
+                  "dataset": "BetterPR",
+                  "input_text": "Please add a baseline comparison and report confidence intervals.",
+                  "gold_label": "constructive",
+                  "mapped_score": 0.85,
+                  "similarity": 0.23
+                },
                 {
                   "dataset": "ReAct",
                   "input_text": "Please add a comparison with a standard retrieval baseline and report runtime.",
@@ -81,11 +88,19 @@
               ]
             },
             "consensus_conflict": {
-              "final_score": 0.58,
+              "final_score": 0.71,
               "llm_score": 0.58,
-              "source": "llm_only",
-              "memory_prior": { "prior_score": null, "example_count": 0 },
-              "retrieved_examples": []
+              "source": "hybrid",
+              "memory_prior": { "prior_score": 0.9, "example_count": 2 },
+              "retrieved_examples": [
+                {
+                  "dataset": "RevCI",
+                  "input_text": "The notation in Section 3 is unclear.\nThe method description needs clearer notation.",
+                  "gold_label": "same_concern",
+                  "mapped_score": 0.9,
+                  "similarity": 0.04
+                }
+              ]
             },
             "rebuttal_robustness": {
               "final_score": 0.55,
@@ -103,11 +118,19 @@
               ]
             },
             "professionalism": {
-              "final_score": 0.88,
-              "llm_score": 0.88,
-              "source": "llm_only",
-              "memory_prior": { "prior_score": null, "example_count": 0 },
-              "retrieved_examples": []
+              "final_score": 0.77,
+              "llm_score": 0.86,
+              "source": "hybrid",
+              "memory_prior": { "prior_score": 0.63, "example_count": 2 },
+              "retrieved_examples": [
+                {
+                  "dataset": "PolitePEER",
+                  "input_text": "The authors may want to clarify the limitation in Section 4.",
+                  "gold_label": "polite",
+                  "mapped_score": 0.85,
+                  "similarity": 0.08
+                }
+              ]
             }
           }
         }
@@ -154,8 +177,15 @@
               "final_score": 0.56,
               "llm_score": 0.62,
               "source": "hybrid",
-              "memory_prior": { "prior_score": 0.47, "example_count": 2 },
+              "memory_prior": { "prior_score": 0.5, "example_count": 4 },
               "retrieved_examples": [
+                {
+                  "dataset": "ReviewCritique",
+                  "input_text": "The weakness about missing ablations is asserted without evidence.",
+                  "gold_label": "deficient",
+                  "mapped_score": 0.2,
+                  "similarity": 0.07
+                },
                 {
                   "dataset": "SubstanReview",
                   "input_text": "The method is weak.",
@@ -181,11 +211,19 @@
               ]
             },
             "consensus_conflict": {
-              "final_score": 0.52,
+              "final_score": 0.53,
               "llm_score": 0.52,
-              "source": "llm_only",
-              "memory_prior": { "prior_score": null, "example_count": 0 },
-              "retrieved_examples": []
+              "source": "hybrid",
+              "memory_prior": { "prior_score": 0.55, "example_count": 2 },
+              "retrieved_examples": [
+                {
+                  "dataset": "RevCI",
+                  "input_text": "The experiments are sufficient for the claim.\nThe experiments are not sufficient for the claim.",
+                  "gold_label": "contradiction",
+                  "mapped_score": 0.1,
+                  "similarity": 0.03
+                }
+              ]
             },
             "rebuttal_robustness": {
               "final_score": 0.5,
@@ -203,11 +241,19 @@
               ]
             },
             "professionalism": {
-              "final_score": 0.82,
+              "final_score": 0.74,
               "llm_score": 0.82,
-              "source": "llm_only",
-              "memory_prior": { "prior_score": null, "example_count": 0 },
-              "retrieved_examples": []
+              "source": "hybrid",
+              "memory_prior": { "prior_score": 0.63, "example_count": 2 },
+              "retrieved_examples": [
+                {
+                  "dataset": "PolitePEER",
+                  "input_text": "The authors clearly did not understand the prior work.",
+                  "gold_label": "impolite",
+                  "mapped_score": 0.15,
+                  "similarity": 0.04
+                }
+              ]
             }
           }
         }

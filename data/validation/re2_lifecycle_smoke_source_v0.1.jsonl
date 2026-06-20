@@ -1,0 +1,2 @@
+{"task_id":"re2-smoke-1","review_comment":"The rebuttal does not address the missing baseline.","rebuttal_text":"We will add a comparison to the standard retrieval baseline.","response_status":"partially_addresses"}
+{"task_id":"re2-smoke-2","review_comment":"The theorem assumptions are wrong.","rebuttal_text":"We revised the theorem statement and corrected the assumptions.","response_status":"resolved"}

@@ -2,6 +2,8 @@
 
 Date: 2026-06-17
 
+Superseded by `docs/external_scoring_memory_status_v0.2.md` on 2026-06-20. This file is kept as the first smoke-integration snapshot.
+
 This document records the implementation status for short-term target 2+3:
 
 1. Use external peer-review datasets as scoring memory.

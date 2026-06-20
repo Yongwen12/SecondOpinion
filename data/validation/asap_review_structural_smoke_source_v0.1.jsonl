@@ -1,0 +1,2 @@
+{"task_id":"asap-review-smoke-1","sentence":"The paper should compare against the most relevant retrieval baseline.","aspect_label":"meaningful_comparison","sentiment":"negative"}
+{"task_id":"asap-review-smoke-2","sentence":"The notation is difficult to follow in Section 2.","aspect_label":"clarity","sentiment":"negative"}

@@ -1,0 +1,489 @@
+{
+  "hybrid_scores": {
+    "actionability": {
+      "dimension": "actionability",
+      "final_score": 0.8525,
+      "llm_score": 0.84,
+      "llm_weight": 0.6,
+      "memory_prior": {
+        "example_count": 4,
+        "label_counts": {
+          "actionable": 1,
+          "constructive": 1,
+          "non_constructive": 1,
+          "not_actionable": 1
+        },
+        "mean_similarity": 0.0985,
+        "prior_score": 0.8712
+      },
+      "min_similarity": 0.0,
+      "query_text": "The review asks authors to add a retrieval baseline, report confidence intervals, clarify notation, and politely points to missing evidence. The rebuttal only partially addresses the baseline.",
+      "retrieved_examples": [
+        {
+          "context_text": "experiments",
+          "dataset": "BetterPR",
+          "dimension": "actionability",
+          "gold_label": "constructive",
+          "input_text": "Please add a baseline comparison and report confidence intervals.",
+          "mapped_score": 0.85,
+          "memory_id": "BetterPR:actionability:betterpr-smoke-1",
+          "metadata": {
+            "dataset": "BetterPR",
+            "dimension": "actionability",
+            "predicted_label": "actionable",
+            "schema_version": "external-scoring-record-v0.1",
+            "task_id": "betterpr-smoke-1"
+          },
+          "rationale": "",
+          "similarity": 0.2273
+        },
+        {
+          "context_text": "experiments",
+          "dataset": "ReAct",
+          "dimension": "actionability",
+          "gold_label": "actionable",
+          "input_text": "Please add a comparison with a standard retrieval baseline and report runtime.",
+          "mapped_score": 0.9,
+          "memory_id": "ReAct:actionability:react-smoke-1",
+          "metadata": {
+            "dataset": "ReAct",
+            "dimension": "actionability",
+            "predicted_label": "actionable",
+            "schema_version": "external-scoring-record-v0.1",
+            "task_id": "react-smoke-1"
+          },
+          "rationale": "",
+          "similarity": 0.1667
+        },
+        {
+          "context_text": "overall",
+          "dataset": "BetterPR",
+          "dimension": "actionability",
+          "gold_label": "non_constructive",
+          "input_text": "This work is not interesting enough for the venue.",
+          "mapped_score": 0.2,
+          "memory_id": "BetterPR:actionability:betterpr-smoke-2",
+          "metadata": {
+            "dataset": "BetterPR",
+            "dimension": "actionability",
+            "predicted_label": "not_actionable",
+            "schema_version": "external-scoring-record-v0.1",
+            "task_id": "betterpr-smoke-2"
+          },
+          "rationale": "",
+          "similarity": 0.0
+        },
+        {
+          "context_text": "overall",
+          "dataset": "ReAct",
+          "dimension": "actionability",
+          "gold_label": "not_actionable",
+          "input_text": "The paper is not very exciting.",
+          "mapped_score": 0.15,
+          "memory_id": "ReAct:actionability:react-smoke-2",
+          "metadata": {
+            "dataset": "ReAct",
+            "dimension": "actionability",
+            "predicted_label": "not_actionable",
+            "schema_version": "external-scoring-record-v0.1",
+            "task_id": "react-smoke-2"
+          },
+          "rationale": "",
+          "similarity": 0.0
+        }
+      ],
+      "schema_version": "hybrid-scoring-v0.1",
+      "source": "hybrid",
+      "top_k": 5
+    },
+    "consensus_conflict": {
+      "dimension": "consensus_conflict",
+      "final_score": 0.708,
+      "llm_score": 0.58,
+      "llm_weight": 0.6,
+      "memory_prior": {
+        "example_count": 2,
+        "label_counts": {
+          "contradiction": 1,
+          "same_concern": 1
+        },
+        "mean_similarity": 0.0185,
+        "prior_score": 0.9
+      },
+      "min_similarity": 0.0,
+      "query_text": "The review asks authors to add a retrieval baseline, report confidence intervals, clarify notation, and politely points to missing evidence. The rebuttal only partially addresses the baseline.",
+      "retrieved_examples": [
+        {
+          "context_text": "clarity\nmedium",
+          "dataset": "RevCI",
+          "dimension": "consensus_conflict",
+          "gold_label": "same_concern",
+          "input_text": "The notation in Section 3 is unclear.\nThe method description needs clearer notation.",
+          "mapped_score": 0.9,
+          "memory_id": "RevCI:consensus_conflict:revci-smoke-2",
+          "metadata": {
+            "dataset": "RevCI",
+            "dimension": "consensus_conflict",
+            "predicted_label": "same_concern",
+            "schema_version": "external-scoring-record-v0.1",
+            "task_id": "revci-smoke-2"
+          },
+          "rationale": "",
+          "similarity": 0.037
+        },
+        {
+          "context_text": "experiments\nstrong",
+          "dataset": "RevCI",
+          "dimension": "consensus_conflict",
+          "gold_label": "contradiction",
+          "input_text": "The experiments are sufficient for the claim.\nThe experiments are not sufficient for the claim.",
+          "mapped_score": 0.1,
+          "memory_id": "RevCI:consensus_conflict:revci-smoke-1",
+          "metadata": {
+            "dataset": "RevCI",
+            "dimension": "consensus_conflict",
+            "predicted_label": "contradiction",
+            "schema_version": "external-scoring-record-v0.1",
+            "task_id": "revci-smoke-1"
+          },
+          "rationale": "",
+          "similarity": 0.0
+        }
+      ],
+      "schema_version": "hybrid-scoring-v0.1",
+      "source": "hybrid",
+      "top_k": 5
+    },
+    "professionalism": {
+      "dimension": "professionalism",
+      "final_score": 0.7675,
+      "llm_score": 0.86,
+      "llm_weight": 0.6,
+      "memory_prior": {
+        "example_count": 2,
+        "label_counts": {
+          "impolite": 1,
+          "polite": 1
+        },
+        "mean_similarity": 0.0609,
+        "prior_score": 0.6287
+      },
+      "min_similarity": 0.0,
+      "query_text": "The review asks authors to add a retrieval baseline, report confidence intervals, clarify notation, and politely points to missing evidence. The rebuttal only partially addresses the baseline.",
+      "retrieved_examples": [
+        {
+          "context_text": "hedged_suggestion",
+          "dataset": "PolitePEER",
+          "dimension": "professionalism",
+          "gold_label": "polite",
+          "input_text": "The authors may want to clarify the limitation in Section 4.",
+          "mapped_score": 0.85,
+          "memory_id": "PolitePEER:professionalism:politepeer-smoke-1",
+          "metadata": {
+            "dataset": "PolitePEER",
+            "dimension": "professionalism",
+            "predicted_label": "polite",
+            "schema_version": "external-scoring-record-v0.1",
+            "task_id": "politepeer-smoke-1"
+          },
+          "rationale": "",
+          "similarity": 0.0833
+        },
+        {
+          "context_text": "dismissive",
+          "dataset": "PolitePEER",
+          "dimension": "professionalism",
+          "gold_label": "impolite",
+          "input_text": "The authors clearly did not understand the prior work.",
+          "mapped_score": 0.15,
+          "memory_id": "PolitePEER:professionalism:politepeer-smoke-2",
+          "metadata": {
+            "dataset": "PolitePEER",
+            "dimension": "professionalism",
+            "predicted_label": "impolite",
+            "schema_version": "external-scoring-record-v0.1",
+            "task_id": "politepeer-smoke-2"
+          },
+          "rationale": "",
+          "similarity": 0.0385
+        }
+      ],
+      "schema_version": "hybrid-scoring-v0.1",
+      "source": "hybrid",
+      "top_k": 5
+    },
+    "rebuttal_robustness": {
+      "dimension": "rebuttal_robustness",
+      "final_score": 0.5155,
+      "llm_score": 0.54,
+      "llm_weight": 0.6,
+      "memory_prior": {
+        "example_count": 5,
+        "label_counts": {
+          "generic_or_unclear": 1,
+          "not_addressed": 1,
+          "partially_addresses": 2,
+          "resolved_or_weakened": 1
+        },
+        "mean_similarity": 0.0813,
+        "prior_score": 0.4787
+      },
+      "min_similarity": 0.0,
+      "query_text": "The review asks authors to add a retrieval baseline, report confidence intervals, clarify notation, and politely points to missing evidence. The rebuttal only partially addresses the baseline.",
+      "retrieved_examples": [
+        {
+          "context_text": "We will add a comparison to the standard retrieval baseline.",
+          "dataset": "Re2",
+          "dimension": "rebuttal_robustness",
+          "gold_label": "partially_addresses",
+          "input_text": "The rebuttal does not address the missing baseline.",
+          "mapped_score": 0.5,
+          "memory_id": "Re2:rebuttal_robustness:re2-smoke-1",
+          "metadata": {
+            "dataset": "Re2",
+            "dimension": "rebuttal_robustness",
+            "predicted_label": "resolved_or_weakened",
+            "schema_version": "external-scoring-record-v0.1",
+            "task_id": "re2-smoke-1"
+          },
+          "rationale": "",
+          "similarity": 0.2
+        },
+        {
+          "context_text": "We will add the baseline comparison and include runtime.\npartially_addresses",
+          "dataset": "DISAPERE",
+          "dimension": "rebuttal_robustness",
+          "gold_label": "partially_addresses",
+          "input_text": "The baseline comparison is missing.",
+          "mapped_score": 0.5,
+          "memory_id": "DISAPERE:rebuttal_robustness:disapere-smoke-1",
+          "metadata": {
+            "dataset": "DISAPERE",
+            "dimension": "rebuttal_robustness",
+            "predicted_label": "resolved_or_weakened",
+            "schema_version": "external-scoring-record-v0.1",
+            "task_id": "disapere-smoke-1"
+          },
+          "rationale": "",
+          "similarity": 0.125
+        },
+        {
+          "context_text": "We revised the theorem statement and added assumptions.",
+          "dataset": "RbtAct",
+          "dimension": "rebuttal_robustness",
+          "gold_label": "resolved_or_weakened",
+          "input_text": "Clarify the theorem assumptions.",
+          "mapped_score": 0.1,
+          "memory_id": "RbtAct:rebuttal_robustness:rbtact-smoke-1",
+          "metadata": {
+            "dataset": "RbtAct",
+            "dimension": "rebuttal_robustness",
+            "predicted_label": "resolved_or_weakened",
+            "schema_version": "external-scoring-record-v0.1",
+            "task_id": "rbtact-smoke-1"
+          },
+          "rationale": "",
+          "similarity": 0.0417
+        },
+        {
+          "context_text": "We believe the current study is enough.",
+          "dataset": "RbtAct",
+          "dimension": "rebuttal_robustness",
+          "gold_label": "generic_or_unclear",
+          "input_text": "Add a broader ablation study.",
+          "mapped_score": 0.7,
+          "memory_id": "RbtAct:rebuttal_robustness:rbtact-smoke-2",
+          "metadata": {
+            "dataset": "RbtAct",
+            "dimension": "rebuttal_robustness",
+            "predicted_label": "generic_or_unclear",
+            "schema_version": "external-scoring-record-v0.1",
+            "task_id": "rbtact-smoke-2"
+          },
+          "rationale": "",
+          "similarity": 0.04
+        },
+        {
+          "context_text": "not_addressed",
+          "dataset": "DISAPERE",
+          "dimension": "rebuttal_robustness",
+          "gold_label": "not_addressed",
+          "input_text": "The theorem assumptions are unclear.",
+          "mapped_score": 0.9,
+          "memory_id": "DISAPERE:rebuttal_robustness:disapere-smoke-2",
+          "metadata": {
+            "dataset": "DISAPERE",
+            "dimension": "rebuttal_robustness",
+            "predicted_label": "generic_or_unclear",
+            "schema_version": "external-scoring-record-v0.1",
+            "task_id": "disapere-smoke-2"
+          },
+          "rationale": "",
+          "similarity": 0.0
+        }
+      ],
+      "schema_version": "hybrid-scoring-v0.1",
+      "source": "hybrid",
+      "top_k": 5
+    },
+    "specificity": {
+      "dimension": "specificity",
+      "final_score": 0.792,
+      "llm_score": 0.72,
+      "llm_weight": 0.6,
+      "memory_prior": {
+        "example_count": 2,
+        "label_counts": {
+          "specific": 1,
+          "vague": 1
+        },
+        "mean_similarity": 0.0652,
+        "prior_score": 0.9
+      },
+      "min_similarity": 0.0,
+      "query_text": "The review asks authors to add a retrieval baseline, report confidence intervals, clarify notation, and politely points to missing evidence. The rebuttal only partially addresses the baseline.",
+      "retrieved_examples": [
+        {
+          "context_text": "experiments",
+          "dataset": "ReAct",
+          "dimension": "specificity",
+          "gold_label": "specific",
+          "input_text": "Section 4 should report confidence intervals for Table 2.",
+          "mapped_score": 0.9,
+          "memory_id": "ReAct:specificity:react-specificity-smoke-1",
+          "metadata": {
+            "dataset": "ReAct",
+            "dimension": "specificity",
+            "predicted_label": "specific",
+            "schema_version": "external-scoring-record-v0.1",
+            "task_id": "react-specificity-smoke-1"
+          },
+          "rationale": "",
+          "similarity": 0.1304
+        },
+        {
+          "context_text": "clarity",
+          "dataset": "ReAct",
+          "dimension": "specificity",
+          "gold_label": "vague",
+          "input_text": "The writing should be improved.",
+          "mapped_score": 0.15,
+          "memory_id": "ReAct:specificity:react-specificity-smoke-2",
+          "metadata": {
+            "dataset": "ReAct",
+            "dimension": "specificity",
+            "predicted_label": "vague",
+            "schema_version": "external-scoring-record-v0.1",
+            "task_id": "react-specificity-smoke-2"
+          },
+          "rationale": "",
+          "similarity": 0.0
+        }
+      ],
+      "schema_version": "hybrid-scoring-v0.1",
+      "source": "hybrid",
+      "top_k": 5
+    },
+    "substantiation": {
+      "dimension": "substantiation",
+      "final_score": 0.5979,
+      "llm_score": 0.66,
+      "llm_weight": 0.6,
+      "memory_prior": {
+        "example_count": 4,
+        "label_counts": {
+          "deficient": 1,
+          "not_deficient": 1,
+          "substantiated": 1,
+          "unsubstantiated": 1
+        },
+        "mean_similarity": 0.0347,
+        "prior_score": 0.5048
+      },
+      "min_similarity": 0.0,
+      "query_text": "The review asks authors to add a retrieval baseline, report confidence intervals, clarify notation, and politely points to missing evidence. The rebuttal only partially addresses the baseline.",
+      "retrieved_examples": [
+        {
+          "context_text": "Missing concrete evidence for the critique.\nmissing_evidence",
+          "dataset": "ReviewCritique",
+          "dimension": "substantiation",
+          "gold_label": "deficient",
+          "input_text": "The weakness about missing ablations is asserted without evidence.",
+          "mapped_score": 0.2,
+          "memory_id": "ReviewCritique:substantiation:reviewcritique-smoke-1",
+          "metadata": {
+            "dataset": "ReviewCritique",
+            "dimension": "substantiation",
+            "predicted_label": "substantiated",
+            "schema_version": "external-scoring-record-v0.1",
+            "task_id": "reviewcritique-smoke-1"
+          },
+          "rationale": "",
+          "similarity": 0.0741
+        },
+        {
+          "context_text": "The reviewer cites the missing ablation table and absent error bars.",
+          "dataset": "SubstanReview",
+          "dimension": "substantiation",
+          "gold_label": "substantiated",
+          "input_text": "The claimed improvement is under-supported.",
+          "mapped_score": 0.9,
+          "memory_id": "SubstanReview:substantiation:substan-smoke-1",
+          "metadata": {
+            "dataset": "SubstanReview",
+            "dimension": "substantiation",
+            "predicted_label": "substantiated",
+            "schema_version": "external-scoring-record-v0.1",
+            "task_id": "substan-smoke-1"
+          },
+          "rationale": "",
+          "similarity": 0.0345
+        },
+        {
+          "context_text": "Critique is backed by an observable missing statistic.\nsupported_evidence",
+          "dataset": "ReviewCritique",
+          "dimension": "substantiation",
+          "gold_label": "not_deficient",
+          "input_text": "The reviewer cites Table 2 and the absent standard deviation when criticizing stability.",
+          "mapped_score": 0.8,
+          "memory_id": "ReviewCritique:substantiation:reviewcritique-smoke-2",
+          "metadata": {
+            "dataset": "ReviewCritique",
+            "dimension": "substantiation",
+            "predicted_label": "substantiated",
+            "schema_version": "external-scoring-record-v0.1",
+            "task_id": "reviewcritique-smoke-2"
+          },
+          "rationale": "",
+          "similarity": 0.0303
+        },
+        {
+          "context_text": "",
+          "dataset": "SubstanReview",
+          "dimension": "substantiation",
+          "gold_label": "unsubstantiated",
+          "input_text": "The method is weak.",
+          "mapped_score": 0.15,
+          "memory_id": "SubstanReview:substantiation:substan-smoke-2",
+          "metadata": {
+            "dataset": "SubstanReview",
+            "dimension": "substantiation",
+            "predicted_label": "unsubstantiated",
+            "schema_version": "external-scoring-record-v0.1",
+            "task_id": "substan-smoke-2"
+          },
+          "rationale": "",
+          "similarity": 0.0
+        }
+      ],
+      "schema_version": "hybrid-scoring-v0.1",
+      "source": "hybrid",
+      "top_k": 5
+    }
+  },
+  "llm_weight": 0.6,
+  "overall_score": 0.7056,
+  "query_text": "The review asks authors to add a retrieval baseline, report confidence intervals, clarify notation, and politely points to missing evidence. The rebuttal only partially addresses the baseline.",
+  "schema_version": "hybrid-scoring-v0.1",
+  "top_k": 5
+}
