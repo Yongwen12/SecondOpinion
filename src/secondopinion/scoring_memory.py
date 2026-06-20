@@ -427,7 +427,7 @@ def write_markdown(path: str | Path, markdown: str) -> None:
 def write_jsonl(path: str | Path, records: list[dict[str, Any]]) -> None:
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text("".join(json.dumps(record, ensure_ascii=False, sort_keys=True) + "\n" for record in records), encoding="utf-8")
+    path.write_text("".join(json.dumps(record, ensure_ascii=True, sort_keys=True) + "\n" for record in records), encoding="utf-8")
 
 
 def read_json(path: str | Path) -> dict[str, Any]:
@@ -435,7 +435,7 @@ def read_json(path: str | Path) -> dict[str, Any]:
 
 
 def read_jsonl(path: str | Path) -> list[dict[str, Any]]:
-    return [json.loads(line) for line in Path(path).read_text(encoding="utf-8-sig").splitlines() if line.strip()]
+    return [json.loads(line) for line in Path(path).read_text(encoding="utf-8-sig").split("\n") if line.strip()]
 
 
 def parse_fields(value: str) -> list[str]:

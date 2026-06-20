@@ -52,6 +52,12 @@ from .external_dataset_adapters import (
     read_records as read_external_records,
     summarize_normalized,
 )
+from .external_dataset_ingestion import (
+    ingest_external_scoring_datasets,
+    render_ingestion_markdown,
+    write_json as write_ingestion_json,
+    write_markdown as write_ingestion_markdown,
+)
 from .evidence_chain import (
     build_benchmark_validation_report,
     build_evidence_chain_benchmark,
@@ -496,6 +502,21 @@ def main(argv: list[str] | None = None) -> None:
     normalize_external.add_argument("--overlap-threshold", type=float, default=0.10)
     normalize_external.add_argument("--limit", type=int, default=None)
 
+    ingest_external = subparsers.add_parser(
+        "ingest-external-scoring-datasets",
+        parents=[storage_parent],
+        help="Download public external scoring datasets, normalize them, and build a local scoring-memory corpus.",
+    )
+    ingest_external.add_argument("--datasets", default="first,second,re2")
+    ingest_external.add_argument("--external-root", default="data/external")
+    ingest_external.add_argument("--normalized-out", default="data/normalized/external_scoring_memory_full_lite_corpus_v0.1.jsonl")
+    ingest_external.add_argument("--memory-out", default="data/normalized/scoring_memory_external_full_lite_v0.1.jsonl")
+    ingest_external.add_argument("--manifest-out", default="data/validation/external_full_lite_ingestion_manifest_v0.1.json")
+    ingest_external.add_argument("--markdown", default="reports/validation/external_full_lite_ingestion_v0.1.md")
+    ingest_external.add_argument("--limit-per-dataset", type=int, default=None)
+    ingest_external.add_argument("--force", action="store_true")
+    ingest_external.add_argument("--skip-download", action="store_true")
+
     scoring_memory = subparsers.add_parser(
         "build-scoring-memory",
         parents=[storage_parent],
@@ -678,6 +699,8 @@ def main(argv: list[str] | None = None) -> None:
         command_write_evidence_chain_validation_story(args)
     elif args.command == "normalize-external-scoring-dataset":
         command_normalize_external_scoring_dataset(args)
+    elif args.command == "ingest-external-scoring-datasets":
+        command_ingest_external_scoring_datasets(args)
     elif args.command == "build-scoring-memory":
         command_build_scoring_memory(args)
     elif args.command == "score-with-memory":
@@ -1313,6 +1336,34 @@ def command_normalize_external_scoring_dataset(args: argparse.Namespace) -> None
     print(
         f"Saved {summary['record_count']} normalized scoring records to {out}. "
         f"datasets={summary['dataset_counts']}; dimensions={summary['dimension_counts']}."
+    )
+
+
+def command_ingest_external_scoring_datasets(args: argparse.Namespace) -> None:
+    normalized_out = artifact_path(args.normalized_out, args)
+    memory_out = artifact_path(args.memory_out, args)
+    manifest_out = artifact_path(args.manifest_out, args)
+    markdown_out = artifact_path(args.markdown, args)
+    records, manifest = ingest_external_scoring_datasets(
+        datasets=args.datasets,
+        external_root=artifact_path(args.external_root, args),
+        normalized_out=normalized_out,
+        force=args.force,
+        skip_download=args.skip_download,
+        limit_per_dataset=args.limit_per_dataset,
+    )
+    memory = build_memory_records_from_normalized(records)
+    write_scoring_jsonl(memory_out, memory)
+    manifest["memory_out"] = str(memory_out)
+    manifest.setdefault("summary", {})["memory_record_count"] = len(memory)
+    write_ingestion_json(manifest_out, manifest)
+    write_ingestion_markdown(markdown_out, render_ingestion_markdown(manifest))
+    summary = manifest.get("summary", {})
+    print(
+        f"Saved {summary.get('normalized_record_count', len(records))} normalized external scoring records to {normalized_out}. "
+        f"Saved {len(memory)} scoring-memory records to {memory_out}. "
+        f"ready={summary.get('ready_dataset_count', 0)}; blocked={summary.get('blocked_dataset_count', 0)}; "
+        f"manifest={manifest_out}; markdown={markdown_out}."
     )
 
 

@@ -379,4 +379,11 @@ The expanded smoke corpus and reports are:
 - `data/validation/scoring_memory_expanded_suite_guardrail_smoke_v0.1.json`
 - `reports/validation/scoring_memory_expanded_suite_guardrail_smoke_v0.1.md`
 
-The demo at `frontend/demos/hybrid_scoring_demo.json` uses backend-shaped `hybrid_scores` and now shows all six product dimensions as memory-backed. This is still a smoke integration, not a full external dataset import. Full raw datasets should remain under `data/external/` and out of Git.
+The demo at `frontend/demos/hybrid_scoring_demo.json` uses backend-shaped `hybrid_scores` and now shows all six product dimensions as memory-backed.
+
+Full-lite ingestion update on 2026-06-20:
+
+- `ingest-external-scoring-datasets` now downloads public direct-link datasets, normalizes them, and builds local scoring memory.
+- The latest full-lite run produced 73,193 normalized records from 8 ready datasets: ReAct, BetterPR, SubstanReview, PolitePEER, ContraSciView, DISAPERE, APE, and ARIES.
+- ReviewCritique, RevCI, RbtAct, AMPERE, ASAP-Review, and Re2 remain metadata-only blockers until stable raw artifact URLs or approved download flows are available.
+- Full raw and normalized corpora remain local-only under `data/external/` and `data/normalized/`; Git keeps only adapters, tests, manifest, and compact reports.

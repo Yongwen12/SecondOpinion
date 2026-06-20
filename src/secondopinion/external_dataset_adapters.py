@@ -24,9 +24,9 @@ DATASET_SPECS: dict[str, dict[str, Any]] = {
     "react": {
         "dataset": "ReAct",
         "default_dimension": "actionability",
-        "text_fields": ["comment", "comment_text", "review_comment", "review_text", "sentence", "text"],
-        "context_fields": ["aspect", "paper_title", "section", "review_id"],
-        "label_fields": ["gold_label", "label", "actionability", "actionability_label", "specificity_label"],
+        "text_fields": ["comment", "comment_text", "review_comment", "review_text", "sentence", "text", "Text"],
+        "context_fields": ["aspect", "paper_title", "section", "review_id", "ReviewId", "SentenceId", "Label2", "set"],
+        "label_fields": ["gold_label", "label", "actionability", "actionability_label", "specificity_label", "Label1"],
         "predicted_fields": ["predicted_label", "prediction", "baseline_label"],
     },
     "substanreview": {
@@ -64,17 +64,17 @@ DATASET_SPECS: dict[str, dict[str, Any]] = {
     "betterpr": {
         "dataset": "BetterPR",
         "default_dimension": "actionability",
-        "text_fields": ["comment", "comment_text", "review_comment", "review_text", "sentence", "text"],
+        "text_fields": ["comment", "comment_text", "review_comment", "review_text", "sentence", "text", "Text"],
         "context_fields": ["aspect", "paper_title", "section", "review_id"],
-        "label_fields": ["gold_label", "label", "constructiveness", "constructive_label", "is_constructive"],
+        "label_fields": ["gold_label", "label", "constructiveness", "constructive_label", "is_constructive", "Target"],
         "predicted_fields": ["predicted_label", "prediction", "baseline_label"],
     },
     "politepeer": {
         "dataset": "PolitePEER",
         "default_dimension": "professionalism",
-        "text_fields": ["comment", "comment_text", "review_comment", "review_text", "sentence", "text"],
-        "context_fields": ["politeness_strategy", "tone_cue", "paper_title", "section"],
-        "label_fields": ["gold_label", "label", "politeness", "politeness_label", "politeness_level", "tone_label"],
+        "text_fields": ["comment", "comment_text", "review_comment", "review_text", "sentence", "text", "review"],
+        "context_fields": ["politeness_strategy", "tone_cue", "paper_title", "section", "Venue", "Review ID", "Review URL"],
+        "label_fields": ["gold_label", "label", "politeness", "politeness_label", "politeness_level", "tone_label", "Tone"],
         "predicted_fields": ["predicted_label", "prediction", "baseline_label"],
     },
     "revci": {
@@ -165,6 +165,7 @@ LABEL_NORMALIZERS = {
     "actionability": {
         "actionable": "actionable",
         "constructive": "constructive",
+        "c": "constructive",
         "yes": "actionable",
         "true": "actionable",
         "1": "actionable",
@@ -174,6 +175,7 @@ LABEL_NORMALIZERS = {
         "not_actionable": "not_actionable",
         "non_actionable": "not_actionable",
         "non_constructive": "non_constructive",
+        "n": "non_constructive",
         "not constructive": "non_constructive",
         "not_constructive": "non_constructive",
         "unconstructive": "non_constructive",
@@ -226,38 +228,59 @@ LABEL_NORMALIZERS = {
         "professional": "professional",
         "polite": "polite",
         "high": "polite",
+        "5": "polite",
+        "4": "polite",
         "constructive": "professional",
         "neutral": "neutral",
         "medium": "neutral",
+        "3": "neutral",
         "unprofessional": "unprofessional",
         "impolite": "impolite",
         "low": "impolite",
+        "2": "impolite",
+        "1": "impolite",
         "rude": "impolite",
         "toxic": "unprofessional",
     },
     "argument_role": {
         "request": "request",
+        "arg_request": "request",
         "suggestion": "request",
         "evaluation": "evaluation",
+        "evaluative": "evaluation",
+        "arg_evaluative": "evaluation",
         "fact": "fact",
+        "arg_fact": "fact",
         "reference": "reference",
+        "arg_reference": "reference",
         "quote": "quote",
+        "arg_quote": "quote",
         "summary": "summary",
+        "arg_structuring": "summary",
         "non_argument": "non_argument",
+        "nonarg": "non_argument",
         "other": "other",
     },
     "review_aspect": {
         "clarity": "clarity",
+        "asp_clarity": "clarity",
         "soundness": "soundness",
+        "asp_soundness": "soundness",
         "substance": "substance",
+        "asp_substance": "substance",
         "originality": "originality",
+        "asp_originality": "originality",
         "novelty": "originality",
         "meaningful_comparison": "meaningful_comparison",
         "comparison": "meaningful_comparison",
         "motivation": "motivation",
+        "asp_motivation": "motivation",
         "reproducibility": "reproducibility",
+        "asp_reproducibility": "reproducibility",
         "presentation": "presentation",
+        "asp_presentation": "presentation",
         "overall": "overall",
+        "none": "overall",
     },
     "rebuttal_alignment": {
         "matched": "matched",
@@ -428,6 +451,10 @@ def normalize_substanreview_records(
     *,
     limit: int | None = None,
 ) -> list[dict[str, Any]]:
+    materialized = list(records)
+    if any(is_substanreview_span_record(record) for record in materialized):
+        return normalize_substanreview_span_records(materialized, limit=limit)
+    records = materialized
     return normalize_dataset_records(records, dataset_key="substanreview", dimension="substantiation", limit=limit)
 
 
@@ -436,6 +463,10 @@ def normalize_disapere_records(
     *,
     limit: int | None = None,
 ) -> list[dict[str, Any]]:
+    materialized = list(records)
+    if any(is_disapere_annotation_record(record) for record in materialized):
+        return normalize_disapere_annotation_records(materialized, limit=limit)
+    records = materialized
     return normalize_dataset_records(records, dataset_key="disapere", dimension="rebuttal_robustness", limit=limit)
 
 
@@ -519,6 +550,170 @@ def normalize_re2_records(
     return normalize_dataset_records(records, dataset_key="re2", dimension="rebuttal_robustness", limit=limit)
 
 
+def is_substanreview_span_record(record: dict[str, Any]) -> bool:
+    return bool(record.get("review") and isinstance(record.get("label"), list))
+
+
+def normalize_substanreview_span_records(
+    records: Iterable[dict[str, Any]],
+    *,
+    limit: int | None = None,
+) -> list[dict[str, Any]]:
+    normalized = []
+    for record_index, record in enumerate(records):
+        review = clean_value(record.get("review", ""))
+        labels = record.get("label", [])
+        if not review or not isinstance(labels, list):
+            continue
+        evidence_by_key: dict[str, list[str]] = {}
+        claims: list[tuple[str, str, str]] = []
+        for span in labels:
+            if not isinstance(span, list | tuple) or len(span) < 3:
+                continue
+            start, end, tag = span[0], span[1], clean_value(span[2])
+            if not isinstance(start, int) or not isinstance(end, int) or not tag:
+                continue
+            text = review[max(0, start) : max(0, end)].strip()
+            if not text:
+                continue
+            key = substantiation_pair_key(tag)
+            if tag.startswith("Jus_"):
+                evidence_by_key.setdefault(key, []).append(text)
+            elif tag.startswith("Eval_"):
+                claims.append((key, tag, text))
+        for claim_index, (key, tag, claim_text) in enumerate(claims):
+            if limit is not None and len(normalized) >= limit:
+                break
+            evidence_text = join_text(evidence_by_key.get(key, []))
+            gold_label = "substantiated" if evidence_text else "unsubstantiated"
+            normalized.append(
+                normalized_record(
+                    task_id=f"substanreview:{clean_value(record.get('id')) or record_index}:{tag}:{claim_index}",
+                    dataset="SubstanReview",
+                    dimension="substantiation",
+                    input_text=claim_text,
+                    context_text=evidence_text,
+                    gold_label=gold_label,
+                    predicted_label=gold_label,
+                    metadata={
+                        "source_review_id": record.get("id", record_index),
+                        "span_label": tag,
+                        "pair_key": key,
+                    },
+                )
+            )
+        if limit is not None and len(normalized) >= limit:
+            break
+    return normalized
+
+
+def substantiation_pair_key(tag: str) -> str:
+    parts = tag.split("_")
+    if len(parts) >= 3:
+        return "_".join(parts[1:])
+    return tag
+
+
+def is_disapere_annotation_record(record: dict[str, Any]) -> bool:
+    return isinstance(record.get("review_sentences"), list) and isinstance(record.get("rebuttal_sentences"), list)
+
+
+def normalize_disapere_annotation_records(
+    records: Iterable[dict[str, Any]],
+    *,
+    limit: int | None = None,
+) -> list[dict[str, Any]]:
+    normalized = []
+    for record_index, record in enumerate(records):
+        metadata = record.get("metadata", {}) if isinstance(record.get("metadata"), dict) else {}
+        aligned_rebuttals = disapere_rebuttals_by_review_sentence(record.get("rebuttal_sentences", []))
+        for review_sentence in record.get("review_sentences", []):
+            if limit is not None and len(normalized) >= limit:
+                break
+            if not isinstance(review_sentence, dict):
+                continue
+            review_text = clean_value(review_sentence.get("text", ""))
+            if not review_text:
+                continue
+            sentence_index = review_sentence.get("sentence_index")
+            rebuttals = aligned_rebuttals.get(sentence_index, [])
+            context = join_text(rebuttal.get("text", "") for rebuttal in rebuttals)
+            gold_label = disapere_rebuttal_robustness_label(rebuttals)
+            normalized.append(
+                normalized_record(
+                    task_id=":".join(
+                        [
+                            "disapere",
+                            clean_value(metadata.get("forum_id")) or str(record_index),
+                            clean_value(metadata.get("review_id")) or "review",
+                            str(sentence_index),
+                        ]
+                    ),
+                    dataset="DISAPERE",
+                    dimension="rebuttal_robustness",
+                    input_text=review_text,
+                    context_text=context,
+                    gold_label=gold_label,
+                    predicted_label=gold_label,
+                    metadata={
+                        "forum_id": metadata.get("forum_id", ""),
+                        "review_id": metadata.get("review_id", ""),
+                        "rebuttal_id": metadata.get("rebuttal_id", ""),
+                        "title": metadata.get("title", ""),
+                        "conference": metadata.get("conference", ""),
+                        "review_action": review_sentence.get("review_action", ""),
+                        "fine_review_action": review_sentence.get("fine_review_action", ""),
+                        "aspect": review_sentence.get("aspect", ""),
+                        "polarity": review_sentence.get("polarity", ""),
+                        "aligned_rebuttal_count": len(rebuttals),
+                        "rebuttal_actions": [clean_value(item.get("rebuttal_action", "")) for item in rebuttals],
+                        "rebuttal_stances": [clean_value(item.get("rebuttal_stance", "")) for item in rebuttals],
+                    },
+                )
+            )
+        if limit is not None and len(normalized) >= limit:
+            break
+    return normalized
+
+
+def disapere_rebuttals_by_review_sentence(rebuttal_sentences: Any) -> dict[Any, list[dict[str, Any]]]:
+    aligned: dict[Any, list[dict[str, Any]]] = {}
+    if not isinstance(rebuttal_sentences, list):
+        return aligned
+    for rebuttal in rebuttal_sentences:
+        if not isinstance(rebuttal, dict):
+            continue
+        alignment = rebuttal.get("alignment", [])
+        if not isinstance(alignment, list | tuple) or len(alignment) < 2:
+            continue
+        target = alignment[1]
+        if isinstance(target, list):
+            indices = target
+        elif target is None:
+            indices = []
+        else:
+            indices = [target]
+        for index in indices:
+            aligned.setdefault(index, []).append(rebuttal)
+    return aligned
+
+
+def disapere_rebuttal_robustness_label(rebuttals: list[dict[str, Any]]) -> str:
+    if not rebuttals:
+        return "not_addressed"
+    actions = {clean_value(rebuttal.get("rebuttal_action", "")).lower() for rebuttal in rebuttals}
+    stances = {clean_value(rebuttal.get("rebuttal_stance", "")).lower() for rebuttal in rebuttals}
+    if actions & {"rebuttal_done", "rebuttal_resolution", "rebuttal_resolved"}:
+        return "resolved_or_weakened"
+    if stances & {"concur", "answer"}:
+        return "specifically_addressed"
+    if actions & {"rebuttal_future", "rebuttal_partial", "rebuttal_followup"}:
+        return "partially_addresses"
+    if stances & {"dispute", "mitigate", "clarification"}:
+        return "generic_or_unclear"
+    return "generic_or_unclear"
+
+
 def normalize_dataset_records(
     records: Iterable[dict[str, Any]],
     *,
@@ -550,7 +745,13 @@ def normalize_dataset_records(
             continue
         normalized.append(
             normalized_record(
-                task_id=clean_value(row.get("task_id") or row.get("id") or row.get("uid") or f"{dataset_key}:{index}"),
+                task_id=clean_value(
+                    row_value(row, "task_id")
+                    or row_value(row, "id")
+                    or row_value(row, "uid")
+                    or row_value(row, "ReviewId")
+                    or f"{dataset_key}:{index}"
+                ),
                 dataset=spec["dataset"],
                 dimension=dimension,
                 input_text=input_text,
@@ -634,6 +835,13 @@ def normalize_source_label(value: Any, *, dimension: str, dataset_key: str, fiel
             return "deficient"
         if text in {"false", "no", "0", "not_deficient", "no_deficiency", "non_deficient"}:
             return "not_deficient"
+    if dataset_key == "politepeer" and field_name.lower() == "tone":
+        if text in {"1", "2"}:
+            return "impolite"
+        if text == "3":
+            return "neutral"
+        if text in {"4", "5"}:
+            return "polite"
     return normalize_dimension_label(value, dimension)
 
 
@@ -684,9 +892,27 @@ def clean_value(value: Any) -> str:
     return str(value or "").strip()
 
 
+def normalized_field_name(value: str) -> str:
+    return "".join(ch for ch in value.lower() if ch.isalnum())
+
+
+def row_value(row: dict[str, Any], field: str) -> Any:
+    if field in row:
+        return row.get(field)
+    lowered = field.lower()
+    for key, value in row.items():
+        if str(key).lower() == lowered:
+            return value
+    normalized = normalized_field_name(field)
+    for key, value in row.items():
+        if normalized_field_name(str(key)) == normalized:
+            return value
+    return ""
+
+
 def first_value(row: dict[str, Any], fields: list[str]) -> Any:
     for field in fields:
-        value = row.get(field)
+        value = row_value(row, field)
         if clean_value(value):
             return value
     return ""
@@ -694,18 +920,26 @@ def first_value(row: dict[str, Any], fields: list[str]) -> Any:
 
 def first_field_value(row: dict[str, Any], fields: list[str]) -> tuple[str, Any]:
     for field in fields:
-        value = row.get(field)
+        value = row_value(row, field)
         if clean_value(value):
             return field, value
     return "", ""
 
 
 def join_fields(row: dict[str, Any], fields: list[str]) -> str:
-    return join_text(row.get(field, "") for field in fields)
+    return join_text(row_value(row, field) for field in fields)
 
 
 def join_text(values: Iterable[Any]) -> str:
-    return "\n".join(clean_value(value) for value in values if clean_value(value))
+    seen = set()
+    parts = []
+    for value in values:
+        text = clean_value(value)
+        if not text or text in seen:
+            continue
+        seen.add(text)
+        parts.append(text)
+    return "\n".join(parts)
 
 
 def compact_metadata(row: dict[str, Any], *, exclude: set[str]) -> dict[str, Any]:
@@ -734,7 +968,7 @@ def summarize_normalized(records: list[dict[str, Any]]) -> dict[str, Any]:
 def read_records(path: str | Path) -> list[dict[str, Any]]:
     path = Path(path)
     if path.suffix.lower() == ".jsonl":
-        return [json.loads(line) for line in path.read_text(encoding="utf-8-sig").splitlines() if line.strip()]
+        return [json.loads(line) for line in path.read_text(encoding="utf-8-sig").split("\n") if line.strip()]
     if path.suffix.lower() == ".json":
         payload = json.loads(path.read_text(encoding="utf-8-sig"))
         if isinstance(payload, list):
@@ -751,7 +985,7 @@ def write_jsonl(path: str | Path, records: list[dict[str, Any]]) -> None:
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
-        "".join(json.dumps(record, ensure_ascii=False, sort_keys=True) + "\n" for record in records),
+        "".join(json.dumps(record, ensure_ascii=True, sort_keys=True) + "\n" for record in records),
         encoding="utf-8",
     )
 

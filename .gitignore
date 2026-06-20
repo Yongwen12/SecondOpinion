@@ -30,6 +30,7 @@ data/derived/
 data/annotations/
 data/cache/
 data/external/
+data/validation/external_full_lite_scoring_suite*.json
 reports/*.md
 reports/*.html
 reports/annotations/

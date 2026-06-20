@@ -1,0 +1,607 @@
+{
+  "datasets": [
+    {
+      "batch": "first",
+      "blockers": [],
+      "dataset": "ReAct",
+      "dataset_key": "react",
+      "dimensions": [
+        "actionability"
+      ],
+      "download_status": "ready",
+      "estimated_size": "1,250 labeled review-comment sentences; raw CSV is small.",
+      "mode": "full-lite",
+      "normalize_blockers": [],
+      "normalize_status": "ready",
+      "normalized_records": 1250,
+      "normalized_summary": {
+        "dataset_counts": {
+          "ReAct": 1250
+        },
+        "dimension_counts": {
+          "actionability": 1250
+        },
+        "gold_label_counts": {
+          "actionable": 560,
+          "not_actionable": 690
+        },
+        "predicted_label_counts": {
+          "actionable": 73,
+          "not_actionable": 1177
+        },
+        "record_count": 1250
+      },
+      "notes": [],
+      "resources": [
+        {
+          "bytes": 206728,
+          "kind": "csv",
+          "name": "processed_data",
+          "path": "data\\external\\react\\processed_data.csv",
+          "status": "existing",
+          "url": "https://raw.githubusercontent.com/gtmdotme/ReAct/main/processed_data.csv"
+        }
+      ],
+      "source_url": "",
+      "status": "ready",
+      "use_in_scoring": "Constructive/actionable comment examples for the actionability prior."
+    },
+    {
+      "batch": "first",
+      "blockers": [],
+      "dataset": "BetterPR",
+      "dataset_key": "betterpr",
+      "dimensions": [
+        "actionability"
+      ],
+      "download_status": "ready",
+      "estimated_size": "1,496 toxicbert.csv comments; main Apple Numbers sheet requires manual conversion.",
+      "mode": "full-lite",
+      "normalize_blockers": [],
+      "normalize_status": "ready",
+      "normalized_records": 1516,
+      "normalized_summary": {
+        "dataset_counts": {
+          "BetterPR": 1516
+        },
+        "dimension_counts": {
+          "actionability": 1516
+        },
+        "gold_label_counts": {
+          "constructive": 759,
+          "non_constructive": 757
+        },
+        "predicted_label_counts": {
+          "actionable": 103,
+          "not_actionable": 1413
+        },
+        "record_count": 1516
+      },
+      "notes": [
+        "The public toxicbert.csv is directly usable.",
+        "The larger Dataset.numbers file is tracked as a conversion task instead of being parsed in this no-dependency pass."
+      ],
+      "resources": [
+        {
+          "bytes": 307891,
+          "kind": "csv",
+          "name": "toxicbert",
+          "path": "data\\external\\betterpr\\toxicbert.csv",
+          "status": "existing",
+          "url": "https://raw.githubusercontent.com/PrabhatkrBharti/BetterPR/main/datasets/toxicbert.csv"
+        }
+      ],
+      "source_url": "",
+      "status": "ready",
+      "use_in_scoring": "Constructive vs non-constructive comments for actionability and reviewer helpfulness."
+    },
+    {
+      "batch": "first",
+      "blockers": [],
+      "dataset": "SubstanReview",
+      "dataset_key": "substanreview",
+      "dimensions": [
+        "substantiation"
+      ],
+      "download_status": "ready",
+      "estimated_size": "Train/test JSONL together are about 1.6 MB.",
+      "mode": "full-lite",
+      "normalize_blockers": [],
+      "normalize_status": "ready",
+      "normalized_records": 2777,
+      "normalized_summary": {
+        "dataset_counts": {
+          "SubstanReview": 2777
+        },
+        "dimension_counts": {
+          "substantiation": 2777
+        },
+        "gold_label_counts": {
+          "substantiated": 1232,
+          "unsubstantiated": 1545
+        },
+        "predicted_label_counts": {
+          "substantiated": 1232,
+          "unsubstantiated": 1545
+        },
+        "record_count": 2777
+      },
+      "notes": [],
+      "resources": [
+        {
+          "bytes": 1258413,
+          "kind": "jsonl",
+          "name": "train",
+          "path": "data\\external\\substanreview\\train.jsonl",
+          "status": "existing",
+          "url": "https://raw.githubusercontent.com/YanzhuGuo/SubstanReview/main/annotation_final/train.jsonl"
+        },
+        {
+          "bytes": 297784,
+          "kind": "jsonl",
+          "name": "test",
+          "path": "data\\external\\substanreview\\test.jsonl",
+          "status": "existing",
+          "url": "https://raw.githubusercontent.com/YanzhuGuo/SubstanReview/main/annotation_final/test.jsonl"
+        }
+      ],
+      "source_url": "",
+      "status": "ready",
+      "use_in_scoring": "Evaluation/justification spans become substantiated vs unsupported reviewer claims."
+    },
+    {
+      "batch": "first",
+      "blockers": [
+        "No stable public raw dataset URL was found during the 2026-06-20 pass."
+      ],
+      "dataset": "ReviewCritique",
+      "dataset_key": "reviewcritique",
+      "dimensions": [
+        "substantiation"
+      ],
+      "download_status": "blocked",
+      "estimated_size": "Paper reports 100 human papers, 380 human reviews, and 11,376 human review segments.",
+      "mode": "metadata-only",
+      "normalize_blockers": [
+        "No stable public raw dataset URL was found during the 2026-06-20 pass."
+      ],
+      "normalize_status": "blocked",
+      "normalized_records": 0,
+      "notes": [],
+      "resources": [],
+      "source_url": "https://arxiv.org/abs/2503.12307",
+      "status": "blocked",
+      "use_in_scoring": "Planned deficiency labels would strengthen substantiation/deficiency priors."
+    },
+    {
+      "batch": "first",
+      "blockers": [],
+      "dataset": "PolitePEER",
+      "dataset_key": "politepeer",
+      "dimensions": [
+        "professionalism"
+      ],
+      "download_status": "ready",
+      "estimated_size": "Full public CSV is about 375 KB.",
+      "mode": "full-lite",
+      "normalize_blockers": [],
+      "normalize_status": "ready",
+      "normalized_records": 2500,
+      "normalized_summary": {
+        "dataset_counts": {
+          "PolitePEER": 2500
+        },
+        "dimension_counts": {
+          "professionalism": 2500
+        },
+        "gold_label_counts": {
+          "impolite": 791,
+          "neutral": 1142,
+          "polite": 567
+        },
+        "predicted_label_counts": {
+          "impolite": 791,
+          "neutral": 1142,
+          "polite": 567
+        },
+        "record_count": 2500
+      },
+      "notes": [],
+      "resources": [
+        {
+          "bytes": 374615,
+          "kind": "csv",
+          "name": "full",
+          "path": "data\\external\\politepeer\\PolitenessDataset-FULL.csv",
+          "status": "existing",
+          "url": "https://raw.githubusercontent.com/PrabhatkrBharti/PolitePEER/main/PolitenessDataset-FULL.csv"
+        }
+      ],
+      "source_url": "",
+      "status": "ready",
+      "use_in_scoring": "Tone labels turn professionalism from LLM-only into an external-data-backed prior."
+    },
+    {
+      "batch": "first",
+      "blockers": [],
+      "dataset": "ContraSciView",
+      "dataset_key": "contrasciview",
+      "dimensions": [
+        "consensus_conflict"
+      ],
+      "download_status": "ready",
+      "estimated_size": "Annotated CSV is about 15 MB.",
+      "mode": "full-lite",
+      "normalize_blockers": [],
+      "normalize_status": "ready",
+      "normalized_records": 47975,
+      "normalized_summary": {
+        "dataset_counts": {
+          "ContraSciView": 47975
+        },
+        "dimension_counts": {
+          "consensus_conflict": 47975
+        },
+        "gold_label_counts": {
+          "contradiction": 5725,
+          "not_contradiction": 42250
+        },
+        "predicted_label_counts": {
+          "contradiction": 47975
+        },
+        "record_count": 47975
+      },
+      "notes": [],
+      "resources": [
+        {
+          "bytes": 15002830,
+          "kind": "csv",
+          "name": "annotated",
+          "path": "data\\external\\contrasciview\\Sdata_annotated.csv",
+          "status": "existing",
+          "url": "https://raw.githubusercontent.com/sandeep82945/Contradiction-in-Peer-Review/main/Sdata_annotated.csv"
+        }
+      ],
+      "source_url": "",
+      "status": "ready",
+      "use_in_scoring": "Contradictory review-pair labels support consensus/conflict guardrails."
+    },
+    {
+      "batch": "first",
+      "blockers": [
+        "Paper is public, but no stable raw artifact URL was found during the 2026-06-20 pass."
+      ],
+      "dataset": "RevCI",
+      "dataset_key": "revci",
+      "dimensions": [
+        "consensus_conflict"
+      ],
+      "download_status": "blocked",
+      "estimated_size": "Paper reports 800 expert-annotated review pairs plus about 2,000 teacher-generated pairs.",
+      "mode": "metadata-only",
+      "normalize_blockers": [
+        "Paper is public, but no stable raw artifact URL was found during the 2026-06-20 pass."
+      ],
+      "normalize_status": "blocked",
+      "normalized_records": 0,
+      "notes": [],
+      "resources": [],
+      "source_url": "https://arxiv.org/abs/2605.10171",
+      "status": "blocked",
+      "use_in_scoring": "Would add evidence-level contradiction intensity beyond binary conflict."
+    },
+    {
+      "batch": "first",
+      "blockers": [],
+      "dataset": "DISAPERE",
+      "dataset_key": "disapere",
+      "dimensions": [
+        "rebuttal_robustness"
+      ],
+      "download_status": "ready",
+      "estimated_size": "Public ZIP is about 3.1 MB.",
+      "mode": "full-lite",
+      "normalize_blockers": [],
+      "normalize_status": "ready",
+      "normalized_records": 4463,
+      "normalized_summary": {
+        "dataset_counts": {
+          "DISAPERE": 4463
+        },
+        "dimension_counts": {
+          "rebuttal_robustness": 4463
+        },
+        "gold_label_counts": {
+          "generic_or_unclear": 308,
+          "not_addressed": 2769,
+          "partially_addresses": 16,
+          "resolved_or_weakened": 591,
+          "specifically_addressed": 779
+        },
+        "predicted_label_counts": {
+          "generic_or_unclear": 308,
+          "not_addressed": 2769,
+          "partially_addresses": 16,
+          "resolved_or_weakened": 591,
+          "specifically_addressed": 779
+        },
+        "record_count": 4463
+      },
+      "notes": [],
+      "resources": [
+        {
+          "bytes": 3050876,
+          "kind": "zip",
+          "name": "annotations",
+          "path": "data\\external\\disapere\\DISAPERE.zip",
+          "status": "existing",
+          "url": "https://raw.githubusercontent.com/nnkennard/DISAPERE/main/DISAPERE.zip"
+        }
+      ],
+      "source_url": "",
+      "status": "ready",
+      "use_in_scoring": "Review-sentence/rebuttal-sentence alignments support rebuttal robustness and response specificity."
+    },
+    {
+      "batch": "second",
+      "blockers": [
+        "No stable public RMR-75K raw artifact URL was found during the 2026-06-20 pass."
+      ],
+      "dataset": "RbtAct",
+      "dataset_key": "rbtact",
+      "dimensions": [
+        "rebuttal_robustness",
+        "actionability"
+      ],
+      "download_status": "blocked",
+      "estimated_size": "Paper reports RMR-75K.",
+      "mode": "metadata-only",
+      "normalize_blockers": [
+        "No stable public RMR-75K raw artifact URL was found during the 2026-06-20 pass."
+      ],
+      "normalize_status": "blocked",
+      "normalized_records": 0,
+      "notes": [],
+      "resources": [],
+      "source_url": "https://arxiv.org/abs/2603.09723",
+      "status": "blocked",
+      "use_in_scoring": "Would connect review actionability to author uptake and revision impact."
+    },
+    {
+      "batch": "second",
+      "blockers": [],
+      "dataset": "APE",
+      "dataset_key": "ape",
+      "dimensions": [
+        "rebuttal_alignment"
+      ],
+      "download_status": "ready",
+      "estimated_size": "Public ZIP is about 7.9 MB.",
+      "mode": "semi-connect",
+      "normalize_blockers": [],
+      "normalize_status": "ready",
+      "normalized_records": 9166,
+      "normalized_summary": {
+        "dataset_counts": {
+          "APE": 9166
+        },
+        "dimension_counts": {
+          "rebuttal_alignment": 9166
+        },
+        "gold_label_counts": {
+          "matched": 7172,
+          "unmatched": 1994
+        },
+        "predicted_label_counts": {
+          "matched": 7172,
+          "unmatched": 1994
+        },
+        "record_count": 9166
+      },
+      "notes": [],
+      "resources": [
+        {
+          "bytes": 7938764,
+          "kind": "zip",
+          "name": "review_rebuttal_pairs",
+          "path": "data\\external\\ape\\ReviewRebuttalnew2.txt.zip",
+          "status": "existing",
+          "url": "https://raw.githubusercontent.com/LiyingCheng95/ArgumentPairExtraction/master/data/ReviewRebuttalnew2.txt.zip"
+        }
+      ],
+      "source_url": "",
+      "status": "ready",
+      "use_in_scoring": "Argument-pair labels support review-comment to rebuttal alignment."
+    },
+    {
+      "batch": "second",
+      "blockers": [],
+      "dataset": "ARIES",
+      "dataset_key": "aries",
+      "dimensions": [
+        "revision_alignment"
+      ],
+      "download_status": "ready",
+      "estimated_size": "Required annotation files are about 2 MB; full paper_edits file is about 13 MB and skipped for now.",
+      "mode": "semi-connect",
+      "normalize_blockers": [],
+      "normalize_status": "ready",
+      "normalized_records": 3546,
+      "normalized_summary": {
+        "dataset_counts": {
+          "ARIES": 3546
+        },
+        "dimension_counts": {
+          "revision_alignment": 3546
+        },
+        "gold_label_counts": {
+          "linked_edit": 3437,
+          "no_edit": 109
+        },
+        "predicted_label_counts": {
+          "linked_edit": 3437,
+          "no_edit": 109
+        },
+        "record_count": 3546
+      },
+      "notes": [],
+      "resources": [
+        {
+          "bytes": 1395177,
+          "kind": "jsonl",
+          "name": "review_comments",
+          "path": "data\\external\\aries\\review_comments.jsonl",
+          "status": "existing",
+          "url": "https://ai2-s2-research-public.s3.us-west-2.amazonaws.com/aries/review_comments.jsonl"
+        },
+        {
+          "bytes": 447768,
+          "kind": "jsonl",
+          "name": "edit_labels_train",
+          "path": "data\\external\\aries\\edit_labels_train.jsonl",
+          "status": "existing",
+          "url": "https://ai2-s2-research-public.s3.us-west-2.amazonaws.com/aries/edit_labels_train.jsonl"
+        },
+        {
+          "bytes": 130783,
+          "kind": "jsonl",
+          "name": "edit_labels_test",
+          "path": "data\\external\\aries\\edit_labels_test.jsonl",
+          "status": "existing",
+          "url": "https://ai2-s2-research-public.s3.us-west-2.amazonaws.com/aries/edit_labels_test.jsonl"
+        }
+      ],
+      "source_url": "",
+      "status": "ready",
+      "use_in_scoring": "Comment-to-edit links open a lightweight path from review concerns to revision alignment."
+    },
+    {
+      "batch": "second",
+      "blockers": [
+        "No stable public raw dataset URL was found during the 2026-06-20 pass."
+      ],
+      "dataset": "AMPERE",
+      "dataset_key": "ampere",
+      "dimensions": [
+        "argument_role"
+      ],
+      "download_status": "blocked",
+      "estimated_size": "Public raw file location not confirmed in this pass.",
+      "mode": "metadata-only",
+      "normalize_blockers": [
+        "No stable public raw dataset URL was found during the 2026-06-20 pass."
+      ],
+      "normalize_status": "blocked",
+      "normalized_records": 0,
+      "notes": [],
+      "resources": [],
+      "source_url": "",
+      "status": "blocked",
+      "use_in_scoring": "Would tag review-comment argument roles such as request, evaluation, fact, and reference."
+    },
+    {
+      "batch": "second",
+      "blockers": [
+        "Requires Google Drive download flow; not pulled in the no-dependency public-URL ingester."
+      ],
+      "dataset": "ASAP-Review",
+      "dataset_key": "asap_review",
+      "dimensions": [
+        "review_aspect"
+      ],
+      "download_status": "blocked",
+      "estimated_size": "ReviewAdvisor dataset is distributed through a Google Drive package.",
+      "mode": "metadata-only",
+      "normalize_blockers": [
+        "Requires Google Drive download flow; not pulled in the no-dependency public-URL ingester."
+      ],
+      "normalize_status": "blocked",
+      "normalized_records": 0,
+      "notes": [],
+      "resources": [],
+      "source_url": "https://github.com/neulab/ReviewAdvisor",
+      "status": "blocked",
+      "use_in_scoring": "Would add aspect labels for soundness, novelty, comparison, presentation, and related review facets."
+    },
+    {
+      "batch": "re2",
+      "blockers": [
+        "Dataset URL is an anonymous repository landing page; no direct raw subset URL was confirmed in this pass."
+      ],
+      "dataset": "Re2",
+      "dataset_key": "re2",
+      "dimensions": [
+        "rebuttal_robustness"
+      ],
+      "download_status": "blocked",
+      "estimated_size": "Paper reports 19,926 submissions, 70,668 reviews, and 53,818 rebuttals.",
+      "mode": "metadata-only",
+      "normalize_blockers": [
+        "Dataset URL is an anonymous repository landing page; no direct raw subset URL was confirmed in this pass."
+      ],
+      "normalize_status": "blocked",
+      "normalized_records": 0,
+      "notes": [],
+      "resources": [],
+      "source_url": "https://anonymous.4open.science/r/ReviewBench_anon/",
+      "status": "blocked",
+      "use_in_scoring": "Strategic review/rebuttal subset for multi-turn rebuttal robustness once a stable artifact is reachable."
+    }
+  ],
+  "external_root": "data\\external",
+  "generated_at": "2026-06-20T14:18:42.035446+00:00",
+  "memory_out": "data\\normalized\\scoring_memory_external_full_lite_v0.1.jsonl",
+  "normalized_out": "data\\normalized\\external_scoring_memory_full_lite_corpus_v0.1.jsonl",
+  "policy": {
+    "normalized_data_committed": false,
+    "normalized_data_location": "data/normalized/",
+    "raw_data_committed": false,
+    "raw_data_location": "data/external/<dataset>/",
+    "training_strategy": "no fine-tuning; use as external scoring memory and benchmark corpus"
+  },
+  "schema_version": "external-full-lite-ingestion-v0.1",
+  "selected_datasets": [
+    "react",
+    "betterpr",
+    "substanreview",
+    "reviewcritique",
+    "politepeer",
+    "contrasciview",
+    "revci",
+    "disapere",
+    "rbtact",
+    "ape",
+    "aries",
+    "ampere",
+    "asap_review",
+    "re2"
+  ],
+  "summary": {
+    "blocked_dataset_count": 6,
+    "dataset_count": 14,
+    "dataset_record_counts": {
+      "APE": 9166,
+      "ARIES": 3546,
+      "BetterPR": 1516,
+      "ContraSciView": 47975,
+      "DISAPERE": 4463,
+      "PolitePEER": 2500,
+      "ReAct": 1250,
+      "SubstanReview": 2777
+    },
+    "dimension_record_counts": {
+      "actionability": 2766,
+      "consensus_conflict": 47975,
+      "professionalism": 2500,
+      "rebuttal_alignment": 9166,
+      "rebuttal_robustness": 4463,
+      "revision_alignment": 3546,
+      "substantiation": 2777
+    },
+    "empty_dataset_count": 0,
+    "memory_record_count": 73193,
+    "normalized_record_count": 73193,
+    "partial_dataset_count": 0,
+    "ready_dataset_count": 8
+  }
+}

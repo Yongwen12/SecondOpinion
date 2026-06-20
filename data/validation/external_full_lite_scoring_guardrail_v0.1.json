@@ -1,0 +1,95 @@
+{
+  "baseline_summary": {},
+  "checks": [
+    {
+      "baseline_or_threshold": null,
+      "current": 0.3949,
+      "limit": null,
+      "name": "accuracy_min",
+      "passed": true,
+      "status": "skipped"
+    },
+    {
+      "baseline_or_threshold": null,
+      "current": 0.7385,
+      "limit": null,
+      "name": "macro_f1_min",
+      "passed": true,
+      "status": "skipped"
+    },
+    {
+      "baseline_or_threshold": null,
+      "current": 0.3949,
+      "limit": 0.02,
+      "name": "accuracy_drop",
+      "passed": true,
+      "status": "skipped"
+    },
+    {
+      "baseline_or_threshold": null,
+      "current": 0.7385,
+      "limit": 0.02,
+      "name": "macro_f1_drop",
+      "passed": true,
+      "status": "skipped"
+    }
+  ],
+  "current_summary": {
+    "accuracy": 0.3949,
+    "dimension_count": 7,
+    "dimensions": [
+      "actionability",
+      "consensus_conflict",
+      "professionalism",
+      "rebuttal_alignment",
+      "rebuttal_robustness",
+      "revision_alignment",
+      "substantiation"
+    ],
+    "gold_label_counts": {
+      "actionable": 560,
+      "constructive": 759,
+      "contradiction": 5725,
+      "generic_or_unclear": 308,
+      "impolite": 791,
+      "linked_edit": 3437,
+      "matched": 7172,
+      "neutral": 1142,
+      "no_edit": 109,
+      "non_constructive": 757,
+      "not_actionable": 690,
+      "not_addressed": 2769,
+      "not_contradiction": 42250,
+      "partially_addresses": 16,
+      "polite": 567,
+      "resolved_or_weakened": 591,
+      "specifically_addressed": 779,
+      "substantiated": 1232,
+      "unmatched": 1994,
+      "unsubstantiated": 1545
+    },
+    "macro_f1": 0.7385,
+    "predicted_label_counts": {
+      "actionable": 176,
+      "contradiction": 47975,
+      "generic_or_unclear": 308,
+      "impolite": 791,
+      "linked_edit": 3437,
+      "matched": 7172,
+      "neutral": 1142,
+      "no_edit": 109,
+      "not_actionable": 2590,
+      "not_addressed": 2769,
+      "partially_addresses": 16,
+      "polite": 567,
+      "resolved_or_weakened": 591,
+      "specifically_addressed": 779,
+      "substantiated": 1232,
+      "unmatched": 1994,
+      "unsubstantiated": 1545
+    },
+    "record_count": 73193
+  },
+  "schema_version": "scoring-guardrail-v0.1",
+  "status": "pass"
+}

@@ -85,6 +85,25 @@ def test_normalize_react_actionability_to_shared_schema():
     assert records[0]["predicted_label"] == "actionable"
 
 
+def test_normalize_react_public_csv_field_names():
+    records = normalize_react_records(
+        [
+            {
+                "ReviewId": "r1",
+                "SentenceId": "s1",
+                "Text": "Please add the missing baseline.",
+                "Label1": "actionable",
+                "Label2": "suggestion",
+                "set": "train",
+            }
+        ]
+    )
+
+    assert records[0]["task_id"] == "r1"
+    assert records[0]["input_text"] == "Please add the missing baseline."
+    assert records[0]["gold_label"] == "actionable"
+
+
 def test_normalize_react_specificity_when_specificity_label_is_available():
     records = normalize_react_records(
         [
@@ -119,6 +138,23 @@ def test_normalize_substanreview_maps_evidence_labels():
     assert records[0]["mapped_score"] == 0.9
 
 
+def test_normalize_substanreview_public_span_labels():
+    records = normalize_substanreview_records(
+        [
+            {
+                "id": 6,
+                "review": "The method is clear. It supports the claim with Table 2.",
+                "label": [[0, 20, "Eval_pos_1"], [21, 56, "Jus_pos_1"]],
+            }
+        ]
+    )
+
+    assert records[0]["task_id"] == "substanreview:6:Eval_pos_1:0"
+    assert records[0]["input_text"] == "The method is clear."
+    assert records[0]["context_text"] == "It supports the claim with Table 2."
+    assert records[0]["gold_label"] == "substantiated"
+
+
 def test_normalize_disapere_and_rbtact_to_rebuttal_robustness():
     disapere = normalize_disapere_records(
         [
@@ -145,6 +181,37 @@ def test_normalize_disapere_and_rbtact_to_rebuttal_robustness():
     assert disapere[0]["gold_label"] == "partially_addresses"
     assert rbtact[0]["dataset"] == "RbtAct"
     assert rbtact[0]["gold_label"] == "resolved_or_weakened"
+
+
+def test_normalize_disapere_public_annotation_record():
+    records = normalize_disapere_records(
+        [
+            {
+                "metadata": {"forum_id": "forum-1", "review_id": "review-1", "rebuttal_id": "reb-1"},
+                "review_sentences": [
+                    {
+                        "sentence_index": 4,
+                        "text": "The equation is inconsistent.",
+                        "review_action": "arg_request",
+                        "aspect": "asp_clarity",
+                    }
+                ],
+                "rebuttal_sentences": [
+                    {
+                        "sentence_index": 1,
+                        "text": "We updated Equation 1.",
+                        "rebuttal_stance": "concur",
+                        "rebuttal_action": "rebuttal_done",
+                        "alignment": ["context_sentences", [4]],
+                    }
+                ],
+            }
+        ]
+    )
+
+    assert records[0]["task_id"] == "disapere:forum-1:review-1:4"
+    assert records[0]["gold_label"] == "resolved_or_weakened"
+    assert records[0]["context_text"] == "We updated Equation 1."
 
 
 def test_normalize_reviewcritique_betterpr_politepeer_revci():
@@ -197,6 +264,31 @@ def test_normalize_reviewcritique_betterpr_politepeer_revci():
     assert politepeer[0]["gold_label"] == "polite"
     assert revci[0]["dimension"] == "consensus_conflict"
     assert revci[0]["gold_label"] == "contradiction"
+
+
+def test_normalize_betterpr_and_politepeer_public_field_names():
+    betterpr = normalize_betterpr_records(
+        [
+            {
+                "Text": "Please explain the baseline choice.",
+                "Target": "C",
+            }
+        ]
+    )
+    politepeer = normalize_politepeer_records(
+        [
+            {
+                "Venue": "ICLR",
+                "review": "This is beyond redemption.",
+                "Tone": "2",
+            }
+        ]
+    )
+
+    assert betterpr[0]["gold_label"] == "constructive"
+    assert betterpr[0]["mapped_score"] == 0.85
+    assert politepeer[0]["gold_label"] == "impolite"
+    assert politepeer[0]["mapped_score"] == 0.15
 
 
 def test_normalize_structural_memory_datasets():
