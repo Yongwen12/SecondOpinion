@@ -359,6 +359,56 @@ def list_conferences(session: Session) -> list[dict[str, Any]]:
     ]
 
 
+def latest_scored_papers(
+    session: Session,
+    *,
+    conference_id: str | None = None,
+    year: int | None = None,
+    limit: int = 12,
+) -> list[dict[str, Any]]:
+    limit = max(1, min(50, limit))
+    stmt = select(Paper, Scorecard).join(Scorecard, Scorecard.paper_id == Paper.paper_id)
+    if conference_id:
+        stmt = stmt.where(Paper.conference_id == conference_id)
+    if year is not None:
+        stmt = stmt.where(Paper.year == year)
+    rows = session.execute(stmt.order_by(Scorecard.created_at.desc()).limit(limit)).all()
+    items = []
+    for paper, scorecard in rows:
+        public_json = scorecard.public_json or {}
+        summary = public_json.get("summary") or {}
+        topics = public_json.get("topics") or []
+        reviewers = public_json.get("reviewers") or []
+        topic_labels = [str(item.get("text") or item.get("label") or "") for item in topics if isinstance(item, dict)]
+        social_up = 0
+        social_down = 0
+        for reviewer in reviewers:
+            if not isinstance(reviewer, dict):
+                continue
+            social = reviewer.get("social") or {}
+            social_up += int(social.get("up") or 0)
+            social_down += int(social.get("down") or 0)
+        items.append(
+            {
+                "paper_id": paper.paper_id,
+                "title": paper.title,
+                "venue": paper.venue,
+                "conference_id": paper.conference_id,
+                "year": paper.year,
+                "decision": paper.decision,
+                "review_count": len(paper.reviews),
+                "overall_score": int(summary.get("overall_score") or 0),
+                "signal_label": str(summary.get("signal_label") or "Review signal"),
+                "comment_count": int(summary.get("comment_count") or 0),
+                "topic_count": int(summary.get("topic_count") or 0),
+                "topics": [item for item in topic_labels if item][:3],
+                "social": {"up": social_up, "down": social_down},
+                "created_at": scorecard.created_at.isoformat() if scorecard.created_at else "",
+            }
+        )
+    return items
+
+
 def search_papers(
     session: Session,
     *,

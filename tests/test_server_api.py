@@ -92,6 +92,12 @@ def test_api_search_scorecard_vote_and_job_flow(tmp_path):
     assert search.status_code == 200
     assert search.json()["items"][0]["paper_id"] == "paper1"
 
+    home = client.get("/api/home", params={"conference": "ICLR", "year": 2025})
+    assert home.status_code == 200
+    assert home.json()["latest_papers"][0]["paper_id"] == "paper1"
+    assert home.json()["latest_papers"][0]["overall_score"] == 80
+    assert home.json()["leaderboards"]["red"][0]["reviewer_key"] == "R1"
+
     scorecard = client.get("/api/papers/paper1/scorecard")
     assert scorecard.status_code == 200
     rendered = json.dumps(scorecard.json())

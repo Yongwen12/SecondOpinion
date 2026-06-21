@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#f4f1ea" />
-  <title>SecondOpinion — Minimal Review Signal v0.3 Polished</title>
+  <title>SecondOpinion - Review Signal Community</title>
   <style>
     :root {
       color-scheme: light;
@@ -94,13 +94,223 @@
 
     .landing {
       min-height: 100svh;
-      display: grid;
-      place-content: center;
-      justify-items: center;
-      gap: 10px;
+      display: block;
       padding: 24px;
     }
 
+    .community-home {
+      width: min(1180px, calc(100vw - 32px));
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+
+    .community-hero {
+      display: grid;
+      gap: 14px;
+      padding-top: 24px;
+    }
+
+    .community-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .community-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--ink);
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    .community-copy {
+      display: grid;
+      gap: 4px;
+      max-width: 720px;
+    }
+
+    .community-copy h1 {
+      margin: 0;
+      font-size: 52px;
+      line-height: .98;
+      letter-spacing: 0;
+    }
+
+    .community-copy p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.55;
+    }
+
+    .topic-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .topic-chip {
+      min-height: 32px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 254, 250, .72);
+      color: var(--ink-2);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .topic-chip.is-active {
+      border-color: var(--ink);
+      background: var(--lime-soft);
+      color: var(--ink);
+    }
+
+    .community-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .feed-panel,
+    .community-board {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 254, 250, .82);
+      box-shadow: var(--shadow-1);
+    }
+
+    .feed-panel { padding: 10px; }
+    .community-board { position: sticky; top: 18px; padding: 12px; }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 4px 4px 12px;
+    }
+
+    .panel-head h2 {
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: 0;
+    }
+
+    .panel-kicker {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .home-paper-list,
+    .community-board-list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .home-paper-card,
+    .community-board-row {
+      width: 100%;
+      display: grid;
+      gap: 8px;
+      padding: 12px;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      background: transparent;
+      color: var(--ink);
+      text-align: left;
+      cursor: pointer;
+      transition: background .16s var(--ease), border-color .16s var(--ease), transform .16s var(--ease);
+    }
+
+    .home-paper-card:hover,
+    .community-board-row:hover {
+      border-color: var(--line-strong);
+      background: var(--surface);
+      transform: translateY(-1px);
+    }
+
+    .home-paper-title {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      font-size: 16px;
+      font-weight: 850;
+      line-height: 1.24;
+    }
+
+    .home-paper-meta,
+    .home-paper-social,
+    .board-meta {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .home-paper-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .home-paper-tags span {
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: var(--surface-3);
+      color: var(--ink-2);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .paper-score-pill {
+      justify-self: start;
+      min-width: 48px;
+      padding: 5px 8px;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      background: var(--lime-soft);
+      font-variant-numeric: tabular-nums;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .board-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .board-tab {
+      min-height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface-2);
+      color: var(--ink-2);
+      font-size: 12px;
+      font-weight: 850;
+      cursor: pointer;
+    }
+
+    .board-tab.is-active {
+      border-color: var(--ink);
+      background: var(--ink);
+      color: var(--surface);
+    }
     .app-view { display: block; }
     .is-idle .app-view { display: none; }
     .is-resolved .landing { display: none; }
@@ -1309,6 +1519,10 @@
 
     @media (max-width: 520px) {
       .landing { padding: 14px; }
+      .community-home { width: min(100%, calc(100vw - 28px)); }
+      .community-grid { grid-template-columns: 1fr; }
+      .community-board { position: static; }
+      .community-copy h1 { font-size: 32px; line-height: 1.05; }
       .search-shell--landing {
         width: 100%;
         min-height: 62px;
@@ -1328,7 +1542,6 @@
       .cloud-tooltip { left: 12px !important; right: 12px; bottom: 12px; top: auto !important; width: auto; }
       .filter-group { max-width: 62vw; }
     }
-
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         scroll-behavior: auto !important;
@@ -1341,22 +1554,53 @@
 </head>
 <body class="is-idle">
   <main class="shell">
-    <section class="landing" aria-label="Search paper">
-      <form class="search-shell search-shell--landing" id="landingSearch" novalidate>
-        <span class="search-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.7-3.7"></path></svg>
-        </span>
-        <label class="sr-only" for="landingInput">论文标题或链接</label>
-        <input class="search-input" id="landingInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Paste paper title / OpenReview link" />
-        <button class="clear-button" id="landingClear" type="button" aria-label="清空输入" hidden>×</button>
-        <button class="analyze-button" id="landingSubmit" type="submit">
-          <span class="button-label">Analyze</span><span class="button-arrow" aria-hidden="true">→</span><span class="spinner" aria-hidden="true"></span>
-        </button>
-      </form>
-      <div class="input-error" id="landingError" role="status" aria-live="polite"></div>
-      <div class="search-results" id="landingResults" role="listbox" aria-label="Paper search results" hidden></div>
+    <section class="landing" aria-label="Review signal community">
+      <div class="community-home">
+        <header class="community-hero">
+          <div class="community-nav">
+            <div class="community-brand"><span class="brand-mark">SO</span><span>SecondOpinion</span></div>
+            <span>Review Signal Community</span>
+          </div>
+          <div class="community-copy">
+            <h1>Find papers through reviewer signals.</h1>
+            <p>Search a paper, or browse recent review signals and community-ranked reviewer comments.</p>
+          </div>
+          <form class="search-shell search-shell--landing" id="landingSearch" novalidate>
+            <span class="search-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.7-3.7"></path></svg>
+            </span>
+            <label class="sr-only" for="landingInput">Paper title or link</label>
+            <input class="search-input" id="landingInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Search ICLR papers, titles, or OpenReview links" />
+            <button class="clear-button" id="landingClear" type="button" aria-label="Clear input" hidden>×</button>
+            <button class="analyze-button" id="landingSubmit" type="submit">
+              <span class="button-label">Search</span><span class="button-arrow" aria-hidden="true">→</span><span class="spinner" aria-hidden="true"></span>
+            </button>
+          </form>
+          <div class="input-error" id="landingError" role="status" aria-live="polite"></div>
+          <div class="search-results" id="landingResults" role="listbox" aria-label="Paper search results" hidden></div>
+          <div class="topic-row" id="homeTopicFilters" aria-label="Paper filters">
+            <button class="topic-chip is-active" type="button" data-home-year="2025">ICLR 2025</button>
+            <button class="topic-chip" type="button" data-home-year="2024">ICLR 2024</button>
+            <button class="topic-chip" type="button" data-home-year="2023">ICLR 2023</button>
+            <button class="topic-chip" type="button" data-home-year="2022">ICLR 2022</button>
+          </div>
+        </header>
+        <div class="community-grid">
+          <section class="feed-panel" aria-labelledby="latestPapersTitle">
+            <div class="panel-head"><h2 id="latestPapersTitle">Latest review signals</h2><span class="panel-kicker" id="latestPapersMeta">ICLR 2025</span></div>
+            <ol class="home-paper-list" id="latestPaperList"></ol>
+          </section>
+          <aside class="community-board" aria-label="Community leaderboards">
+            <div class="panel-head"><h2>Reviewer Arena</h2><span class="panel-kicker">public votes</span></div>
+            <div class="board-tabs">
+              <button class="board-tab is-active" type="button" data-home-board="red">Red List</button>
+              <button class="board-tab" type="button" data-home-board="black">Black List</button>
+            </div>
+            <ol class="community-board-list" id="communityBoardList"></ol>
+          </aside>
+        </div>
+      </div>
     </section>
-
     <section class="app-view" aria-label="Review results">
       <header class="topbar">
         <button class="brand" id="homeButton" type="button" aria-label="返回搜索">
@@ -1514,6 +1758,10 @@
     let publicScorecard = null;
     let leaderboards = { red: [], black: [] };
     let paperSearchResults = [];
+    let homePapers = [];
+    let homeBoards = { red: [], black: [] };
+    let homeYear = 2025;
+    let homeBoardKind = 'red';
 
     const apiParam = new URLSearchParams(location.search).get('api') || '';
     const DEFAULT_API_BASE = 'https://secondopinion.smartselling.work';
@@ -1544,6 +1792,10 @@
     const landingError = document.getElementById('landingError');
     const landingResults = document.getElementById('landingResults');
     const topResults = document.getElementById('topResults');
+    const latestPaperList = document.getElementById('latestPaperList');
+    const latestPapersMeta = document.getElementById('latestPapersMeta');
+    const communityBoardList = document.getElementById('communityBoardList');
+    const homeTopicFilters = document.getElementById('homeTopicFilters');
     const reviewerGrid = document.getElementById('reviewerGrid');
     const paperStats = document.getElementById('paperStats');
     const redList = document.getElementById('redList');
@@ -1658,6 +1910,111 @@
       container.hidden = false;
     }
 
+    function fallbackHomePaper() {
+      const paper = publicScorecard?.paper || {};
+      const summary = publicScorecard?.summary || {};
+      return {
+        paper_id: paper.paper_id || 'second-opinion-demo',
+        title: paper.title || 'SecondOpinion demo paper',
+        venue: paper.venue || paper.conference || 'ICLR',
+        conference_id: 'ICLR',
+        year: paper.year || homeYear,
+        decision: paper.decision || '',
+        review_count: summary.reviewer_count || reviewers.length,
+        overall_score: summary.overall_score || 0,
+        signal_label: summary.signal_label || 'Review signal',
+        comment_count: summary.comment_count || splitComments.length,
+        topic_count: summary.topic_count || cloudWords.length,
+        topics: cloudWords.slice(0, 3).map(item => item.text).filter(Boolean),
+        social: { up: 0, down: 0 }
+      };
+    }
+
+    function renderLatestPapers() {
+      if (!latestPaperList) return;
+      latestPapersMeta.textContent = `ICLR ${homeYear}`;
+      const papers = homePapers.length ? homePapers : [fallbackHomePaper()];
+      latestPaperList.innerHTML = papers.map(item => {
+        const topics = Array.isArray(item.topics) && item.topics.length ? item.topics : ['review signal'];
+        const social = item.social || {};
+        const score = Math.max(0, Math.min(100, Math.round(Number(item.overall_score || 0))));
+        return `
+          <li>
+            <button class="home-paper-card" type="button" data-home-paper-id="${escapeHtml(item.paper_id)}">
+              <span class="paper-score-pill">${score}</span>
+              <span class="home-paper-title">${escapeHtml(item.title || item.paper_id)}</span>
+              <span class="home-paper-meta">${escapeHtml(item.venue || item.conference_id || 'ICLR')} ${escapeHtml(item.year || '')} · ${Number(item.review_count || 0)} reviewers · ${escapeHtml(item.signal_label || 'Review signal')}</span>
+              <span class="home-paper-tags">${topics.slice(0, 3).map(topic => `<span>${escapeHtml(topic)}</span>`).join('')}</span>
+              <span class="home-paper-social">${Number(social.up || 0)} useful · ${Number(social.down || 0)} disputed · ${Number(item.comment_count || 0)} comments</span>
+            </button>
+          </li>`;
+      }).join('');
+    }
+
+    function renderCommunityBoard() {
+      if (!communityBoardList) return;
+      document.querySelectorAll('[data-home-board]').forEach(button => button.classList.toggle('is-active', button.dataset.homeBoard === homeBoardKind));
+      const rows = (homeBoards[homeBoardKind] || []).slice(0, 10);
+      if (!rows.length) {
+        communityBoardList.innerHTML = '<li><button class="community-board-row" type="button" data-home-paper-id="second-opinion-demo"><strong>Demo reviewer</strong><span class="board-meta">Open a paper to start voting.</span></button></li>';
+        return;
+      }
+      communityBoardList.innerHTML = rows.map((item, index) => `
+        <li>
+          <button class="community-board-row" type="button" data-home-board-paper="${escapeHtml(item.paper_id || '')}">
+            <span class="home-paper-meta">#${index + 1} · ${escapeHtml(item.paper_title || 'ICLR paper')}</span>
+            <strong>${escapeHtml(item.nickname || item.reviewer_key || 'Reviewer')}</strong>
+            <span class="board-meta">Score ${Math.round(Number(item.score || 0))} · ${Number(item.up || 0)} useful · ${Number(item.down || 0)} disputed</span>
+          </button>
+        </li>`).join('');
+    }
+
+    function renderCommunityHome() {
+      renderLatestPapers();
+      renderCommunityBoard();
+    }
+
+    async function loadCommunityHome(year = homeYear) {
+      homeYear = Number(year || 2025);
+      homePapers = [];
+      homeTopicFilters?.querySelectorAll('[data-home-year]').forEach(button => button.classList.toggle('is-active', Number(button.dataset.homeYear) === homeYear));
+      renderCommunityHome();
+      if (!API_BASE) return;
+      try {
+        const response = await apiFetch(`/api/home?conference=ICLR&year=${encodeURIComponent(homeYear)}&limit=12`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const payload = await response.json();
+        homePapers = Array.isArray(payload.latest_papers) ? payload.latest_papers : [];
+        homeBoards = payload.leaderboards || { red: [], black: [] };
+        renderCommunityHome();
+      } catch (error) {
+        console.warn('Community home load failed; using local fallback.', error);
+        renderCommunityHome();
+      }
+    }
+
+    async function openHomePaper(paperId, source = 'landing') {
+      if (!paperId) return;
+      const paper = homePapers.find(item => item.paper_id === paperId) || { paper_id: paperId };
+      const currentPaperId = publicScorecard?.paper?.paper_id || 'second-opinion-demo';
+      if (!API_BASE && paperId === currentPaperId) {
+        enterResolvedView(source);
+        return;
+      }
+      setBusy(true, source);
+      try {
+        await loadScorecardFromApi(paperId, source, paper);
+      } catch (error) {
+        if (paperId === currentPaperId) {
+          enterResolvedView(source);
+          return;
+        }
+        console.warn('Home paper load failed.', error);
+        showToast('Could not load this paper');
+      } finally {
+        setBusy(false, source);
+      }
+    }
     async function submitPaper(value, source = 'landing') {
       if (state.busy) return;
       const clean = (value || '').trim();
@@ -2190,6 +2547,7 @@
       body.classList.remove('is-resolved');
       body.classList.add('is-idle');
       hideCloudTooltip(true);
+      renderCommunityHome();
       window.setTimeout(() => {
         landingInput.focus();
         landingInput.setSelectionRange(landingInput.value.length, landingInput.value.length);
@@ -2224,6 +2582,31 @@
     document.getElementById('resetCloud').addEventListener('click', resetCloudView);
 
     document.addEventListener('click', event => {
+      const yearButton = event.target.closest('[data-home-year]');
+      if (yearButton) {
+        loadCommunityHome(Number(yearButton.dataset.homeYear));
+        return;
+      }
+
+      const boardButton = event.target.closest('[data-home-board]');
+      if (boardButton) {
+        homeBoardKind = boardButton.dataset.homeBoard === 'black' ? 'black' : 'red';
+        renderCommunityBoard();
+        return;
+      }
+
+      const homePaperButton = event.target.closest('[data-home-paper-id]');
+      if (homePaperButton) {
+        openHomePaper(homePaperButton.dataset.homePaperId, 'landing');
+        return;
+      }
+
+      const homeBoardPaperButton = event.target.closest('[data-home-board-paper]');
+      if (homeBoardPaperButton) {
+        openHomePaper(homeBoardPaperButton.dataset.homeBoardPaper, 'landing');
+        return;
+      }
+
       const paperResultButton = event.target.closest('[data-paper-result-index]');
       if (paperResultButton) {
         const source = paperResultButton.closest('#topResults') ? 'top' : 'landing';
@@ -2372,6 +2755,7 @@
     const params = new URLSearchParams(location.search);
     loadPublicScorecard().then(() => {
       renderAll();
+      loadCommunityHome();
       if (params.has('demo')) submitPaper('https://openreview.net/forum?id=second-opinion-demo', 'landing');
     });
   </script>

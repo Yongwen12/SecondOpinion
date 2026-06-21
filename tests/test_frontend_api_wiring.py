@@ -18,3 +18,14 @@ def test_frontend_search_does_not_treat_plain_words_as_paper_ids():
     assert "looksLikeOpenReviewId" in html
     assert "{10,}" in html
     assert "/[A-Z0-9_-]/" in html
+
+
+def test_frontend_has_community_home_entrypoint():
+    html = Path("frontend/index.html").read_text(encoding="utf-8")
+
+    assert "Review Signal Community" in html
+    assert "id=\"latestPaperList\"" in html
+    assert "id=\"communityBoardList\"" in html
+    assert "/api/home?conference=ICLR" in html
+    assert "data-home-paper-id" in html
+    assert "data-home-board-paper" in html

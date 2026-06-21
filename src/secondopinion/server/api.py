@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import os
 import uuid
@@ -18,6 +18,7 @@ from .repository import (
     create_scoring_job,
     job_to_public_dict,
     latest_scorecard,
+    latest_scored_papers,
     list_conferences,
     paper_to_public_dict,
     search_papers,
@@ -66,6 +67,18 @@ def create_app(
     @app.get("/health")
     def health() -> dict[str, Any]:
         return {"status": "ok", "service": "secondopinion-api"}
+
+    @app.get("/api/home")
+    def home(
+        conference: str | None = "ICLR",
+        year: int | None = 2025,
+        limit: int = 12,
+        session: Session = Depends(get_session),
+    ) -> dict[str, Any]:
+        return {
+            "latest_papers": latest_scored_papers(session, conference_id=conference, year=year, limit=limit),
+            "leaderboards": build_leaderboards(session, conference_id=conference, year=year, limit=10),
+        }
 
     @app.get("/api/conferences")
     def conferences(session: Session = Depends(get_session)) -> dict[str, Any]:
