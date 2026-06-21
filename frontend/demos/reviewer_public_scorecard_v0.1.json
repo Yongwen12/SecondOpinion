@@ -1,0 +1,265 @@
+{
+  "schema_version": "reviewer-public-scorecard-v0.1",
+  "paper": {
+    "title": "Reviewer Signal Demo Submission",
+    "conference": "ICLR 2026",
+    "venue": "ICLR",
+    "year": 2026
+  },
+  "summary": {
+    "overall_score": 70,
+    "signal_label": "Solid Signal",
+    "reviewer_count": 2,
+    "comment_count": 2,
+    "topic_count": 8,
+    "situation": "Reviewer comments are scored first, then surfaced as public-facing review signals."
+  },
+  "reviewers": [
+    {
+      "reviewer_key": "R1",
+      "nickname": "Baseline Hawk",
+      "avatar_key": "R1",
+      "score": 74,
+      "tone": "blue",
+      "label": "Solid Signal",
+      "summary": "Actionable review with concrete experimental requests.",
+      "rating": 5,
+      "confidence": 4,
+      "social": {
+        "up": 101,
+        "down": 18
+      },
+      "dimensions": [
+        {
+          "key": "specificity",
+          "label": "Specificity",
+          "score": 79,
+          "criterion": "Solid specificity: How concrete and inspectable the reviewer comment is."
+        },
+        {
+          "key": "substantiation",
+          "label": "Evidence Link",
+          "score": 77,
+          "criterion": "Solid evidence link: Whether the comment gives reasons, evidence, or manuscript anchors."
+        },
+        {
+          "key": "actionability",
+          "label": "Actionability",
+          "score": 86,
+          "criterion": "Strong actionability: Whether the authors can turn the comment into a response or revision."
+        },
+        {
+          "key": "consensus_conflict",
+          "label": "Peer Support",
+          "score": 71,
+          "criterion": "Solid peer support: Whether nearby reviewer signals support or conflict with this concern."
+        },
+        {
+          "key": "rebuttal_robustness",
+          "label": "Rebuttal Risk",
+          "score": 55,
+          "criterion": "Mixed rebuttal risk: useful but uneven."
+        },
+        {
+          "key": "professionalism",
+          "label": "Tone",
+          "score": 77,
+          "criterion": "Solid tone: Whether the comment is constructive, calibrated, and professional."
+        }
+      ],
+      "topics": [
+        "compare",
+        "standard",
+        "retrieval",
+        "baseline",
+        "report"
+      ]
+    },
+    {
+      "reviewer_key": "R2",
+      "nickname": "Assumption Mapper",
+      "avatar_key": "R2",
+      "score": 65,
+      "tone": "gold",
+      "label": "Needs Signal",
+      "summary": "Raises a real rebuttal-survival risk but with weaker substantiation.",
+      "rating": 4,
+      "confidence": 3,
+      "social": {
+        "up": 85,
+        "down": 25
+      },
+      "dimensions": [
+        {
+          "key": "specificity",
+          "label": "Specificity",
+          "score": 81,
+          "criterion": "Solid specificity: How concrete and inspectable the reviewer comment is."
+        },
+        {
+          "key": "substantiation",
+          "label": "Evidence Link",
+          "score": 56,
+          "criterion": "Mixed evidence link: useful but uneven."
+        },
+        {
+          "key": "actionability",
+          "label": "Actionability",
+          "score": 74,
+          "criterion": "Solid actionability: Whether the authors can turn the comment into a response or revision."
+        },
+        {
+          "key": "consensus_conflict",
+          "label": "Peer Support",
+          "score": 53,
+          "criterion": "Mixed peer support: useful but uneven."
+        },
+        {
+          "key": "rebuttal_robustness",
+          "label": "Rebuttal Risk",
+          "score": 50,
+          "criterion": "Mixed rebuttal risk: useful but uneven."
+        },
+        {
+          "key": "professionalism",
+          "label": "Tone",
+          "score": 74,
+          "criterion": "Solid tone: Whether the comment is constructive, calibrated, and professional."
+        }
+      ],
+      "topics": [
+        "theorem",
+        "assumptions",
+        "remain",
+        "unclear",
+        "rebuttal"
+      ]
+    }
+  ],
+  "comments": [
+    {
+      "reviewer_key": "R1",
+      "nickname": "Baseline Hawk",
+      "chunk_id": "C1",
+      "text": "The paper should compare against a standard retrieval baseline and report runtime.",
+      "second_opinion": "This is concrete, answerable, and strongly supported by external actionability examples.",
+      "tone": "blue",
+      "up": 56,
+      "down": 6,
+      "topics": [
+        "compare",
+        "standard",
+        "retrieval",
+        "baseline"
+      ]
+    },
+    {
+      "reviewer_key": "R2",
+      "nickname": "Assumption Mapper",
+      "chunk_id": "C2",
+      "text": "The theorem assumptions remain unclear after the rebuttal.",
+      "second_opinion": "The point is specific, but the current response only partially addresses it.",
+      "tone": "gold",
+      "up": 49,
+      "down": 8,
+      "topics": [
+        "theorem",
+        "assumptions",
+        "remain",
+        "unclear"
+      ]
+    }
+  ],
+  "topics": [
+    {
+      "text": "compare",
+      "size": 44,
+      "x": 70,
+      "y": 64,
+      "tone": "blue",
+      "reviewer_key": "R1",
+      "nickname": "Baseline Hawk",
+      "chunk": "The paper should compare against a standard retrieval baseline and report runtime."
+    },
+    {
+      "text": "standard",
+      "size": 45,
+      "x": 224,
+      "y": 156,
+      "tone": "blue",
+      "reviewer_key": "R1",
+      "nickname": "Baseline Hawk",
+      "chunk": "The paper should compare against a standard retrieval baseline and report runtime."
+    },
+    {
+      "text": "retrieval",
+      "size": 46,
+      "x": 378,
+      "y": 248,
+      "tone": "blue",
+      "reviewer_key": "R1",
+      "nickname": "Baseline Hawk",
+      "chunk": "The paper should compare against a standard retrieval baseline and report runtime."
+    },
+    {
+      "text": "baseline",
+      "size": 45,
+      "x": 532,
+      "y": 340,
+      "tone": "blue",
+      "reviewer_key": "R1",
+      "nickname": "Baseline Hawk",
+      "chunk": "The paper should compare against a standard retrieval baseline and report runtime."
+    },
+    {
+      "text": "theorem",
+      "size": 44,
+      "x": 686,
+      "y": 432,
+      "tone": "gold",
+      "reviewer_key": "R2",
+      "nickname": "Assumption Mapper",
+      "chunk": "The theorem assumptions remain unclear after the rebuttal."
+    },
+    {
+      "text": "assumptions",
+      "size": 48,
+      "x": 840,
+      "y": 134,
+      "tone": "gold",
+      "reviewer_key": "R2",
+      "nickname": "Assumption Mapper",
+      "chunk": "The theorem assumptions remain unclear after the rebuttal."
+    },
+    {
+      "text": "remain",
+      "size": 43,
+      "x": 114,
+      "y": 226,
+      "tone": "gold",
+      "reviewer_key": "R2",
+      "nickname": "Assumption Mapper",
+      "chunk": "The theorem assumptions remain unclear after the rebuttal."
+    },
+    {
+      "text": "unclear",
+      "size": 44,
+      "x": 268,
+      "y": 318,
+      "tone": "gold",
+      "reviewer_key": "R2",
+      "nickname": "Assumption Mapper",
+      "chunk": "The theorem assumptions remain unclear after the rebuttal."
+    }
+  ],
+  "leaderboards": {
+    "red": [
+      "R1",
+      "R2"
+    ],
+    "black": [
+      "R2",
+      "R1"
+    ]
+  }
+}

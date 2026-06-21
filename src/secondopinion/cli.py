@@ -89,6 +89,10 @@ from .rag_validation import (
     write_rag_validation_markdown,
 )
 from .report import write_html_report, write_markdown_report
+from .reviewer_public_scorecard import (
+    build_public_scorecard,
+    write_json as write_public_scorecard_json,
+)
 from .reviewer_calibration import (
     DEFAULT_CONSENSUS_CALIBRATION_MODEL,
     DEFAULT_REBUTTAL_RESOLUTION_CALIBRATION_MODEL,
@@ -158,6 +162,24 @@ def main(argv: list[str] | None = None) -> None:
     snapshot.add_argument("--page-size", type=int, default=100)
     snapshot.add_argument("--root", default="data/raw")
     snapshot.add_argument("--normalize-out", default="")
+    snapshot_openreview = subparsers.add_parser(
+        "snapshot-openreview",
+        parents=[storage_parent],
+        help="Save a raw OpenReview snapshot for a configurable venue invitation.",
+    )
+    snapshot_openreview.add_argument("--venue", required=True, help="Venue label used in manifests and paths, e.g. ICLR.")
+    snapshot_openreview.add_argument("--year", type=int, required=True)
+    snapshot_openreview.add_argument(
+        "--invitation",
+        default="",
+        help="OpenReview submission invitation. If omitted, a common venue template is used.",
+    )
+    snapshot_openreview.add_argument("--limit", type=int, default=25)
+    snapshot_openreview.add_argument("--page-size", type=int, default=100)
+    snapshot_openreview.add_argument("--details", default="replies")
+    snapshot_openreview.add_argument("--api-base", default="https://api2.openreview.net")
+    snapshot_openreview.add_argument("--root", default="data/raw")
+    snapshot_openreview.add_argument("--normalize-out", default="")
 
     normalize = subparsers.add_parser(
         "normalize-snapshot",
@@ -517,6 +539,14 @@ def main(argv: list[str] | None = None) -> None:
     ingest_external.add_argument("--force", action="store_true")
     ingest_external.add_argument("--skip-download", action="store_true")
 
+    public_scorecard = subparsers.add_parser(
+        "build-reviewer-public-scorecard",
+        parents=[storage_parent],
+        help="Export reviewer-facing scorecard JSON for the static frontend.",
+    )
+    public_scorecard.add_argument("--input", default="frontend/demos/hybrid_scoring_demo.json")
+    public_scorecard.add_argument("--out", default="frontend/demos/reviewer_public_scorecard_v0.1.json")
+
     scoring_memory = subparsers.add_parser(
         "build-scoring-memory",
         parents=[storage_parent],
@@ -653,6 +683,8 @@ def main(argv: list[str] | None = None) -> None:
         command_scan_iclr(args)
     elif args.command == "snapshot-iclr":
         command_snapshot_iclr(args)
+    elif args.command == "snapshot-openreview":
+        command_snapshot_openreview(args)
     elif args.command == "normalize-snapshot":
         command_normalize_snapshot(args)
     elif args.command == "inventory-openreview-data":
@@ -701,6 +733,8 @@ def main(argv: list[str] | None = None) -> None:
         command_normalize_external_scoring_dataset(args)
     elif args.command == "ingest-external-scoring-datasets":
         command_ingest_external_scoring_datasets(args)
+    elif args.command == "build-reviewer-public-scorecard":
+        command_build_reviewer_public_scorecard(args)
     elif args.command == "build-scoring-memory":
         command_build_scoring_memory(args)
     elif args.command == "score-with-memory":
@@ -739,14 +773,22 @@ def command_scan_iclr(args: argparse.Namespace) -> None:
 
 
 def command_snapshot_iclr(args: argparse.Namespace) -> None:
-    client = OpenReviewClient()
-    invitation = f"ICLR.cc/{args.year}/Conference/-/Submission"
+    args.venue = "ICLR"
+    args.invitation = f"ICLR.cc/{args.year}/Conference/-/Submission"
+    args.details = "replies"
+    args.api_base = "https://api2.openreview.net"
+    command_snapshot_openreview(args)
+
+
+def command_snapshot_openreview(args: argparse.Namespace) -> None:
+    client = OpenReviewClient(base_url=args.api_base)
+    invitation = args.invitation or default_openreview_submission_invitation(args.venue, args.year)
     result = save_openreview_snapshot(
         client,
-        venue="ICLR",
+        venue=args.venue,
         year=args.year,
         invitation=invitation,
-        details="replies",
+        details=args.details,
         limit=args.limit,
         page_size=args.page_size,
         root=artifact_path(args.root, args),
@@ -762,6 +804,26 @@ def command_snapshot_iclr(args: argparse.Namespace) -> None:
         write_json(normalized, normalize_out)
         print(f"Saved normalized data to {normalize_out}.")
 
+
+def default_openreview_submission_invitation(venue: str, year: int) -> str:
+    normalized = venue.strip().lower()
+    venue_ids = {
+        "iclr": "ICLR.cc",
+        "neurips": "NeurIPS.cc",
+        "nips": "NeurIPS.cc",
+        "icml": "ICML.cc",
+        "colm": "colmweb.org",
+    }
+    if normalized in {"tmlr", "transactions on machine learning research"}:
+        return "TMLR/-/Submission"
+    venue_id = venue_ids.get(normalized)
+    if not venue_id:
+        raise SystemExit(
+            "No default OpenReview invitation template for "
+            f"{venue!r}. Pass --invitation explicitly, for example "
+            f"--invitation {venue}.cc/{year}/Conference/-/Submission."
+        )
+    return f"{venue_id}/{year}/Conference/-/Submission"
 
 def command_normalize_snapshot(args: argparse.Namespace) -> None:
     normalized = normalize_snapshot(artifact_path(args.snapshot, args))
@@ -1364,6 +1426,19 @@ def command_ingest_external_scoring_datasets(args: argparse.Namespace) -> None:
         f"Saved {len(memory)} scoring-memory records to {memory_out}. "
         f"ready={summary.get('ready_dataset_count', 0)}; blocked={summary.get('blocked_dataset_count', 0)}; "
         f"manifest={manifest_out}; markdown={markdown_out}."
+    )
+
+
+def command_build_reviewer_public_scorecard(args: argparse.Namespace) -> None:
+    payload = read_json(artifact_path(args.input, args))
+    public_scorecard = build_public_scorecard(payload)
+    out = artifact_path(args.out, args)
+    write_public_scorecard_json(out, public_scorecard)
+    summary = public_scorecard.get("summary", {})
+    print(
+        f"Saved reviewer public scorecard to {out}. "
+        f"reviewers={summary.get('reviewer_count', 0)}; comments={summary.get('comment_count', 0)}; "
+        f"overall={summary.get('overall_score', 0)}."
     )
 
 

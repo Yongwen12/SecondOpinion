@@ -1,105 +1,2166 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Second Opinion</title>
-    <link rel="stylesheet" href="./styles.css?v=hybrid-scoring-20260617">
-  </head>
-  <body>
-    <header class="topbar">
-      <a class="brand" href="./" aria-label="Second Opinion home">
-        <span class="brand-mark" aria-hidden="true">SO</span>
-        <span>Second Opinion</span>
-      </a>
-      <nav class="topnav" aria-label="Main">
-        <a href="#workspace">Workspace</a>
-        <a href="#venues">Venues</a>
-      </nav>
-    </header>
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#f4f1ea" />
+  <title>SecondOpinion — Minimal Review Signal v0.3 Polished</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f1ea;
+      --surface: #fffefa;
+      --surface-2: #faf7f0;
+      --surface-3: #f3eee4;
+      --ink: #191918;
+      --ink-2: #3e3c38;
+      --muted: #77736c;
+      --line: #e4ded3;
+      --line-strong: #cbc2b4;
+      --lime: #b9f34c;
+      --lime-soft: #effbd7;
+      --green: #16795a;
+      --green-soft: #eaf6f0;
+      --blue: #2e65a8;
+      --blue-soft: #edf3fb;
+      --gold: #a76e16;
+      --gold-soft: #fbf1da;
+      --red: #a7473f;
+      --red-soft: #faece9;
+      --shadow-1: 0 1px 2px rgba(24, 24, 22, .04), 0 10px 30px rgba(24, 24, 22, .055);
+      --shadow-2: 0 18px 60px rgba(24, 24, 22, .09);
+      --radius-xl: 26px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --focus: 0 0 0 4px rgba(22, 121, 90, .15);
+      --ease: cubic-bezier(.2, .75, .25, 1);
+    }
 
-    <main>
-      <section class="search-band" id="search">
-        <div class="search-copy">
-          <p class="eyebrow">ICLR preview</p>
-          <h1>Reviewer comment scorecard</h1>
-        </div>
+    * { box-sizing: border-box; }
 
-        <form class="search-panel" id="analysis-form">
-          <div class="venue-row" id="venues" aria-label="Venue">
-            <button class="venue-pill active" type="button" data-venue="ICLR">ICLR</button>
-            <button class="venue-pill" type="button" disabled>ICML</button>
-            <button class="venue-pill" type="button" disabled>NeurIPS</button>
-            <button class="venue-pill" type="button" disabled>ACL</button>
-          </div>
+    html {
+      min-height: 100%;
+      scroll-behavior: smooth;
+    }
 
-          <label class="field-label" for="paper-query">Paper, OpenReview URL, or pasted reviews</label>
-          <div class="query-row">
-            <input
-              id="paper-query"
-              name="query"
-              autocomplete="off"
-              spellcheck="false"
-              value="https://openreview.net/forum?id=second-opinion-demo"
-            >
-            <button class="primary-action" type="submit">Analyze</button>
-          </div>
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 86% -8%, rgba(185, 243, 76, .19), transparent 29%),
+        radial-gradient(circle at -4% 18%, rgba(46, 101, 168, .07), transparent 28%),
+        var(--bg);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable", "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
 
-          <div class="demo-row">
-            <label for="demo-select">Demo paper</label>
-            <select id="demo-select" name="demo">
-              <option value="paper-hybrid-memory">Hybrid scoring memory demo</option>
-              <option value="paper-evidence-chain">Evidence-chain reader</option>
-              <option value="paper-microbial">Microbial Communities with GNNs</option>
-              <option value="paper-tabr">TabR nearest neighbors</option>
-              <option value="paper-nekm">Neural Evolutionary Kernel Method</option>
-            </select>
-            <a href="./demos/mvp_demo_three_papers.html" target="_blank" rel="noreferrer">HTML report</a>
-            <a href="./demos/mvp_demo_three_papers.md" target="_blank" rel="noreferrer">Markdown</a>
-            <a href="./demos/demo_three_papers_audit_results.json" target="_blank" rel="noreferrer">JSON</a>
-          </div>
+    button, input { font: inherit; }
+    button { border: 0; }
+    button, [role="button"] { -webkit-tap-highlight-color: transparent; }
+
+    button:focus-visible,
+    input:focus-visible,
+    [tabindex]:focus-visible {
+      outline: none;
+      box-shadow: var(--focus);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .shell {
+      width: min(1180px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 18px 0 56px;
+    }
+
+    .is-idle .shell {
+      width: 100%;
+      padding: 0;
+    }
+
+    .landing {
+      min-height: 100svh;
+      display: grid;
+      place-content: center;
+      justify-items: center;
+      gap: 10px;
+      padding: 24px;
+    }
+
+    .app-view { display: block; }
+    .is-idle .app-view { display: none; }
+    .is-resolved .landing { display: none; }
+
+    .search-shell {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto auto;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--line-strong);
+      background: rgba(255, 254, 250, .94);
+      box-shadow: var(--shadow-2);
+      transition: border-color .2s var(--ease), box-shadow .2s var(--ease), transform .2s var(--ease);
+    }
+
+    .search-shell:focus-within {
+      border-color: rgba(22, 121, 90, .56);
+      box-shadow: var(--shadow-2), var(--focus);
+    }
+
+    .search-shell.is-invalid {
+      border-color: rgba(167, 71, 63, .8);
+      animation: nudge .24s ease-in-out 2;
+    }
+
+    .search-shell--landing {
+      width: min(860px, calc(100vw - 32px));
+      min-height: 72px;
+      padding: 8px 8px 8px 18px;
+      border-radius: 24px;
+    }
+
+    .search-shell--compact {
+      width: min(590px, 58vw);
+      min-height: 46px;
+      padding: 5px 5px 5px 12px;
+      border-radius: 15px;
+      box-shadow: none;
+      background: rgba(255, 254, 250, .82);
+    }
+
+    .search-shell--compact:focus-within {
+      box-shadow: var(--focus);
+      background: var(--surface);
+    }
+
+    .search-icon {
+      display: grid;
+      place-items: center;
+      width: 24px;
+      color: var(--muted);
+    }
+
+    .search-icon svg { width: 19px; height: 19px; }
+
+    .search-input {
+      min-width: 0;
+      width: 100%;
+      height: 100%;
+      padding: 0 4px;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--ink);
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -.01em;
+    }
+
+    .search-shell--landing .search-input { font-size: clamp(16px, 1.6vw, 19px); }
+    .search-input::placeholder { color: #9a958c; font-weight: 500; }
+
+    .clear-button,
+    .icon-button,
+    .close-button {
+      display: inline-grid;
+      place-items: center;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: color .16s ease, background .16s ease, border-color .16s ease, transform .16s ease;
+    }
+
+    .clear-button {
+      width: 34px;
+      height: 34px;
+      font-size: 19px;
+      line-height: 1;
+    }
+
+    .clear-button:hover,
+    .icon-button:hover,
+    .close-button:hover {
+      color: var(--ink);
+      background: var(--surface-3);
+      border-color: var(--line);
+    }
+
+    .clear-button[hidden] { display: none; }
+
+    .analyze-button {
+      position: relative;
+      min-width: 126px;
+      min-height: 54px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 0 18px;
+      border: 1px solid var(--ink);
+      border-radius: 16px;
+      background: var(--lime);
+      color: #131711;
+      box-shadow: 3px 3px 0 var(--ink);
+      cursor: pointer;
+      font-weight: 750;
+      letter-spacing: -.01em;
+      transition: transform .16s var(--ease), box-shadow .16s var(--ease), filter .16s ease;
+    }
+
+    .search-shell--compact .analyze-button {
+      min-width: 44px;
+      min-height: 36px;
+      padding: 0 12px;
+      border-radius: 11px;
+      box-shadow: none;
+    }
+
+    .analyze-button:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 4px 4px 0 var(--ink);
+      filter: saturate(1.03);
+    }
+
+    .search-shell--compact .analyze-button:hover { box-shadow: 2px 2px 0 var(--ink); }
+    .analyze-button:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--ink); }
+    .analyze-button:disabled { cursor: progress; filter: saturate(.55); }
+
+    .button-arrow {
+      font-size: 20px;
+      line-height: 1;
+      transition: transform .18s var(--ease);
+    }
+
+    .analyze-button:hover .button-arrow { transform: translateX(2px); }
+
+    .spinner {
+      display: none;
+      width: 17px;
+      height: 17px;
+      border: 2px solid rgba(19, 23, 17, .24);
+      border-top-color: var(--ink);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+
+    .analyze-button.is-busy .button-arrow { display: none; }
+    .analyze-button.is-busy .spinner { display: inline-block; }
+
+    .input-error {
+      min-height: 18px;
+      color: var(--red);
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      min-height: 66px;
+      margin: -18px -10px 16px;
+      padding: 10px;
+      background: linear-gradient(to bottom, rgba(244, 241, 234, .94), rgba(244, 241, 234, .78));
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0;
+      background: transparent;
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -.025em;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--ink);
+      border-radius: 9px;
+      background: var(--lime);
+      box-shadow: 2px 2px 0 var(--ink);
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: -.02em;
+    }
+
+    .content-stack {
+      display: grid;
+      gap: 16px;
+    }
+
+    .surface {
+      border: 1px solid rgba(25, 25, 24, .09);
+      border-radius: var(--radius-xl);
+      background: rgba(255, 254, 250, .94);
+      box-shadow: var(--shadow-1);
+      overflow: clip;
+    }
+
+    .score-section {
+      display: grid;
+      grid-template-columns: 188px minmax(0, 1fr);
+      gap: 22px;
+      padding: 22px;
+    }
+
+    .score-overview {
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      gap: 12px;
+      min-height: 194px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: linear-gradient(160deg, #fff, var(--surface-2));
+    }
+
+    .score-ring {
+      --score: 73;
+      position: relative;
+      width: 132px;
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: conic-gradient(var(--green) calc(var(--score) * 1%), #ebe6dc 0);
+      isolation: isolate;
+    }
+
+    .score-ring::before {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      border-radius: inherit;
+      background: var(--surface);
+      box-shadow: inset 0 0 0 1px rgba(25, 25, 24, .05);
+      z-index: -1;
+    }
+
+    .score-value {
+      display: grid;
+      justify-items: center;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .score-value strong {
+      font-size: 47px;
+      line-height: .92;
+      font-weight: 820;
+      letter-spacing: -.065em;
+    }
+
+    .score-value span {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 760;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+    }
+
+    .signal-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 28px;
+      padding: 0 10px;
+      border: 1px solid rgba(22, 121, 90, .18);
+      border-radius: 999px;
+      background: var(--green-soft);
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 760;
+    }
+
+    .signal-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 0 4px rgba(22, 121, 90, .09);
+    }
+
+    .score-main {
+      min-width: 0;
+      display: grid;
+      align-content: center;
+      gap: 13px;
+    }
+
+    .paper-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .paper-title {
+      min-width: 0;
+      margin: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--ink);
+      font-size: clamp(20px, 2vw, 25px);
+      font-weight: 780;
+      letter-spacing: -.045em;
+    }
+
+    .paper-stats {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex: 0 0 auto;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .paper-stats span + span::before {
+      content: "·";
+      margin-right: 8px;
+      color: var(--line-strong);
+    }
+
+    .reviewer-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .reviewer-card {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: 38px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      min-height: 78px;
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--surface-2);
+      color: var(--ink);
+      cursor: pointer;
+      text-align: left;
+      transition: border-color .18s ease, background .18s ease, transform .18s var(--ease), box-shadow .18s ease;
+    }
+
+    .reviewer-card:hover {
+      transform: translateY(-1px);
+      border-color: var(--line-strong);
+      background: var(--surface);
+      box-shadow: 0 8px 22px rgba(25, 25, 24, .06);
+    }
+
+    .reviewer-card.is-active {
+      border-color: var(--ink);
+      background: var(--surface);
+      box-shadow: 3px 3px 0 var(--ink);
+    }
+
+    .mini-avatar,
+    .pixel-avatar {
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      flex: 0 0 auto;
+      border: 1px solid var(--ink);
+      background: #fff;
+      image-rendering: pixelated;
+    }
+
+    .mini-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      box-shadow: 2px 2px 0 var(--ink);
+    }
+
+    .reviewer-card-copy {
+      min-width: 0;
+      display: grid;
+      gap: 4px;
+    }
+
+    .reviewer-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--ink-2);
+      font-size: 12px;
+      font-weight: 680;
+    }
+
+    .reviewer-score-line {
+      display: flex;
+      align-items: baseline;
+      gap: 7px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .reviewer-score-line strong {
+      font-size: 24px;
+      line-height: 1;
+      font-weight: 820;
+      letter-spacing: -.05em;
+    }
+
+    .tone-label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .chevron {
+      width: 22px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 16px;
+      transition: transform .2s var(--ease), background .18s ease, color .18s ease;
+    }
+
+    .reviewer-card:hover .chevron { background: var(--surface-3); color: var(--ink); }
+    .reviewer-card.is-active .chevron { transform: rotate(180deg); }
+
+    .score-detail {
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      transform: translateY(-4px);
+      transition: grid-template-rows .28s var(--ease), opacity .2s ease, transform .28s var(--ease);
+    }
+
+    .score-detail.is-open {
+      grid-template-rows: 1fr;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .score-detail-clip { overflow: hidden; }
+
+    .score-detail-card {
+      display: grid;
+      gap: 13px;
+      margin-top: 1px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--surface-2);
+    }
+
+    .detail-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .detail-copy { min-width: 0; }
+
+    .detail-name {
+      margin: 0 0 4px;
+      font-size: 14px;
+      font-weight: 780;
+      letter-spacing: -.02em;
+    }
+
+    .detail-summary {
+      margin: 0;
+      color: var(--ink-2);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .detail-score {
+      min-width: 54px;
+      min-height: 32px;
+      display: inline-grid;
+      place-items: center;
+      padding: 0 9px;
+      border: 1px solid currentColor;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .tone-green { color: var(--green); background: var(--green-soft); }
+    .tone-blue { color: var(--blue); background: var(--blue-soft); }
+    .tone-gold { color: var(--gold); background: var(--gold-soft); }
+    .tone-red { color: var(--red); background: var(--red-soft); }
+
+    .dimension-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 9px;
+    }
+
+    .metric {
+      display: grid;
+      gap: 7px;
+      min-width: 0;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--surface);
+    }
+
+    .metric-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 720;
+    }
+
+    .metric-head strong {
+      font-size: 13px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .metric-track {
+      height: 6px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #ece6dc;
+    }
+
+    .metric-fill {
+      width: 0;
+      height: 100%;
+      display: block;
+      border-radius: inherit;
+      background: var(--green);
+      transition: width .62s var(--ease);
+    }
+
+    .metric-fill.blue { background: var(--blue); }
+    .metric-fill.gold { background: var(--gold); }
+    .metric-fill.red { background: var(--red); }
+
+    .criterion {
+      min-height: 30px;
+      color: var(--muted);
+      font-size: 10.5px;
+      line-height: 1.4;
+    }
+
+    .score-guide {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 6px;
+      padding-top: 1px;
+    }
+
+    .guide-item {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .guide-swatch {
+      width: 18px;
+      height: 5px;
+      border-radius: 99px;
+      background: var(--red);
+      flex: 0 0 auto;
+    }
+
+    .guide-item:nth-child(2) .guide-swatch { background: var(--gold); }
+    .guide-item:nth-child(3) .guide-swatch { background: var(--blue); }
+    .guide-item:nth-child(4) .guide-swatch { background: var(--green); }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      min-height: 58px;
+      padding: 13px 17px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 770;
+      letter-spacing: -.025em;
+    }
+
+    .section-tools {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .icon-button {
+      width: 34px;
+      height: 34px;
+      font-size: 17px;
+    }
+
+    .leaderboard-section {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .leaderboard-card { min-width: 0; }
+
+    .leaderboard-kicker {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 760;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    .leaderboard-card--red .section-head h2 { color: var(--green); }
+    .leaderboard-card--black .section-head h2 { color: var(--red); }
+
+    .leaderboard-list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 12px;
+      list-style: none;
+    }
+
+    .leaderboard-list li {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .leaderboard-list .vote-group {
+      padding: 2px;
+      background: var(--surface);
+    }
+
+    .leaderboard-list .vote-button {
+      min-width: 42px;
+      height: 29px;
+    }
+
+    .leaderboard-row {
+      display: grid;
+      grid-template-columns: 26px 40px minmax(0, 1fr) auto;
+      gap: 9px;
+      align-items: center;
+      width: 100%;
+      min-height: 54px;
+      padding: 7px 8px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface-2);
+      color: var(--ink);
+      text-align: left;
+      transition: border-color .16s ease, background .16s ease, transform .16s var(--ease);
+    }
+
+    .leaderboard-row:hover {
+      transform: translateY(-1px);
+      border-color: var(--line-strong);
+      background: var(--surface);
+    }
+
+    .leader-rank {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 820;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .leader-copy {
+      min-width: 0;
+      display: grid;
+      gap: 2px;
+    }
+
+    .leader-copy strong,
+    .leader-copy span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .leader-copy strong {
+      font-size: 13px;
+      font-weight: 780;
+    }
+
+    .leader-copy span {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 650;
+    }
+
+    .leader-score {
+      color: var(--ink);
+      font-size: 18px;
+      font-weight: 820;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .cloud-stage {
+      position: relative;
+      height: 370px;
+      margin: 14px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background:
+        linear-gradient(rgba(25, 25, 24, .025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(25, 25, 24, .025) 1px, transparent 1px),
+        radial-gradient(circle at 18% 18%, rgba(185, 243, 76, .16), transparent 28%),
+        radial-gradient(circle at 80% 74%, rgba(46, 101, 168, .10), transparent 31%),
+        #fcfbf7;
+      background-size: 32px 32px, 32px 32px, auto, auto, auto;
+      cursor: grab;
+      touch-action: none;
+      user-select: none;
+      overscroll-behavior: contain;
+    }
+
+    .cloud-stage.is-dragging { cursor: grabbing; }
+
+    .cloud-canvas {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1080px;
+      height: 520px;
+      transform-origin: 0 0;
+      will-change: transform;
+    }
+
+    .cloud-word {
+      position: absolute;
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 8px 5px;
+      border: 0;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .28);
+      color: var(--ink);
+      cursor: help;
+      font-weight: 780;
+      line-height: 1;
+      letter-spacing: -.045em;
+      white-space: nowrap;
+      transition: transform .16s var(--ease), background .16s ease, box-shadow .16s ease, opacity .16s ease;
+    }
+
+    .cloud-word:hover,
+    .cloud-word:focus-visible,
+    .cloud-word.is-pinned {
+      transform: translateY(-2px) scale(1.025);
+      background: rgba(255, 255, 255, .9);
+      box-shadow: 0 8px 22px rgba(25, 25, 24, .1);
+      z-index: 3;
+    }
+
+    .cloud-word.is-linked {
+      background: rgba(255, 255, 255, .9);
+      box-shadow: 0 0 0 2px currentColor, 0 8px 22px rgba(25, 25, 24, .08);
+      z-index: 2;
+    }
+
+    .cloud-word[data-tone="green"] { color: var(--green); }
+    .cloud-word[data-tone="blue"] { color: var(--blue); }
+    .cloud-word[data-tone="gold"] { color: var(--gold); }
+    .cloud-word[data-tone="red"] { color: var(--red); }
+
+    .cloud-tooltip {
+      position: absolute;
+      z-index: 10;
+      width: min(360px, calc(100% - 24px));
+      display: grid;
+      gap: 6px;
+      padding: 11px 12px;
+      border: 1px solid var(--ink);
+      border-radius: 14px;
+      background: rgba(255, 254, 250, .97);
+      color: var(--ink);
+      box-shadow: 3px 3px 0 var(--ink), 0 14px 36px rgba(25, 25, 24, .12);
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(5px);
+      transition: opacity .12s ease, transform .12s var(--ease);
+    }
+
+    .cloud-tooltip.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .tooltip-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .tooltip-keyword {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .tooltip-reviewer {
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .tooltip-chunk {
+      margin: 0;
+      color: var(--ink-2);
+      font-size: 12px;
+      line-height: 1.48;
+    }
+
+    .cloud-corner {
+      position: absolute;
+      right: 11px;
+      bottom: 10px;
+      display: flex;
+      gap: 5px;
+      pointer-events: none;
+    }
+
+    .reviewer-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      opacity: .72;
+    }
+
+    .reviewer-dot:nth-child(2) { background: var(--gold); }
+    .reviewer-dot:nth-child(3) { background: var(--blue); }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .filter-group::-webkit-scrollbar { display: none; }
+
+    .filter-button {
+      min-height: 30px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+      transition: border-color .16s ease, background .16s ease, color .16s ease;
+    }
+
+    .filter-button:hover { color: var(--ink); border-color: var(--line-strong); }
+    .filter-button.is-active { color: var(--ink); border-color: var(--ink); background: var(--surface); }
+
+    .thread-list { display: grid; }
+
+    .comment-row {
+      position: relative;
+      display: grid;
+      grid-template-columns: 48px minmax(0, 1fr) auto;
+      gap: 13px;
+      align-items: start;
+      padding: 16px 17px;
+      border-top: 1px solid var(--line);
+      transition: background .18s ease, opacity .18s ease;
+    }
+
+    .comment-row:first-child { border-top: 0; }
+    .comment-row:hover { background: rgba(250, 247, 240, .66); }
+    .comment-row.is-hidden { display: none; }
+
+    .comment-row.is-linked {
+      background: linear-gradient(90deg, var(--reviewer-soft, var(--green-soft)), transparent 62%);
+    }
+
+    .comment-row.is-linked::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 14px;
+      bottom: 14px;
+      width: 3px;
+      border-radius: 0 4px 4px 0;
+      background: var(--reviewer-color, var(--green));
+    }
+
+    .pixel-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 11px;
+      box-shadow: 2px 2px 0 var(--ink);
+    }
+
+    .comment-main {
+      min-width: 0;
+      display: grid;
+      gap: 7px;
+    }
+
+    .comment-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 7px;
+      min-height: 24px;
+    }
+
+    .comment-id {
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 780;
+      letter-spacing: -.015em;
+    }
+
+    .chunk-id {
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 720;
+      letter-spacing: .04em;
+    }
+
+    .status-badge {
+      min-height: 22px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 8px;
+      border: 1px solid currentColor;
+      border-radius: 999px;
+      font-size: 9.5px;
+      font-weight: 750;
+      white-space: nowrap;
+      opacity: .88;
+    }
+
+    .viewpoint {
+      max-width: 820px;
+      margin: 0;
+      color: #282724;
+      font-size: 14px;
+      font-weight: 560;
+      line-height: 1.62;
+      letter-spacing: -.006em;
+    }
+
+    .ai-comment {
+      justify-self: end;
+      max-width: min(620px, 100%);
+      display: inline-flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-top: 2px;
+      padding: 8px 10px;
+      border: 1px solid #e7e0d5;
+      border-radius: 13px 13px 4px 13px;
+      background: linear-gradient(135deg, #fffefb, var(--surface-2));
+      color: var(--ink-2);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .ai-mark {
+      min-width: 25px;
+      height: 20px;
+      display: inline-grid;
+      place-items: center;
+      border: 1px solid var(--ink);
+      border-radius: 7px;
+      background: var(--lime);
+      color: var(--ink);
+      box-shadow: 1px 1px 0 var(--ink);
+      font-size: 9px;
+      font-weight: 820;
+      line-height: 1;
+    }
+
+    .vote-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface-2);
+    }
+
+    .vote-button {
+      min-width: 48px;
+      height: 31px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 0 8px;
+      border: 1px solid transparent;
+      border-radius: 9px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      transition: color .16s ease, background .16s ease, border-color .16s ease, transform .16s ease;
+    }
+
+    .vote-button:hover { color: var(--ink); background: var(--surface); }
+    .vote-button:active { transform: scale(.97); }
+    .vote-button.is-up { color: var(--green); background: var(--green-soft); border-color: rgba(22, 121, 90, .2); }
+    .vote-button.is-down { color: var(--red); background: var(--red-soft); border-color: rgba(167, 71, 63, .2); }
+
+    .vote-icon { font-size: 13px; line-height: 1; }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: max(20px, env(safe-area-inset-bottom));
+      z-index: 50;
+      max-width: calc(100vw - 32px);
+      padding: 10px 13px;
+      border: 1px solid var(--ink);
+      border-radius: 12px;
+      background: var(--ink);
+      color: #fff;
+      box-shadow: 3px 3px 0 var(--lime);
+      font-size: 12px;
+      font-weight: 680;
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, 12px);
+      transition: opacity .2s ease, transform .22s var(--ease);
+    }
+
+    .toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes nudge { 50% { transform: translateX(4px); } }
+    @keyframes reveal { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+    .is-resolved .surface { animation: reveal .38s var(--ease) both; }
+    .is-resolved .surface:nth-child(2) { animation-delay: .045s; }
+    .is-resolved .surface:nth-child(3) { animation-delay: .09s; }
+
+    @media (max-width: 940px) {
+      .score-section { grid-template-columns: 156px minmax(0, 1fr); gap: 16px; padding: 17px; }
+      .score-overview { min-height: 176px; padding: 12px; }
+      .score-ring { width: 116px; }
+      .score-value strong { font-size: 42px; }
+      .reviewer-grid { grid-template-columns: 1fr; }
+      .reviewer-card { min-height: 68px; }
+      .dimension-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .comment-row { grid-template-columns: 48px minmax(0, 1fr); }
+      .vote-group { grid-column: 2; justify-self: end; }
+    }
+
+    @media (max-width: 680px) {
+      .shell { width: min(100% - 20px, 1180px); padding-top: 10px; padding-bottom: 34px; }
+      .topbar { position: static; align-items: stretch; flex-direction: column; gap: 9px; margin: 0 0 12px; padding: 0; background: transparent; backdrop-filter: none; }
+      .brand { align-self: flex-start; }
+      .search-shell--compact { width: 100%; }
+      .score-section { grid-template-columns: 1fr; padding: 13px; }
+      .score-overview { grid-template-columns: auto auto; justify-content: center; justify-items: start; align-items: center; min-height: auto; padding: 13px 16px; }
+      .score-ring { width: 96px; grid-row: auto; }
+      .score-ring::before { inset: 8px; }
+      .score-value strong { font-size: 36px; }
+      .signal-chip { justify-self: start; }
+      .paper-bar { align-items: flex-start; flex-direction: column; gap: 6px; }
+      .reviewer-grid {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(220px, 76vw);
+        grid-template-columns: none;
+        overflow-x: auto;
+        overscroll-behavior-inline: contain;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+        padding: 1px 3px 5px 1px;
+      }
+      .reviewer-grid::-webkit-scrollbar { display: none; }
+      .reviewer-card { scroll-snap-align: start; }
+      .dimension-grid { grid-template-columns: 1fr; }
+      .score-guide { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .leaderboard-section { grid-template-columns: 1fr; }
+      .section-head { padding: 11px 12px; }
+      .cloud-stage { height: 340px; margin: 10px; border-radius: 17px; }
+      .comment-row { grid-template-columns: 42px minmax(0, 1fr); gap: 11px; padding: 14px 12px; }
+      .pixel-avatar { width: 39px; height: 39px; border-radius: 10px; }
+      .viewpoint { font-size: 13.5px; }
+      .ai-comment { justify-self: stretch; }
+      .vote-group { grid-column: 2; }
+      .filter-group { max-width: 68vw; }
+    }
+
+    @media (max-width: 520px) {
+      .landing { padding: 14px; }
+      .search-shell--landing {
+        width: 100%;
+        min-height: 62px;
+        padding: 6px 6px 6px 13px;
+        border-radius: 19px;
+      }
+      .search-shell--landing .search-icon { display: none; }
+      .search-shell--landing { grid-template-columns: minmax(0, 1fr) auto auto; }
+      .search-shell--landing .analyze-button { min-width: 52px; min-height: 48px; padding: 0 15px; border-radius: 14px; }
+      .search-shell--landing .button-label { display: none; }
+      .search-shell--compact .button-label { display: none; }
+      .search-shell--compact .analyze-button { padding: 0 10px; }
+      .brand span:last-child { font-size: 14px; }
+      .paper-title { font-size: 19px; }
+      .surface { border-radius: 20px; }
+      .score-section { border-radius: 20px; }
+      .cloud-tooltip { left: 12px !important; right: 12px; bottom: 12px; top: auto !important; width: auto; }
+      .filter-group { max-width: 62vw; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body class="is-idle">
+  <main class="shell">
+    <section class="landing" aria-label="Search paper">
+      <form class="search-shell search-shell--landing" id="landingSearch" novalidate>
+        <span class="search-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.7-3.7"></path></svg>
+        </span>
+        <label class="sr-only" for="landingInput">论文标题或链接</label>
+        <input class="search-input" id="landingInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Paste paper title / OpenReview link" />
+        <button class="clear-button" id="landingClear" type="button" aria-label="清空输入" hidden>×</button>
+        <button class="analyze-button" id="landingSubmit" type="submit">
+          <span class="button-label">Analyze</span><span class="button-arrow" aria-hidden="true">→</span><span class="spinner" aria-hidden="true"></span>
+        </button>
+      </form>
+      <div class="input-error" id="landingError" role="status" aria-live="polite"></div>
+    </section>
+
+    <section class="app-view" aria-label="Review results">
+      <header class="topbar">
+        <button class="brand" id="homeButton" type="button" aria-label="返回搜索">
+          <span class="brand-mark">SO</span><span>SecondOpinion</span>
+        </button>
+        <form class="search-shell search-shell--compact" id="topSearch" novalidate>
+          <span class="search-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.7-3.7"></path></svg>
+          </span>
+          <label class="sr-only" for="topInput">论文标题或链接</label>
+          <input class="search-input" id="topInput" autocomplete="off" autocapitalize="off" spellcheck="false" />
+          <button class="clear-button" id="topClear" type="button" aria-label="清空输入">×</button>
+          <button class="analyze-button" id="topSubmit" type="submit" aria-label="分析论文">
+            <span class="button-label">Analyze</span><span class="button-arrow" aria-hidden="true">→</span><span class="spinner" aria-hidden="true"></span>
+          </button>
         </form>
-      </section>
+      </header>
 
-      <section class="pipeline-band hidden" id="pipeline" aria-live="polite">
-        <div class="section-head">
-          <p class="eyebrow">Analysis pipeline</p>
-          <h2 id="pipeline-title">Preparing analysis</h2>
-        </div>
-        <div class="pipeline-layout">
-          <div class="pipeline-layers" id="pipeline-layers"></div>
-          <aside class="analysis-feed" aria-label="Analysis notes">
-            <h3>Live notes</h3>
-            <ol id="analysis-log"></ol>
-          </aside>
-        </div>
-      </section>
-
-      <section class="workspace hidden" id="workspace">
-        <div class="workspace-head">
-          <div>
-            <p class="eyebrow">Workspace</p>
-            <h2 id="paper-title">ICLR submission analysis</h2>
+      <div class="content-stack">
+        <section class="surface score-section" aria-labelledby="paperTitle">
+          <div class="score-overview">
+            <div class="score-ring" id="scoreRing" aria-label="Overall score 73 out of 100">
+              <div class="score-value"><strong id="overallScore">73</strong><span>overall</span></div>
+            </div>
+            <div class="signal-chip"><span class="signal-dot"></span><span id="signalLabel">Solid signal</span></div>
           </div>
-          <div class="paper-metrics" id="paper-metrics"></div>
-        </div>
 
-        <div class="tabs" role="tablist" aria-label="Workspace tabs">
-          <button class="tab active" type="button" data-tab="overview">Scorecard</button>
-          <button class="tab" type="button" data-tab="reviewers">Claim Scores</button>
-          <button class="tab" type="button" data-tab="rebuttal">Triage</button>
-        </div>
+          <div class="score-main">
+            <div class="paper-bar">
+              <h1 class="paper-title" id="paperTitle">second-opinion-demo</h1>
+              <div class="paper-stats" id="paperStats" aria-label="Paper statistics"><span>3 reviewers</span><span>6 chunks</span></div>
+            </div>
+            <div class="reviewer-grid" id="reviewerGrid" aria-label="Reviewer scores"></div>
+            <div class="score-detail" id="scoreDetail" aria-live="polite">
+              <div class="score-detail-clip" id="scoreDetailClip"></div>
+            </div>
+          </div>
+        </section>
 
-        <div class="workspace-grid">
-          <aside class="reviewer-rail" aria-label="Reviewers">
-            <h3>Reviewers</h3>
-            <div id="reviewer-rail"></div>
-          </aside>
-          <section class="tab-panel" id="tab-panel" aria-live="polite"></section>
-        </div>
-      </section>
-    </main>
+        <section class="leaderboard-section" aria-label="Reviewer leaderboards">
+          <article class="surface leaderboard-card leaderboard-card--red">
+            <div class="section-head"><h2>Red List</h2><span class="leaderboard-kicker">Top reviewers</span></div>
+            <ol class="leaderboard-list" id="redList"></ol>
+          </article>
+          <article class="surface leaderboard-card leaderboard-card--black">
+            <div class="section-head"><h2>Black List</h2><span class="leaderboard-kicker">Needs scrutiny</span></div>
+            <ol class="leaderboard-list" id="blackList"></ol>
+          </article>
+        </section>
 
-    <script src="./app.js?v=hybrid-scoring-20260617"></script>
-  </body>
+        <section class="surface cloud-section" aria-labelledby="themesTitle">
+          <div class="section-head">
+            <h2 id="themesTitle">Themes</h2>
+            <div class="section-tools">
+              <button class="icon-button" id="resetCloud" type="button" aria-label="重置词云位置" title="Reset view">↺</button>
+            </div>
+          </div>
+          <div class="cloud-stage" id="cloudStage" tabindex="0" aria-label="可拖动的评论主题词云，悬停词语查看对应评论">
+            <div class="cloud-canvas" id="cloudCanvas"></div>
+            <div class="cloud-tooltip" id="cloudTooltip" role="status" aria-live="polite"></div>
+            <div class="cloud-corner" aria-hidden="true"><span class="reviewer-dot"></span><span class="reviewer-dot"></span><span class="reviewer-dot"></span></div>
+          </div>
+        </section>
+
+        <section class="surface comments-section" aria-labelledby="commentsTitle">
+          <div class="section-head">
+            <h2 id="commentsTitle">Comments</h2>
+            <div class="filter-group" id="commentFilters" aria-label="筛选评论"></div>
+          </div>
+          <div class="thread-list" id="threadList"></div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const avatarSvg = {
+      R1: `<svg viewBox="0 0 50 50" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect width="50" height="50" fill="#fffefa"/><rect x="6" y="8" width="38" height="8" fill="#16795a"/><rect x="10" y="16" width="30" height="8" fill="#16795a"/><rect x="14" y="24" width="22" height="8" fill="#191918"/><rect x="10" y="32" width="8" height="8" fill="#16795a"/><rect x="32" y="32" width="8" height="8" fill="#16795a"/><rect x="18" y="18" width="5" height="5" fill="#fff"/><rect x="30" y="18" width="5" height="5" fill="#fff"/><rect x="24" y="25" width="5" height="5" fill="#b9f34c"/></svg>`,
+      R2: `<svg viewBox="0 0 50 50" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect width="50" height="50" fill="#fffefa"/><rect x="8" y="9" width="34" height="7" fill="#a76e16"/><rect x="12" y="16" width="26" height="8" fill="#191918"/><rect x="7" y="25" width="36" height="6" fill="#ecd08f"/><rect x="13" y="33" width="30" height="5" fill="#ecd08f"/><rect x="8" y="40" width="24" height="4" fill="#ecd08f"/><rect x="17" y="18" width="5" height="5" fill="#fff"/><rect x="31" y="18" width="5" height="5" fill="#fff"/><rect x="24" y="24" width="4" height="4" fill="#b9f34c"/></svg>`,
+      R3: `<svg viewBox="0 0 50 50" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect width="50" height="50" fill="#fffefa"/><rect x="8" y="7" width="34" height="8" fill="#2e65a8"/><rect x="12" y="15" width="26" height="8" fill="#2e65a8"/><rect x="10" y="23" width="30" height="10" fill="#191918"/><rect x="16" y="18" width="6" height="6" fill="#fff"/><rect x="29" y="18" width="6" height="6" fill="#fff"/><rect x="19" y="34" width="12" height="5" fill="#2e65a8"/><rect x="14" y="39" width="22" height="4" fill="#2e65a8"/></svg>`
+    };
+
+    let reviewers = [
+      {
+        id: 'R1', name: 'Baseline Hawk', score: 91, tone: 'green', label: 'High Signal',
+        summary: 'Compare with a standard retrieval baseline and report runtime.',
+        dimensions: [
+          ['Specificity', 92, 'Names the missing baseline and runtime.'],
+          ['Actionability', 95, 'Maps directly to one experiment.'],
+          ['Evidence Link', 88, 'Points to a missing benchmark.'],
+          ['Rebuttal Risk', 81, 'Remains valid until comparison is added.'],
+          ['Tone', 96, 'Direct, neutral, and non-personal.'],
+          ['Priority', 90, 'Central to the acceptance decision.']
+        ]
+      },
+      {
+        id: 'R2', name: 'Vague Thunder', score: 44, tone: 'gold', label: 'Needs Signal',
+        summary: 'The paper is not convincing and needs more experiments.',
+        dimensions: [
+          ['Specificity', 34, 'No concrete missing experiment.'],
+          ['Actionability', 28, 'Hard to convert into a checklist.'],
+          ['Evidence Link', 41, 'Weak claim-to-evidence pointer.'],
+          ['Rebuttal Risk', 39, 'May be resolved by clarification.'],
+          ['Tone', 58, 'Negative, but still acceptable.'],
+          ['Priority', 64, 'Important but underspecified.']
+        ]
+      },
+      {
+        id: 'R3', name: 'Evidence Anchor', score: 84, tone: 'blue', label: 'High Signal',
+        summary: 'The ablation still does not explain why the central claim is supported.',
+        dimensions: [
+          ['Specificity', 86, 'Targets the central claim directly.'],
+          ['Actionability', 79, 'Requires a stronger ablation argument.'],
+          ['Evidence Link', 91, 'Clear claim-to-evidence connection.'],
+          ['Rebuttal Risk', 87, 'Persists if the claim stays unsupported.'],
+          ['Tone', 83, 'Firm, concise, and grounded.'],
+          ['Priority', 82, 'High-value revision point.']
+        ]
+      }
+    ];
+
+    let splitComments = [
+      { id: 'R1', chunk: 'C1', tone: 'green', view: 'Current baselines are not enough; add a standard retrieval baseline and runtime comparison.', ai: '这一刀很准：不是“多做实验”，而是“做哪个实验”。', up: 64, down: 4 },
+      { id: 'R1', chunk: 'C2', tone: 'green', view: 'Clarify whether the reported gains come from the evidence search module or the scoring module.', ai: '适合直接变成 ablation 表格的一行。', up: 51, down: 6 },
+      { id: 'R2', chunk: 'C3', tone: 'gold', view: 'The work is not convincing and needs more experiments.', ai: '雷声很大，但落点还没有出现。', up: 18, down: 44 },
+      { id: 'R2', chunk: 'C4', tone: 'gold', view: 'The novelty appears limited compared with prior review-assistance systems.', ai: '指出了方向，但还缺具体对比对象和差异标准。', up: 24, down: 31 },
+      { id: 'R3', chunk: 'C5', tone: 'blue', view: 'The ablation does not yet support the central claim about evidence-grounded review auditing.', ai: '这是 rebuttal 里必须认真处理的硬点。', up: 58, down: 7 },
+      { id: 'R3', chunk: 'C6', tone: 'blue', view: 'Separate retrieval failure, claim extraction failure, and scoring failure in the error analysis.', ai: '这条可以直接变成 error analysis section 的结构。', up: 46, down: 5 }
+    ];
+
+    let cloudWords = [
+      { text: 'baseline', size: 76, x: 402, y: 192, tone: 'green', reviewer: 'R1', chunk: 'Please compare against a standard retrieval baseline and report runtime.' },
+      { text: 'ablation', size: 68, x: 120, y: 232, tone: 'blue', reviewer: 'R3', chunk: 'The ablation does not explain why the central claim is supported.' },
+      { text: 'runtime', size: 48, x: 682, y: 266, tone: 'green', reviewer: 'R1', chunk: 'Report runtime so the proposed method can be judged against practical cost.' },
+      { text: 'central claim', size: 49, x: 548, y: 326, tone: 'blue', reviewer: 'R3', chunk: 'The evidence does not yet lock onto the central claim.' },
+      { text: 'more experiments', size: 40, x: 118, y: 354, tone: 'gold', reviewer: 'R2', chunk: 'The paper is not convincing and needs more experiments.' },
+      { text: 'evidence link', size: 44, x: 294, y: 110, tone: 'blue', reviewer: 'R3', chunk: 'The response needs to connect each claim to concrete evidence.' },
+      { text: 'retrieval failure', size: 37, x: 718, y: 116, tone: 'blue', reviewer: 'R3', chunk: 'Separate retrieval failure, claim extraction failure, and scoring failure.' },
+      { text: 'specificity', size: 34, x: 72, y: 142, tone: 'green', reviewer: 'R1', chunk: 'The useful comments are specific enough to become checklist items.' },
+      { text: 'convincing', size: 33, x: 812, y: 352, tone: 'gold', reviewer: 'R2', chunk: 'This concern is broad and needs a more concrete target.' },
+      { text: 'error analysis', size: 35, x: 464, y: 62, tone: 'blue', reviewer: 'R3', chunk: 'An error analysis could clarify which component fails.' },
+      { text: 'checklist', size: 32, x: 92, y: 430, tone: 'green', reviewer: 'R1', chunk: 'R1 comments convert cleanly into a rebuttal checklist.' },
+      { text: 'vague', size: 31, x: 892, y: 205, tone: 'red', reviewer: 'R2', chunk: 'The comment has low actionability because it is underspecified.' },
+      { text: 'claim extraction', size: 31, x: 558, y: 438, tone: 'blue', reviewer: 'R3', chunk: 'Claim extraction should be separated from downstream scoring.' },
+      { text: 'novelty', size: 30, x: 798, y: 438, tone: 'gold', reviewer: 'R2', chunk: 'The novelty concern needs concrete prior systems and comparison criteria.' },
+      { text: 'scoring failure', size: 28, x: 294, y: 446, tone: 'blue', reviewer: 'R3', chunk: 'Scoring failure should be measured separately from retrieval quality.' },
+      { text: 'practical cost', size: 27, x: 864, y: 78, tone: 'green', reviewer: 'R1', chunk: 'Runtime and cost determine whether the method is practical.' },
+      { text: 'prior systems', size: 25, x: 76, y: 68, tone: 'gold', reviewer: 'R2', chunk: 'Name the prior review-assistance systems used to judge novelty.' },
+      { text: 'component gains', size: 25, x: 664, y: 392, tone: 'green', reviewer: 'R1', chunk: 'Separate gains from evidence search and scoring modules.' }
+    ];
+
+    let publicScorecard = null;
+    let leaderboards = { red: [], black: [] };
+
+    const toneMap = {
+      green: { color: '#16795a', soft: '#eaf6f0' },
+      blue: { color: '#2e65a8', soft: '#edf3fb' },
+      gold: { color: '#a76e16', soft: '#fbf1da' },
+      red: { color: '#a7473f', soft: '#faece9' }
+    };
+
+    const state = {
+      paper: 'second-opinion-demo',
+      selectedReviewer: null,
+      commentFilter: 'ALL',
+      busy: false,
+      cloud: { x: 0, y: 0, scale: 1, dragging: false, moved: false, startX: 0, startY: 0, originX: 0, originY: 0, pinnedWord: null }
+    };
+
+    const body = document.body;
+    const landingInput = document.getElementById('landingInput');
+    const topInput = document.getElementById('topInput');
+    const landingClear = document.getElementById('landingClear');
+    const topClear = document.getElementById('topClear');
+    const landingError = document.getElementById('landingError');
+    const reviewerGrid = document.getElementById('reviewerGrid');
+    const paperStats = document.getElementById('paperStats');
+    const redList = document.getElementById('redList');
+    const blackList = document.getElementById('blackList');
+    const scoreDetail = document.getElementById('scoreDetail');
+    const scoreDetailClip = document.getElementById('scoreDetailClip');
+    const cloudStage = document.getElementById('cloudStage');
+    const cloudCanvas = document.getElementById('cloudCanvas');
+    const cloudTooltip = document.getElementById('cloudTooltip');
+    const threadList = document.getElementById('threadList');
+    const commentFilters = document.getElementById('commentFilters');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    function scoreBand(value) {
+      if (value >= 85) return { className: '', label: 'Strong signal' };
+      if (value >= 70) return { className: 'blue', label: 'Solid signal' };
+      if (value >= 40) return { className: 'gold', label: 'Mixed signal' };
+      return { className: 'red', label: 'Weak signal' };
+    }
+
+    function toneClass(tone) { return `tone-${toneMap[tone] ? tone : 'gold'}`; }
+
+    function parsePaperTitle(value) {
+      const clean = value.trim();
+      try {
+        const url = new URL(clean);
+        if (url.hostname.includes('openreview.net')) {
+          const id = url.searchParams.get('id');
+          return id ? `OpenReview · ${id}` : 'OpenReview submission';
+        }
+        if (url.hostname.includes('doi.org')) {
+          return `DOI · ${decodeURIComponent(url.pathname.replace(/^\//, ''))}`;
+        }
+        const tail = decodeURIComponent(url.pathname.split('/').filter(Boolean).pop() || url.hostname);
+        return tail || url.hostname;
+      } catch (_) {
+        return clean;
+      }
+    }
+
+    function setInputValue(value) {
+      landingInput.value = value;
+      topInput.value = value;
+      syncClearButtons();
+    }
+
+    function syncClearButtons() {
+      landingClear.hidden = !landingInput.value;
+      topClear.hidden = !topInput.value;
+    }
+
+    function setBusy(isBusy, source) {
+      state.busy = isBusy;
+      const button = source === 'top' ? document.getElementById('topSubmit') : document.getElementById('landingSubmit');
+      button.disabled = isBusy;
+      button.classList.toggle('is-busy', isBusy);
+      button.setAttribute('aria-busy', String(isBusy));
+    }
+
+    function showInputError() {
+      const form = document.getElementById('landingSearch');
+      form.classList.add('is-invalid');
+      landingError.textContent = '请输入论文标题或链接';
+      window.setTimeout(() => form.classList.remove('is-invalid'), 520);
+      landingInput.focus();
+    }
+
+    function submitPaper(value, source = 'landing') {
+      if (state.busy) return;
+      const clean = (value || '').trim();
+      if (!clean) {
+        if (source === 'landing') showInputError();
+        else {
+          document.getElementById('topSearch').classList.add('is-invalid');
+          window.setTimeout(() => document.getElementById('topSearch').classList.remove('is-invalid'), 520);
+          topInput.focus();
+        }
+        return;
+      }
+
+      landingError.textContent = '';
+      setBusy(true, source);
+      const delay = reducedMotion.matches ? 0 : 360;
+      window.setTimeout(() => {
+        state.paper = clean;
+        state.selectedReviewer = null;
+        state.commentFilter = 'ALL';
+        setInputValue(clean);
+        document.getElementById('paperTitle').textContent = parsePaperTitle(clean);
+        body.classList.remove('is-idle');
+        body.classList.add('is-resolved');
+        renderAll();
+        setBusy(false, source);
+        window.scrollTo({ top: 0, behavior: reducedMotion.matches ? 'auto' : 'smooth' });
+        if (source === 'top') showToast('Review signal updated');
+      }, delay);
+    }
+
+    async function loadPublicScorecard() {
+      try {
+        const response = await fetch('./demos/reviewer_public_scorecard_v0.1.json', { cache: 'no-store' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        applyPublicScorecard(await response.json());
+      } catch (error) {
+        console.warn('Using built-in demo scorecard fallback.', error);
+      }
+    }
+
+    function applyPublicScorecard(scorecard) {
+      publicScorecard = scorecard;
+      const paper = scorecard.paper || {};
+      const summary = scorecard.summary || {};
+      const reviewerItems = Array.isArray(scorecard.reviewers) ? scorecard.reviewers : [];
+      const commentItems = Array.isArray(scorecard.comments) ? scorecard.comments : [];
+      const topicItems = Array.isArray(scorecard.topics) ? scorecard.topics : [];
+      leaderboards = scorecard.leaderboards || { red: [], black: [] };
+
+      reviewers = reviewerItems.map((reviewer, index) => ({
+        id: reviewer.reviewer_key || `R${index + 1}`,
+        avatar: reviewer.avatar_key || `R${(index % 3) + 1}`,
+        name: reviewer.nickname || `Reviewer ${index + 1}`,
+        score: Number(reviewer.score || 0),
+        tone: reviewer.tone || scoreBand(Number(reviewer.score || 0)).className || 'green',
+        label: reviewer.label || scoreBand(Number(reviewer.score || 0)).label,
+        summary: reviewer.summary || 'Reviewer comments scored by SecondOpinion.',
+        social: reviewer.social || { up: 0, down: 0 },
+        dimensions: (reviewer.dimensions || []).map(item => [item.label, Number(item.score || 0), item.criterion || 'Reviewer-facing score signal.'])
+      }));
+
+      splitComments = commentItems.map((comment, index) => ({
+        id: comment.reviewer_key,
+        chunk: comment.chunk_id || `C${index + 1}`,
+        tone: comment.tone || 'gold',
+        view: comment.text || '',
+        ai: comment.second_opinion || '',
+        up: Number(comment.up || 0),
+        down: Number(comment.down || 0)
+      }));
+
+      cloudWords = topicItems.map((topic, index) => ({
+        text: topic.text,
+        size: Number(topic.size || 30),
+        x: Number(topic.x ?? (70 + (index * 150) % 880)),
+        y: Number(topic.y ?? (70 + (index * 90) % 380)),
+        tone: topic.tone || 'gold',
+        reviewer: topic.reviewer_key || '',
+        reviewerName: topic.nickname || '',
+        chunk: topic.chunk || ''
+      }));
+
+      if (paper.title) document.getElementById('paperTitle').textContent = paper.title;
+      if (paper.title) setInputValue(paper.title);
+      if (summary.signal_label) document.getElementById('signalLabel').textContent = summary.signal_label;
+    }
+
+    function renderPaperInfo() {
+      if (!publicScorecard) return;
+      const paper = publicScorecard.paper || {};
+      const summary = publicScorecard.summary || {};
+      document.getElementById('paperTitle').textContent = paper.title || parsePaperTitle(state.paper || 'second-opinion-demo');
+      paperStats.innerHTML = [
+        `${summary.reviewer_count ?? reviewers.length} reviewers`,
+        `${summary.comment_count ?? splitComments.length} chunks`,
+        paper.conference || ''
+      ].filter(Boolean).map(item => `<span>${item}</span>`).join('');
+    }
+
+    function reviewerById(id) {
+      return reviewers.find(item => item.id === id);
+    }
+
+    function reviewerSocialCounts(reviewer) {
+      const key = `reviewer:${reviewer.id}`;
+      const selected = voteState[key] || null;
+      const base = reviewer.social || { up: 0, down: 0 };
+      return {
+        selected,
+        up: Number(base.up || 0) + (selected === 'up' ? 1 : 0),
+        down: Number(base.down || 0) + (selected === 'down' ? 1 : 0)
+      };
+    }
+
+    function reviewerSocialScore(reviewer) {
+      const counts = reviewerSocialCounts(reviewer);
+      return reviewer.score + counts.up * 0.16 - counts.down * 0.22;
+    }
+
+    function reviewerRiskScore(reviewer) {
+      const counts = reviewerSocialCounts(reviewer);
+      return (100 - reviewer.score) + counts.down * 0.34 - counts.up * 0.1;
+    }
+
+    function orderedLeaderboard(kind) {
+      const keys = leaderboards[kind] || [];
+      const keyed = keys.map(reviewerById).filter(Boolean);
+      if (keyed.length) return keyed;
+      return [...reviewers].sort((left, right) => kind === 'red' ? reviewerSocialScore(right) - reviewerSocialScore(left) : reviewerRiskScore(right) - reviewerRiskScore(left));
+    }
+
+    function renderLeaderboards() {
+      redList.innerHTML = orderedLeaderboard('red').slice(0, 10).map((reviewer, index) => leaderboardRow(reviewer, index, 'red')).join('');
+      blackList.innerHTML = orderedLeaderboard('black').slice(0, 10).map((reviewer, index) => leaderboardRow(reviewer, index, 'black')).join('');
+    }
+
+    function leaderboardRow(reviewer, index, kind) {
+      const metric = Math.round(kind === 'red' ? reviewerSocialScore(reviewer) : reviewerRiskScore(reviewer));
+      const counts = reviewerSocialCounts(reviewer);
+      return `
+        <li>
+          <button class="leaderboard-row" type="button" data-leader-reviewer="${reviewer.id}">
+            <span class="leader-rank">${index + 1}</span>
+            <span class="mini-avatar" aria-hidden="true">${avatarSvg[reviewer.avatar || reviewer.id] || avatarSvg.R1}</span>
+            <span class="leader-copy"><strong>${reviewer.name}</strong><span>${reviewer.label}</span></span>
+            <span class="leader-score">${metric}</span>
+          </button>
+          <div class="vote-group" aria-label="Vote on ${reviewer.name}">
+            <button class="vote-button${counts.selected === 'up' ? ' is-up' : ''}" type="button" data-reviewer-vote="up" data-reviewer-id="${reviewer.id}" aria-pressed="${counts.selected === 'up'}"><span class="vote-icon">↑</span><span>${counts.up}</span></button>
+            <button class="vote-button${counts.selected === 'down' ? ' is-down' : ''}" type="button" data-reviewer-vote="down" data-reviewer-id="${reviewer.id}" aria-pressed="${counts.selected === 'down'}"><span class="vote-icon">↓</span><span>${counts.down}</span></button>
+          </div>
+        </li>`;
+    }
+
+    function updateReviewerVote(reviewerId, action) {
+      const key = `reviewer:${reviewerId}`;
+      const current = voteState[key] || null;
+      voteState[key] = current === action ? null : action;
+      if (!voteState[key]) delete voteState[key];
+      saveVoteState(voteState);
+      renderLeaderboards();
+      showToast(voteState[key] ? 'Vote recorded' : 'Vote removed');
+    }
+    function renderOverallScore() {
+      const avg = publicScorecard?.summary?.overall_score ?? Math.round(reviewers.reduce((sum, reviewer) => sum + reviewer.score, 0) / Math.max(1, reviewers.length));
+      const band = scoreBand(avg);
+      const scoreEl = document.getElementById('overallScore');
+      const ring = document.getElementById('scoreRing');
+      const label = document.getElementById('signalLabel');
+      ring.style.setProperty('--score', avg);
+      ring.setAttribute('aria-label', `Overall score ${avg} out of 100`);
+      label.textContent = band.label;
+
+      if (reducedMotion.matches) {
+        scoreEl.textContent = avg;
+        return;
+      }
+
+      const start = performance.now();
+      const duration = 480;
+      function tick(now) {
+        const progress = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        scoreEl.textContent = Math.round(avg * eased);
+        if (progress < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }
+
+    function renderReviewerCards() {
+      reviewerGrid.innerHTML = reviewers.map(reviewer => {
+        const active = state.selectedReviewer === reviewer.id;
+        return `
+          <button class="reviewer-card${active ? ' is-active' : ''}" type="button" data-reviewer="${reviewer.id}" aria-expanded="${active}">
+            <span class="mini-avatar" aria-hidden="true">${avatarSvg[reviewer.avatar || reviewer.id] || avatarSvg.R1}</span>
+            <span class="reviewer-card-copy">
+              <span class="reviewer-name">${reviewer.name}</span>
+              <span class="reviewer-score-line"><strong>${reviewer.score}</strong><span class="tone-label">${reviewer.label}</span></span>
+            </span>
+            <span class="chevron" aria-hidden="true">⌄</span>
+          </button>`;
+      }).join('');
+    }
+
+    function metricTone(value) {
+      if (value < 40) return 'red';
+      if (value < 70) return 'gold';
+      if (value < 85) return 'blue';
+      return '';
+    }
+
+    function renderScoreDetail() {
+      const reviewer = reviewers.find(item => item.id === state.selectedReviewer);
+      scoreDetail.classList.toggle('is-open', Boolean(reviewer));
+      if (!reviewer) {
+        scoreDetailClip.innerHTML = '';
+        syncLinkedReviewer();
+        return;
+      }
+
+      scoreDetailClip.innerHTML = `
+        <div class="score-detail-card">
+          <div class="detail-head">
+            <div class="detail-copy">
+              <h3 class="detail-name">${reviewer.name}</h3>
+              <p class="detail-summary">${reviewer.summary}</p>
+            </div>
+            <span class="detail-score ${toneClass(reviewer.tone)}">${reviewer.score}/100</span>
+          </div>
+          <div class="dimension-grid">
+            ${reviewer.dimensions.map(([name, value, criterion]) => `
+              <div class="metric">
+                <div class="metric-head"><span>${name}</span><strong>${value}</strong></div>
+                <div class="metric-track"><i class="metric-fill ${metricTone(value)}" data-width="${value}%"></i></div>
+                <div class="criterion">${criterion}</div>
+              </div>`).join('')}
+          </div>
+          <div class="score-guide" aria-label="Score guide">
+            <span class="guide-item"><i class="guide-swatch"></i>0–39 Weak</span>
+            <span class="guide-item"><i class="guide-swatch"></i>40–69 Mixed</span>
+            <span class="guide-item"><i class="guide-swatch"></i>70–84 Solid</span>
+            <span class="guide-item"><i class="guide-swatch"></i>85–100 Strong</span>
+          </div>
+        </div>`;
+
+      requestAnimationFrame(() => {
+        scoreDetailClip.querySelectorAll('.metric-fill').forEach(fill => { fill.style.width = fill.dataset.width; });
+      });
+      syncLinkedReviewer();
+    }
+
+    function renderCloud() {
+      cloudCanvas.innerHTML = cloudWords.map((word, index) => `
+        <button class="cloud-word" type="button" data-word-index="${index}" data-tone="${word.tone}" data-reviewer="${word.reviewer}" style="left:${word.x}px;top:${word.y}px;font-size:${word.size}px;" aria-label="${word.text}, ${word.reviewer}">${word.text}</button>`).join('');
+      requestAnimationFrame(resetCloudView);
+    }
+
+    function renderFilters() {
+      const counts = splitComments.reduce((acc, comment) => {
+        acc[comment.id] = (acc[comment.id] || 0) + 1;
+        return acc;
+      }, {});
+      const filters = [{ id: 'ALL', label: 'All', count: splitComments.length }, ...reviewers.map(reviewer => ({ id: reviewer.id, label: reviewer.name, count: counts[reviewer.id] || 0 }))];
+      commentFilters.innerHTML = filters.map(filter => `
+        <button class="filter-button${state.commentFilter === filter.id ? ' is-active' : ''}" type="button" data-filter="${filter.id}" aria-pressed="${state.commentFilter === filter.id}">${filter.label}<span>${filter.count}</span></button>`).join('');
+    }
+
+    function loadVoteState() {
+      try { return JSON.parse(localStorage.getItem('secondOpinion-v03-votes') || '{}'); }
+      catch (_) { return {}; }
+    }
+
+    function saveVoteState(votes) {
+      try { localStorage.setItem('secondOpinion-v03-votes', JSON.stringify(votes)); }
+      catch (_) {}
+    }
+
+    const voteState = loadVoteState();
+
+    function voteCounts(comment) {
+      const selected = voteState[comment.chunk] || null;
+      return {
+        selected,
+        up: comment.up + (selected === 'up' ? 1 : 0),
+        down: comment.down + (selected === 'down' ? 1 : 0)
+      };
+    }
+
+    function renderComments() {
+      threadList.innerHTML = splitComments.map(comment => {
+        const reviewer = reviewers.find(item => item.id === comment.id);
+        const counts = voteCounts(comment);
+        const hidden = state.commentFilter !== 'ALL' && state.commentFilter !== comment.id;
+        const tone = toneMap[comment.tone] || toneMap.gold;
+        return `
+          <article class="comment-row${hidden ? ' is-hidden' : ''}" data-comment-id="${comment.id}" data-chunk="${comment.chunk}" style="--reviewer-color:${tone.color};--reviewer-soft:${tone.soft};">
+            <div class="pixel-avatar" aria-hidden="true">${avatarSvg[reviewer?.avatar || comment.id] || avatarSvg.R1}</div>
+            <div class="comment-main">
+              <div class="comment-meta">
+                <span class="comment-id">${reviewer?.name || comment.id}</span>
+                <span class="chunk-id">${comment.chunk}</span>
+                <span class="status-badge ${toneClass(comment.tone)}">${reviewer?.label || 'Review chunk'}</span>
+              </div>
+              <p class="viewpoint">${comment.view}</p>
+              <div class="ai-comment"><span class="ai-mark">SO</span><span>${comment.ai}</span></div>
+            </div>
+            <div class="vote-group" aria-label="Vote on ${comment.chunk}">
+              <button class="vote-button${counts.selected === 'up' ? ' is-up' : ''}" type="button" data-vote="up" data-chunk="${comment.chunk}" aria-pressed="${counts.selected === 'up'}"><span class="vote-icon">↑</span><span>${counts.up}</span></button>
+              <button class="vote-button${counts.selected === 'down' ? ' is-down' : ''}" type="button" data-vote="down" data-chunk="${comment.chunk}" aria-pressed="${counts.selected === 'down'}"><span class="vote-icon">↓</span><span>${counts.down}</span></button>
+            </div>
+          </article>`;
+      }).join('');
+      syncLinkedReviewer();
+    }
+
+    function renderAll() {
+      renderOverallScore();
+      renderReviewerCards();
+      renderScoreDetail();
+      renderCloud();
+      renderFilters();
+      renderComments();
+    }
+
+    function selectReviewer(id) {
+      state.selectedReviewer = state.selectedReviewer === id ? null : id;
+      renderReviewerCards();
+      renderScoreDetail();
+      if (state.selectedReviewer && window.innerWidth < 680) {
+        window.setTimeout(() => scoreDetail.scrollIntoView({ behavior: reducedMotion.matches ? 'auto' : 'smooth', block: 'nearest' }), 80);
+      }
+    }
+
+    function syncLinkedReviewer() {
+      document.querySelectorAll('.cloud-word').forEach(word => {
+        word.classList.toggle('is-linked', Boolean(state.selectedReviewer) && word.dataset.reviewer === state.selectedReviewer);
+      });
+      document.querySelectorAll('.comment-row').forEach(row => {
+        row.classList.toggle('is-linked', Boolean(state.selectedReviewer) && row.dataset.commentId === state.selectedReviewer);
+      });
+    }
+
+    function applyCommentFilter(filter) {
+      state.commentFilter = filter;
+      renderFilters();
+      renderComments();
+    }
+
+    function updateVote(chunk, action) {
+      const current = voteState[chunk] || null;
+      voteState[chunk] = current === action ? null : action;
+      saveVoteState(voteState);
+      renderComments();
+      showToast(voteState[chunk] ? 'Vote recorded' : 'Vote removed');
+    }
+
+    function cloudLimits() {
+      const stageW = cloudStage.clientWidth;
+      const stageH = cloudStage.clientHeight;
+      const scaledW = 1080 * state.cloud.scale;
+      const scaledH = 520 * state.cloud.scale;
+      const margin = 90;
+      return {
+        minX: Math.min(margin, stageW - scaledW - margin),
+        maxX: Math.max(-margin, stageW - scaledW + margin),
+        minY: Math.min(margin, stageH - scaledH - margin),
+        maxY: Math.max(-margin, stageH - scaledH + margin)
+      };
+    }
+
+    function setCloudTransform(x, y) {
+      const limits = cloudLimits();
+      state.cloud.x = Math.max(limits.minX, Math.min(limits.maxX, x));
+      state.cloud.y = Math.max(limits.minY, Math.min(limits.maxY, y));
+      cloudCanvas.style.transform = `translate3d(${state.cloud.x}px, ${state.cloud.y}px, 0) scale(${state.cloud.scale})`;
+    }
+
+    function resetCloudView() {
+      if (!cloudStage.clientWidth) return;
+      const fitX = (cloudStage.clientWidth - 34) / 1080;
+      const fitY = (cloudStage.clientHeight - 34) / 520;
+      state.cloud.scale = Math.max(window.innerWidth < 680 ? .58 : .72, Math.min(1, fitX, fitY));
+      const x = (cloudStage.clientWidth - 1080 * state.cloud.scale) / 2;
+      const y = (cloudStage.clientHeight - 520 * state.cloud.scale) / 2;
+      setCloudTransform(x, y);
+      hideCloudTooltip(true);
+    }
+
+    function tooltipMarkup(word) {
+      return `<div class="tooltip-head"><span class="tooltip-keyword">${word.text}</span><span class="tooltip-reviewer">${word.reviewerName || word.reviewer}</span></div><p class="tooltip-chunk">${word.chunk}</p>`;
+    }
+
+    function showCloudTooltip(wordIndex, clientX, clientY, pinned = false) {
+      const word = cloudWords[wordIndex];
+      if (!word) return;
+      cloudTooltip.innerHTML = tooltipMarkup(word);
+      cloudTooltip.classList.add('is-visible');
+      cloudTooltip.dataset.pinned = pinned ? 'true' : 'false';
+      state.cloud.pinnedWord = pinned ? wordIndex : state.cloud.pinnedWord;
+
+      document.querySelectorAll('.cloud-word').forEach(el => el.classList.toggle('is-pinned', pinned && Number(el.dataset.wordIndex) === wordIndex));
+
+      const stageRect = cloudStage.getBoundingClientRect();
+      const tooltipWidth = Math.min(360, stageRect.width - 24);
+      const localX = Number.isFinite(clientX) ? clientX - stageRect.left + 14 : stageRect.width / 2 - tooltipWidth / 2;
+      const localY = Number.isFinite(clientY) ? clientY - stageRect.top + 16 : stageRect.height / 2;
+      const left = Math.max(12, Math.min(stageRect.width - tooltipWidth - 12, localX));
+      const estimatedHeight = 104;
+      const top = Math.max(12, Math.min(stageRect.height - estimatedHeight - 12, localY));
+      cloudTooltip.style.left = `${left}px`;
+      cloudTooltip.style.top = `${top}px`;
+    }
+
+    function hideCloudTooltip(force = false) {
+      if (!force && cloudTooltip.dataset.pinned === 'true') return;
+      cloudTooltip.classList.remove('is-visible');
+      cloudTooltip.dataset.pinned = 'false';
+      state.cloud.pinnedWord = null;
+      document.querySelectorAll('.cloud-word.is-pinned').forEach(el => el.classList.remove('is-pinned'));
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('is-visible');
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => toast.classList.remove('is-visible'), 1300);
+    }
+
+    function resetToSearch() {
+      body.classList.remove('is-resolved');
+      body.classList.add('is-idle');
+      hideCloudTooltip(true);
+      window.setTimeout(() => {
+        landingInput.focus();
+        landingInput.setSelectionRange(landingInput.value.length, landingInput.value.length);
+      }, 0);
+    }
+
+    document.getElementById('landingSearch').addEventListener('submit', event => {
+      event.preventDefault();
+      submitPaper(landingInput.value, 'landing');
+    });
+
+    document.getElementById('topSearch').addEventListener('submit', event => {
+      event.preventDefault();
+      submitPaper(topInput.value, 'top');
+    });
+
+    landingInput.addEventListener('input', () => {
+      landingError.textContent = '';
+      document.getElementById('landingSearch').classList.remove('is-invalid');
+      topInput.value = landingInput.value;
+      syncClearButtons();
+    });
+
+    topInput.addEventListener('input', () => {
+      landingInput.value = topInput.value;
+      syncClearButtons();
+    });
+
+    landingClear.addEventListener('click', () => { setInputValue(''); landingInput.focus(); });
+    topClear.addEventListener('click', () => { setInputValue(''); topInput.focus(); });
+    document.getElementById('homeButton').addEventListener('click', resetToSearch);
+    document.getElementById('resetCloud').addEventListener('click', resetCloudView);
+
+    document.addEventListener('click', event => {
+      const reviewerVoteButton = event.target.closest('[data-reviewer-vote]');
+      if (reviewerVoteButton) {
+        updateReviewerVote(reviewerVoteButton.dataset.reviewerId, reviewerVoteButton.dataset.reviewerVote);
+        return;
+      }
+
+      const leaderButton = event.target.closest('[data-leader-reviewer]');
+      if (leaderButton) {
+        selectReviewer(leaderButton.dataset.leaderReviewer);
+        return;
+      }
+
+      const reviewerButton = event.target.closest('.reviewer-card[data-reviewer]');
+      if (reviewerButton) {
+        selectReviewer(reviewerButton.dataset.reviewer);
+        return;
+      }
+
+      const filterButton = event.target.closest('[data-filter]');
+      if (filterButton) {
+        applyCommentFilter(filterButton.dataset.filter);
+        return;
+      }
+
+      const voteButton = event.target.closest('[data-vote]');
+      if (voteButton) {
+        updateVote(voteButton.dataset.chunk, voteButton.dataset.vote);
+        return;
+      }
+
+      const wordButton = event.target.closest('.cloud-word');
+      if (wordButton) {
+        if (state.cloud.moved) {
+          event.preventDefault();
+          return;
+        }
+        const index = Number(wordButton.dataset.wordIndex);
+        showCloudTooltip(index, event.clientX, event.clientY, true);
+        state.selectedReviewer = wordButton.dataset.reviewer;
+        renderReviewerCards();
+        renderScoreDetail();
+        return;
+      }
+
+      if (event.target === cloudStage) hideCloudTooltip(true);
+    });
+
+    cloudStage.addEventListener('pointermove', event => {
+      if (state.cloud.dragging) {
+        const dx = event.clientX - state.cloud.startX;
+        const dy = event.clientY - state.cloud.startY;
+        if (Math.abs(dx) + Math.abs(dy) > 5) state.cloud.moved = true;
+        setCloudTransform(state.cloud.originX + dx, state.cloud.originY + dy);
+        return;
+      }
+
+      if (cloudTooltip.dataset.pinned === 'true') return;
+      const word = event.target.closest('.cloud-word');
+      if (word) showCloudTooltip(Number(word.dataset.wordIndex), event.clientX, event.clientY, false);
+      else hideCloudTooltip();
+    });
+
+    cloudStage.addEventListener('pointerleave', () => {
+      if (cloudTooltip.dataset.pinned !== 'true') hideCloudTooltip();
+    });
+
+    cloudStage.addEventListener('focusin', event => {
+      const word = event.target.closest('.cloud-word');
+      if (word) showCloudTooltip(Number(word.dataset.wordIndex), NaN, NaN, false);
+    });
+
+    cloudStage.addEventListener('focusout', event => {
+      if (event.target.closest('.cloud-word') && cloudTooltip.dataset.pinned !== 'true') hideCloudTooltip();
+    });
+
+    cloudStage.addEventListener('pointerdown', event => {
+      if (event.target.closest('.cloud-word')) return;
+      state.cloud.dragging = true;
+      state.cloud.moved = false;
+      state.cloud.startX = event.clientX;
+      state.cloud.startY = event.clientY;
+      state.cloud.originX = state.cloud.x;
+      state.cloud.originY = state.cloud.y;
+      cloudStage.classList.add('is-dragging');
+      cloudStage.setPointerCapture(event.pointerId);
+    });
+
+    function endCloudDrag(event) {
+      state.cloud.dragging = false;
+      cloudStage.classList.remove('is-dragging');
+      try { cloudStage.releasePointerCapture(event.pointerId); } catch (_) {}
+      window.setTimeout(() => { state.cloud.moved = false; }, 0);
+    }
+
+    cloudStage.addEventListener('pointerup', endCloudDrag);
+    cloudStage.addEventListener('pointercancel', endCloudDrag);
+
+    cloudStage.addEventListener('keydown', event => {
+      const step = event.shiftKey ? 48 : 22;
+      if (event.key === 'ArrowLeft') { event.preventDefault(); setCloudTransform(state.cloud.x + step, state.cloud.y); }
+      if (event.key === 'ArrowRight') { event.preventDefault(); setCloudTransform(state.cloud.x - step, state.cloud.y); }
+      if (event.key === 'ArrowUp') { event.preventDefault(); setCloudTransform(state.cloud.x, state.cloud.y + step); }
+      if (event.key === 'ArrowDown') { event.preventDefault(); setCloudTransform(state.cloud.x, state.cloud.y - step); }
+      if (event.key === 'Home') { event.preventDefault(); resetCloudView(); }
+      if (event.key === 'Escape') hideCloudTooltip(true);
+    });
+
+    document.addEventListener('keydown', event => {
+      const typing = /INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName || '');
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault();
+        (body.classList.contains('is-idle') ? landingInput : topInput).focus();
+      }
+      if (!typing && event.key === '/') {
+        event.preventDefault();
+        (body.classList.contains('is-idle') ? landingInput : topInput).focus();
+      }
+      if (event.key === 'Escape' && state.selectedReviewer) {
+        state.selectedReviewer = null;
+        renderReviewerCards();
+        renderScoreDetail();
+      }
+    });
+
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(resetCloudView, 120);
+    });
+
+    syncClearButtons();
+
+    const params = new URLSearchParams(location.search);
+    loadPublicScorecard().then(() => {
+      renderAll();
+      if (params.has('demo')) submitPaper('https://openreview.net/forum?id=second-opinion-demo', 'landing');
+    });
+  </script>
+</body>
 </html>
+
+
+
+
+
+
