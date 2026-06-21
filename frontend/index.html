@@ -1373,6 +1373,7 @@
             <span class="button-label">Analyze</span><span class="button-arrow" aria-hidden="true">→</span><span class="spinner" aria-hidden="true"></span>
           </button>
         </form>
+        <div class="search-results search-results--compact" id="topResults" role="listbox" aria-label="Paper search results" hidden></div>
       </header>
 
       <div class="content-stack">
@@ -1515,7 +1516,8 @@
     let paperSearchResults = [];
 
     const apiParam = new URLSearchParams(location.search).get('api') || '';
-    const configuredApiBase = apiParam || window.SECONDOPINION_API_BASE || localStorage.getItem('secondOpinion-apiBase') || '';
+    const DEFAULT_API_BASE = 'https://secondopinion.smartselling.work';
+    const configuredApiBase = apiParam || window.SECONDOPINION_API_BASE || localStorage.getItem('secondOpinion-apiBase') || DEFAULT_API_BASE;
     const API_BASE = configuredApiBase.replace(/\/+$/, '');
 
     const toneMap = {
