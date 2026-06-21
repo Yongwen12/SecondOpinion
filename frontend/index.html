@@ -1631,7 +1631,8 @@
         const url = new URL(clean);
         if (url.hostname.includes('openreview.net')) return url.searchParams.get('id') || '';
       } catch (_) {}
-      return /^[A-Za-z0-9_-]{6,}$/.test(clean) && !clean.includes(' ') ? clean : '';
+      const looksLikeOpenReviewId = /^[A-Za-z0-9_-]{10,}$/.test(clean) && /[A-Z0-9_-]/.test(clean);
+      return looksLikeOpenReviewId ? clean : '';
     }
 
     function resultContainer(source) {
