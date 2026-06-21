@@ -59,6 +59,198 @@ def create_scoring_job(
     return job
 
 
+def enqueue_scoring_jobs(
+    session: Session,
+    *,
+    conference_id: str | None = None,
+    year: int | None = None,
+    paper_ids: list[str] | None = None,
+    limit: int | None = None,
+    requested_by_session: str = "server_batch",
+    scorer_version: str,
+    memory_index_version: str,
+    missing_only: bool = True,
+    dry_run: bool = False,
+) -> dict[str, Any]:
+    papers = list(_filtered_papers(session, conference_id=conference_id, year=year, paper_ids=paper_ids))
+    created: list[str] = []
+    skipped_scored = 0
+    skipped_active = 0
+    considered = 0
+    for paper in papers:
+        if limit is not None and considered >= limit:
+            break
+        considered += 1
+        if missing_only and _has_scorecard_for_version(
+            session,
+            paper.paper_id,
+            scorer_version=scorer_version,
+            memory_index_version=memory_index_version,
+        ):
+            skipped_scored += 1
+            continue
+        if _has_active_scoring_job(
+            session,
+            paper.paper_id,
+            scorer_version=scorer_version,
+            memory_index_version=memory_index_version,
+        ):
+            skipped_active += 1
+            continue
+        if dry_run:
+            created.append(paper.paper_id)
+            continue
+        job = create_scoring_job(
+            session,
+            paper_id=paper.paper_id,
+            requested_by_session=requested_by_session,
+            scorer_version=scorer_version,
+            memory_index_version=memory_index_version,
+        )
+        created.append(job.paper_id)
+    return {
+        "conference_id": conference_id,
+        "year": year,
+        "paper_ids": paper_ids or [],
+        "considered": considered,
+        "created": len(created),
+        "created_paper_ids": created,
+        "skipped_scored": skipped_scored,
+        "skipped_active": skipped_active,
+        "dry_run": dry_run,
+    }
+
+
+def scoring_status(
+    session: Session,
+    *,
+    conference_id: str | None = None,
+    year: int | None = None,
+    scorer_version: str,
+    memory_index_version: str,
+) -> dict[str, Any]:
+    paper_ids = [
+        paper.paper_id
+        for paper in _filtered_papers(session, conference_id=conference_id, year=year, paper_ids=None)
+    ]
+    if not paper_ids:
+        return {
+            "conference_id": conference_id,
+            "year": year,
+            "total_papers": 0,
+            "scored": 0,
+            "queued": 0,
+            "running": 0,
+            "failed": 0,
+            "not_queued": 0,
+            "scorer_version": scorer_version,
+            "memory_index_version": memory_index_version,
+        }
+    scored_ids = set(
+        session.execute(
+            select(Scorecard.paper_id).where(
+                Scorecard.paper_id.in_(paper_ids),
+                Scorecard.scorer_version == scorer_version,
+                Scorecard.memory_index_version == memory_index_version,
+            )
+        ).scalars()
+    )
+    jobs = list(
+        session.execute(
+            select(ScoringJob).where(
+                ScoringJob.paper_id.in_(paper_ids),
+                ScoringJob.scorer_version == scorer_version,
+                ScoringJob.memory_index_version == memory_index_version,
+            )
+        ).scalars()
+    )
+    latest_by_paper: dict[str, ScoringJob] = {}
+    for job in jobs:
+        current = latest_by_paper.get(job.paper_id)
+        if current is None or job.created_at > current.created_at:
+            latest_by_paper[job.paper_id] = job
+    queued_ids = {paper_id for paper_id, job in latest_by_paper.items() if job.status == "queued" and paper_id not in scored_ids}
+    running_ids = {paper_id for paper_id, job in latest_by_paper.items() if job.status == "running" and paper_id not in scored_ids}
+    failed_ids = {paper_id for paper_id, job in latest_by_paper.items() if job.status == "failed" and paper_id not in scored_ids}
+    pending_ids = set(paper_ids) - scored_ids - queued_ids - running_ids - failed_ids
+    return {
+        "conference_id": conference_id,
+        "year": year,
+        "total_papers": len(paper_ids),
+        "scored": len(scored_ids),
+        "queued": len(queued_ids),
+        "running": len(running_ids),
+        "failed": len(failed_ids),
+        "not_queued": len(pending_ids),
+        "scorer_version": scorer_version,
+        "memory_index_version": memory_index_version,
+    }
+
+
+def retry_failed_scoring_jobs(
+    session: Session,
+    *,
+    conference_id: str | None = None,
+    year: int | None = None,
+    limit: int | None = None,
+    scorer_version: str,
+    memory_index_version: str,
+) -> dict[str, Any]:
+    paper_ids = [
+        paper.paper_id
+        for paper in _filtered_papers(session, conference_id=conference_id, year=year, paper_ids=None)
+    ]
+    if not paper_ids:
+        return {"conference_id": conference_id, "year": year, "retried": 0, "retried_paper_ids": []}
+    jobs = list(
+        session.execute(
+            select(ScoringJob)
+            .where(
+                ScoringJob.status == "failed",
+                ScoringJob.scorer_version == scorer_version,
+                ScoringJob.memory_index_version == memory_index_version,
+                ScoringJob.paper_id.in_(paper_ids),
+            )
+            .order_by(ScoringJob.completed_at.desc().nullslast(), ScoringJob.updated_at.desc())
+        ).scalars()
+    )
+    retried: list[str] = []
+    seen_papers: set[str] = set()
+    for job in jobs:
+        if limit is not None and len(retried) >= limit:
+            break
+        if job.paper_id in seen_papers:
+            continue
+        seen_papers.add(job.paper_id)
+        if _has_scorecard_for_version(
+            session,
+            job.paper_id,
+            scorer_version=scorer_version,
+            memory_index_version=memory_index_version,
+        ):
+            continue
+        if _has_active_scoring_job(
+            session,
+            job.paper_id,
+            scorer_version=scorer_version,
+            memory_index_version=memory_index_version,
+        ):
+            continue
+        create_scoring_job(
+            session,
+            paper_id=job.paper_id,
+            requested_by_session="server_retry_failed",
+            scorer_version=scorer_version,
+            memory_index_version=memory_index_version,
+        )
+        retried.append(job.paper_id)
+    return {
+        "conference_id": conference_id,
+        "year": year,
+        "retried": len(retried),
+        "retried_paper_ids": retried,
+    }
+
 def latest_scorecard(session: Session, paper_id: str) -> Scorecard | None:
     return session.execute(
         select(Scorecard)
@@ -331,3 +523,64 @@ def register_memory_index(
         index.active = active
     session.flush()
     return index
+
+
+
+def _filtered_papers(
+    session: Session,
+    *,
+    conference_id: str | None,
+    year: int | None,
+    paper_ids: list[str] | None,
+) -> list[Paper]:
+    stmt = select(Paper)
+    if conference_id:
+        stmt = stmt.where(Paper.conference_id == conference_id)
+    if year is not None:
+        stmt = stmt.where(Paper.year == year)
+    if paper_ids:
+        stmt = stmt.where(Paper.paper_id.in_(paper_ids))
+    return list(session.execute(stmt.order_by(Paper.year.desc(), Paper.title.asc())).scalars())
+
+
+def _has_scorecard_for_version(
+    session: Session,
+    paper_id: str,
+    *,
+    scorer_version: str,
+    memory_index_version: str,
+) -> bool:
+    return (
+        session.execute(
+            select(Scorecard.scorecard_id)
+            .where(
+                Scorecard.paper_id == paper_id,
+                Scorecard.scorer_version == scorer_version,
+                Scorecard.memory_index_version == memory_index_version,
+            )
+            .limit(1)
+        ).scalar_one_or_none()
+        is not None
+    )
+
+
+def _has_active_scoring_job(
+    session: Session,
+    paper_id: str,
+    *,
+    scorer_version: str,
+    memory_index_version: str,
+) -> bool:
+    return (
+        session.execute(
+            select(ScoringJob.job_id)
+            .where(
+                ScoringJob.paper_id == paper_id,
+                ScoringJob.status.in_(["queued", "running"]),
+                ScoringJob.scorer_version == scorer_version,
+                ScoringJob.memory_index_version == memory_index_version,
+            )
+            .limit(1)
+        ).scalar_one_or_none()
+        is not None
+    )

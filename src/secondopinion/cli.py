@@ -666,6 +666,34 @@ def main(argv: list[str] | None = None) -> None:
     server_worker.add_argument("--database-url", default=os.environ.get("SECONDOPINION_DATABASE_URL", ""))
     server_worker.add_argument("--once", action="store_true")
     server_worker.add_argument("--sleep-seconds", type=float, default=3.0)
+    server_enqueue = subparsers.add_parser(
+        "server-enqueue-scoring",
+        help="Create queued scoring jobs for matching server papers.",
+    )
+    server_enqueue.add_argument("--database-url", default=os.environ.get("SECONDOPINION_DATABASE_URL", ""))
+    server_enqueue.add_argument("--conference", default="ICLR")
+    server_enqueue.add_argument("--year", type=int, default=None)
+    server_enqueue.add_argument("--paper-id", action="append", default=[])
+    server_enqueue.add_argument("--limit", type=int, default=None)
+    server_enqueue.add_argument("--include-scored", action="store_true", help="Also enqueue papers that already have a scorecard for this scorer/memory version.")
+    server_enqueue.add_argument("--dry-run", action="store_true")
+
+    server_status = subparsers.add_parser(
+        "server-scoring-status",
+        help="Report scoring coverage and queued/running/failed paper counts.",
+    )
+    server_status.add_argument("--database-url", default=os.environ.get("SECONDOPINION_DATABASE_URL", ""))
+    server_status.add_argument("--conference", default="ICLR")
+    server_status.add_argument("--year", type=int, default=None)
+
+    server_retry = subparsers.add_parser(
+        "server-retry-failed-scoring",
+        help="Create fresh queued jobs for failed scoring papers.",
+    )
+    server_retry.add_argument("--database-url", default=os.environ.get("SECONDOPINION_DATABASE_URL", ""))
+    server_retry.add_argument("--conference", default="ICLR")
+    server_retry.add_argument("--year", type=int, default=None)
+    server_retry.add_argument("--limit", type=int, default=None)
 
     annotation_export = subparsers.add_parser(
         "annotation-export",
@@ -790,6 +818,12 @@ def main(argv: list[str] | None = None) -> None:
         command_server_register_memory_index(args)
     elif args.command == "server-run-worker":
         command_server_run_worker(args)
+    elif args.command == "server-enqueue-scoring":
+        command_server_enqueue_scoring(args)
+    elif args.command == "server-scoring-status":
+        command_server_scoring_status(args)
+    elif args.command == "server-retry-failed-scoring":
+        command_server_retry_failed_scoring(args)
     elif args.command == "annotation-export":
         command_annotation_export(args)
     elif args.command == "annotation-llm-label":
@@ -1733,6 +1767,68 @@ def command_server_run_worker(args: argparse.Namespace) -> None:
             print("No queued scoring job found.")
         else:
             print(json.dumps(result, ensure_ascii=False, indent=2))
+
+def command_server_enqueue_scoring(args: argparse.Namespace) -> None:
+    from .server.database import init_db, make_engine, make_session_factory, session_scope
+    from .server.repository import enqueue_scoring_jobs
+
+    settings = server_settings_for_cli(args)
+    engine = make_engine(settings.database_url)
+    init_db(engine)
+    session_factory = make_session_factory(engine)
+    with session_scope(session_factory) as session:
+        summary = enqueue_scoring_jobs(
+            session,
+            conference_id=args.conference or None,
+            year=args.year,
+            paper_ids=list(args.paper_id or []) or None,
+            limit=args.limit,
+            requested_by_session="server_batch_cli",
+            scorer_version=settings.scorer_version,
+            memory_index_version=settings.memory_index_version,
+            missing_only=not args.include_scored,
+            dry_run=args.dry_run,
+        )
+    print(json.dumps(summary, ensure_ascii=False, indent=2))
+
+
+def command_server_scoring_status(args: argparse.Namespace) -> None:
+    from .server.database import init_db, make_engine, make_session_factory, session_scope
+    from .server.repository import scoring_status
+
+    settings = server_settings_for_cli(args)
+    engine = make_engine(settings.database_url)
+    init_db(engine)
+    session_factory = make_session_factory(engine)
+    with session_scope(session_factory) as session:
+        summary = scoring_status(
+            session,
+            conference_id=args.conference or None,
+            year=args.year,
+            scorer_version=settings.scorer_version,
+            memory_index_version=settings.memory_index_version,
+        )
+    print(json.dumps(summary, ensure_ascii=False, indent=2))
+
+
+def command_server_retry_failed_scoring(args: argparse.Namespace) -> None:
+    from .server.database import init_db, make_engine, make_session_factory, session_scope
+    from .server.repository import retry_failed_scoring_jobs
+
+    settings = server_settings_for_cli(args)
+    engine = make_engine(settings.database_url)
+    init_db(engine)
+    session_factory = make_session_factory(engine)
+    with session_scope(session_factory) as session:
+        summary = retry_failed_scoring_jobs(
+            session,
+            conference_id=args.conference or None,
+            year=args.year,
+            limit=args.limit,
+            scorer_version=settings.scorer_version,
+            memory_index_version=settings.memory_index_version,
+        )
+    print(json.dumps(summary, ensure_ascii=False, indent=2))
 
 def command_annotation_export(args: argparse.Namespace) -> None:
     if args.evidence_chain_demo:

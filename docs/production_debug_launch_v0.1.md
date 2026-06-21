@@ -77,3 +77,24 @@ The production-debug launch was validated with three real ICLR 2025 papers:
 - `q6CM6UdP3K`
 
 All three scoring jobs completed successfully, wrote public scorecards, and passed the public contract check: no `hybrid_scores`, `memory_prior`, `mapped_score`, retrieved examples, or raw reviewer identity appeared in public responses.
+## Batch Scoring Operations
+
+Use these commands to expand from demo papers to the full imported ICLR corpus without blocking the frontend.
+
+```bash
+python -m secondopinion server-scoring-status --conference ICLR --year 2025
+python -m secondopinion server-enqueue-scoring --conference ICLR --year 2025 --limit 10 --dry-run
+python -m secondopinion server-enqueue-scoring --conference ICLR --year 2025 --limit 10
+python -m secondopinion server-retry-failed-scoring --conference ICLR --year 2025 --limit 20
+```
+
+Recommended rollout order:
+
+```text
+ICLR 2025: 10 -> 100 -> 1000
+ICLR 2024: 100 -> 1000
+ICLR 2023: 100 -> 1000
+ICLR 2022: 100 -> 1000
+```
+
+The enqueue command defaults to missing-only behavior. Papers that already have a scorecard for the active scorer and memory index are skipped, and queued/running jobs are not duplicated.
