@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8" />
@@ -267,6 +267,56 @@
       color: var(--red);
       font-size: 12px;
       font-weight: 650;
+    }
+
+    .search-results {
+      width: min(860px, calc(100vw - 32px));
+      display: grid;
+      gap: 8px;
+      padding: 8px;
+      border: 1px solid var(--line-strong);
+      border-radius: 18px;
+      background: rgba(255, 254, 250, .96);
+      box-shadow: var(--shadow-1);
+    }
+
+    .search-results[hidden] { display: none; }
+
+    .search-results--compact {
+      position: absolute;
+      top: 64px;
+      right: 10px;
+      width: min(590px, calc(100vw - 32px));
+      z-index: 40;
+    }
+
+    .paper-result-card {
+      width: 100%;
+      display: grid;
+      gap: 4px;
+      padding: 10px 12px;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      background: transparent;
+      color: var(--ink);
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .paper-result-card:hover {
+      border-color: var(--line);
+      background: var(--surface-3);
+    }
+
+    .paper-result-card strong {
+      font-size: 13px;
+      line-height: 1.32;
+    }
+
+    .paper-result-card span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
     }
 
     .topbar {
@@ -1304,6 +1354,7 @@
         </button>
       </form>
       <div class="input-error" id="landingError" role="status" aria-live="polite"></div>
+      <div class="search-results" id="landingResults" role="listbox" aria-label="Paper search results" hidden></div>
     </section>
 
     <section class="app-view" aria-label="Review results">
@@ -1461,6 +1512,11 @@
 
     let publicScorecard = null;
     let leaderboards = { red: [], black: [] };
+    let paperSearchResults = [];
+
+    const apiParam = new URLSearchParams(location.search).get('api') || '';
+    const configuredApiBase = apiParam || window.SECONDOPINION_API_BASE || localStorage.getItem('secondOpinion-apiBase') || '';
+    const API_BASE = configuredApiBase.replace(/\/+$/, '');
 
     const toneMap = {
       green: { color: '#16795a', soft: '#eaf6f0' },
@@ -1471,6 +1527,7 @@
 
     const state = {
       paper: 'second-opinion-demo',
+      paperId: 'second-opinion-demo',
       selectedReviewer: null,
       commentFilter: 'ALL',
       busy: false,
@@ -1483,6 +1540,8 @@
     const landingClear = document.getElementById('landingClear');
     const topClear = document.getElementById('topClear');
     const landingError = document.getElementById('landingError');
+    const landingResults = document.getElementById('landingResults');
+    const topResults = document.getElementById('topResults');
     const reviewerGrid = document.getElementById('reviewerGrid');
     const paperStats = document.getElementById('paperStats');
     const redList = document.getElementById('redList');
@@ -1550,7 +1609,53 @@
       landingInput.focus();
     }
 
-    function submitPaper(value, source = 'landing') {
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+    }
+
+    function apiPath(path) {
+      return `${API_BASE}${path}`;
+    }
+
+    async function apiFetch(path, options = {}) {
+      if (!API_BASE) throw new Error('API base is not configured');
+      const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
+      return fetch(apiPath(path), { cache: 'no-store', credentials: 'include', ...options, headers });
+    }
+
+    function paperIdFromValue(value) {
+      const clean = value.trim();
+      try {
+        const url = new URL(clean);
+        if (url.hostname.includes('openreview.net')) return url.searchParams.get('id') || '';
+      } catch (_) {}
+      return /^[A-Za-z0-9_-]{6,}$/.test(clean) && !clean.includes(' ') ? clean : '';
+    }
+
+    function resultContainer(source) {
+      return source === 'top' ? topResults : landingResults;
+    }
+
+    function hideSearchResults() {
+      landingResults.hidden = true;
+      topResults.hidden = true;
+      landingResults.innerHTML = '';
+      topResults.innerHTML = '';
+    }
+
+    function showSearchResults(items, source) {
+      const container = resultContainer(source);
+      paperSearchResults = items.slice(0, 8);
+      const rows = paperSearchResults.map((item, index) => `
+        <button class="paper-result-card" type="button" data-paper-result-index="${index}">
+          <strong>${escapeHtml(item.title || item.paper_id)}</strong>
+          <span>${escapeHtml(item.venue || item.conference_id || 'ICLR')} ${escapeHtml(item.year || '')} · ${Number(item.review_count || 0)} reviews</span>
+        </button>`).join('');
+      container.innerHTML = rows || '<div class="paper-result-card"><strong>No matching paper found</strong><span>Try an OpenReview id or a shorter title.</span></div>';
+      container.hidden = false;
+    }
+
+    async function submitPaper(value, source = 'landing') {
       if (state.busy) return;
       const clean = (value || '').trim();
       if (!clean) {
@@ -1564,24 +1669,106 @@
       }
 
       landingError.textContent = '';
+      hideSearchResults();
       setBusy(true, source);
+      if (API_BASE) {
+        try {
+          const handledByApi = await submitPaperViaApi(clean, source);
+          if (handledByApi) {
+            setBusy(false, source);
+            return;
+          }
+        } catch (error) {
+          console.warn('API paper lookup failed; falling back to static demo.', error);
+          showToast('API unavailable; showing demo data');
+        }
+      }
+
       const delay = reducedMotion.matches ? 0 : 360;
       window.setTimeout(() => {
         state.paper = clean;
+        state.paperId = paperIdFromValue(clean) || 'second-opinion-demo';
         state.selectedReviewer = null;
         state.commentFilter = 'ALL';
         setInputValue(clean);
         document.getElementById('paperTitle').textContent = parsePaperTitle(clean);
-        body.classList.remove('is-idle');
-        body.classList.add('is-resolved');
-        renderAll();
+        enterResolvedView(source);
         setBusy(false, source);
-        window.scrollTo({ top: 0, behavior: reducedMotion.matches ? 'auto' : 'smooth' });
-        if (source === 'top') showToast('Review signal updated');
       }, delay);
     }
 
+    async function submitPaperViaApi(value, source) {
+      const paperId = paperIdFromValue(value);
+      if (paperId) return loadScorecardFromApi(paperId, source, { title: parsePaperTitle(value) });
+      const response = await apiFetch(`/api/conferences/ICLR/papers?query=${encodeURIComponent(value)}&limit=8`);
+      if (!response.ok) return false;
+      const payload = await response.json();
+      const items = Array.isArray(payload.items) ? payload.items : [];
+      if (items.length === 1) return loadScorecardFromApi(items[0].paper_id, source, items[0]);
+      showSearchResults(items, source);
+      showToast(items.length ? 'Choose a paper' : 'No matching paper found');
+      return true;
+    }
+
+    async function loadScorecardFromApi(paperId, source = 'landing', paper = {}) {
+      const response = await apiFetch(`/api/papers/${encodeURIComponent(paperId)}/scorecard`);
+      if (response.status === 404) {
+        await requestScoringJob(paperId);
+        showPendingPaper(paperId, paper, source);
+        return true;
+      }
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const scorecard = await response.json();
+      state.paperId = paperId;
+      applyPublicScorecard(scorecard);
+      hideSearchResults();
+      enterResolvedView(source);
+      if (source === 'top') showToast('Review signal updated');
+      return true;
+    }
+
+    async function requestScoringJob(paperId) {
+      const response = await apiFetch(`/api/papers/${encodeURIComponent(paperId)}/scoring-jobs`, { method: 'POST', body: '{}' });
+      if (!response.ok) throw new Error(`Unable to create scoring job: HTTP ${response.status}`);
+      showToast('Scoring job queued');
+    }
+
+    function showPendingPaper(paperId, paper, source) {
+      const title = paper.title || parsePaperTitle(paperId);
+      state.paper = title;
+      state.paperId = paperId;
+      state.selectedReviewer = null;
+      state.commentFilter = 'ALL';
+      setInputValue(title);
+      applyPublicScorecard({
+        schema_version: 'reviewer-public-scorecard-v0.1',
+        paper: { paper_id: paperId, title, conference: `${paper.venue || paper.conference_id || 'ICLR'} ${paper.year || ''}`.trim(), venue: paper.venue || paper.conference_id || 'ICLR', year: paper.year || '' },
+        summary: { overall_score: 0, signal_label: 'Scoring queued', reviewer_count: 0, comment_count: 0, topic_count: 0 },
+        reviewers: [],
+        comments: [],
+        topics: [],
+        leaderboards: { red: [], black: [] }
+      });
+      enterResolvedView(source);
+    }
+
+    function enterResolvedView(source) {
+      body.classList.remove('is-idle');
+      body.classList.add('is-resolved');
+      renderAll();
+      window.scrollTo({ top: 0, behavior: reducedMotion.matches ? 'auto' : 'smooth' });
+      if (source === 'top') showToast('Review signal updated');
+    }
     async function loadPublicScorecard() {
+      const initialParams = new URLSearchParams(location.search);
+      const initialPaperId = initialParams.get('paper') || initialParams.get('id') || '';
+      if (API_BASE && initialPaperId) {
+        try {
+          if (await loadScorecardFromApi(initialPaperId, 'landing')) return;
+        } catch (error) {
+          console.warn('Initial API scorecard load failed; using static fallback.', error);
+        }
+      }
       try {
         const response = await fetch('./demos/reviewer_public_scorecard_v0.1.json', { cache: 'no-store' });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -1590,10 +1777,10 @@
         console.warn('Using built-in demo scorecard fallback.', error);
       }
     }
-
     function applyPublicScorecard(scorecard) {
       publicScorecard = scorecard;
       const paper = scorecard.paper || {};
+      if (paper.paper_id) state.paperId = paper.paper_id;
       const summary = scorecard.summary || {};
       const reviewerItems = Array.isArray(scorecard.reviewers) ? scorecard.reviewers : [];
       const commentItems = Array.isArray(scorecard.comments) ? scorecard.comments : [];
@@ -1655,7 +1842,7 @@
     }
 
     function reviewerSocialCounts(reviewer) {
-      const key = `reviewer:${reviewer.id}`;
+      const key = `reviewer:${state.paperId}:${reviewer.id}`;
       const selected = voteState[key] || null;
       const base = reviewer.social || { up: 0, down: 0 };
       return {
@@ -1705,14 +1892,30 @@
         </li>`;
     }
 
-    function updateReviewerVote(reviewerId, action) {
-      const key = `reviewer:${reviewerId}`;
+    async function updateReviewerVote(reviewerId, action) {
+      const key = `reviewer:${state.paperId}:${reviewerId}`;
       const current = voteState[key] || null;
       voteState[key] = current === action ? null : action;
       if (!voteState[key]) delete voteState[key];
       saveVoteState(voteState);
       renderLeaderboards();
       showToast(voteState[key] ? 'Vote recorded' : 'Vote removed');
+      if (!API_BASE) return;
+      try {
+        const response = await apiFetch(`/api/papers/${encodeURIComponent(state.paperId)}/reviewers/${encodeURIComponent(reviewerId)}/votes`, {
+          method: 'POST',
+          body: JSON.stringify({ vote: voteState[key] || 'none' })
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const payload = await response.json();
+        if (payload.scorecard) {
+          applyPublicScorecard(payload.scorecard);
+          renderAll();
+        }
+      } catch (error) {
+        console.warn('Reviewer vote sync failed.', error);
+        showToast('Vote saved locally');
+      }
     }
     function renderOverallScore() {
       const avg = publicScorecard?.summary?.overall_score ?? Math.round(reviewers.reduce((sum, reviewer) => sum + reviewer.score, 0) / Math.max(1, reviewers.length));
@@ -1722,7 +1925,7 @@
       const label = document.getElementById('signalLabel');
       ring.style.setProperty('--score', avg);
       ring.setAttribute('aria-label', `Overall score ${avg} out of 100`);
-      label.textContent = band.label;
+      label.textContent = publicScorecard?.summary?.signal_label || band.label;
 
       if (reducedMotion.matches) {
         scoreEl.textContent = avg;
@@ -2018,6 +2221,19 @@
     document.getElementById('resetCloud').addEventListener('click', resetCloudView);
 
     document.addEventListener('click', event => {
+      const paperResultButton = event.target.closest('[data-paper-result-index]');
+      if (paperResultButton) {
+        const source = paperResultButton.closest('#topResults') ? 'top' : 'landing';
+        const item = paperSearchResults[Number(paperResultButton.dataset.paperResultIndex)];
+        if (!item) return;
+        setBusy(true, source);
+        loadScorecardFromApi(item.paper_id, source, item).catch(error => {
+          console.warn('Paper result load failed.', error);
+          showToast('Could not load this paper');
+        }).finally(() => setBusy(false, source));
+        return;
+      }
+
       const reviewerVoteButton = event.target.closest('[data-reviewer-vote]');
       if (reviewerVoteButton) {
         updateReviewerVote(reviewerVoteButton.dataset.reviewerId, reviewerVoteButton.dataset.reviewerVote);
@@ -2158,6 +2374,13 @@
   </script>
 </body>
 </html>
+
+
+
+
+
+
+
 
 
 

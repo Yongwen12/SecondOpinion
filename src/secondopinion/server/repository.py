@@ -1,0 +1,333 @@
+from __future__ import annotations
+
+import copy
+import uuid
+from collections import defaultdict
+from typing import Any
+
+from sqlalchemy import delete, func, or_, select
+from sqlalchemy.orm import Session
+
+from .models import (
+    Conference,
+    MemoryIndex,
+    Paper,
+    Review,
+    ReviewerScore,
+    Scorecard,
+    ScoringJob,
+    Vote,
+    utcnow,
+)
+from ..reviewer_public_scorecard import PUBLIC_SCORECARD_VERSION
+
+
+def stable_scorecard_id(paper_id: str, scorer_version: str, memory_index_version: str) -> str:
+    return f"scorecard:{paper_id}:{scorer_version}:{memory_index_version}"
+
+
+def create_scoring_job(
+    session: Session,
+    *,
+    paper_id: str,
+    requested_by_session: str = "",
+    scorer_version: str,
+    memory_index_version: str,
+) -> ScoringJob:
+    existing = session.execute(
+        select(ScoringJob)
+        .where(
+            ScoringJob.paper_id == paper_id,
+            ScoringJob.status.in_(["queued", "running"]),
+            ScoringJob.scorer_version == scorer_version,
+            ScoringJob.memory_index_version == memory_index_version,
+        )
+        .order_by(ScoringJob.created_at.desc())
+    ).scalar_one_or_none()
+    if existing:
+        return existing
+    job = ScoringJob(
+        job_id=f"job_{uuid.uuid4().hex[:16]}",
+        paper_id=paper_id,
+        status="queued",
+        requested_by_session=requested_by_session,
+        scorer_version=scorer_version,
+        memory_index_version=memory_index_version,
+    )
+    session.add(job)
+    session.flush()
+    return job
+
+
+def latest_scorecard(session: Session, paper_id: str) -> Scorecard | None:
+    return session.execute(
+        select(Scorecard)
+        .where(Scorecard.paper_id == paper_id)
+        .order_by(Scorecard.created_at.desc())
+        .limit(1)
+    ).scalar_one_or_none()
+
+
+def store_scorecard(
+    session: Session,
+    *,
+    paper: Paper,
+    public_json: dict[str, Any],
+    internal_artifact_path: str,
+    scorer_version: str,
+    memory_index_version: str,
+) -> Scorecard:
+    scorecard_id = stable_scorecard_id(paper.paper_id, scorer_version, memory_index_version)
+    scorecard = session.get(Scorecard, scorecard_id)
+    if scorecard is None:
+        scorecard = Scorecard(
+            scorecard_id=scorecard_id,
+            paper_id=paper.paper_id,
+            schema_version=str(public_json.get("schema_version") or PUBLIC_SCORECARD_VERSION),
+            scorer_version=scorer_version,
+            memory_index_version=memory_index_version,
+            public_json=public_json,
+            internal_artifact_path=internal_artifact_path,
+        )
+        session.add(scorecard)
+    else:
+        scorecard.schema_version = str(public_json.get("schema_version") or PUBLIC_SCORECARD_VERSION)
+        scorecard.public_json = public_json
+        scorecard.internal_artifact_path = internal_artifact_path
+        scorecard.created_at = utcnow()
+
+    session.execute(delete(ReviewerScore).where(ReviewerScore.scorecard_id == scorecard_id))
+    for reviewer in public_json.get("reviewers", []):
+        if not isinstance(reviewer, dict):
+            continue
+        session.add(
+            ReviewerScore(
+                scorecard_id=scorecard_id,
+                paper_id=paper.paper_id,
+                conference_id=paper.conference_id,
+                year=paper.year,
+                reviewer_key=str(reviewer.get("reviewer_key", "")),
+                nickname=str(reviewer.get("nickname", "")),
+                avatar_key=str(reviewer.get("avatar_key", "")),
+                score=int(reviewer.get("score") or 0),
+                dimensions_json=list(reviewer.get("dimensions") or []),
+                social_json=dict(reviewer.get("social") or {}),
+            )
+        )
+    session.flush()
+    return scorecard
+
+
+def paper_to_public_dict(paper: Paper) -> dict[str, Any]:
+    return {
+        "paper_id": paper.paper_id,
+        "openreview_forum_id": paper.openreview_forum_id,
+        "conference_id": paper.conference_id,
+        "venue": paper.venue,
+        "year": paper.year,
+        "title": paper.title,
+        "abstract": paper.abstract,
+        "decision": paper.decision,
+        "pdf_url": paper.pdf_url,
+        "review_count": len(paper.reviews),
+    }
+
+
+def job_to_public_dict(job: ScoringJob) -> dict[str, Any]:
+    return {
+        "job_id": job.job_id,
+        "paper_id": job.paper_id,
+        "status": job.status,
+        "scorer_version": job.scorer_version,
+        "memory_index_version": job.memory_index_version,
+        "error": job.error,
+        "created_at": job.created_at.isoformat() if job.created_at else "",
+        "updated_at": job.updated_at.isoformat() if job.updated_at else "",
+        "completed_at": job.completed_at.isoformat() if job.completed_at else "",
+    }
+
+
+def list_conferences(session: Session) -> list[dict[str, Any]]:
+    rows = session.execute(
+        select(Conference, func.count(Paper.paper_id), func.min(Paper.year), func.max(Paper.year))
+        .join(Paper, Paper.conference_id == Conference.conference_id, isouter=True)
+        .group_by(Conference.conference_id)
+        .order_by(Conference.conference_id)
+    ).all()
+    return [
+        {
+            "conference_id": conference.conference_id,
+            "name": conference.name,
+            "venue": conference.venue,
+            "paper_count": int(count or 0),
+            "min_year": min_year,
+            "max_year": max_year,
+        }
+        for conference, count, min_year, max_year in rows
+    ]
+
+
+def search_papers(
+    session: Session,
+    *,
+    conference_id: str,
+    query: str = "",
+    year: int | None = None,
+    limit: int = 20,
+    cursor: str = "",
+) -> dict[str, Any]:
+    offset = max(0, int(cursor or "0"))
+    limit = max(1, min(50, limit))
+    stmt = select(Paper).where(Paper.conference_id == conference_id)
+    if year is not None:
+        stmt = stmt.where(Paper.year == year)
+    clean_query = query.strip()
+    if clean_query:
+        like = f"%{clean_query}%"
+        stmt = stmt.where(or_(Paper.title.ilike(like), Paper.paper_id.ilike(like), Paper.openreview_forum_id.ilike(like)))
+    stmt = stmt.order_by(Paper.year.desc(), Paper.title.asc()).offset(offset).limit(limit + 1)
+    papers = list(session.execute(stmt).scalars())
+    items = [paper_to_public_dict(paper) for paper in papers[:limit]]
+    return {
+        "items": items,
+        "next_cursor": str(offset + limit) if len(papers) > limit else None,
+    }
+
+
+def vote_counts_by_reviewer(session: Session, paper_id: str) -> dict[str, dict[str, int]]:
+    rows = session.execute(
+        select(Vote.reviewer_key, Vote.vote, func.count(Vote.id))
+        .where(Vote.paper_id == paper_id)
+        .group_by(Vote.reviewer_key, Vote.vote)
+    ).all()
+    counts: dict[str, dict[str, int]] = defaultdict(lambda: {"up": 0, "down": 0})
+    for reviewer_key, vote, count in rows:
+        if vote in {"up", "down"}:
+            counts[str(reviewer_key)][str(vote)] = int(count)
+    return counts
+
+
+def apply_vote_counts(session: Session, paper_id: str, public_json: dict[str, Any]) -> dict[str, Any]:
+    scorecard = copy.deepcopy(public_json)
+    counts = vote_counts_by_reviewer(session, paper_id)
+    for reviewer in scorecard.get("reviewers", []):
+        if not isinstance(reviewer, dict):
+            continue
+        reviewer_key = str(reviewer.get("reviewer_key", ""))
+        base = reviewer.get("social") or {}
+        reviewer["social"] = {
+            "up": int(base.get("up") or 0) + counts[reviewer_key]["up"],
+            "down": int(base.get("down") or 0) + counts[reviewer_key]["down"],
+        }
+    scorecard["leaderboards"] = leaderboard_keys_from_public(scorecard)
+    return scorecard
+
+
+def leaderboard_keys_from_public(public_json: dict[str, Any]) -> dict[str, list[str]]:
+    reviewers = [item for item in public_json.get("reviewers", []) if isinstance(item, dict)]
+
+    def social_score(reviewer: dict[str, Any]) -> float:
+        social = reviewer.get("social") or {}
+        return float(reviewer.get("score") or 0) + float(social.get("up") or 0) * 0.16 - float(social.get("down") or 0) * 0.22
+
+    def risk_score(reviewer: dict[str, Any]) -> float:
+        social = reviewer.get("social") or {}
+        return (100 - float(reviewer.get("score") or 0)) + float(social.get("down") or 0) * 0.34 - float(social.get("up") or 0) * 0.1
+
+    red = sorted(reviewers, key=social_score, reverse=True)
+    black = sorted(reviewers, key=risk_score, reverse=True)
+    return {
+        "red": [str(item.get("reviewer_key", "")) for item in red[:10]],
+        "black": [str(item.get("reviewer_key", "")) for item in black[:10]],
+    }
+
+
+def upsert_vote(session: Session, *, paper_id: str, reviewer_key: str, session_id: str, vote: str) -> dict[str, Any]:
+    if vote not in {"up", "down", "none"}:
+        raise ValueError("vote must be one of: up, down, none")
+    existing = session.execute(
+        select(Vote).where(
+            Vote.paper_id == paper_id,
+            Vote.reviewer_key == reviewer_key,
+            Vote.session_id == session_id,
+        )
+    ).scalar_one_or_none()
+    if vote == "none":
+        if existing is not None:
+            session.delete(existing)
+            session.flush()
+        return {"paper_id": paper_id, "reviewer_key": reviewer_key, "selected": None}
+    if existing is None:
+        existing = Vote(paper_id=paper_id, reviewer_key=reviewer_key, session_id=session_id, vote=vote)
+        session.add(existing)
+    else:
+        existing.vote = vote
+        existing.updated_at = utcnow()
+    session.flush()
+    return {"paper_id": paper_id, "reviewer_key": reviewer_key, "selected": vote}
+
+
+def build_leaderboards(
+    session: Session,
+    *,
+    conference_id: str | None = None,
+    year: int | None = None,
+    limit: int = 10,
+) -> dict[str, list[dict[str, Any]]]:
+    limit = max(1, min(50, limit))
+    stmt = select(ReviewerScore, Paper.title).join(Paper, Paper.paper_id == ReviewerScore.paper_id)
+    if conference_id:
+        stmt = stmt.where(ReviewerScore.conference_id == conference_id)
+    if year is not None:
+        stmt = stmt.where(ReviewerScore.year == year)
+    rows = session.execute(stmt).all()
+    counts_by_paper: dict[str, dict[str, dict[str, int]]] = {}
+    items = []
+    for score, title in rows:
+        if score.paper_id not in counts_by_paper:
+            counts_by_paper[score.paper_id] = vote_counts_by_reviewer(session, score.paper_id)
+        social = dict(score.social_json or {})
+        extra = counts_by_paper[score.paper_id][score.reviewer_key]
+        up = int(social.get("up") or 0) + extra["up"]
+        down = int(social.get("down") or 0) + extra["down"]
+        red_score = score.score + up * 0.16 - down * 0.22
+        black_score = (100 - score.score) + down * 0.34 - up * 0.1
+        items.append(
+            {
+                "paper_id": score.paper_id,
+                "paper_title": title,
+                "reviewer_key": score.reviewer_key,
+                "nickname": score.nickname,
+                "avatar_key": score.avatar_key,
+                "score": score.score,
+                "up": up,
+                "down": down,
+                "red_score": round(red_score, 2),
+                "black_score": round(black_score, 2),
+            }
+        )
+    red = sorted(items, key=lambda item: item["red_score"], reverse=True)[:limit]
+    black = sorted(items, key=lambda item: item["black_score"], reverse=True)[:limit]
+    return {"red": red, "black": black}
+
+
+def register_memory_index(
+    session: Session,
+    *,
+    version: str,
+    path: str,
+    record_count: int,
+    dimensions: dict[str, Any],
+    active: bool = True,
+) -> MemoryIndex:
+    index = session.get(MemoryIndex, version)
+    if index is None:
+        index = MemoryIndex(version=version, path=path, record_count=record_count, dimensions_json=dimensions, active=active)
+        session.add(index)
+    else:
+        index.path = path
+        index.record_count = record_count
+        index.dimensions_json = dimensions
+        index.active = active
+    session.flush()
+    return index

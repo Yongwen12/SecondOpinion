@@ -1,0 +1,82 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: secondopinion
+      POSTGRES_USER: secondopinion
+      POSTGRES_PASSWORD: secondopinion
+    ports:
+      - "5432:5432"
+    volumes:
+      - secondopinion-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U secondopinion -d secondopinion"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  api:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SECONDOPINION_DATABASE_URL: postgresql+psycopg://secondopinion:secondopinion@db:5432/secondopinion
+      SECONDOPINION_SERVER_ARTIFACT_ROOT: /srv/secondopinion/artifacts
+      SECONDOPINION_SCORING_MEMORY: /srv/secondopinion/data/normalized/scoring_memory_external_full_lite_v0.1.jsonl
+      SECONDOPINION_CORS_ORIGINS: ${SECONDOPINION_CORS_ORIGINS:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      SECONDOPINION_ENABLE_LLM_SCORER: ${SECONDOPINION_ENABLE_LLM_SCORER:-0}
+      SECONDOPINION_SCORER_MODEL: ${SECONDOPINION_SCORER_MODEL:-gpt-5-nano}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/srv/secondopinion/data:ro
+      - secondopinion-artifacts:/srv/secondopinion/artifacts
+
+  worker:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ["python", "-m", "secondopinion", "server-run-worker", "--sleep-seconds", "5"]
+    environment:
+      SECONDOPINION_DATABASE_URL: postgresql+psycopg://secondopinion:secondopinion@db:5432/secondopinion
+      SECONDOPINION_SERVER_ARTIFACT_ROOT: /srv/secondopinion/artifacts
+      SECONDOPINION_SCORING_MEMORY: /srv/secondopinion/data/normalized/scoring_memory_external_full_lite_v0.1.jsonl
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      SECONDOPINION_ENABLE_LLM_SCORER: ${SECONDOPINION_ENABLE_LLM_SCORER:-0}
+      SECONDOPINION_SCORER_MODEL: ${SECONDOPINION_SCORER_MODEL:-gpt-5-nano}
+    volumes:
+      - ./data:/srv/secondopinion/data:ro
+      - secondopinion-artifacts:/srv/secondopinion/artifacts
+
+  bootstrap:
+    build: .
+    profiles: ["bootstrap"]
+    depends_on:
+      db:
+        condition: service_healthy
+    command:
+      - /bin/sh
+      - -lc
+      - |
+        python -m secondopinion server-init-db &&
+        python -m secondopinion server-ingest-normalized \
+          /srv/secondopinion/data/normalized/iclr_2022_sample_1000.json \
+          /srv/secondopinion/data/normalized/iclr_2023_sample_1000.json \
+          /srv/secondopinion/data/normalized/iclr_2024_sample_1000.json \
+          /srv/secondopinion/data/normalized/iclr_2025_sample_1000.json &&
+        python -m secondopinion server-import-demo-scorecard --input frontend/demos/reviewer_public_scorecard_v0.1.json &&
+        python -m secondopinion server-register-memory-index --memory /srv/secondopinion/data/normalized/scoring_memory_external_full_lite_v0.1.jsonl
+    environment:
+      SECONDOPINION_DATABASE_URL: postgresql+psycopg://secondopinion:secondopinion@db:5432/secondopinion
+      SECONDOPINION_SERVER_ARTIFACT_ROOT: /srv/secondopinion/artifacts
+      SECONDOPINION_SCORING_MEMORY: /srv/secondopinion/data/normalized/scoring_memory_external_full_lite_v0.1.jsonl
+    volumes:
+      - ./data:/srv/secondopinion/data:ro
+      - secondopinion-artifacts:/srv/secondopinion/artifacts
+
+volumes:
+  secondopinion-postgres:
+  secondopinion-artifacts:

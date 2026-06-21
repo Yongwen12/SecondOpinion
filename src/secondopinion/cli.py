@@ -636,6 +636,37 @@ def main(argv: list[str] | None = None) -> None:
     storage = subparsers.add_parser("storage-info", help="Show artifact storage and Google Drive suggestions.")
     storage.add_argument("--storage-root", default=None)
 
+    server_init = subparsers.add_parser("server-init-db", help="Create SecondOpinion server database tables.")
+    server_init.add_argument("--database-url", default=os.environ.get("SECONDOPINION_DATABASE_URL", ""))
+
+    server_ingest = subparsers.add_parser(
+        "server-ingest-normalized",
+        help="Import normalized ICLR paper/review JSON files into the server database.",
+    )
+    server_ingest.add_argument("inputs", nargs="*")
+    server_ingest.add_argument("--database-url", default=os.environ.get("SECONDOPINION_DATABASE_URL", ""))
+
+    server_demo = subparsers.add_parser(
+        "server-import-demo-scorecard",
+        help="Import the static frontend public scorecard fixture into the server database.",
+    )
+    server_demo.add_argument("--input", default="frontend/demos/reviewer_public_scorecard_v0.1.json")
+    server_demo.add_argument("--paper-id", default="second-opinion-demo")
+    server_demo.add_argument("--database-url", default=os.environ.get("SECONDOPINION_DATABASE_URL", ""))
+
+    server_memory = subparsers.add_parser(
+        "server-register-memory-index",
+        help="Register the external scoring memory JSONL used by the server worker.",
+    )
+    server_memory.add_argument("--memory", default="data/normalized/scoring_memory_external_full_lite_v0.1.jsonl")
+    server_memory.add_argument("--version", default=os.environ.get("SECONDOPINION_MEMORY_INDEX_VERSION", "external-full-lite-v0.1"))
+    server_memory.add_argument("--database-url", default=os.environ.get("SECONDOPINION_DATABASE_URL", ""))
+
+    server_worker = subparsers.add_parser("server-run-worker", help="Run queued server scoring jobs.")
+    server_worker.add_argument("--database-url", default=os.environ.get("SECONDOPINION_DATABASE_URL", ""))
+    server_worker.add_argument("--once", action="store_true")
+    server_worker.add_argument("--sleep-seconds", type=float, default=3.0)
+
     annotation_export = subparsers.add_parser(
         "annotation-export",
         parents=[storage_parent],
@@ -749,6 +780,16 @@ def main(argv: list[str] | None = None) -> None:
         command_demo(args)
     elif args.command == "storage-info":
         command_storage_info(args)
+    elif args.command == "server-init-db":
+        command_server_init_db(args)
+    elif args.command == "server-ingest-normalized":
+        command_server_ingest_normalized(args)
+    elif args.command == "server-import-demo-scorecard":
+        command_server_import_demo_scorecard(args)
+    elif args.command == "server-register-memory-index":
+        command_server_register_memory_index(args)
+    elif args.command == "server-run-worker":
+        command_server_run_worker(args)
     elif args.command == "annotation-export":
         command_annotation_export(args)
     elif args.command == "annotation-llm-label":
@@ -1598,6 +1639,100 @@ def command_storage_info(args: argparse.Namespace) -> None:
     else:
         print("Suggested Google Drive root: not found")
 
+
+
+def server_settings_for_cli(args: argparse.Namespace):
+    from dataclasses import replace
+    from .server.config import settings_from_env
+
+    settings = settings_from_env()
+    database_url = getattr(args, "database_url", "")
+    if database_url:
+        settings = replace(settings, database_url=database_url)
+    return settings
+
+
+def command_server_init_db(args: argparse.Namespace) -> None:
+    from .server.database import init_db, make_engine
+
+    settings = server_settings_for_cli(args)
+    engine = make_engine(settings.database_url)
+    init_db(engine)
+    print(f"Initialized SecondOpinion server database at {settings.database_url}.")
+
+
+def command_server_ingest_normalized(args: argparse.Namespace) -> None:
+    from .server.config import normalized_inputs_from_env
+    from .server.database import init_db, make_engine, make_session_factory, session_scope
+    from .server.ingest import import_normalized_dataset
+
+    settings = server_settings_for_cli(args)
+    engine = make_engine(settings.database_url)
+    init_db(engine)
+    session_factory = make_session_factory(engine)
+    inputs = [Path(item) for item in args.inputs] if args.inputs else normalized_inputs_from_env()
+    summaries = []
+    with session_scope(session_factory) as session:
+        for input_path in inputs:
+            summaries.append(import_normalized_dataset(session, input_path))
+    total_papers = sum(int(item.get("paper_count", 0)) for item in summaries)
+    total_reviews = sum(int(item.get("review_count", 0)) for item in summaries)
+    print(f"Imported {len(summaries)} normalized datasets: papers={total_papers}; reviews={total_reviews}.")
+
+
+def command_server_import_demo_scorecard(args: argparse.Namespace) -> None:
+    from .server.database import init_db, make_engine, make_session_factory, session_scope
+    from .server.ingest import import_public_scorecard
+
+    settings = server_settings_for_cli(args)
+    engine = make_engine(settings.database_url)
+    init_db(engine)
+    session_factory = make_session_factory(engine)
+    with session_scope(session_factory) as session:
+        summary = import_public_scorecard(
+            session,
+            path=args.input,
+            paper_id=args.paper_id,
+            scorer_version=settings.scorer_version,
+            memory_index_version=settings.memory_index_version,
+        )
+    print(
+        f"Imported demo scorecard for paper={summary['paper_id']}; "
+        f"reviewers={summary['reviewer_count']}; scorecard={summary['scorecard_id']}."
+    )
+
+
+def command_server_register_memory_index(args: argparse.Namespace) -> None:
+    from .server.database import init_db, make_engine, make_session_factory, session_scope
+    from .server.ingest import register_scoring_memory_from_file
+
+    settings = server_settings_for_cli(args)
+    engine = make_engine(settings.database_url)
+    init_db(engine)
+    session_factory = make_session_factory(engine)
+    with session_scope(session_factory) as session:
+        summary = register_scoring_memory_from_file(session, path=args.memory, version=args.version)
+    print(f"Registered memory index {summary['version']} with {summary['record_count']} records at {summary['path']}.")
+
+
+def command_server_run_worker(args: argparse.Namespace) -> None:
+    from .server.database import init_db, make_engine, make_session_factory
+    from .server.worker import run_worker_loop
+
+    settings = server_settings_for_cli(args)
+    engine = make_engine(settings.database_url)
+    init_db(engine)
+    session_factory = make_session_factory(engine)
+    for result in run_worker_loop(
+        session_factory,
+        settings=settings,
+        once=args.once,
+        sleep_seconds=args.sleep_seconds,
+    ):
+        if result is None:
+            print("No queued scoring job found.")
+        else:
+            print(json.dumps(result, ensure_ascii=False, indent=2))
 
 def command_annotation_export(args: argparse.Namespace) -> None:
     if args.evidence_chain_demo:

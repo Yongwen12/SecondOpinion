@@ -27,6 +27,7 @@ data/normalized/
 data/audits/
 data/pdfs/
 data/derived/
+data/server/
 data/annotations/
 data/cache/
 data/external/
@@ -37,3 +38,4 @@ reports/annotations/
 
 .DS_Store
 Thumbs.db
+
