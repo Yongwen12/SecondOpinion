@@ -3,7 +3,7 @@ from __future__ import annotations
 import argparse
 from collections.abc import Iterable
 
-from sqlalchemy import create_engine, text
+from sqlalchemy import Integer, create_engine, text
 from sqlalchemy.engine import Engine
 
 from secondopinion.server.database import Base, init_db
@@ -39,7 +39,7 @@ def reset_sequences(target: Engine, table_names: Iterable[str]) -> None:
         for table_name in table_names:
             table = Base.metadata.tables[table_name]
             for column in table.columns:
-                if not column.primary_key or not column.autoincrement:
+                if not column.primary_key or not isinstance(column.type, Integer):
                     continue
                 conn.execute(
                     text(
