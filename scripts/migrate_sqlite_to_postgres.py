@@ -47,13 +47,10 @@ def main() -> None:
 
     source = create_engine(args.sqlite_url, future=True)
     target = create_engine(args.postgres_url, future=True)
-    init_db(target)
-
     table_names = [table.name for table in Base.metadata.sorted_tables]
     if args.replace:
-        with target.begin() as conn:
-            for table_name in reversed(table_names):
-                conn.execute(Base.metadata.tables[table_name].delete())
+        Base.metadata.drop_all(target)
+    init_db(target)
 
     total = 0
     for table_name in table_names:
