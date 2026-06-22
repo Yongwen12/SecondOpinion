@@ -311,6 +311,68 @@
       background: var(--ink);
       color: var(--surface);
     }
+    .home-boards-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      align-items: start;
+    }
+
+    .home-board {
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 254, 250, .86);
+      box-shadow: var(--shadow-1);
+      padding: 12px;
+    }
+
+    .home-board--red .board-title { color: var(--green); }
+    .home-board--black .board-title { color: var(--red); }
+
+    .board-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 4px 4px 12px;
+    }
+
+    .board-title {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    .board-subtitle {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 780;
+    }
+
+    .mobile-board-tabs {
+      display: none;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .mobile-board-tab {
+      min-height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--surface-2);
+      color: var(--ink-2);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 850;
+    }
+
+    .mobile-board-tab.is-active {
+      border-color: var(--ink);
+      background: var(--ink);
+      color: var(--surface);
+    }
     .app-view { display: block; }
     .is-idle .app-view { display: none; }
     .is-resolved .landing { display: none; }
@@ -1521,6 +1583,10 @@
       .landing { padding: 14px; }
       .community-home { width: min(100%, calc(100vw - 28px)); }
       .community-grid { grid-template-columns: 1fr; }
+      .home-boards-grid { grid-template-columns: 1fr; }
+      .mobile-board-tabs { display: grid; }
+      .home-board[data-home-board-panel] { display: none; }
+      .home-board[data-home-board-panel].is-active { display: block; }
       .community-board { position: static; }
       .community-copy h1 { font-size: 32px; line-height: 1.05; }
       .search-shell--landing {
@@ -1562,18 +1628,18 @@
             <span>Review Signal Community</span>
           </div>
           <div class="community-copy">
-            <h1>Find papers through reviewer signals.</h1>
-            <p>Search a paper, or browse recent review signals and community-ranked reviewer comments.</p>
+            <h1>Review quality, ranked by the community.</h1>
+            <p>Search a paper, or browse reviewer quality red and black lists.</p>
           </div>
           <form class="search-shell search-shell--landing" id="landingSearch" novalidate>
             <span class="search-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.7-3.7"></path></svg>
             </span>
             <label class="sr-only" for="landingInput">Paper title or link</label>
-            <input class="search-input" id="landingInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Search ICLR papers, titles, or OpenReview links" />
+            <input class="search-input" id="landingInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="搜索论文标题，或粘贴 OpenReview / arXiv 链接" />
             <button class="clear-button" id="landingClear" type="button" aria-label="Clear input" hidden>×</button>
             <button class="analyze-button" id="landingSubmit" type="submit">
-              <span class="button-label">Search</span><span class="button-arrow" aria-hidden="true">→</span><span class="spinner" aria-hidden="true"></span>
+              <span class="button-label">搜索</span><span class="button-arrow" aria-hidden="true">→</span><span class="spinner" aria-hidden="true"></span>
             </button>
           </form>
           <div class="input-error" id="landingError" role="status" aria-live="polite"></div>
@@ -1585,20 +1651,20 @@
             <button class="topic-chip" type="button" data-home-year="2022">ICLR 2022</button>
           </div>
         </header>
-        <div class="community-grid">
-          <section class="feed-panel" aria-labelledby="latestPapersTitle">
-            <div class="panel-head"><h2 id="latestPapersTitle">Latest review signals</h2><span class="panel-kicker" id="latestPapersMeta">ICLR 2025</span></div>
-            <ol class="home-paper-list" id="latestPaperList"></ol>
-          </section>
-          <aside class="community-board" aria-label="Community leaderboards">
-            <div class="panel-head"><h2>Reviewer Arena</h2><span class="panel-kicker">public votes</span></div>
-            <div class="board-tabs">
-              <button class="board-tab is-active" type="button" data-home-board="red">Red List</button>
-              <button class="board-tab" type="button" data-home-board="black">Black List</button>
-            </div>
-            <ol class="community-board-list" id="communityBoardList"></ol>
-          </aside>
+        <div class="mobile-board-tabs" aria-label="Leaderboard switch">
+          <button class="mobile-board-tab is-active" type="button" data-home-board="red">红榜</button>
+          <button class="mobile-board-tab" type="button" data-home-board="black">黑榜</button>
         </div>
+        <section class="home-boards-grid" aria-label="Reviewer quality boards">
+          <article class="home-board home-board--red" data-home-board-panel="red">
+            <header class="board-heading"><h2 class="board-title">红榜</h2><span class="board-subtitle" id="homeRedMeta">ICLR 2025</span></header>
+            <ol class="community-board-list" id="homeRedList"></ol>
+          </article>
+          <article class="home-board home-board--black" data-home-board-panel="black">
+            <header class="board-heading"><h2 class="board-title">黑榜</h2><span class="board-subtitle" id="homeBlackMeta">ICLR 2025</span></header>
+            <ol class="community-board-list" id="homeBlackList"></ol>
+          </article>
+        </section>
       </div>
     </section>
     <section class="app-view" aria-label="Review results">
@@ -1951,22 +2017,30 @@
       }).join('');
     }
 
-    function renderCommunityBoard() {
-      if (!communityBoardList) return;
-      document.querySelectorAll('[data-home-board]').forEach(button => button.classList.toggle('is-active', button.dataset.homeBoard === homeBoardKind));
-      const rows = (homeBoards[homeBoardKind] || []).slice(0, 10);
+    function boardRows(kind) {
+      const rows = (homeBoards[kind] || []).slice(0, 10);
       if (!rows.length) {
-        communityBoardList.innerHTML = '<li><button class="community-board-row" type="button" data-home-paper-id="second-opinion-demo"><strong>Demo reviewer</strong><span class="board-meta">Open a paper to start voting.</span></button></li>';
-        return;
+        return '<li><button class="community-board-row" type="button" data-home-paper-id="second-opinion-demo"><strong>Demo reviewer</strong><span class="board-meta">Open a paper to start voting.</span></button></li>';
       }
-      communityBoardList.innerHTML = rows.map((item, index) => `
+      return rows.map((item, index) => `
         <li>
           <button class="community-board-row" type="button" data-home-board-paper="${escapeHtml(item.paper_id || '')}">
             <span class="home-paper-meta">#${index + 1} · ${escapeHtml(item.paper_title || 'ICLR paper')}</span>
             <strong>${escapeHtml(item.nickname || item.reviewer_key || 'Reviewer')}</strong>
-            <span class="board-meta">Score ${Math.round(Number(item.score || 0))} · ${Number(item.up || 0)} useful · ${Number(item.down || 0)} disputed</span>
+            <span class="paper-score-pill">${Math.round(Number(item.score || 0))} Q</span>
+            <span class="board-meta">${Number(item.up || 0)} useful · ${Number(item.down || 0)} disputed</span>
           </button>
         </li>`).join('');
+    }
+
+    function renderCommunityBoard() {
+      document.querySelectorAll('[data-home-board]').forEach(button => button.classList.toggle('is-active', button.dataset.homeBoard === homeBoardKind));
+      document.querySelectorAll('[data-home-board-panel]').forEach(panel => panel.classList.toggle('is-active', panel.dataset.homeBoardPanel === homeBoardKind));
+      if (homeRedMeta) homeRedMeta.textContent = `ICLR ${homeYear}`;
+      if (homeBlackMeta) homeBlackMeta.textContent = `ICLR ${homeYear}`;
+      if (homeRedList) homeRedList.innerHTML = boardRows('red');
+      if (homeBlackList) homeBlackList.innerHTML = boardRows('black');
+      if (communityBoardList) communityBoardList.innerHTML = boardRows(homeBoardKind);
     }
 
     function renderCommunityHome() {

@@ -23,9 +23,9 @@ def test_frontend_search_does_not_treat_plain_words_as_paper_ids():
 def test_frontend_has_community_home_entrypoint():
     html = Path("frontend/index.html").read_text(encoding="utf-8")
 
-    assert "Review Signal Community" in html
-    assert "id=\"latestPaperList\"" in html
-    assert "id=\"communityBoardList\"" in html
+    assert "Review quality, ranked by the community." in html
+    assert "id=\"homeRedList\"" in html
+    assert "id=\"homeBlackList\"" in html
+    assert "data-home-board-panel=\"red\"" in html
     assert "/api/home?conference=ICLR" in html
-    assert "data-home-paper-id" in html
     assert "data-home-board-paper" in html
