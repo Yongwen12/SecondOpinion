@@ -10,10 +10,23 @@ from secondopinion.server.database import Base, init_db
 from secondopinion.server import models  # noqa: F401 - register metadata
 
 
+def clean_value(value):
+    if isinstance(value, str):
+        return value.replace("\x00", "")
+    if isinstance(value, dict):
+        return {key: clean_value(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [clean_value(item) for item in value]
+    return value
+
+
 def copy_table(source: Engine, target: Engine, table_name: str) -> int:
     table = Base.metadata.tables[table_name]
     with source.connect() as source_conn:
-        rows = [dict(row._mapping) for row in source_conn.execute(table.select())]
+        rows = [
+            {key: clean_value(value) for key, value in row._mapping.items()}
+            for row in source_conn.execute(table.select())
+        ]
     if not rows:
         return 0
     with target.begin() as target_conn:
