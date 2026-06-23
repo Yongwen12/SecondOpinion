@@ -288,6 +288,7 @@ def store_scorecard(
         scorecard.internal_artifact_path = internal_artifact_path
         scorecard.created_at = utcnow()
 
+    session.flush()
     session.execute(delete(ReviewerScore).where(ReviewerScore.scorecard_id == scorecard_id))
     for reviewer in public_json.get("reviewers", []):
         if not isinstance(reviewer, dict):

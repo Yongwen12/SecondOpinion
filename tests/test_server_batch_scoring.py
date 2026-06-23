@@ -49,6 +49,42 @@ def write_normalized(tmp_path):
     return path
 
 
+def test_store_scorecard_flushes_parent_before_reviewer_scores():
+    class RecordingSession:
+        def __init__(self):
+            self.events = []
+
+        def get(self, *_args):
+            return None
+
+        def add(self, obj):
+            self.events.append(("add", obj.__class__.__name__))
+
+        def flush(self):
+            self.events.append(("flush", ""))
+
+        def execute(self, *_args):
+            self.events.append(("execute", ""))
+
+    session = RecordingSession()
+    paper = Paper(paper_id="paper1", conference_id="ICLR", year=2025, title="Paper")
+    store_scorecard(
+        session,
+        paper=paper,
+        public_json={
+            "schema_version": "reviewer-public-scorecard-v0.1",
+            "reviewers": [{"reviewer_key": "R1", "score": 72}],
+        },
+        internal_artifact_path="artifact.json",
+        scorer_version="s1",
+        memory_index_version="m1",
+    )
+
+    first_flush = session.events.index(("flush", ""))
+    first_execute = session.events.index(("execute", ""))
+    assert first_flush < first_execute
+
+
 def test_batch_enqueue_status_and_retry_failed(tmp_path):
     factory = session_factory_for(tmp_path)
     settings = ServerSettings(

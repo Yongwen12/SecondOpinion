@@ -591,6 +591,23 @@
       font-weight: 700;
     }
 
+    .empty-state {
+      padding: 16px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 12px;
+      background: rgba(255, 254, 250, .66);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .empty-state strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--ink);
+      font-size: 14px;
+    }
+
     .topbar {
       position: sticky;
       top: 0;
@@ -771,7 +788,7 @@
     }
 
     .paper-stats span + span::before {
-      content: "·";
+      content: "/";
       margin-right: 8px;
       color: var(--line-strong);
     }
@@ -1636,10 +1653,10 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.7-3.7"></path></svg>
             </span>
             <label class="sr-only" for="landingInput">Paper title or link</label>
-            <input class="search-input" id="landingInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="搜索论文标题，或粘贴 OpenReview / arXiv 链接" />
-            <button class="clear-button" id="landingClear" type="button" aria-label="Clear input" hidden>×</button>
+                        <input class="search-input" id="landingInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Search paper title, OpenReview ID, or link" />
+                        <button class="clear-button" id="landingClear" type="button" aria-label="Clear input" hidden>x</button>
             <button class="analyze-button" id="landingSubmit" type="submit">
-              <span class="button-label">搜索</span><span class="button-arrow" aria-hidden="true">→</span><span class="spinner" aria-hidden="true"></span>
+                            <span class="button-label">Search</span><span class="button-arrow" aria-hidden="true">-&gt;</span><span class="spinner" aria-hidden="true"></span>
             </button>
           </form>
           <div class="input-error" id="landingError" role="status" aria-live="polite"></div>
@@ -1651,17 +1668,26 @@
             <button class="topic-chip" type="button" data-home-year="2022">ICLR 2022</button>
           </div>
         </header>
+        <section class="feed-panel" aria-label="Recently scored papers">
+          <div class="panel-head">
+            <div>
+              <h2>Recently scored papers</h2>
+              <span class="panel-kicker" id="latestPapersMeta">ICLR 2025</span>
+            </div>
+          </div>
+          <ul class="home-paper-list" id="latestPaperList"></ul>
+        </section>
         <div class="mobile-board-tabs" aria-label="Leaderboard switch">
-          <button class="mobile-board-tab is-active" type="button" data-home-board="red">红榜</button>
-          <button class="mobile-board-tab" type="button" data-home-board="black">黑榜</button>
+                    <button class="mobile-board-tab is-active" type="button" data-home-board="red">Red List</button>
+                    <button class="mobile-board-tab" type="button" data-home-board="black">Black List</button>
         </div>
         <section class="home-boards-grid" aria-label="Reviewer quality boards">
           <article class="home-board home-board--red" data-home-board-panel="red">
-            <header class="board-heading"><h2 class="board-title">红榜</h2><span class="board-subtitle" id="homeRedMeta">ICLR 2025</span></header>
+                        <header class="board-heading"><h2 class="board-title">Red List</h2><span class="board-subtitle" id="homeRedMeta">ICLR 2025</span></header>
             <ol class="community-board-list" id="homeRedList"></ol>
           </article>
           <article class="home-board home-board--black" data-home-board-panel="black">
-            <header class="board-heading"><h2 class="board-title">黑榜</h2><span class="board-subtitle" id="homeBlackMeta">ICLR 2025</span></header>
+                        <header class="board-heading"><h2 class="board-title">Black List</h2><span class="board-subtitle" id="homeBlackMeta">ICLR 2025</span></header>
             <ol class="community-board-list" id="homeBlackList"></ol>
           </article>
         </section>
@@ -1669,18 +1695,18 @@
     </section>
     <section class="app-view" aria-label="Review results">
       <header class="topbar">
-        <button class="brand" id="homeButton" type="button" aria-label="返回搜索">
+                <button class="brand" id="homeButton" type="button" aria-label="Back to search">
           <span class="brand-mark">SO</span><span>SecondOpinion</span>
         </button>
         <form class="search-shell search-shell--compact" id="topSearch" novalidate>
           <span class="search-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.7-3.7"></path></svg>
           </span>
-          <label class="sr-only" for="topInput">论文标题或链接</label>
+                    <label class="sr-only" for="topInput">Paper title or link</label>
           <input class="search-input" id="topInput" autocomplete="off" autocapitalize="off" spellcheck="false" />
-          <button class="clear-button" id="topClear" type="button" aria-label="清空输入">×</button>
-          <button class="analyze-button" id="topSubmit" type="submit" aria-label="分析论文">
-            <span class="button-label">Analyze</span><span class="button-arrow" aria-hidden="true">→</span><span class="spinner" aria-hidden="true"></span>
+                    <button class="clear-button" id="topClear" type="button" aria-label="Clear input">x</button>
+                    <button class="analyze-button" id="topSubmit" type="submit" aria-label="Search paper">
+                          <span class="button-label">Search</span><span class="button-arrow" aria-hidden="true">-&gt;</span><span class="spinner" aria-hidden="true"></span>
           </button>
         </form>
         <div class="search-results search-results--compact" id="topResults" role="listbox" aria-label="Paper search results" hidden></div>
@@ -1697,7 +1723,7 @@
 
           <div class="score-main">
             <div class="paper-bar">
-              <h1 class="paper-title" id="paperTitle">second-opinion-demo</h1>
+              <h1 class="paper-title" id="paperTitle">Select a paper</h1>
               <div class="paper-stats" id="paperStats" aria-label="Paper statistics"><span>3 reviewers</span><span>6 chunks</span></div>
             </div>
             <div class="reviewer-grid" id="reviewerGrid" aria-label="Reviewer scores"></div>
@@ -1722,10 +1748,10 @@
           <div class="section-head">
             <h2 id="themesTitle">Themes</h2>
             <div class="section-tools">
-              <button class="icon-button" id="resetCloud" type="button" aria-label="重置词云位置" title="Reset view">↺</button>
+                            <button class="icon-button" id="resetCloud" type="button" aria-label="Reset topic map" title="Reset view">R</button>
             </div>
           </div>
-          <div class="cloud-stage" id="cloudStage" tabindex="0" aria-label="可拖动的评论主题词云，悬停词语查看对应评论">
+                    <div class="cloud-stage" id="cloudStage" tabindex="0" aria-label="Interactive topic map">
             <div class="cloud-canvas" id="cloudCanvas"></div>
             <div class="cloud-tooltip" id="cloudTooltip" role="status" aria-live="polite"></div>
             <div class="cloud-corner" aria-hidden="true"><span class="reviewer-dot"></span><span class="reviewer-dot"></span><span class="reviewer-dot"></span></div>
@@ -1735,7 +1761,7 @@
         <section class="surface comments-section" aria-labelledby="commentsTitle">
           <div class="section-head">
             <h2 id="commentsTitle">Comments</h2>
-            <div class="filter-group" id="commentFilters" aria-label="筛选评论"></div>
+                        <div class="filter-group" id="commentFilters" aria-label="Filter comments"></div>
           </div>
           <div class="thread-list" id="threadList"></div>
         </section>
@@ -1792,12 +1818,12 @@
     ];
 
     let splitComments = [
-      { id: 'R1', chunk: 'C1', tone: 'green', view: 'Current baselines are not enough; add a standard retrieval baseline and runtime comparison.', ai: '这一刀很准：不是“多做实验”，而是“做哪个实验”。', up: 64, down: 4 },
-      { id: 'R1', chunk: 'C2', tone: 'green', view: 'Clarify whether the reported gains come from the evidence search module or the scoring module.', ai: '适合直接变成 ablation 表格的一行。', up: 51, down: 6 },
-      { id: 'R2', chunk: 'C3', tone: 'gold', view: 'The work is not convincing and needs more experiments.', ai: '雷声很大，但落点还没有出现。', up: 18, down: 44 },
-      { id: 'R2', chunk: 'C4', tone: 'gold', view: 'The novelty appears limited compared with prior review-assistance systems.', ai: '指出了方向，但还缺具体对比对象和差异标准。', up: 24, down: 31 },
-      { id: 'R3', chunk: 'C5', tone: 'blue', view: 'The ablation does not yet support the central claim about evidence-grounded review auditing.', ai: '这是 rebuttal 里必须认真处理的硬点。', up: 58, down: 7 },
-      { id: 'R3', chunk: 'C6', tone: 'blue', view: 'Separate retrieval failure, claim extraction failure, and scoring failure in the error analysis.', ai: '这条可以直接变成 error analysis section 的结构。', up: 46, down: 5 }
+      { id: 'R1', chunk: 'C1', tone: 'green', view: 'Current baselines are not enough; add a standard retrieval baseline and runtime comparison.', ai: 'Specific enough to become an author checklist item.', up: 64, down: 4 },
+      { id: 'R1', chunk: 'C2', tone: 'green', view: 'Clarify whether the reported gains come from the evidence search module or the scoring module.', ai: 'Clear ablation target.', up: 51, down: 6 },
+      { id: 'R2', chunk: 'C3', tone: 'gold', view: 'The work is not convincing and needs more experiments.', ai: 'Broad concern; needs a concrete target.', up: 18, down: 44 },
+      { id: 'R2', chunk: 'C4', tone: 'gold', view: 'The novelty appears limited compared with prior review-assistance systems.', ai: 'Needs named prior systems and comparison criteria.', up: 24, down: 31 },
+      { id: 'R3', chunk: 'C5', tone: 'blue', view: 'The ablation does not yet support the central claim about evidence-grounded review auditing.', ai: 'High-priority rebuttal point.', up: 58, down: 7 },
+      { id: 'R3', chunk: 'C6', tone: 'blue', view: 'Separate retrieval failure, claim extraction failure, and scoring failure in the error analysis.', ai: 'Good structure for an error analysis section.', up: 46, down: 5 }
     ];
 
     let cloudWords = [
@@ -1842,8 +1868,8 @@
     };
 
     const state = {
-      paper: 'second-opinion-demo',
-      paperId: 'second-opinion-demo',
+      paper: '',
+      paperId: '',
       selectedReviewer: null,
       commentFilter: 'ALL',
       busy: false,
@@ -1890,10 +1916,10 @@
         const url = new URL(clean);
         if (url.hostname.includes('openreview.net')) {
           const id = url.searchParams.get('id');
-          return id ? `OpenReview · ${id}` : 'OpenReview submission';
+          return id ? `OpenReview / ${id}` : 'OpenReview submission';
         }
         if (url.hostname.includes('doi.org')) {
-          return `DOI · ${decodeURIComponent(url.pathname.replace(/^\//, ''))}`;
+          return `DOI / ${decodeURIComponent(url.pathname.replace(/^\//, ''))}`;
         }
         const tail = decodeURIComponent(url.pathname.split('/').filter(Boolean).pop() || url.hostname);
         return tail || url.hostname;
@@ -1924,7 +1950,7 @@
     function showInputError() {
       const form = document.getElementById('landingSearch');
       form.classList.add('is-invalid');
-      landingError.textContent = '请输入论文标题或链接';
+      landingError.textContent = 'Enter a paper title or link';
       window.setTimeout(() => form.classList.remove('is-invalid'), 520);
       landingInput.focus();
     }
@@ -1970,37 +1996,21 @@
       const rows = paperSearchResults.map((item, index) => `
         <button class="paper-result-card" type="button" data-paper-result-index="${index}">
           <strong>${escapeHtml(item.title || item.paper_id)}</strong>
-          <span>${escapeHtml(item.venue || item.conference_id || 'ICLR')} ${escapeHtml(item.year || '')} · ${Number(item.review_count || 0)} reviews</span>
+          <span>${escapeHtml(item.venue || item.conference_id || 'ICLR')} ${escapeHtml(item.year || '')} / ${Number(item.review_count || 0)} reviews</span>
         </button>`).join('');
       container.innerHTML = rows || '<div class="paper-result-card"><strong>No matching paper found</strong><span>Try an OpenReview id or a shorter title.</span></div>';
       container.hidden = false;
     }
 
-    function fallbackHomePaper() {
-      const paper = publicScorecard?.paper || {};
-      const summary = publicScorecard?.summary || {};
-      return {
-        paper_id: paper.paper_id || 'second-opinion-demo',
-        title: paper.title || 'SecondOpinion demo paper',
-        venue: paper.venue || paper.conference || 'ICLR',
-        conference_id: 'ICLR',
-        year: paper.year || homeYear,
-        decision: paper.decision || '',
-        review_count: summary.reviewer_count || reviewers.length,
-        overall_score: summary.overall_score || 0,
-        signal_label: summary.signal_label || 'Review signal',
-        comment_count: summary.comment_count || splitComments.length,
-        topic_count: summary.topic_count || cloudWords.length,
-        topics: cloudWords.slice(0, 3).map(item => item.text).filter(Boolean),
-        social: { up: 0, down: 0 }
-      };
-    }
 
     function renderLatestPapers() {
       if (!latestPaperList) return;
       latestPapersMeta.textContent = `ICLR ${homeYear}`;
-      const papers = homePapers.length ? homePapers : [fallbackHomePaper()];
-      latestPaperList.innerHTML = papers.map(item => {
+      if (!homePapers.length) {
+        latestPaperList.innerHTML = '<li class="empty-state"><strong>No scored papers yet</strong>Choose another year or search for a paper already in the indexed ICLR corpus.</li>';
+        return;
+      }
+      latestPaperList.innerHTML = homePapers.map(item => {
         const topics = Array.isArray(item.topics) && item.topics.length ? item.topics : ['review signal'];
         const social = item.social || {};
         const score = Math.max(0, Math.min(100, Math.round(Number(item.overall_score || 0))));
@@ -2009,9 +2019,9 @@
             <button class="home-paper-card" type="button" data-home-paper-id="${escapeHtml(item.paper_id)}">
               <span class="paper-score-pill">${score}</span>
               <span class="home-paper-title">${escapeHtml(item.title || item.paper_id)}</span>
-              <span class="home-paper-meta">${escapeHtml(item.venue || item.conference_id || 'ICLR')} ${escapeHtml(item.year || '')} · ${Number(item.review_count || 0)} reviewers · ${escapeHtml(item.signal_label || 'Review signal')}</span>
+              <span class="home-paper-meta">${escapeHtml(item.venue || item.conference_id || 'ICLR')} ${escapeHtml(item.year || '')} / ${Number(item.review_count || 0)} reviewers / ${escapeHtml(item.signal_label || 'Review signal')}</span>
               <span class="home-paper-tags">${topics.slice(0, 3).map(topic => `<span>${escapeHtml(topic)}</span>`).join('')}</span>
-              <span class="home-paper-social">${Number(social.up || 0)} useful · ${Number(social.down || 0)} disputed · ${Number(item.comment_count || 0)} comments</span>
+              <span class="home-paper-social">${Number(social.up || 0)} useful / ${Number(social.down || 0)} disputed / ${Number(item.comment_count || 0)} comments</span>
             </button>
           </li>`;
       }).join('');
@@ -2020,15 +2030,15 @@
     function boardRows(kind) {
       const rows = (homeBoards[kind] || []).slice(0, 10);
       if (!rows.length) {
-        return '<li><button class="community-board-row" type="button" data-home-paper-id="second-opinion-demo"><strong>Demo reviewer</strong><span class="board-meta">Open a paper to start voting.</span></button></li>';
+        return '<li class="empty-state"><strong>No ranking yet</strong>Reviewer lists appear after papers for this year have scorecards.</li>';
       }
       return rows.map((item, index) => `
         <li>
           <button class="community-board-row" type="button" data-home-board-paper="${escapeHtml(item.paper_id || '')}">
-            <span class="home-paper-meta">#${index + 1} · ${escapeHtml(item.paper_title || 'ICLR paper')}</span>
+            <span class="home-paper-meta">#${index + 1} / ${escapeHtml(item.paper_title || 'ICLR paper')}</span>
             <strong>${escapeHtml(item.nickname || item.reviewer_key || 'Reviewer')}</strong>
             <span class="paper-score-pill">${Math.round(Number(item.score || 0))} Q</span>
-            <span class="board-meta">${Number(item.up || 0)} useful · ${Number(item.down || 0)} disputed</span>
+            <span class="board-meta">${Number(item.up || 0)} useful / ${Number(item.down || 0)} disputed</span>
           </button>
         </li>`).join('');
     }
@@ -2070,7 +2080,7 @@
     async function openHomePaper(paperId, source = 'landing') {
       if (!paperId) return;
       const paper = homePapers.find(item => item.paper_id === paperId) || { paper_id: paperId };
-      const currentPaperId = publicScorecard?.paper?.paper_id || 'second-opinion-demo';
+      const currentPaperId = publicScorecard?.paper?.paper_id || '';
       if (!API_BASE && paperId === currentPaperId) {
         enterResolvedView(source);
         return;
@@ -2113,22 +2123,12 @@
             return;
           }
         } catch (error) {
-          console.warn('API paper lookup failed; falling back to static demo.', error);
-          showToast('API unavailable; showing demo data');
+          console.warn('API paper lookup failed.', error);
         }
       }
 
-      const delay = reducedMotion.matches ? 0 : 360;
-      window.setTimeout(() => {
-        state.paper = clean;
-        state.paperId = paperIdFromValue(clean) || 'second-opinion-demo';
-        state.selectedReviewer = null;
-        state.commentFilter = 'ALL';
-        setInputValue(clean);
-        document.getElementById('paperTitle').textContent = parsePaperTitle(clean);
-        enterResolvedView(source);
-        setBusy(false, source);
-      }, delay);
+      showUnavailableSearch(source);
+      setBusy(false, source);
     }
 
     async function submitPaperViaApi(value, source) {
@@ -2147,8 +2147,9 @@
     async function loadScorecardFromApi(paperId, source = 'landing', paper = {}) {
       const response = await apiFetch(`/api/papers/${encodeURIComponent(paperId)}/scorecard`);
       if (response.status === 404) {
-        await requestScoringJob(paperId);
-        showPendingPaper(paperId, paper, source);
+        const queued = await requestScoringJob(paperId);
+        if (queued) showPendingPaper(paperId, paper, source);
+        else showNotIndexedPaper(paperId, paper, source);
         return true;
       }
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -2163,10 +2164,25 @@
 
     async function requestScoringJob(paperId) {
       const response = await apiFetch(`/api/papers/${encodeURIComponent(paperId)}/scoring-jobs`, { method: 'POST', body: '{}' });
+      if (response.status === 404) return false;
       if (!response.ok) throw new Error(`Unable to create scoring job: HTTP ${response.status}`);
-      showToast('Scoring job queued');
+      showToast('Added to scoring queue');
+      return true;
     }
 
+    function showUnavailableSearch(source) {
+      const message = 'Search is temporarily unavailable. Try again in a moment.';
+      if (source === 'landing') landingError.textContent = message;
+      else showToast(message);
+    }
+
+    function showNotIndexedPaper(paperId, paper, source) {
+      const title = paper.title || parsePaperTitle(paperId);
+      const message = `${title} is not indexed yet. Current coverage is ICLR 2022-2025 sample papers.`;
+      if (source === 'landing') landingError.textContent = message;
+      else showToast('Paper is not indexed yet');
+      hideSearchResults();
+    }
     function showPendingPaper(paperId, paper, source) {
       const title = paper.title || parsePaperTitle(paperId);
       state.paper = title;
@@ -2196,19 +2212,12 @@
     async function loadPublicScorecard() {
       const initialParams = new URLSearchParams(location.search);
       const initialPaperId = initialParams.get('paper') || initialParams.get('id') || '';
-      if (API_BASE && initialPaperId) {
-        try {
-          if (await loadScorecardFromApi(initialPaperId, 'landing')) return;
-        } catch (error) {
-          console.warn('Initial API scorecard load failed; using static fallback.', error);
-        }
-      }
+      if (!API_BASE || !initialPaperId) return;
       try {
-        const response = await fetch('./demos/reviewer_public_scorecard_v0.1.json', { cache: 'no-store' });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        applyPublicScorecard(await response.json());
+        await loadScorecardFromApi(initialPaperId, 'landing');
       } catch (error) {
-        console.warn('Using built-in demo scorecard fallback.', error);
+        console.warn('Initial API scorecard load failed.', error);
+        showUnavailableSearch('landing');
       }
     }
     function applyPublicScorecard(scorecard) {
@@ -2263,7 +2272,7 @@
       if (!publicScorecard) return;
       const paper = publicScorecard.paper || {};
       const summary = publicScorecard.summary || {};
-      document.getElementById('paperTitle').textContent = paper.title || parsePaperTitle(state.paper || 'second-opinion-demo');
+      document.getElementById('paperTitle').textContent = paper.title || parsePaperTitle(state.paper || 'Select a paper');
       paperStats.innerHTML = [
         `${summary.reviewer_count ?? reviewers.length} reviewers`,
         `${summary.comment_count ?? splitComments.length} chunks`,
@@ -2320,8 +2329,8 @@
             <span class="leader-score">${metric}</span>
           </button>
           <div class="vote-group" aria-label="Vote on ${reviewer.name}">
-            <button class="vote-button${counts.selected === 'up' ? ' is-up' : ''}" type="button" data-reviewer-vote="up" data-reviewer-id="${reviewer.id}" aria-pressed="${counts.selected === 'up'}"><span class="vote-icon">↑</span><span>${counts.up}</span></button>
-            <button class="vote-button${counts.selected === 'down' ? ' is-down' : ''}" type="button" data-reviewer-vote="down" data-reviewer-id="${reviewer.id}" aria-pressed="${counts.selected === 'down'}"><span class="vote-icon">↓</span><span>${counts.down}</span></button>
+            <button class="vote-button${counts.selected === 'up' ? ' is-up' : ''}" type="button" data-reviewer-vote="up" data-reviewer-id="${reviewer.id}" aria-pressed="${counts.selected === 'up'}"><span class="vote-icon">+</span><span>${counts.up}</span></button>
+            <button class="vote-button${counts.selected === 'down' ? ' is-down' : ''}" type="button" data-reviewer-vote="down" data-reviewer-id="${reviewer.id}" aria-pressed="${counts.selected === 'down'}"><span class="vote-icon">-</span><span>${counts.down}</span></button>
           </div>
         </li>`;
     }
@@ -2387,7 +2396,7 @@
               <span class="reviewer-name">${reviewer.name}</span>
               <span class="reviewer-score-line"><strong>${reviewer.score}</strong><span class="tone-label">${reviewer.label}</span></span>
             </span>
-            <span class="chevron" aria-hidden="true">⌄</span>
+            <span class="chevron" aria-hidden="true">v</span>
           </button>`;
       }).join('');
     }
@@ -2426,10 +2435,10 @@
               </div>`).join('')}
           </div>
           <div class="score-guide" aria-label="Score guide">
-            <span class="guide-item"><i class="guide-swatch"></i>0–39 Weak</span>
-            <span class="guide-item"><i class="guide-swatch"></i>40–69 Mixed</span>
-            <span class="guide-item"><i class="guide-swatch"></i>70–84 Solid</span>
-            <span class="guide-item"><i class="guide-swatch"></i>85–100 Strong</span>
+            <span class="guide-item"><i class="guide-swatch"></i>0-39 Weak</span>
+            <span class="guide-item"><i class="guide-swatch"></i>40-69 Mixed</span>
+            <span class="guide-item"><i class="guide-swatch"></i>70-84 Solid</span>
+            <span class="guide-item"><i class="guide-swatch"></i>85-100 Strong</span>
           </div>
         </div>`;
 
@@ -2495,8 +2504,8 @@
               <div class="ai-comment"><span class="ai-mark">SO</span><span>${comment.ai}</span></div>
             </div>
             <div class="vote-group" aria-label="Vote on ${comment.chunk}">
-              <button class="vote-button${counts.selected === 'up' ? ' is-up' : ''}" type="button" data-vote="up" data-chunk="${comment.chunk}" aria-pressed="${counts.selected === 'up'}"><span class="vote-icon">↑</span><span>${counts.up}</span></button>
-              <button class="vote-button${counts.selected === 'down' ? ' is-down' : ''}" type="button" data-vote="down" data-chunk="${comment.chunk}" aria-pressed="${counts.selected === 'down'}"><span class="vote-icon">↓</span><span>${counts.down}</span></button>
+              <button class="vote-button${counts.selected === 'up' ? ' is-up' : ''}" type="button" data-vote="up" data-chunk="${comment.chunk}" aria-pressed="${counts.selected === 'up'}"><span class="vote-icon">+</span><span>${counts.up}</span></button>
+              <button class="vote-button${counts.selected === 'down' ? ' is-down' : ''}" type="button" data-vote="down" data-chunk="${comment.chunk}" aria-pressed="${counts.selected === 'down'}"><span class="vote-icon">-</span><span>${counts.down}</span></button>
             </div>
           </article>`;
       }).join('');
@@ -2830,21 +2839,7 @@
     loadPublicScorecard().then(() => {
       renderAll();
       loadCommunityHome();
-      if (params.has('demo')) submitPaper('https://openreview.net/forum?id=second-opinion-demo', 'landing');
     });
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
