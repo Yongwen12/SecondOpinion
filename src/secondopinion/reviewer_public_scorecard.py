@@ -169,8 +169,8 @@ def public_comments(reviewer_key: str, nickname: str, claims: list[dict[str, Any
                 "text": text,
                 "second_opinion": take,
                 "tone": tone_for_score(score),
-                "up": max(8, round(score * 0.75)),
-                "down": max(2, round((100 - score) * 0.24)),
+                "up": 0,
+                "down": 0,
                 "topics": top_keywords(text, limit=4),
             }
         )
@@ -199,22 +199,14 @@ def build_topics(reviewers: list[dict[str, Any]], comments: list[dict[str, Any]]
 
 
 def build_leaderboards(reviewers: list[dict[str, Any]]) -> dict[str, list[str]]:
-    red = sorted(reviewers, key=lambda item: social_score(item), reverse=True)
-    black = sorted(reviewers, key=lambda item: risk_score(item), reverse=True)
+    red = sorted(reviewers, key=lambda item: (-int(item.get("score") or 0), str(item.get("reviewer_key") or "")))
+    black = sorted(reviewers, key=lambda item: (int(item.get("score") or 0), str(item.get("reviewer_key") or "")))
     return {
         "red": [item["reviewer_key"] for item in red[:10]],
         "black": [item["reviewer_key"] for item in black[:10]],
     }
 
 
-def social_score(reviewer: dict[str, Any]) -> float:
-    social = reviewer.get("social", {})
-    return float(reviewer.get("score", 0)) + float(social.get("up", 0)) * 0.16 - float(social.get("down", 0)) * 0.22
-
-
-def risk_score(reviewer: dict[str, Any]) -> float:
-    social = reviewer.get("social", {})
-    return (100 - float(reviewer.get("score", 0))) + float(social.get("down", 0)) * 0.34 - float(social.get("up", 0)) * 0.1
 
 
 def nickname_for(text: str, *, index: int, score: int) -> str:
@@ -245,10 +237,8 @@ def dimension_criterion(key: str, score: int) -> str:
 
 
 def default_social_counts(score: int, index: int) -> dict[str, int]:
-    return {
-        "up": max(10, round(score * 1.4) - index * 3),
-        "down": max(2, round((100 - score) * 0.6) + index * 2),
-    }
+    # Community counts come only from real votes in the `votes` table. No seeding.
+    return {"up": 0, "down": 0}
 
 
 def avatar_key(index: int) -> str:

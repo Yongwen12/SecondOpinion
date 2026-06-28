@@ -66,3 +66,22 @@ def test_build_public_scorecard_creates_black_list_for_low_score_reviewer():
     assert public["leaderboards"]["red"][0] == "R1"
     assert public["leaderboards"]["black"][0] == "R2"
     assert public["reviewers"][1]["nickname"] == "Vague Thunder"
+
+
+def test_build_public_scorecard_does_not_seed_synthetic_votes():
+    source = {
+        "paper": {"title": "Demo Paper"},
+        "reviewers": [
+            {
+                "display_id": "R1",
+                "claims": [
+                    {"claim_text": "Add a baseline.", "hybrid_scores": {"specificity": {"final_score": 0.9}}}
+                ],
+            },
+        ],
+    }
+
+    public = build_public_scorecard(source)
+
+    assert public["reviewers"][0]["social"] == {"up": 0, "down": 0}
+    assert all(comment["up"] == 0 and comment["down"] == 0 for comment in public["comments"])

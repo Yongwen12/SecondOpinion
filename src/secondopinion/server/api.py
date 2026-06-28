@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import datetime as dt
 import os
 import uuid
 from typing import Any
@@ -7,11 +8,12 @@ from typing import Any
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session, sessionmaker
 
 from .config import ServerSettings, settings_from_env
 from .database import init_db, make_engine, make_session_factory
-from .models import Paper, ScoringJob
+from .models import Paper, ScoringJob, Vote, utcnow
 from .repository import (
     apply_vote_counts,
     build_leaderboards,
@@ -149,6 +151,8 @@ def create_app(
         body = await parse_json_body(request)
         session_id = session_id_from_request(request)
         selected = str(body.get("vote") or "none")
+        if selected in {"up", "down"}:
+            enforce_vote_rate_limit(session, session_id)
         result = upsert_vote(
             session,
             paper_id=paper_id,
@@ -193,6 +197,22 @@ async def parse_json_body(request: Request) -> dict[str, Any]:
 def session_id_from_request(request: Request) -> str:
     existing = request.cookies.get(SESSION_COOKIE)
     return existing or f"session_{uuid.uuid4().hex}"
+
+
+VOTE_RATE_LIMIT = 60
+VOTE_RATE_WINDOW = dt.timedelta(hours=1)
+
+
+def enforce_vote_rate_limit(session: Session, session_id: str) -> None:
+    window_start = utcnow() - VOTE_RATE_WINDOW
+    recent_votes = session.execute(
+        select(func.count(Vote.id)).where(
+            Vote.session_id == session_id,
+            Vote.updated_at >= window_start,
+        )
+    ).scalar_one()
+    if int(recent_votes or 0) >= VOTE_RATE_LIMIT:
+        raise HTTPException(status_code=429, detail={"code": "vote_rate_limited"})
 
 
 app = create_app()

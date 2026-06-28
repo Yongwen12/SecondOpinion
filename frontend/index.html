@@ -206,11 +206,32 @@
       letter-spacing: 0;
     }
 
-    .panel-kicker {
+    .panel-kicker,
+    .panel-note {
       color: var(--muted);
       font-size: 12px;
       font-weight: 750;
     }
+
+    .panel-note {
+      max-width: 42rem;
+      margin: 4px 0 0;
+      line-height: 1.35;
+    }
+
+    .panel-note strong { color: var(--ink-2); }
+
+    .home-status {
+      padding: 11px 13px;
+      border: 1px solid rgba(167, 71, 63, .22);
+      border-radius: 12px;
+      background: var(--red-soft);
+      color: var(--red);
+      font-size: 13px;
+      font-weight: 760;
+    }
+
+    .home-status[hidden] { display: none; }
 
     .home-paper-list,
     .community-board-list {
@@ -349,6 +370,21 @@
       color: var(--muted);
       font-size: 12px;
       font-weight: 780;
+    }
+
+    .board-rank {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .board-paper-title {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      font-size: 13px;
+      line-height: 1.28;
     }
 
     .mobile-board-tabs {
@@ -1646,14 +1682,14 @@
           </div>
           <div class="community-copy">
             <h1>Review quality, ranked by the community.</h1>
-            <p>Search a paper, or browse reviewer quality red and black lists.</p>
+            <p>Search a paper, or browse reviewer-quality signals for the current ICLR corpus.</p>
           </div>
           <form class="search-shell search-shell--landing" id="landingSearch" novalidate>
             <span class="search-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.7-3.7"></path></svg>
             </span>
-            <label class="sr-only" for="landingInput">Paper title or link</label>
-                        <input class="search-input" id="landingInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Search paper title, OpenReview ID, or link" />
+            <label class="sr-only" for="landingInput">Paper title or OpenReview ID</label>
+                        <input class="search-input" id="landingInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Search paper title, paper ID, or OpenReview link" />
                         <button class="clear-button" id="landingClear" type="button" aria-label="Clear input" hidden>x</button>
             <button class="analyze-button" id="landingSubmit" type="submit">
                             <span class="button-label">Search</span><span class="button-arrow" aria-hidden="true">-&gt;</span><span class="spinner" aria-hidden="true"></span>
@@ -1668,26 +1704,28 @@
             <button class="topic-chip" type="button" data-home-year="2022">ICLR 2022</button>
           </div>
         </header>
+        <div class="home-status" id="homeStatus" role="status" aria-live="polite" hidden></div>
         <section class="feed-panel" aria-label="Recently scored papers">
           <div class="panel-head">
             <div>
               <h2>Recently scored papers</h2>
               <span class="panel-kicker" id="latestPapersMeta">ICLR 2025</span>
+              <p class="panel-note">Scores rate <strong>review quality</strong>, not the paper.</p>
             </div>
           </div>
           <ul class="home-paper-list" id="latestPaperList"></ul>
         </section>
         <div class="mobile-board-tabs" aria-label="Leaderboard switch">
-                    <button class="mobile-board-tab is-active" type="button" data-home-board="red">Red List</button>
-                    <button class="mobile-board-tab" type="button" data-home-board="black">Black List</button>
+                    <button class="mobile-board-tab is-active" type="button" data-home-board="red">Most Helpful</button>
+                    <button class="mobile-board-tab" type="button" data-home-board="black">Needs Scrutiny</button>
         </div>
         <section class="home-boards-grid" aria-label="Reviewer quality boards">
           <article class="home-board home-board--red" data-home-board-panel="red">
-                        <header class="board-heading"><h2 class="board-title">Red List</h2><span class="board-subtitle" id="homeRedMeta">ICLR 2025</span></header>
+                        <header class="board-heading"><h2 class="board-title">Most Helpful</h2><span class="board-subtitle" id="homeRedMeta">ICLR 2025</span></header>
             <ol class="community-board-list" id="homeRedList"></ol>
           </article>
           <article class="home-board home-board--black" data-home-board-panel="black">
-                        <header class="board-heading"><h2 class="board-title">Black List</h2><span class="board-subtitle" id="homeBlackMeta">ICLR 2025</span></header>
+                        <header class="board-heading"><h2 class="board-title">Needs Scrutiny</h2><span class="board-subtitle" id="homeBlackMeta">ICLR 2025</span></header>
             <ol class="community-board-list" id="homeBlackList"></ol>
           </article>
         </section>
@@ -1702,7 +1740,7 @@
           <span class="search-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.7-3.7"></path></svg>
           </span>
-                    <label class="sr-only" for="topInput">Paper title or link</label>
+                    <label class="sr-only" for="topInput">Paper title or OpenReview ID</label>
           <input class="search-input" id="topInput" autocomplete="off" autocapitalize="off" spellcheck="false" />
                     <button class="clear-button" id="topClear" type="button" aria-label="Clear input">x</button>
                     <button class="analyze-button" id="topSubmit" type="submit" aria-label="Search paper">
@@ -1715,10 +1753,10 @@
       <div class="content-stack">
         <section class="surface score-section" aria-labelledby="paperTitle">
           <div class="score-overview">
-            <div class="score-ring" id="scoreRing" aria-label="Overall score 73 out of 100">
-              <div class="score-value"><strong id="overallScore">73</strong><span>overall</span></div>
+            <div class="score-ring" id="scoreRing" aria-label="Review quality score 73 of 100">
+              <div class="score-value"><strong id="overallScore">73</strong><span>review quality</span></div>
             </div>
-            <div class="signal-chip"><span class="signal-dot"></span><span id="signalLabel">Solid signal</span></div>
+            <div class="signal-chip"><span class="signal-dot" aria-hidden="true"></span><span id="signalLabel">Solid signal</span></div>
           </div>
 
           <div class="score-main">
@@ -1735,11 +1773,11 @@
 
         <section class="leaderboard-section" aria-label="Reviewer leaderboards">
           <article class="surface leaderboard-card leaderboard-card--red">
-            <div class="section-head"><h2>Red List</h2><span class="leaderboard-kicker">Top reviewers</span></div>
+            <div class="section-head"><h2>Most Helpful</h2><span class="leaderboard-kicker">Reviewer quality</span></div>
             <ol class="leaderboard-list" id="redList"></ol>
           </article>
           <article class="surface leaderboard-card leaderboard-card--black">
-            <div class="section-head"><h2>Black List</h2><span class="leaderboard-kicker">Needs scrutiny</span></div>
+            <div class="section-head"><h2>Needs Scrutiny</h2><span class="leaderboard-kicker">Reviewer quality risk</span></div>
             <ol class="leaderboard-list" id="blackList"></ol>
           </article>
         </section>
@@ -1818,12 +1856,12 @@
     ];
 
     let splitComments = [
-      { id: 'R1', chunk: 'C1', tone: 'green', view: 'Current baselines are not enough; add a standard retrieval baseline and runtime comparison.', ai: 'Specific enough to become an author checklist item.', up: 64, down: 4 },
-      { id: 'R1', chunk: 'C2', tone: 'green', view: 'Clarify whether the reported gains come from the evidence search module or the scoring module.', ai: 'Clear ablation target.', up: 51, down: 6 },
-      { id: 'R2', chunk: 'C3', tone: 'gold', view: 'The work is not convincing and needs more experiments.', ai: 'Broad concern; needs a concrete target.', up: 18, down: 44 },
-      { id: 'R2', chunk: 'C4', tone: 'gold', view: 'The novelty appears limited compared with prior review-assistance systems.', ai: 'Needs named prior systems and comparison criteria.', up: 24, down: 31 },
-      { id: 'R3', chunk: 'C5', tone: 'blue', view: 'The ablation does not yet support the central claim about evidence-grounded review auditing.', ai: 'High-priority rebuttal point.', up: 58, down: 7 },
-      { id: 'R3', chunk: 'C6', tone: 'blue', view: 'Separate retrieval failure, claim extraction failure, and scoring failure in the error analysis.', ai: 'Good structure for an error analysis section.', up: 46, down: 5 }
+      { id: 'R1', chunk: 'C1', tone: 'green', view: 'Current baselines are not enough; add a standard retrieval baseline and runtime comparison.', ai: 'Specific enough to become an author checklist item.', up: 0, down: 0 },
+      { id: 'R1', chunk: 'C2', tone: 'green', view: 'Clarify whether the reported gains come from the evidence search module or the scoring module.', ai: 'Clear ablation target.', up: 0, down: 0 },
+      { id: 'R2', chunk: 'C3', tone: 'gold', view: 'The work is not convincing and needs more experiments.', ai: 'Broad concern; needs a concrete target.', up: 0, down: 0 },
+      { id: 'R2', chunk: 'C4', tone: 'gold', view: 'The novelty appears limited compared with prior review-assistance systems.', ai: 'Needs named prior systems and comparison criteria.', up: 0, down: 0 },
+      { id: 'R3', chunk: 'C5', tone: 'blue', view: 'The ablation does not yet support the central claim about evidence-grounded review auditing.', ai: 'High-priority rebuttal point.', up: 0, down: 0 },
+      { id: 'R3', chunk: 'C6', tone: 'blue', view: 'Separate retrieval failure, claim extraction failure, and scoring failure in the error analysis.', ai: 'Good structure for an error analysis section.', up: 0, down: 0 }
     ];
 
     let cloudWords = [
@@ -1885,6 +1923,7 @@
     const landingResults = document.getElementById('landingResults');
     const topResults = document.getElementById('topResults');
     const latestPaperList = document.getElementById('latestPaperList');
+    const homeStatus = document.getElementById('homeStatus');
     const latestPapersMeta = document.getElementById('latestPapersMeta');
     const communityBoardList = document.getElementById('communityBoardList');
     const homeTopicFilters = document.getElementById('homeTopicFilters');
@@ -1950,7 +1989,7 @@
     function showInputError() {
       const form = document.getElementById('landingSearch');
       form.classList.add('is-invalid');
-      landingError.textContent = 'Enter a paper title or link';
+      landingError.textContent = 'Enter a paper title or OpenReview ID';
       window.setTimeout(() => form.classList.remove('is-invalid'), 520);
       landingInput.focus();
     }
@@ -2003,6 +2042,41 @@
     }
 
 
+    function setHomeStatus(message = '') {
+      if (!homeStatus) return;
+      homeStatus.textContent = message;
+      homeStatus.hidden = !message;
+    }
+
+    function socialText(up, down, comments) {
+      const u = Number(up || 0), d = Number(down || 0), c = Number(comments || 0);
+      const commentPart = `${c} comments`;
+      if (u + d === 0) return `${commentPart} / Be the first to vote`;
+      return `${u} useful / ${d} disputed / ${commentPart}`;
+    }
+
+    function boardVoteText(up, down) {
+      const u = Number(up || 0), d = Number(down || 0);
+      if (u + d === 0) return 'No votes yet';
+      return `${u} useful / ${d} disputed`;
+    }
+
+    function doiFromValue(value) {
+      const clean = value.trim();
+      try {
+        const url = new URL(clean);
+        if (url.hostname.includes('doi.org')) return decodeURIComponent(url.pathname.replace(/^\//, ''));
+      } catch (_) {}
+      return /^10\.\d{4,9}\/\S+$/i.test(clean) ? clean : '';
+    }
+
+    function showUnsupportedIdentifier(source) {
+      const message = 'DOI lookup is not supported yet - search by paper title or OpenReview ID.';
+      if (source === 'landing') landingError.textContent = message;
+      else showToast(message);
+      hideSearchResults();
+    }
+
     function renderLatestPapers() {
       if (!latestPaperList) return;
       latestPapersMeta.textContent = `ICLR ${homeYear}`;
@@ -2017,11 +2091,11 @@
         return `
           <li>
             <button class="home-paper-card" type="button" data-home-paper-id="${escapeHtml(item.paper_id)}">
-              <span class="paper-score-pill">${score}</span>
+              <span class="paper-score-pill" title="Review quality score">${score}</span>
               <span class="home-paper-title">${escapeHtml(item.title || item.paper_id)}</span>
               <span class="home-paper-meta">${escapeHtml(item.venue || item.conference_id || 'ICLR')} ${escapeHtml(item.year || '')} / ${Number(item.review_count || 0)} reviewers / ${escapeHtml(item.signal_label || 'Review signal')}</span>
               <span class="home-paper-tags">${topics.slice(0, 3).map(topic => `<span>${escapeHtml(topic)}</span>`).join('')}</span>
-              <span class="home-paper-social">${Number(social.up || 0)} useful / ${Number(social.down || 0)} disputed / ${Number(item.comment_count || 0)} comments</span>
+              <span class="home-paper-social">${escapeHtml(socialText(social.up, social.down, item.comment_count))}</span>
             </button>
           </li>`;
       }).join('');
@@ -2035,10 +2109,11 @@
       return rows.map((item, index) => `
         <li>
           <button class="community-board-row" type="button" data-home-board-paper="${escapeHtml(item.paper_id || '')}">
-            <span class="home-paper-meta">#${index + 1} / ${escapeHtml(item.paper_title || 'ICLR paper')}</span>
-            <strong>${escapeHtml(item.nickname || item.reviewer_key || 'Reviewer')}</strong>
-            <span class="paper-score-pill">${Math.round(Number(item.score || 0))} Q</span>
-            <span class="board-meta">${Number(item.up || 0)} useful / ${Number(item.down || 0)} disputed</span>
+            <span class="board-rank">#${index + 1}</span>
+            <strong class="board-paper-title">${escapeHtml(item.paper_title || 'ICLR paper')}</strong>
+            <span class="home-paper-meta">${escapeHtml(item.nickname || item.reviewer_key || 'Reviewer')}</span>
+            <span class="paper-score-pill" title="Reviewer quality score">${Math.round(Number(item.score || 0))}</span>
+            <span class="board-meta">${escapeHtml(boardVoteText(item.up, item.down))}</span>
           </button>
         </li>`).join('');
     }
@@ -2063,16 +2138,22 @@
       homePapers = [];
       homeTopicFilters?.querySelectorAll('[data-home-year]').forEach(button => button.classList.toggle('is-active', Number(button.dataset.homeYear) === homeYear));
       renderCommunityHome();
-      if (!API_BASE) return;
+      setHomeStatus('');
+      if (!API_BASE) {
+        setHomeStatus('SecondOpinion API is unavailable. Search and live scorecards need the production API.');
+        return;
+      }
       try {
         const response = await apiFetch(`/api/home?conference=ICLR&year=${encodeURIComponent(homeYear)}&limit=12`);
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const payload = await response.json();
         homePapers = Array.isArray(payload.latest_papers) ? payload.latest_papers : [];
         homeBoards = payload.leaderboards || { red: [], black: [] };
+        setHomeStatus('');
         renderCommunityHome();
       } catch (error) {
-        console.warn('Community home load failed; using local fallback.', error);
+        console.warn('Community home load failed.', error);
+        setHomeStatus('SecondOpinion API is unavailable. Search and live scorecards need the production API.');
         renderCommunityHome();
       }
     }
@@ -2132,6 +2213,10 @@
     }
 
     async function submitPaperViaApi(value, source) {
+      if (doiFromValue(value)) {
+        showUnsupportedIdentifier(source);
+        return true;
+      }
       const paperId = paperIdFromValue(value);
       if (paperId) return loadScorecardFromApi(paperId, source, { title: parsePaperTitle(value) });
       const response = await apiFetch(`/api/conferences/ICLR/papers?query=${encodeURIComponent(value)}&limit=8`);
@@ -2290,26 +2375,16 @@
       const base = reviewer.social || { up: 0, down: 0 };
       return {
         selected,
-        up: Number(base.up || 0) + (selected === 'up' ? 1 : 0),
-        down: Number(base.down || 0) + (selected === 'down' ? 1 : 0)
+        up: Number(base.up || 0),
+        down: Number(base.down || 0)
       };
-    }
-
-    function reviewerSocialScore(reviewer) {
-      const counts = reviewerSocialCounts(reviewer);
-      return reviewer.score + counts.up * 0.16 - counts.down * 0.22;
-    }
-
-    function reviewerRiskScore(reviewer) {
-      const counts = reviewerSocialCounts(reviewer);
-      return (100 - reviewer.score) + counts.down * 0.34 - counts.up * 0.1;
     }
 
     function orderedLeaderboard(kind) {
       const keys = leaderboards[kind] || [];
       const keyed = keys.map(reviewerById).filter(Boolean);
       if (keyed.length) return keyed;
-      return [...reviewers].sort((left, right) => kind === 'red' ? reviewerSocialScore(right) - reviewerSocialScore(left) : reviewerRiskScore(right) - reviewerRiskScore(left));
+      return [...reviewers].sort((left, right) => kind === 'red' ? right.score - left.score : left.score - right.score);
     }
 
     function renderLeaderboards() {
@@ -2318,7 +2393,7 @@
     }
 
     function leaderboardRow(reviewer, index, kind) {
-      const metric = Math.round(kind === 'red' ? reviewerSocialScore(reviewer) : reviewerRiskScore(reviewer));
+      const metric = Math.round(reviewer.score);
       const counts = reviewerSocialCounts(reviewer);
       return `
         <li>
@@ -2337,17 +2412,24 @@
 
     async function updateReviewerVote(reviewerId, action) {
       const key = `reviewer:${state.paperId}:${reviewerId}`;
-      const current = voteState[key] || null;
-      voteState[key] = current === action ? null : action;
-      if (!voteState[key]) delete voteState[key];
+      const previous = voteState[key] || null;
+      const next = previous === action ? null : action;
+      if (next) voteState[key] = next;
+      else delete voteState[key];
       saveVoteState(voteState);
       renderLeaderboards();
-      showToast(voteState[key] ? 'Vote recorded' : 'Vote removed');
-      if (!API_BASE) return;
+      if (!API_BASE) {
+        if (previous) voteState[key] = previous;
+        else delete voteState[key];
+        saveVoteState(voteState);
+        renderLeaderboards();
+        showToast('Vote requires the production API');
+        return;
+      }
       try {
         const response = await apiFetch(`/api/papers/${encodeURIComponent(state.paperId)}/reviewers/${encodeURIComponent(reviewerId)}/votes`, {
           method: 'POST',
-          body: JSON.stringify({ vote: voteState[key] || 'none' })
+          body: JSON.stringify({ vote: next || 'none' })
         });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const payload = await response.json();
@@ -2355,9 +2437,14 @@
           applyPublicScorecard(payload.scorecard);
           renderAll();
         }
+        showToast(next ? 'Vote recorded' : 'Vote removed');
       } catch (error) {
         console.warn('Reviewer vote sync failed.', error);
-        showToast('Vote saved locally');
+        if (previous) voteState[key] = previous;
+        else delete voteState[key];
+        saveVoteState(voteState);
+        renderLeaderboards();
+        showToast('Vote could not be saved');
       }
     }
     function renderOverallScore() {
@@ -2367,7 +2454,7 @@
       const ring = document.getElementById('scoreRing');
       const label = document.getElementById('signalLabel');
       ring.style.setProperty('--score', avg);
-      ring.setAttribute('aria-label', `Overall score ${avg} out of 100`);
+      ring.setAttribute('aria-label', `Review quality score ${avg} of 100`);
       label.textContent = publicScorecard?.summary?.signal_label || band.label;
 
       if (reducedMotion.matches) {

@@ -374,6 +374,17 @@ def latest_scored_papers(
     if year is not None:
         stmt = stmt.where(Paper.year == year)
     rows = session.execute(stmt.order_by(Scorecard.created_at.desc()).limit(limit)).all()
+    paper_ids = [paper.paper_id for paper, _ in rows]
+    votes_by_paper: dict[str, dict[str, int]] = defaultdict(lambda: {"up": 0, "down": 0})
+    if paper_ids:
+        vote_rows = session.execute(
+            select(Vote.paper_id, Vote.vote, func.count(Vote.id))
+            .where(Vote.paper_id.in_(paper_ids))
+            .group_by(Vote.paper_id, Vote.vote)
+        ).all()
+        for pid, vote, count in vote_rows:
+            if vote in ("up", "down"):
+                votes_by_paper[str(pid)][str(vote)] = int(count)
     items = []
     for paper, scorecard in rows:
         public_json = scorecard.public_json or {}
@@ -381,14 +392,7 @@ def latest_scored_papers(
         topics = public_json.get("topics") or []
         reviewers = public_json.get("reviewers") or []
         topic_labels = [str(item.get("text") or item.get("label") or "") for item in topics if isinstance(item, dict)]
-        social_up = 0
-        social_down = 0
-        for reviewer in reviewers:
-            if not isinstance(reviewer, dict):
-                continue
-            social = reviewer.get("social") or {}
-            social_up += int(social.get("up") or 0)
-            social_down += int(social.get("down") or 0)
+
         items.append(
             {
                 "paper_id": paper.paper_id,
@@ -403,7 +407,8 @@ def latest_scored_papers(
                 "comment_count": int(summary.get("comment_count") or 0),
                 "topic_count": int(summary.get("topic_count") or 0),
                 "topics": [item for item in topic_labels if item][:3],
-                "social": {"up": social_up, "down": social_down},
+                "social": votes_by_paper[paper.paper_id],
+                "vote_total": votes_by_paper[paper.paper_id]["up"] + votes_by_paper[paper.paper_id]["down"],
                 "created_at": scorecard.created_at.isoformat() if scorecard.created_at else "",
             }
         )
@@ -457,10 +462,9 @@ def apply_vote_counts(session: Session, paper_id: str, public_json: dict[str, An
         if not isinstance(reviewer, dict):
             continue
         reviewer_key = str(reviewer.get("reviewer_key", ""))
-        base = reviewer.get("social") or {}
         reviewer["social"] = {
-            "up": int(base.get("up") or 0) + counts[reviewer_key]["up"],
-            "down": int(base.get("down") or 0) + counts[reviewer_key]["down"],
+            "up": counts[reviewer_key]["up"],
+            "down": counts[reviewer_key]["down"],
         }
     scorecard["leaderboards"] = leaderboard_keys_from_public(scorecard)
     return scorecard
@@ -468,17 +472,8 @@ def apply_vote_counts(session: Session, paper_id: str, public_json: dict[str, An
 
 def leaderboard_keys_from_public(public_json: dict[str, Any]) -> dict[str, list[str]]:
     reviewers = [item for item in public_json.get("reviewers", []) if isinstance(item, dict)]
-
-    def social_score(reviewer: dict[str, Any]) -> float:
-        social = reviewer.get("social") or {}
-        return float(reviewer.get("score") or 0) + float(social.get("up") or 0) * 0.16 - float(social.get("down") or 0) * 0.22
-
-    def risk_score(reviewer: dict[str, Any]) -> float:
-        social = reviewer.get("social") or {}
-        return (100 - float(reviewer.get("score") or 0)) + float(social.get("down") or 0) * 0.34 - float(social.get("up") or 0) * 0.1
-
-    red = sorted(reviewers, key=social_score, reverse=True)
-    black = sorted(reviewers, key=risk_score, reverse=True)
+    red = sorted(reviewers, key=lambda item: (-int(item.get("score") or 0), str(item.get("reviewer_key") or "")))
+    black = sorted(reviewers, key=lambda item: (int(item.get("score") or 0), str(item.get("reviewer_key") or "")))
     return {
         "red": [str(item.get("reviewer_key", "")) for item in red[:10]],
         "black": [str(item.get("reviewer_key", "")) for item in black[:10]],
@@ -529,12 +524,9 @@ def build_leaderboards(
     for score, title in rows:
         if score.paper_id not in counts_by_paper:
             counts_by_paper[score.paper_id] = vote_counts_by_reviewer(session, score.paper_id)
-        social = dict(score.social_json or {})
         extra = counts_by_paper[score.paper_id][score.reviewer_key]
-        up = int(social.get("up") or 0) + extra["up"]
-        down = int(social.get("down") or 0) + extra["down"]
-        red_score = score.score + up * 0.16 - down * 0.22
-        black_score = (100 - score.score) + down * 0.34 - up * 0.1
+        up = extra["up"]
+        down = extra["down"]
         items.append(
             {
                 "paper_id": score.paper_id,
@@ -545,12 +537,10 @@ def build_leaderboards(
                 "score": score.score,
                 "up": up,
                 "down": down,
-                "red_score": round(red_score, 2),
-                "black_score": round(black_score, 2),
             }
         )
-    red = sorted(items, key=lambda item: item["red_score"], reverse=True)[:limit]
-    black = sorted(items, key=lambda item: item["black_score"], reverse=True)[:limit]
+    red = sorted(items, key=lambda item: (-item["score"], item["reviewer_key"]))[:limit]
+    black = sorted(items, key=lambda item: (item["score"], item["reviewer_key"]))[:limit]
     return {"red": red, "black": black}
 
 

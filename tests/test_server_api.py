@@ -97,6 +97,9 @@ def test_api_search_scorecard_vote_and_job_flow(tmp_path):
     assert home.json()["latest_papers"][0]["paper_id"] == "paper1"
     assert home.json()["latest_papers"][0]["overall_score"] == 80
     assert home.json()["leaderboards"]["red"][0]["reviewer_key"] == "R1"
+    # Home feed exposes only real vote totals, ignoring stored synthetic baselines.
+    assert home.json()["latest_papers"][0]["social"] == {"up": 0, "down": 0}
+    assert home.json()["latest_papers"][0]["vote_total"] == 0
 
     scorecard = client.get("/api/papers/paper1/scorecard")
     assert scorecard.status_code == 200
@@ -106,7 +109,7 @@ def test_api_search_scorecard_vote_and_job_flow(tmp_path):
 
     vote = client.post("/api/papers/paper1/reviewers/R1/votes", json={"vote": "up"})
     assert vote.status_code == 200
-    assert vote.json()["scorecard"]["reviewers"][0]["social"]["up"] == 2
+    assert vote.json()["scorecard"]["reviewers"][0]["social"]["up"] == 1
 
     missing = client.get("/api/papers/paper2/scorecard")
     assert missing.status_code == 404
