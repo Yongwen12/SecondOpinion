@@ -42,7 +42,7 @@ def seed(factory, tmp_path):
     public = {
         "schema_version": "reviewer-public-scorecard-v0.1",
         "paper": {"title": "Searchable Paper", "venue": "ICLR", "year": 2025},
-        "summary": {"overall_score": 80, "signal_label": "Solid Signal", "reviewer_count": 1, "comment_count": 0},
+        "summary": {"overall_score": 80, "signal_label": "Solid review", "reviewer_count": 1, "comment_count": 0},
         "reviewers": [
             {
                 "reviewer_key": "R1",
@@ -50,7 +50,7 @@ def seed(factory, tmp_path):
                 "avatar_key": "R1",
                 "score": 80,
                 "tone": "blue",
-                "label": "Solid Signal",
+                "label": "Solid review",
                 "summary": "Useful review.",
                 "social": {"up": 1, "down": 0},
                 "dimensions": [],

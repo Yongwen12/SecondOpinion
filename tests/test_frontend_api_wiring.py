@@ -30,6 +30,14 @@ def test_frontend_has_community_home_entrypoint():
     assert "id=\"homeRedList\"" in html
     assert "id=\"homeBlackList\"" in html
     assert "id=\"latestPaperList\"" in html
-    assert "data-home-board-panel=\"red\"" in html
+    assert "class=\"community-grid\"" in html
+    assert "data-home-panel=\"recent\"" in html
+    assert "data-home-panel=\"red\"" in html
+    assert "data-home-board=\"recent\"" in html
+    assert "Least Useful" in html
+    assert "plainBand" in html
     assert "/api/home?conference=ICLR" in html
     assert "data-home-board-paper" in html
+    assert "Needs Scrutiny" not in html
+    assert "Red List" not in html
+    assert "Black List" not in html

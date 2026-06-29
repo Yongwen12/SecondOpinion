@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#f4f1ea" />
-  <title>SecondOpinion - Review Signal Community</title>
+  <title>SecondOpinion - Review Quality Community</title>
   <style>
     :root {
       color-scheme: light;
@@ -47,10 +47,7 @@
       min-height: 100vh;
       margin: 0;
       color: var(--ink);
-      background:
-        radial-gradient(circle at 86% -8%, rgba(185, 243, 76, .19), transparent 29%),
-        radial-gradient(circle at -4% 18%, rgba(46, 101, 168, .07), transparent 28%),
-        var(--bg);
+      background: #f6f7f5;
       font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable", "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
       font-synthesis: none;
       text-rendering: optimizeLegibility;
@@ -95,20 +92,20 @@
     .landing {
       min-height: 100svh;
       display: block;
-      padding: 24px;
+      padding: 18px 24px 32px;
     }
 
     .community-home {
       width: min(1180px, calc(100vw - 32px));
       margin: 0 auto;
       display: grid;
-      gap: 18px;
+      gap: 14px;
     }
 
     .community-hero {
       display: grid;
-      gap: 14px;
-      padding-top: 24px;
+      gap: 12px;
+      padding-top: 10px;
     }
 
     .community-nav {
@@ -139,8 +136,8 @@
 
     .community-copy h1 {
       margin: 0;
-      font-size: 52px;
-      line-height: .98;
+      font-size: clamp(28px, 3.2vw, 42px);
+      line-height: 1.04;
       letter-spacing: 0;
     }
 
@@ -176,7 +173,7 @@
 
     .community-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+      grid-template-columns: minmax(0, 1fr) clamp(300px, 30%, 360px);
       gap: 16px;
       align-items: start;
     }
@@ -184,13 +181,19 @@
     .feed-panel,
     .community-board {
       border: 1px solid var(--line);
-      border-radius: 16px;
-      background: rgba(255, 254, 250, .82);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .92);
       box-shadow: var(--shadow-1);
     }
 
     .feed-panel { padding: 10px; }
-    .community-board { position: sticky; top: 18px; padding: 12px; }
+    .community-board {
+      position: sticky;
+      top: 18px;
+      max-height: calc(100vh - 36px);
+      overflow: auto;
+      padding: 10px;
+    }
 
     .panel-head {
       display: flex;
@@ -334,22 +337,20 @@
     }
     .home-boards-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
+      gap: 12px;
       align-items: start;
     }
 
     .home-board {
       min-width: 0;
       border: 1px solid var(--line);
-      border-radius: 18px;
-      background: rgba(255, 254, 250, .86);
-      box-shadow: var(--shadow-1);
-      padding: 12px;
+      border-radius: 10px;
+      background: rgba(250, 251, 249, .78);
+      padding: 10px;
     }
 
     .home-board--red .board-title { color: var(--green); }
-    .home-board--black .board-title { color: var(--red); }
+    .home-board--black .board-title { color: var(--gold); }
 
     .board-heading {
       display: flex;
@@ -361,7 +362,7 @@
 
     .board-title {
       margin: 0;
-      font-size: 22px;
+      font-size: 16px;
       font-weight: 900;
       letter-spacing: 0;
     }
@@ -389,7 +390,7 @@
 
     .mobile-board-tabs {
       display: none;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 8px;
     }
 
@@ -1632,15 +1633,17 @@
       .filter-group { max-width: 68vw; }
     }
 
+    @media (max-width: 900px) {
+      .community-grid { grid-template-columns: 1fr; }
+      .community-board { position: static; max-height: none; overflow: visible; padding: 0; border: 0; box-shadow: none; background: transparent; }
+      .mobile-board-tabs { display: grid; }
+      [data-home-panel] { display: none; }
+      [data-home-panel].is-active { display: block; }
+    }
+
     @media (max-width: 520px) {
       .landing { padding: 14px; }
       .community-home { width: min(100%, calc(100vw - 28px)); }
-      .community-grid { grid-template-columns: 1fr; }
-      .home-boards-grid { grid-template-columns: 1fr; }
-      .mobile-board-tabs { display: grid; }
-      .home-board[data-home-board-panel] { display: none; }
-      .home-board[data-home-board-panel].is-active { display: block; }
-      .community-board { position: static; }
       .community-copy h1 { font-size: 32px; line-height: 1.05; }
       .search-shell--landing {
         width: 100%;
@@ -1673,16 +1676,16 @@
 </head>
 <body class="is-idle">
   <main class="shell">
-    <section class="landing" aria-label="Review signal community">
+    <section class="landing" aria-label="Review quality community">
       <div class="community-home">
         <header class="community-hero">
           <div class="community-nav">
             <div class="community-brand"><span class="brand-mark">SO</span><span>SecondOpinion</span></div>
-            <span>Review Signal Community</span>
+            <span>Review Quality Community</span>
           </div>
           <div class="community-copy">
             <h1>Review quality, ranked by the community.</h1>
-            <p>Search a paper, or browse reviewer-quality signals for the current ICLR corpus.</p>
+            <p>Search a paper, or browse reviewer-quality lists for the current ICLR corpus.</p>
           </div>
           <form class="search-shell search-shell--landing" id="landingSearch" novalidate>
             <span class="search-icon" aria-hidden="true">
@@ -1705,30 +1708,35 @@
           </div>
         </header>
         <div class="home-status" id="homeStatus" role="status" aria-live="polite" hidden></div>
-        <section class="feed-panel" aria-label="Recently scored papers">
-          <div class="panel-head">
-            <div>
-              <h2>Recently scored papers</h2>
-              <span class="panel-kicker" id="latestPapersMeta">ICLR 2025</span>
-              <p class="panel-note">Scores rate <strong>review quality</strong>, not the paper.</p>
-            </div>
-          </div>
-          <ul class="home-paper-list" id="latestPaperList"></ul>
-        </section>
-        <div class="mobile-board-tabs" aria-label="Leaderboard switch">
-                    <button class="mobile-board-tab is-active" type="button" data-home-board="red">Most Helpful</button>
-                    <button class="mobile-board-tab" type="button" data-home-board="black">Needs Scrutiny</button>
+        <div class="mobile-board-tabs" aria-label="Homepage view switch">
+          <button class="mobile-board-tab is-active" type="button" data-home-board="recent">Recent</button>
+          <button class="mobile-board-tab" type="button" data-home-board="red">Most Helpful</button>
+          <button class="mobile-board-tab" type="button" data-home-board="black">Least Useful</button>
         </div>
-        <section class="home-boards-grid" aria-label="Reviewer quality boards">
-          <article class="home-board home-board--red" data-home-board-panel="red">
-                        <header class="board-heading"><h2 class="board-title">Most Helpful</h2><span class="board-subtitle" id="homeRedMeta">ICLR 2025</span></header>
-            <ol class="community-board-list" id="homeRedList"></ol>
-          </article>
-          <article class="home-board home-board--black" data-home-board-panel="black">
-                        <header class="board-heading"><h2 class="board-title">Needs Scrutiny</h2><span class="board-subtitle" id="homeBlackMeta">ICLR 2025</span></header>
-            <ol class="community-board-list" id="homeBlackList"></ol>
-          </article>
-        </section>
+        <div class="community-grid">
+          <section class="feed-panel is-active" data-home-panel="recent" aria-label="Recently scored papers">
+            <div class="panel-head">
+              <div>
+                <h2>Recently scored papers</h2>
+                <span class="panel-kicker" id="latestPapersMeta">ICLR 2025</span>
+                <p class="panel-note">Scores rate <strong>review quality</strong>, not the paper.</p>
+              </div>
+            </div>
+            <ul class="home-paper-list" id="latestPaperList"></ul>
+          </section>
+          <aside class="community-board" aria-label="Reviewer quality side rail">
+            <section class="home-boards-grid" aria-label="Reviewer quality boards">
+              <article class="home-board home-board--red" data-home-panel="red">
+                <header class="board-heading"><h2 class="board-title">Most Helpful</h2><span class="board-subtitle" id="homeRedMeta">ICLR 2025</span></header>
+                <ol class="community-board-list" id="homeRedList"></ol>
+              </article>
+              <article class="home-board home-board--black" data-home-panel="black">
+                <header class="board-heading"><h2 class="board-title">Least Useful</h2><span class="board-subtitle" id="homeBlackMeta">ICLR 2025</span></header>
+                <ol class="community-board-list" id="homeBlackList"></ol>
+              </article>
+            </section>
+          </aside>
+        </div>
       </div>
     </section>
     <section class="app-view" aria-label="Review results">
@@ -1756,13 +1764,13 @@
             <div class="score-ring" id="scoreRing" aria-label="Review quality score 73 of 100">
               <div class="score-value"><strong id="overallScore">73</strong><span>review quality</span></div>
             </div>
-            <div class="signal-chip"><span class="signal-dot" aria-hidden="true"></span><span id="signalLabel">Solid signal</span></div>
+            <div class="signal-chip"><span class="signal-dot" aria-hidden="true"></span><span id="signalLabel">Solid review</span></div>
           </div>
 
           <div class="score-main">
             <div class="paper-bar">
               <h1 class="paper-title" id="paperTitle">Select a paper</h1>
-              <div class="paper-stats" id="paperStats" aria-label="Paper statistics"><span>3 reviewers</span><span>6 chunks</span></div>
+              <div class="paper-stats" id="paperStats" aria-label="Paper statistics"><span>3 reviewers</span><span>6 comments</span></div>
             </div>
             <div class="reviewer-grid" id="reviewerGrid" aria-label="Reviewer scores"></div>
             <div class="score-detail" id="scoreDetail" aria-live="polite">
@@ -1777,7 +1785,7 @@
             <ol class="leaderboard-list" id="redList"></ol>
           </article>
           <article class="surface leaderboard-card leaderboard-card--black">
-            <div class="section-head"><h2>Needs Scrutiny</h2><span class="leaderboard-kicker">Reviewer quality risk</span></div>
+            <div class="section-head"><h2>Least Useful</h2><span class="leaderboard-kicker">Reviewer quality</span></div>
             <ol class="leaderboard-list" id="blackList"></ol>
           </article>
         </section>
@@ -1818,7 +1826,7 @@
 
     let reviewers = [
       {
-        id: 'R1', name: 'Baseline Hawk', score: 91, tone: 'green', label: 'High Signal',
+        id: 'R1', name: 'Baseline Hawk', score: 91, tone: 'green', label: 'Strong review',
         summary: 'Compare with a standard retrieval baseline and report runtime.',
         dimensions: [
           ['Specificity', 92, 'Names the missing baseline and runtime.'],
@@ -1830,7 +1838,7 @@
         ]
       },
       {
-        id: 'R2', name: 'Vague Thunder', score: 44, tone: 'gold', label: 'Needs Signal',
+        id: 'R2', name: 'Vague Thunder', score: 44, tone: 'gold', label: 'Mixed review',
         summary: 'The paper is not convincing and needs more experiments.',
         dimensions: [
           ['Specificity', 34, 'No concrete missing experiment.'],
@@ -1842,7 +1850,7 @@
         ]
       },
       {
-        id: 'R3', name: 'Evidence Anchor', score: 84, tone: 'blue', label: 'High Signal',
+        id: 'R3', name: 'Evidence Anchor', score: 84, tone: 'blue', label: 'Strong review',
         summary: 'The ablation still does not explain why the central claim is supported.',
         dimensions: [
           ['Specificity', 86, 'Targets the central claim directly.'],
@@ -1891,7 +1899,7 @@
     let homePapers = [];
     let homeBoards = { red: [], black: [] };
     let homeYear = 2025;
-    let homeBoardKind = 'red';
+    let homeBoardKind = 'recent';
 
     const apiParam = new URLSearchParams(location.search).get('api') || '';
     const DEFAULT_API_BASE = 'https://secondopinion.smartselling.work';
@@ -1925,7 +1933,6 @@
     const latestPaperList = document.getElementById('latestPaperList');
     const homeStatus = document.getElementById('homeStatus');
     const latestPapersMeta = document.getElementById('latestPapersMeta');
-    const communityBoardList = document.getElementById('communityBoardList');
     const homeTopicFilters = document.getElementById('homeTopicFilters');
     const reviewerGrid = document.getElementById('reviewerGrid');
     const paperStats = document.getElementById('paperStats');
@@ -1941,10 +1948,21 @@
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
     function scoreBand(value) {
-      if (value >= 85) return { className: '', label: 'Strong signal' };
-      if (value >= 70) return { className: 'blue', label: 'Solid signal' };
-      if (value >= 40) return { className: 'gold', label: 'Mixed signal' };
-      return { className: 'red', label: 'Weak signal' };
+      if (value >= 85) return { className: '', label: 'Strong review' };
+      if (value >= 70) return { className: 'blue', label: 'Solid review' };
+      if (value >= 40) return { className: 'gold', label: 'Mixed review' };
+      return { className: 'red', label: 'Weak review' };
+    }
+
+    function plainBand(label) {
+      const value = String(label || '').trim();
+      const normalized = value.toLowerCase();
+      if (normalized === 'high signal' || normalized === 'strong signal') return 'Strong review';
+      if (normalized === 'solid signal') return 'Solid review';
+      if (normalized === 'needs signal' || normalized === 'mixed signal') return 'Mixed review';
+      if (normalized === 'weak signal') return 'Weak review';
+      if (normalized === 'review signal') return 'review';
+      return value;
     }
 
     function toneClass(tone) { return `tone-${toneMap[tone] ? tone : 'gold'}`; }
@@ -2085,7 +2103,7 @@
         return;
       }
       latestPaperList.innerHTML = homePapers.map(item => {
-        const topics = Array.isArray(item.topics) && item.topics.length ? item.topics : ['review signal'];
+        const topics = Array.isArray(item.topics) && item.topics.length ? item.topics : ['review'];
         const social = item.social || {};
         const score = Math.max(0, Math.min(100, Math.round(Number(item.overall_score || 0))));
         return `
@@ -2093,7 +2111,7 @@
             <button class="home-paper-card" type="button" data-home-paper-id="${escapeHtml(item.paper_id)}">
               <span class="paper-score-pill" title="Review quality score">${score}</span>
               <span class="home-paper-title">${escapeHtml(item.title || item.paper_id)}</span>
-              <span class="home-paper-meta">${escapeHtml(item.venue || item.conference_id || 'ICLR')} ${escapeHtml(item.year || '')} / ${Number(item.review_count || 0)} reviewers / ${escapeHtml(item.signal_label || 'Review signal')}</span>
+              <span class="home-paper-meta">${escapeHtml(item.venue || item.conference_id || 'ICLR')} ${escapeHtml(item.year || '')} / ${Number(item.review_count || 0)} reviewers / ${escapeHtml(plainBand(item.signal_label || 'review'))}</span>
               <span class="home-paper-tags">${topics.slice(0, 3).map(topic => `<span>${escapeHtml(topic)}</span>`).join('')}</span>
               <span class="home-paper-social">${escapeHtml(socialText(social.up, social.down, item.comment_count))}</span>
             </button>
@@ -2102,7 +2120,7 @@
     }
 
     function boardRows(kind) {
-      const rows = (homeBoards[kind] || []).slice(0, 10);
+      const rows = (homeBoards[kind] || []).slice(0, 5);
       if (!rows.length) {
         return '<li class="empty-state"><strong>No ranking yet</strong>Reviewer lists appear after papers for this year have scorecards.</li>';
       }
@@ -2120,12 +2138,12 @@
 
     function renderCommunityBoard() {
       document.querySelectorAll('[data-home-board]').forEach(button => button.classList.toggle('is-active', button.dataset.homeBoard === homeBoardKind));
-      document.querySelectorAll('[data-home-board-panel]').forEach(panel => panel.classList.toggle('is-active', panel.dataset.homeBoardPanel === homeBoardKind));
+      document.querySelectorAll('[data-home-panel]').forEach(panel => panel.classList.toggle('is-active', panel.dataset.homePanel === homeBoardKind));
       if (homeRedMeta) homeRedMeta.textContent = `ICLR ${homeYear}`;
       if (homeBlackMeta) homeBlackMeta.textContent = `ICLR ${homeYear}`;
       if (homeRedList) homeRedList.innerHTML = boardRows('red');
       if (homeBlackList) homeBlackList.innerHTML = boardRows('black');
-      if (communityBoardList) communityBoardList.innerHTML = boardRows(homeBoardKind);
+
     }
 
     function renderCommunityHome() {
@@ -2243,7 +2261,7 @@
       applyPublicScorecard(scorecard);
       hideSearchResults();
       enterResolvedView(source);
-      if (source === 'top') showToast('Review signal updated');
+      if (source === 'top') showToast('Scorecard updated');
       return true;
     }
 
@@ -2292,7 +2310,7 @@
       body.classList.add('is-resolved');
       renderAll();
       window.scrollTo({ top: 0, behavior: reducedMotion.matches ? 'auto' : 'smooth' });
-      if (source === 'top') showToast('Review signal updated');
+      if (source === 'top') showToast('Scorecard updated');
     }
     async function loadPublicScorecard() {
       const initialParams = new URLSearchParams(location.search);
@@ -2324,7 +2342,7 @@
         label: reviewer.label || scoreBand(Number(reviewer.score || 0)).label,
         summary: reviewer.summary || 'Reviewer comments scored by SecondOpinion.',
         social: reviewer.social || { up: 0, down: 0 },
-        dimensions: (reviewer.dimensions || []).map(item => [item.label, Number(item.score || 0), item.criterion || 'Reviewer-facing score signal.'])
+        dimensions: (reviewer.dimensions || []).map(item => [item.label, Number(item.score || 0), item.criterion || 'Reviewer quality score.'])
       }));
 
       splitComments = commentItems.map((comment, index) => ({
@@ -2350,7 +2368,7 @@
 
       if (paper.title) document.getElementById('paperTitle').textContent = paper.title;
       if (paper.title) setInputValue(paper.title);
-      if (summary.signal_label) document.getElementById('signalLabel').textContent = summary.signal_label;
+      if (summary.signal_label) document.getElementById('signalLabel').textContent = plainBand(summary.signal_label);
     }
 
     function renderPaperInfo() {
@@ -2360,7 +2378,7 @@
       document.getElementById('paperTitle').textContent = paper.title || parsePaperTitle(state.paper || 'Select a paper');
       paperStats.innerHTML = [
         `${summary.reviewer_count ?? reviewers.length} reviewers`,
-        `${summary.comment_count ?? splitComments.length} chunks`,
+        `${summary.comment_count ?? splitComments.length} comments`,
         paper.conference || ''
       ].filter(Boolean).map(item => `<span>${item}</span>`).join('');
     }
@@ -2455,7 +2473,7 @@
       const label = document.getElementById('signalLabel');
       ring.style.setProperty('--score', avg);
       ring.setAttribute('aria-label', `Review quality score ${avg} of 100`);
-      label.textContent = publicScorecard?.summary?.signal_label || band.label;
+      label.textContent = plainBand(publicScorecard?.summary?.signal_label || band.label);
 
       if (reducedMotion.matches) {
         scoreEl.textContent = avg;
@@ -2585,7 +2603,7 @@
               <div class="comment-meta">
                 <span class="comment-id">${reviewer?.name || comment.id}</span>
                 <span class="chunk-id">${comment.chunk}</span>
-                <span class="status-badge ${toneClass(comment.tone)}">${reviewer?.label || 'Review chunk'}</span>
+                <span class="status-badge ${toneClass(comment.tone)}">${reviewer?.label || 'Review comment'}</span>
               </div>
               <p class="viewpoint">${comment.view}</p>
               <div class="ai-comment"><span class="ai-mark">SO</span><span>${comment.ai}</span></div>
@@ -2760,7 +2778,7 @@
 
       const boardButton = event.target.closest('[data-home-board]');
       if (boardButton) {
-        homeBoardKind = boardButton.dataset.homeBoard === 'black' ? 'black' : 'red';
+        homeBoardKind = ['recent', 'red', 'black'].includes(boardButton.dataset.homeBoard) ? boardButton.dataset.homeBoard : 'recent';
         renderCommunityBoard();
         return;
       }

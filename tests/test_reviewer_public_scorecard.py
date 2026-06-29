@@ -1,4 +1,4 @@
-﻿from secondopinion.reviewer_public_scorecard import build_public_scorecard
+from secondopinion.reviewer_public_scorecard import build_public_scorecard
 
 
 def test_build_public_scorecard_from_hybrid_scores_hides_internal_fields():
@@ -34,8 +34,11 @@ def test_build_public_scorecard_from_hybrid_scores_hides_internal_fields():
     assert public["schema_version"] == "reviewer-public-scorecard-v0.1"
     assert public["paper"]["conference"] == "ICLR 2026"
     assert public["summary"]["reviewer_count"] == 1
+    assert public["summary"]["signal_label"] == "Solid review"
+    assert public["summary"]["situation"] == "Reviewer comments are scored first, then surfaced for the community."
     assert public["reviewers"][0]["nickname"] == "Baseline Hawk"
     assert public["reviewers"][0]["score"] == 72
+    assert public["reviewers"][0]["label"] == "Solid review"
     assert public["comments"][0]["text"] == "Please add a retrieval baseline and report runtime."
     assert public["leaderboards"]["red"] == ["R1"]
     rendered = str(public)

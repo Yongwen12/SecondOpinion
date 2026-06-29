@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import argparse
 import json
@@ -84,9 +84,9 @@ def build_public_scorecard(payload: dict[str, Any]) -> dict[str, Any]:
 def public_paper(paper: dict[str, Any]) -> dict[str, Any]:
     venue = str(paper.get("venue", "ICLR") or "ICLR")
     year = paper.get("year", 2026)
-    title = str(paper.get("title", "Reviewer Signal Demo Submission") or "Reviewer Signal Demo Submission")
+    title = str(paper.get("title", "Reviewer Quality Demo Submission") or "Reviewer Quality Demo Submission")
     if "hybrid scoring memory" in title.lower():
-        title = "Reviewer Signal Demo Submission"
+        title = "Reviewer Quality Demo Submission"
     return {
         "title": title,
         "conference": f"{venue} {year}".strip(),
@@ -103,7 +103,7 @@ def public_summary(summary: dict[str, Any], reviewers: list[dict[str, Any]], com
         "reviewer_count": len(reviewers),
         "comment_count": len(comments),
         "topic_count": len({topic for comment in comments for topic in comment.get("topics", [])}),
-        "situation": "Reviewer comments are scored first, then surfaced as public-facing review signals.",
+        "situation": "Reviewer comments are scored first, then surfaced for the community.",
     }
 
 
@@ -159,7 +159,7 @@ def public_comments(reviewer_key: str, nickname: str, claims: list[dict[str, Any
         text = str(claim.get("claim_text") or claim.get("source_sentence") or "").strip()
         if not text:
             continue
-        take = str(claim.get("second_opinion_take") or claim.get("rebuttal_guidance", {}).get("suggested_response") or "SecondOpinion found a review signal here.")
+        take = str(claim.get("second_opinion_take") or claim.get("rebuttal_guidance", {}).get("suggested_response") or "SecondOpinion scored this comment.")
         score = round(mean(score.get("final_score", 0) * 100 for score in claim.get("hybrid_scores", {}).values() if isinstance(score, dict)))
         comments.append(
             {
@@ -233,7 +233,7 @@ def dimension_criterion(key: str, score: int) -> str:
         return f"Solid {label.lower()}: {description}"
     if score >= 40:
         return f"Mixed {label.lower()}: useful but uneven."
-    return f"Weak {label.lower()}: needs a clearer signal."
+    return f"Weak {label.lower()}: needs to be more specific."
 
 
 def default_social_counts(score: int, index: int) -> dict[str, int]:
@@ -248,12 +248,12 @@ def avatar_key(index: int) -> str:
 def signal_label(score: int | float) -> str:
     value = float(score)
     if value >= 85:
-        return "High Signal"
+        return "Strong review"
     if value >= 70:
-        return "Solid Signal"
+        return "Solid review"
     if value >= 40:
-        return "Needs Signal"
-    return "Weak Signal"
+        return "Mixed review"
+    return "Weak review"
 
 
 def tone_for_score(score: int | float) -> str:
