@@ -173,8 +173,8 @@
 
     .community-grid {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
+      grid-template-columns: clamp(180px, 20%, 230px) minmax(0, 1fr) clamp(180px, 20%, 230px);
+      gap: 14px;
       align-items: start;
     }
 
@@ -350,6 +350,8 @@
     .home-board--black { border-top: 3px solid #2c2a28; }
     .home-board--red .board-title { color: var(--red); }
     .home-board--black .board-title { color: #2c2a28; }
+    .home-board { padding: 9px; position: sticky; top: 16px; }
+    .home-board .board-title { font-size: 13px; }
 
     .board-heading {
       display: flex;
@@ -1714,6 +1716,10 @@
           <button class="mobile-board-tab" type="button" data-home-board="black">Least Useful</button>
         </div>
         <div class="community-grid">
+          <article class="home-board home-board--red" data-home-panel="red" aria-label="Most helpful reviewers">
+            <header class="board-heading"><h2 class="board-title">Most Helpful</h2><span class="board-subtitle" id="homeRedMeta">ICLR 2025</span></header>
+            <ol class="community-board-list" id="homeRedList"></ol>
+          </article>
           <section class="feed-panel is-active" data-home-panel="recent" aria-label="Recently scored papers">
             <div class="panel-head">
               <div>
@@ -1724,18 +1730,10 @@
             </div>
             <ul class="home-paper-list" id="latestPaperList"></ul>
           </section>
-          <aside class="community-board" aria-label="Reviewer quality side rail">
-            <section class="home-boards-grid" aria-label="Reviewer quality boards">
-              <article class="home-board home-board--red" data-home-panel="red">
-                <header class="board-heading"><h2 class="board-title">Most Helpful</h2><span class="board-subtitle" id="homeRedMeta">ICLR 2025</span></header>
-                <ol class="community-board-list" id="homeRedList"></ol>
-              </article>
-              <article class="home-board home-board--black" data-home-panel="black">
-                <header class="board-heading"><h2 class="board-title">Least Useful</h2><span class="board-subtitle" id="homeBlackMeta">ICLR 2025</span></header>
-                <ol class="community-board-list" id="homeBlackList"></ol>
-              </article>
-            </section>
-          </aside>
+          <article class="home-board home-board--black" data-home-panel="black" aria-label="Least useful reviewers">
+            <header class="board-heading"><h2 class="board-title">Least Useful</h2><span class="board-subtitle" id="homeBlackMeta">ICLR 2025</span></header>
+            <ol class="community-board-list" id="homeBlackList"></ol>
+          </article>
         </div>
       </div>
     </section>
