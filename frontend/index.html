@@ -174,7 +174,7 @@
     .community-grid {
       display: grid;
       grid-template-columns: clamp(180px, 20%, 230px) minmax(0, 1fr) clamp(180px, 20%, 230px);
-      gap: 14px;
+      gap: 28px;
       align-items: start;
     }
 
@@ -350,8 +350,10 @@
     .home-board--black { border-top: 3px solid #2c2a28; }
     .home-board--red .board-title { color: var(--red); }
     .home-board--black .board-title { color: #2c2a28; }
-    .home-board { padding: 9px; position: sticky; top: 16px; }
+    .home-board { padding: 9px 10px 11px; position: sticky; top: 16px; box-shadow: var(--shadow-1); border-color: var(--line-strong); }
     .home-board .board-title { font-size: 13px; }
+    .board-vote { margin-top: 5px; }
+    .board-vote .vote-button { min-width: 0; height: 28px; padding: 0 9px; }
 
     .board-heading {
       display: flex;
@@ -2135,21 +2137,65 @@
       }).join('');
     }
 
+    function boardVoteCounts(item) {
+      const selected = voteState[`reviewer:${item.paper_id}:${item.reviewer_key}`] || null;
+      return { selected, up: Number(item.up || 0), down: Number(item.down || 0) };
+    }
+
     function boardRows(kind) {
       const rows = (homeBoards[kind] || []).slice(0, 5);
       if (!rows.length) {
         return '<li class="empty-state"><strong>No ranking yet</strong>Reviewer lists appear after papers for this year have scorecards.</li>';
       }
-      return rows.map((item, index) => `
+      return rows.map((item, index) => {
+        const c = boardVoteCounts(item);
+        const pid = escapeHtml(item.paper_id || '');
+        const rk = escapeHtml(item.reviewer_key || '');
+        return `
         <li>
-          <button class="community-board-row" type="button" data-home-board-paper="${escapeHtml(item.paper_id || '')}">
+          <button class="community-board-row" type="button" data-home-board-paper="${pid}">
             <span class="board-rank">#${index + 1}</span>
             <strong class="board-paper-title">${escapeHtml(item.paper_title || 'ICLR paper')}</strong>
             <span class="home-paper-meta">${escapeHtml(item.nickname || item.reviewer_key || 'Reviewer')}</span>
             <span class="paper-score-pill" title="Reviewer quality score">${Math.round(Number(item.score || 0))}</span>
-            <span class="board-meta">${escapeHtml(boardVoteText(item.up, item.down))}</span>
           </button>
-        </li>`).join('');
+          <div class="vote-group board-vote" aria-label="Agree or disagree with this AI ranking">
+            <button class="vote-button${c.selected === 'up' ? ' is-up' : ''}" type="button" data-board-vote="up" data-paper-id="${pid}" data-reviewer-key="${rk}" aria-pressed="${c.selected === 'up'}" aria-label="Helpful"><span class="vote-icon">${THUMB_UP}</span><span>${c.up}</span></button>
+            <button class="vote-button${c.selected === 'down' ? ' is-down' : ''}" type="button" data-board-vote="down" data-paper-id="${pid}" data-reviewer-key="${rk}" aria-pressed="${c.selected === 'down'}" aria-label="Not helpful"><span class="vote-icon">${THUMB_DOWN}</span><span>${c.down}</span></button>
+          </div>
+        </li>`;
+      }).join('');
+    }
+
+    function updateBoardVote(paperId, reviewerKey, action) {
+      const key = `reviewer:${paperId}:${reviewerKey}`;
+      const prev = voteState[key] || null;
+      const next = prev === action ? null : action;
+      const delta = (item, from, to) => {
+        if (from === 'up') item.up = Math.max(0, Number(item.up || 0) - 1);
+        if (from === 'down') item.down = Math.max(0, Number(item.down || 0) - 1);
+        if (to === 'up') item.up = Number(item.up || 0) + 1;
+        if (to === 'down') item.down = Number(item.down || 0) + 1;
+      };
+      const targets = [...(homeBoards.red || []), ...(homeBoards.black || [])]
+        .filter(it => it.paper_id === paperId && it.reviewer_key === reviewerKey);
+      targets.forEach(it => delta(it, prev, next));
+      if (next) voteState[key] = next; else delete voteState[key];
+      saveVoteState(voteState);
+      renderCommunityBoard();
+      if (!API_BASE) { showToast('Vote requires the production API'); return; }
+      apiFetch(`/api/papers/${encodeURIComponent(paperId)}/reviewers/${encodeURIComponent(reviewerKey)}/votes`, {
+        method: 'POST', body: JSON.stringify({ vote: next || 'none' })
+      }).then(r => {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        showToast(next ? 'Vote recorded' : 'Vote removed');
+      }).catch(() => {
+        targets.forEach(it => delta(it, next, prev));
+        if (prev) voteState[key] = prev; else delete voteState[key];
+        saveVoteState(voteState);
+        renderCommunityBoard();
+        showToast('Vote could not be saved');
+      });
     }
 
     function renderCommunityBoard() {
@@ -2831,6 +2877,12 @@
       const homePaperButton = event.target.closest('[data-home-paper-id]');
       if (homePaperButton) {
         openHomePaper(homePaperButton.dataset.homePaperId, 'landing');
+        return;
+      }
+
+      const boardVoteButton = event.target.closest('[data-board-vote]');
+      if (boardVoteButton) {
+        updateBoardVote(boardVoteButton.dataset.paperId, boardVoteButton.dataset.reviewerKey, boardVoteButton.dataset.boardVote);
         return;
       }
 
