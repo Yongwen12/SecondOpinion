@@ -403,7 +403,7 @@ def latest_scored_papers(
                 "decision": paper.decision,
                 "review_count": len(paper.reviews),
                 "overall_score": int(summary.get("overall_score") or 0),
-                "signal_label": str(summary.get("signal_label") or "Review signal"),
+                "signal_label": str(summary.get("signal_label") or "Review"),
                 "comment_count": int(summary.get("comment_count") or 0),
                 "topic_count": int(summary.get("topic_count") or 0),
                 "topics": [item for item in topic_labels if item][:3],

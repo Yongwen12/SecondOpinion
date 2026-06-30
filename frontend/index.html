@@ -173,7 +173,7 @@
 
     .community-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) clamp(300px, 30%, 360px);
+      grid-template-columns: 1fr;
       gap: 16px;
       align-items: start;
     }
@@ -188,10 +188,6 @@
 
     .feed-panel { padding: 10px; }
     .community-board {
-      position: sticky;
-      top: 18px;
-      max-height: calc(100vh - 36px);
-      overflow: auto;
       padding: 10px;
     }
 
@@ -337,6 +333,7 @@
     }
     .home-boards-grid {
       display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 12px;
       align-items: start;
     }
@@ -349,8 +346,10 @@
       padding: 10px;
     }
 
-    .home-board--red .board-title { color: var(--green); }
-    .home-board--black .board-title { color: var(--gold); }
+    .home-board--red { border-top: 3px solid var(--red); }
+    .home-board--black { border-top: 3px solid #2c2a28; }
+    .home-board--red .board-title { color: var(--red); }
+    .home-board--black .board-title { color: #2c2a28; }
 
     .board-heading {
       display: flex;
@@ -1639,6 +1638,7 @@
       .mobile-board-tabs { display: grid; }
       [data-home-panel] { display: none; }
       [data-home-panel].is-active { display: block; }
+      .home-boards-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 520px) {
@@ -1779,16 +1779,7 @@
           </div>
         </section>
 
-        <section class="leaderboard-section" aria-label="Reviewer leaderboards">
-          <article class="surface leaderboard-card leaderboard-card--red">
-            <div class="section-head"><h2>Most Helpful</h2><span class="leaderboard-kicker">Reviewer quality</span></div>
-            <ol class="leaderboard-list" id="redList"></ol>
-          </article>
-          <article class="surface leaderboard-card leaderboard-card--black">
-            <div class="section-head"><h2>Least Useful</h2><span class="leaderboard-kicker">Reviewer quality</span></div>
-            <ol class="leaderboard-list" id="blackList"></ol>
-          </article>
-        </section>
+        <!-- Per-paper reviewer leaderboards removed: redundant with the reviewer cards above (now sorted by score). Reviewer leaderboards live on the homepage rail. -->
 
         <section class="surface cloud-section" aria-labelledby="themesTitle">
           <div class="section-head">
@@ -1821,8 +1812,35 @@
     const avatarSvg = {
       R1: `<svg viewBox="0 0 50 50" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect width="50" height="50" fill="#fffefa"/><rect x="6" y="8" width="38" height="8" fill="#16795a"/><rect x="10" y="16" width="30" height="8" fill="#16795a"/><rect x="14" y="24" width="22" height="8" fill="#191918"/><rect x="10" y="32" width="8" height="8" fill="#16795a"/><rect x="32" y="32" width="8" height="8" fill="#16795a"/><rect x="18" y="18" width="5" height="5" fill="#fff"/><rect x="30" y="18" width="5" height="5" fill="#fff"/><rect x="24" y="25" width="5" height="5" fill="#b9f34c"/></svg>`,
       R2: `<svg viewBox="0 0 50 50" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect width="50" height="50" fill="#fffefa"/><rect x="8" y="9" width="34" height="7" fill="#a76e16"/><rect x="12" y="16" width="26" height="8" fill="#191918"/><rect x="7" y="25" width="36" height="6" fill="#ecd08f"/><rect x="13" y="33" width="30" height="5" fill="#ecd08f"/><rect x="8" y="40" width="24" height="4" fill="#ecd08f"/><rect x="17" y="18" width="5" height="5" fill="#fff"/><rect x="31" y="18" width="5" height="5" fill="#fff"/><rect x="24" y="24" width="4" height="4" fill="#b9f34c"/></svg>`,
-      R3: `<svg viewBox="0 0 50 50" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect width="50" height="50" fill="#fffefa"/><rect x="8" y="7" width="34" height="8" fill="#2e65a8"/><rect x="12" y="15" width="26" height="8" fill="#2e65a8"/><rect x="10" y="23" width="30" height="10" fill="#191918"/><rect x="16" y="18" width="6" height="6" fill="#fff"/><rect x="29" y="18" width="6" height="6" fill="#fff"/><rect x="19" y="34" width="12" height="5" fill="#2e65a8"/><rect x="14" y="39" width="22" height="4" fill="#2e65a8"/></svg>`
+      R3: `<svg viewBox="0 0 50 50" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect width="50" height="50" fill="#fffefa"/><rect x="8" y="7" width="34" height="8" fill="#2e65a8"/><rect x="12" y="15" width="26" height="8" fill="#2e65a8"/><rect x="10" y="23" width="30" height="10" fill="#191918"/><rect x="16" y="18" width="6" height="6" fill="#fff"/><rect x="29" y="18" width="6" height="6" fill="#fff"/><rect x="19" y="34" width="12" height="5" fill="#2e65a8"/><rect x="14" y="39" width="22" height="4" fill="#2e65a8"/></svg>`,
+      hawk: `<svg viewBox="0 0 50 50" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect width="50" height="50" fill="#fffefa"/><rect x="15" y="13" width="16" height="9" fill="#a7473f"/><rect x="13" y="22" width="22" height="12" fill="#a7473f"/><rect x="31" y="16" width="9" height="4" fill="#a76e16"/><rect x="24" y="16" width="4" height="4" fill="#191918"/><rect x="13" y="24" width="15" height="6" fill="#7e352f"/><rect x="9" y="30" width="6" height="4" fill="#7e352f"/><rect x="18" y="34" width="4" height="5" fill="#a76e16"/><rect x="27" y="34" width="4" height="5" fill="#a76e16"/></svg>`,
+      map: `<svg viewBox="0 0 50 50" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect width="50" height="50" fill="#fffefa"/><rect x="9" y="13" width="32" height="24" fill="#fbf1da"/><rect x="9" y="13" width="32" height="3" fill="#a76e16"/><rect x="9" y="34" width="32" height="3" fill="#a76e16"/><rect x="19" y="13" width="3" height="24" fill="#a76e16"/><rect x="29" y="13" width="3" height="24" fill="#a76e16"/><rect x="12" y="20" width="7" height="2" fill="#2e65a8"/><rect x="19" y="22" width="11" height="2" fill="#2e65a8"/><rect x="32" y="27" width="5" height="5" fill="#a7473f"/></svg>`,
+      anchor: `<svg viewBox="0 0 50 50" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect width="50" height="50" fill="#fffefa"/><rect x="22" y="9" width="6" height="6" fill="#2e65a8"/><rect x="24" y="11" width="2" height="2" fill="#fffefa"/><rect x="22" y="15" width="6" height="20" fill="#2e65a8"/><rect x="16" y="20" width="18" height="4" fill="#2e65a8"/><rect x="13" y="29" width="4" height="7" fill="#2e65a8"/><rect x="33" y="29" width="4" height="7" fill="#2e65a8"/><rect x="13" y="33" width="24" height="4" fill="#2e65a8"/></svg>`,
+      binoculars: `<svg viewBox="0 0 50 50" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect width="50" height="50" fill="#fffefa"/><rect x="11" y="17" width="11" height="17" fill="#16795a"/><rect x="28" y="17" width="11" height="17" fill="#16795a"/><rect x="22" y="21" width="6" height="6" fill="#16795a"/><rect x="11" y="14" width="11" height="3" fill="#0f5b43"/><rect x="28" y="14" width="11" height="3" fill="#0f5b43"/><rect x="13" y="29" width="7" height="4" fill="#b9f34c"/><rect x="30" y="29" width="7" height="4" fill="#b9f34c"/></svg>`,
+      cloud: `<svg viewBox="0 0 50 50" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect width="50" height="50" fill="#fffefa"/><rect x="14" y="19" width="22" height="12" fill="#c7d2dd"/><rect x="19" y="15" width="12" height="6" fill="#c7d2dd"/><rect x="10" y="23" width="6" height="8" fill="#c7d2dd"/><rect x="34" y="23" width="6" height="8" fill="#c7d2dd"/><rect x="15" y="34" width="18" height="2" fill="#9fb0c0"/><rect x="12" y="38" width="22" height="2" fill="#9fb0c0"/></svg>`,
+      storm: `<svg viewBox="0 0 50 50" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect width="50" height="50" fill="#fffefa"/><rect x="13" y="13" width="24" height="11" fill="#5b6470"/><rect x="18" y="10" width="13" height="5" fill="#5b6470"/><rect x="9" y="17" width="6" height="7" fill="#5b6470"/><rect x="35" y="17" width="6" height="7" fill="#5b6470"/><rect x="24" y="25" width="7" height="7" fill="#f2c200"/><rect x="19" y="31" width="9" height="4" fill="#f2c200"/><rect x="22" y="34" width="5" height="7" fill="#f2c200"/></svg>`,
+      clipboard: `<svg viewBox="0 0 50 50" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect width="50" height="50" fill="#fffefa"/><rect x="14" y="12" width="22" height="29" fill="#2e65a8"/><rect x="17" y="16" width="16" height="22" fill="#fff"/><rect x="20" y="9" width="10" height="6" fill="#a76e16"/><rect x="19" y="20" width="4" height="4" fill="#16795a"/><rect x="25" y="21" width="7" height="2" fill="#9bb4d4"/><rect x="19" y="28" width="4" height="4" fill="#16795a"/><rect x="25" y="29" width="7" height="2" fill="#9bb4d4"/></svg>`,
+      magnifier: `<svg viewBox="0 0 50 50" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect width="50" height="50" fill="#fffefa"/><rect x="15" y="11" width="14" height="4" fill="#191918"/><rect x="13" y="15" width="4" height="10" fill="#191918"/><rect x="27" y="15" width="4" height="10" fill="#191918"/><rect x="15" y="25" width="14" height="4" fill="#191918"/><rect x="17" y="15" width="10" height="10" fill="#dbe7f3"/><rect x="29" y="29" width="5" height="5" fill="#191918"/><rect x="32" y="32" width="8" height="4" fill="#191918"/></svg>`
     };
+
+    const THUMB_UP = `<svg class="thumb" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" fill="currentColor"><path d="M2 21h3V9H2v12zm19-11h-6.3l.95-4.57.03-.32a1.5 1.5 0 0 0-.44-1.06L14.17 3 7.6 9.59A2 2 0 0 0 7 11v8a2 2 0 0 0 2 2h8a2 2 0 0 0 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1a2 2 0 0 0-2-2z"/></svg>`;
+    const THUMB_DOWN = `<svg class="thumb" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" fill="currentColor" style="transform:rotate(180deg)"><path d="M2 21h3V9H2v12zm19-11h-6.3l.95-4.57.03-.32a1.5 1.5 0 0 0-.44-1.06L14.17 3 7.6 9.59A2 2 0 0 0 7 11v8a2 2 0 0 0 2 2h8a2 2 0 0 0 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1a2 2 0 0 0-2-2z"/></svg>`;
+
+    function mascotKey(nickname) {
+      const n = String(nickname || '').toLowerCase();
+      if (n.includes('hawk')) return 'hawk';
+      if (n.includes('anchor')) return 'anchor';
+      if (n.includes('scout')) return 'binoculars';
+      if (n.includes('needle') || n.includes('scope')) return 'magnifier';
+      if (n.includes('fog') || n.includes('drift')) return 'cloud';
+      if (n.includes('thunder') || n.includes('storm')) return 'storm';
+      if (n.includes('pilot') || n.includes('checklist')) return 'clipboard';
+      if (n.includes('map') || n.includes('cartograph')) return 'map';
+      const pool = ['hawk', 'anchor', 'binoculars', 'magnifier', 'cloud', 'clipboard', 'map', 'storm'];
+      let h = 0;
+      for (let i = 0; i < n.length; i++) h = (h * 31 + n.charCodeAt(i)) >>> 0;
+      return pool[h % pool.length];
+    }
 
     let reviewers = [
       {
@@ -2335,11 +2353,11 @@
 
       reviewers = reviewerItems.map((reviewer, index) => ({
         id: reviewer.reviewer_key || `R${index + 1}`,
-        avatar: reviewer.avatar_key || `R${(index % 3) + 1}`,
+        avatar: mascotKey(reviewer.nickname),
         name: reviewer.nickname || `Reviewer ${index + 1}`,
         score: Number(reviewer.score || 0),
         tone: reviewer.tone || scoreBand(Number(reviewer.score || 0)).className || 'green',
-        label: reviewer.label || scoreBand(Number(reviewer.score || 0)).label,
+        label: plainBand(reviewer.label || scoreBand(Number(reviewer.score || 0)).label),
         summary: reviewer.summary || 'Reviewer comments scored by SecondOpinion.',
         social: reviewer.social || { up: 0, down: 0 },
         dimensions: (reviewer.dimensions || []).map(item => [item.label, Number(item.score || 0), item.criterion || 'Reviewer quality score.'])
@@ -2355,16 +2373,19 @@
         down: Number(comment.down || 0)
       }));
 
-      cloudWords = topicItems.map((topic, index) => ({
-        text: topic.text,
-        size: Number(topic.size || 30),
-        x: Number(topic.x ?? (70 + (index * 150) % 880)),
-        y: Number(topic.y ?? (70 + (index * 90) % 380)),
-        tone: topic.tone || 'gold',
-        reviewer: topic.reviewer_key || '',
-        reviewerName: topic.nickname || '',
-        chunk: topic.chunk || ''
-      }));
+      cloudWords = topicItems
+        .filter(topic => topic && typeof topic.text === 'string' && topic.text.trim().length >= 3 && !CLOUD_STOPWORDS.has(topic.text.trim().toLowerCase()))
+        .slice(0, 18)
+        .map(topic => ({
+          text: topic.text.trim(),
+          size: Math.max(22, Math.min(60, Number(topic.size || 30))),
+          x: 0,
+          y: 0,
+          tone: topic.tone || 'gold',
+          reviewer: topic.reviewer_key || '',
+          reviewerName: topic.nickname || '',
+          chunk: topic.chunk || ''
+        }));
 
       if (paper.title) document.getElementById('paperTitle').textContent = paper.title;
       if (paper.title) setInputValue(paper.title);
@@ -2406,6 +2427,7 @@
     }
 
     function renderLeaderboards() {
+      if (!redList || !blackList) return; // per-paper leaderboards removed from the detail view
       redList.innerHTML = orderedLeaderboard('red').slice(0, 10).map((reviewer, index) => leaderboardRow(reviewer, index, 'red')).join('');
       blackList.innerHTML = orderedLeaderboard('black').slice(0, 10).map((reviewer, index) => leaderboardRow(reviewer, index, 'black')).join('');
     }
@@ -2492,7 +2514,7 @@
     }
 
     function renderReviewerCards() {
-      reviewerGrid.innerHTML = reviewers.map(reviewer => {
+      reviewerGrid.innerHTML = [...reviewers].sort((a, b) => b.score - a.score).map(reviewer => {
         const active = state.selectedReviewer === reviewer.id;
         return `
           <button class="reviewer-card${active ? ' is-active' : ''}" type="button" data-reviewer="${reviewer.id}" aria-expanded="${active}">
@@ -2553,9 +2575,34 @@
       syncLinkedReviewer();
     }
 
+    const CLOUD_STOPWORDS = new Set('are not the and that this with from also had has have was were for but you your our out set get got there here than then they them its can will would could should may might one two use used using via per etc let make made more most some such into onto only very much many any all each both same other does did how why what when where which while because been being over under about'.split(' '));
+
+    // Recompute non-overlapping positions client-side (ignore any stored x/y, which can collide).
+    function layoutCloud(words) {
+      const W = 1080, H = 520, cx = W / 2, cy = H / 2;
+      const placed = [];
+      for (const word of [...words].sort((a, b) => b.size - a.size)) {
+        const w = Math.max(44, word.text.length * word.size * 0.58 + 12);
+        const h = word.size * 1.15;
+        let angle = 0, radius = 0, ok = false, x = cx - w / 2, y = cy - h / 2;
+        for (let step = 0; step < 700; step++) {
+          x = cx + radius * Math.cos(angle) - w / 2;
+          y = cy + radius * Math.sin(angle) * 0.6 - h / 2;
+          if (x >= 10 && y >= 10 && x + w <= W - 10 && y + h <= H - 10 &&
+              !placed.some(p => x < p.x + p.w + 12 && x + w + 12 > p.x && y < p.y + p.h + 10 && y + h + 10 > p.y)) {
+            ok = true; break;
+          }
+          angle += 0.4; radius += 2.2;
+        }
+        word.hidden = !ok;
+        if (ok) { word.x = Math.round(x); word.y = Math.round(y); placed.push({ x, y, w, h }); }
+      }
+    }
+
     function renderCloud() {
-      cloudCanvas.innerHTML = cloudWords.map((word, index) => `
-        <button class="cloud-word" type="button" data-word-index="${index}" data-tone="${word.tone}" data-reviewer="${word.reviewer}" style="left:${word.x}px;top:${word.y}px;font-size:${word.size}px;" aria-label="${word.text}, ${word.reviewer}">${word.text}</button>`).join('');
+      layoutCloud(cloudWords);
+      cloudCanvas.innerHTML = cloudWords.filter(word => !word.hidden).map(word => `
+        <button class="cloud-word" type="button" data-word-index="${cloudWords.indexOf(word)}" data-tone="${word.tone}" data-reviewer="${word.reviewer}" style="left:${word.x}px;top:${word.y}px;font-size:${word.size}px;" aria-label="${word.text}, ${word.reviewer}">${word.text}</button>`).join('');
       requestAnimationFrame(resetCloudView);
     }
 
@@ -2609,8 +2656,8 @@
               <div class="ai-comment"><span class="ai-mark">SO</span><span>${comment.ai}</span></div>
             </div>
             <div class="vote-group" aria-label="Vote on ${comment.chunk}">
-              <button class="vote-button${counts.selected === 'up' ? ' is-up' : ''}" type="button" data-vote="up" data-chunk="${comment.chunk}" aria-pressed="${counts.selected === 'up'}"><span class="vote-icon">+</span><span>${counts.up}</span></button>
-              <button class="vote-button${counts.selected === 'down' ? ' is-down' : ''}" type="button" data-vote="down" data-chunk="${comment.chunk}" aria-pressed="${counts.selected === 'down'}"><span class="vote-icon">-</span><span>${counts.down}</span></button>
+              <button class="vote-button${counts.selected === 'up' ? ' is-up' : ''}" type="button" data-vote="up" data-chunk="${comment.chunk}" aria-pressed="${counts.selected === 'up'}" aria-label="Like"><span class="vote-icon">${THUMB_UP}</span><span>${counts.up}</span></button>
+              <button class="vote-button${counts.selected === 'down' ? ' is-down' : ''}" type="button" data-vote="down" data-chunk="${comment.chunk}" aria-pressed="${counts.selected === 'down'}" aria-label="Dislike"><span class="vote-icon">${THUMB_DOWN}</span><span>${counts.down}</span></button>
             </div>
           </article>`;
       }).join('');

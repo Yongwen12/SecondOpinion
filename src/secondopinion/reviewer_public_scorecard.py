@@ -14,7 +14,7 @@ DIMENSION_LABELS = {
     "specificity": ("Specificity", "How concrete and inspectable the reviewer comment is."),
     "substantiation": ("Evidence Link", "Whether the comment gives reasons, evidence, or manuscript anchors."),
     "actionability": ("Actionability", "Whether the authors can turn the comment into a response or revision."),
-    "consensus_conflict": ("Peer Support", "Whether nearby reviewer signals support or conflict with this concern."),
+    "consensus_conflict": ("Peer Support", "Whether nearby reviewers support or conflict with this concern."),
     "rebuttal_robustness": ("Rebuttal Risk", "Whether the concern still matters after the author response."),
     "professionalism": ("Tone", "Whether the comment is constructive, calibrated, and professional."),
 }
@@ -65,6 +65,7 @@ def build_public_scorecard(payload: dict[str, Any]) -> dict[str, Any]:
     if not isinstance(payload.get("reviewers"), list):
         raise ValueError("Input does not contain a reviewers list.")
     reviewers = [public_reviewer(item, index) for index, item in enumerate(payload.get("reviewers", []), start=1)]
+    _dedupe_nicknames(reviewers)
     comments = [comment for reviewer in reviewers for comment in reviewer.pop("_comments")]
     for index, comment in enumerate(comments, start=1):
         comment["chunk_id"] = f"C{index}"
@@ -79,6 +80,30 @@ def build_public_scorecard(payload: dict[str, Any]) -> dict[str, Any]:
         "leaderboards": build_leaderboards(reviewers),
     }
     return public
+
+
+def _dedupe_nicknames(reviewers: list[dict[str, Any]]) -> None:
+    """Give each reviewer on a scorecard a distinct nickname (and sync their comments).
+
+    The nickname pool is small, so two reviewers on one paper can otherwise collide
+    (e.g. two "Assumption Mapper" cards). Append a roman suffix to later duplicates.
+    """
+    seen: dict[str, int] = {}
+    for reviewer in reviewers:
+        base = str(reviewer.get("nickname") or "Reviewer")
+        seen[base] = seen.get(base, 0) + 1
+        if seen[base] == 1:
+            continue
+        unique = f"{base} {_roman(seen[base])}"
+        reviewer["nickname"] = unique
+        for comment in reviewer.get("_comments", []):
+            if isinstance(comment, dict):
+                comment["nickname"] = unique
+
+
+def _roman(n: int) -> str:
+    numerals = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"]
+    return numerals[n - 1] if 1 <= n <= len(numerals) else str(n)
 
 
 def public_paper(paper: dict[str, Any]) -> dict[str, Any]:
@@ -159,7 +184,7 @@ def public_comments(reviewer_key: str, nickname: str, claims: list[dict[str, Any
         text = str(claim.get("claim_text") or claim.get("source_sentence") or "").strip()
         if not text:
             continue
-        take = str(claim.get("second_opinion_take") or claim.get("rebuttal_guidance", {}).get("suggested_response") or "SecondOpinion scored this comment.")
+        take = str(claim.get("second_opinion_take") or claim.get("rebuttal_guidance", {}).get("suggested_response") or "SO read it — usable, just sharpen the point.")
         score = round(mean(score.get("final_score", 0) * 100 for score in claim.get("hybrid_scores", {}).values() if isinstance(score, dict)))
         comments.append(
             {

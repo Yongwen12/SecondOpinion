@@ -279,12 +279,29 @@ def clamp01(value: float) -> float:
 
 
 def public_take_for_claim(claim_text: str, overall_score: float | None) -> str:
+    # Short, plain-spoken, lightly wry verdict on the *review comment* — never the people.
+    # Deterministic (varies by score band + a stable hash) so re-scoring needs no LLM.
     score = 0.0 if overall_score is None else overall_score
     if score >= 0.75:
-        return "This comment is concrete enough to become an author response checklist item."
-    if score >= 0.55:
-        return "This comment contains a usable signal, but the author may need to pin down the exact target."
-    return "This comment is surfaced as low-signal because it is hard to turn into a concrete response."
+        variants = [
+            "Sharp and specific — basically a ready-made checklist item.",
+            "Concrete enough to act on. No notes.",
+            "Specific, answerable, fair. The good kind of nitpick.",
+        ]
+    elif score >= 0.55:
+        variants = [
+            "Useful-ish — real point, fuzzy aim. Name the target.",
+            "Right neighborhood, no address. Pin down the ask.",
+            "Half a point: good instinct, thin on specifics.",
+        ]
+    else:
+        variants = [
+            "Hard to act on — gestures at a problem without naming one.",
+            "More vibe than ask. Needs a concrete target.",
+            "Too vague to check. Say what's actually missing.",
+        ]
+    index = sum(ord(ch) for ch in claim_text) % len(variants)
+    return variants[index]
 
 
 def summarize_text(text: str, *, limit: int = 180) -> str:
