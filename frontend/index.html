@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#ffffff" />
-  <title>Judge My Reviewers - The Verdict</title>
+  <title>Judge My Reviewers</title>
   <style>
     :root {
       color-scheme: light;
@@ -1853,38 +1853,12 @@
       text-transform: uppercase;
     }
 
-    .outrage-title {
-      margin: 28px 0 0;
-      color: var(--oh-ink);
-      font-size: 60px;
-      font-weight: 900;
-      line-height: 0.95;
-      letter-spacing: 0;
-    }
-
-    .outrage-title mark {
-      padding: 0 14px 8px;
-      background: var(--oh-yellow);
-      color: var(--oh-ink);
-    }
-
-    .outrage-title span {
-      color: var(--oh-accent);
-    }
-
-    .outrage-sub {
-      max-width: 680px;
-      margin: 20px 0 0;
-      color: #6d6d6d;
-      font-size: 17px;
-      line-height: 1.5;
-    }
 
     .outrage-tabs {
       display: flex;
       align-items: center;
       gap: 14px;
-      margin-top: 44px;
+      margin-top: 16px;
       padding-bottom: 12px;
       border-bottom: 2px solid var(--oh-ink);
       overflow-x: auto;
@@ -2427,14 +2401,6 @@
         grid-row: 1;
       }
 
-      .outrage-title {
-        font-size: 48px;
-      }
-
-      .outrage-title mark {
-        padding: 0 8px 4px;
-      }
-
       .outrage-row {
         grid-template-columns: 44px 1fr 84px;
         gap: 8px;
@@ -2510,8 +2476,6 @@
         </header>
 
         <div class="outrage-eyebrow" id="outrageEyebrow"></div>
-        <h1 class="outrage-title" id="outrageTitle"></h1>
-        <p class="outrage-sub" id="outrageSub"></p>
 
         <nav class="outrage-tabs" id="boardTabs" aria-label="Reviewer leaderboards"></nav>
         <p class="outrage-ticker" id="communityTicker" hidden></p>
@@ -2710,8 +2674,6 @@
     const BOARD_COPY = {
       heat: {
         eyebrow: count => `ICLR 2025 · ALL TOPICS · ${count} REVIEWS AUDITED`,
-        title: 'The <mark>Verdict</mark><span>.</span>',
-        sub: 'They judged your paper. Your turn. Real quotes, real reviews — the worst rise to the top.',
         unit: 'OUTRAGE',
         stamp: 'STRONG REJECT',
         rate: 'PILE ON →',
@@ -2723,8 +2685,6 @@
       },
       praise: {
         eyebrow: count => `ICLR 2025 · ALL TOPICS · ${count} REVIEWS AUDITED`,
-        title: '<mark>Acquitted</mark><span>.</span>',
-        sub: 'Proof that good reviews exist. We were as surprised as you.',
         unit: 'RESPECT',
         stamp: 'STRONG ACCEPT',
         rate: 'VOUCH →',
@@ -2821,8 +2781,6 @@
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const homeBrand = document.getElementById('homeBrand');
     const outrageEyebrow = document.getElementById('outrageEyebrow');
-    const outrageTitle = document.getElementById('outrageTitle');
-    const outrageSub = document.getElementById('outrageSub');
     const boardTabs = document.getElementById('boardTabs');
     const communityTicker = document.getElementById('communityTicker');
     const outrageBoard = document.getElementById('outrageBoard');
@@ -3104,12 +3062,10 @@
     function renderCommunityBoard() {
       const board = homeBoards[homeBoardKind] || homeBoards.overall;
       const copy = BOARD_COPY[board.tone];
-      document.title = `${BRAND} - ${board.tone === 'praise' ? 'Acquitted' : 'The Verdict'}`;
+      document.title = BRAND;
       body.classList.toggle('praise', board.tone === 'praise');
       if (homeBrand) homeBrand.textContent = BRAND;
       if (outrageEyebrow) outrageEyebrow.textContent = copy.eyebrow(homeAuditedCount || board.count || 128);
-      if (outrageTitle) outrageTitle.innerHTML = copy.title;
-      if (outrageSub) outrageSub.textContent = copy.sub;
       if (boardTabs) {
         boardTabs.innerHTML = BOARD_ORDER.map(key => {
           const tabBoard = homeBoards[key] || DEMO_HOME_BOARDS[key];

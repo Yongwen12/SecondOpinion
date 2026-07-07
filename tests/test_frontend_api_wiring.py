@@ -27,8 +27,9 @@ def test_frontend_has_community_home_entrypoint():
     html = Path("frontend/index.html").read_text(encoding="utf-8")
 
     assert "Judge My Reviewers" in html
-    assert "The <mark>Verdict</mark>" in html
-    assert "<mark>Acquitted</mark>" in html
+    assert 'id="outrageTitle"' not in html
+    assert 'id="outrageSub"' not in html
+    assert 'The <mark>Verdict</mark>' not in html
     assert "id=\"outrageBoard\"" in html
     assert "id=\"boardTabs\"" in html
     assert "data-board-tab" in html
