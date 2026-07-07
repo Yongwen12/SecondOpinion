@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#ffffff" />
-  <title>Weak Reject - The Outrage Index</title>
+  <title>Judge My Reviewers - The Verdict</title>
   <style>
     :root {
       color-scheme: light;
@@ -1094,6 +1094,19 @@
     .guide-item:nth-child(3) .guide-swatch { background: var(--blue); }
     .guide-item:nth-child(4) .guide-swatch { background: var(--green); }
 
+    .detail-comments {
+      margin-top: 15px;
+      padding-top: 13px;
+      border-top: 1px solid var(--line);
+    }
+
+    .detail-comment-status {
+      margin: 8px 0 0;
+      min-height: 16px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
     .section-head {
       display: flex;
       align-items: center;
@@ -1766,14 +1779,37 @@
 
     .outrage-search-form {
       position: relative;
-      display: block;
-      width: 230px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 300px;
+      border-bottom: 1px solid #d8d8d8;
+    }
+
+    .outrage-search-form:focus-within {
+      border-color: var(--oh-ink);
+    }
+
+    .outrage-search-conf {
+      flex: 0 0 auto;
+      border: 0;
+      border-right: 1px solid #e2e2e2;
+      border-radius: 0;
+      padding: 6px 8px 6px 1px;
+      color: var(--oh-ink);
+      background: transparent;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      outline: none;
     }
 
     .outrage-search-input {
+      flex: 1 1 auto;
+      min-width: 0;
       width: 100%;
       border: 0;
-      border-bottom: 1px solid #d8d8d8;
       border-radius: 0;
       padding: 6px 1px;
       color: var(--oh-ink);
@@ -1820,7 +1856,7 @@
     .outrage-title {
       margin: 28px 0 0;
       color: var(--oh-ink);
-      font-size: 92px;
+      font-size: 60px;
       font-weight: 900;
       line-height: 0.95;
       letter-spacing: 0;
@@ -2283,14 +2319,77 @@
       background: #ffffff;
     }
 
-    .rate-soon {
+    .rate-comment-form {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid #ececec;
+    }
+
+    .rate-comment-input {
       width: 100%;
-      margin-top: 14px;
+      min-height: 62px;
+      resize: vertical;
       border: 1px solid #d8d8d8;
       border-radius: 0;
-      padding: 10px 1px;
-      color: #a8a8a8;
+      padding: 10px;
+      color: #111111;
       background: #ffffff;
+      font: inherit;
+      font-size: 13px;
+      line-height: 1.45;
+      outline: none;
+    }
+
+    .rate-comment-input:focus {
+      border-color: #111111;
+    }
+
+    .rate-comment-submit {
+      justify-self: start;
+    }
+
+    .rate-comments-head {
+      margin: 22px 0 0;
+      color: #111111;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .rate-comments {
+      margin-top: 4px;
+    }
+
+    .rate-comments-empty {
+      margin: 12px 0 0;
+      color: #8a8a8a;
+      font-size: 13px;
+    }
+
+    .rate-comment {
+      padding: 13px 0;
+      border-bottom: 1px solid #ececec;
+    }
+
+    .rate-comment-body {
+      margin: 0;
+      color: #111111;
+      font-size: 14px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .rate-comment-meta {
+      margin: 6px 0 0;
+      color: #8a8a8a;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
     }
 
     .rate-error {
@@ -2395,8 +2494,14 @@
           <div class="outrage-brand" id="homeBrand"></div>
           <div class="outrage-actions">
             <form class="outrage-search-form" id="landingSearch" novalidate>
+              <label class="sr-only" for="landingConference">Conference</label>
+              <select class="outrage-search-conf" id="landingConference" aria-label="Conference">
+                <option value="ICLR">ICLR</option>
+                <option value="NeurIPS">NeurIPS</option>
+                <option value="ICML">ICML</option>
+              </select>
               <label class="sr-only" for="landingInput">Search paper, venue, or topic</label>
-              <input class="outrage-search-input" id="landingInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Search paper / venue / topic" />
+              <input class="outrage-search-input" id="landingInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Search paper" />
               <button class="outrage-search-clear" id="landingClear" type="button" aria-label="Clear input" hidden>x</button>
               <button class="outrage-hidden-submit" id="landingSubmit" type="submit" aria-label="Search"></button>
             </form>
@@ -2600,13 +2705,13 @@
       { text: 'component gains', size: 25, x: 664, y: 392, tone: 'green', reviewer: 'R1', chunk: 'Separate gains from evidence search and scoring modules.' }
     ];
 
-    const BRAND = 'Weak Reject';
+    const BRAND = 'Judge My Reviewers';
     const BOARD_ORDER = ['overall', 'toxic', 'helpful'];
     const BOARD_COPY = {
       heat: {
         eyebrow: count => `ICLR 2025 · ALL TOPICS · ${count} REVIEWS AUDITED`,
-        title: 'The <mark>Outrage</mark> Index<span>.</span>',
-        sub: 'Where “needs more experiments” finally gets the review it deserves. Real quotes, real reviews — the worst rise to the top.',
+        title: 'The <mark>Verdict</mark><span>.</span>',
+        sub: 'They judged your paper. Your turn. Real quotes, real reviews — the worst rise to the top.',
         unit: 'OUTRAGE',
         stamp: 'STRONG REJECT',
         rate: 'PILE ON →',
@@ -2618,14 +2723,14 @@
       },
       praise: {
         eyebrow: count => `ICLR 2025 · ALL TOPICS · ${count} REVIEWS AUDITED`,
-        title: 'The <mark>Honor</mark> Roll<span>.</span>',
+        title: '<mark>Acquitted</mark><span>.</span>',
         sub: 'Proof that good reviews exist. We were as surprised as you.',
         unit: 'RESPECT',
         stamp: 'STRONG ACCEPT',
         rate: 'VOUCH →',
         hu: n => `${n} human${n === 1 ? '' : 's'} vouched`,
         ai: 'AI verdict only — be the first to vouch',
-        cta: '<p><b>Seen reviewing done right?</b>Pick the paper, pick the reviewer, nominate them for the Honor Roll.</p><button class="outrage-submit" type="button" data-open-rate>Vouch →</button>',
+        cta: '<p><b>Seen reviewing done right?</b>Pick the paper, pick the reviewer, and clear their name.</p><button class="outrage-submit" type="button" data-open-rate>Vouch →</button>',
         fine: 'Quotes are real, from public ICLR 2025 reviews. The good ones get the spotlight too — <b>peer review deserves better villains and better heroes.</b>',
         tier: score => score >= 95 ? '🏆' : '⭐'
       }
@@ -2666,7 +2771,7 @@
     let homeBoardKind = initialHomeBoard();
     let homeTickerHtml = '<span class="hl">⚡ 24 human ratings this week</span> · latest: <b>“brutal but fair”</b> on Reviewer #4 — 2 min ago';
     let usingDemoHome = true;
-    let rateContext = { row: null, paperId: '', reviewerKey: '', tone: 'heat', source: 'global', paperResults: [], reviewerResults: [], selectedPaper: null };
+    let rateContext = { row: null, paperId: '', reviewerKey: '', tone: 'heat', source: 'global', paperResults: [], reviewerResults: [], selectedPaper: null, comments: [], commentsLoading: false };
 
     const apiParam = new URLSearchParams(location.search).get('api') || '';
     const DEFAULT_API_BASE = 'https://secondopinion.smartselling.work';
@@ -2691,6 +2796,7 @@
 
     const body = document.body;
     const landingInput = document.getElementById('landingInput');
+    const landingConference = document.getElementById('landingConference');
     const topInput = document.getElementById('topInput');
     const landingClear = document.getElementById('landingClear');
     const topClear = document.getElementById('topClear');
@@ -2922,6 +3028,7 @@
         venue: String(source.venue || fb.venue || 'ICLR 2025'),
         score: clampScore(scoreSource),
         humanCount: Number(source.humanCount ?? source.h ?? source.human_count ?? source.vote_total ?? ((Number(source.up || 0) + Number(source.down || 0)) || fb.humanCount || 0)),
+        commentCount: Number(source.commentCount ?? source.comment_count ?? fb.commentCount ?? 0),
         paperId,
         reviewerKey,
         tone
@@ -2997,7 +3104,7 @@
     function renderCommunityBoard() {
       const board = homeBoards[homeBoardKind] || homeBoards.overall;
       const copy = BOARD_COPY[board.tone];
-      document.title = `${BRAND} - ${board.tone === 'praise' ? 'The Honor Roll' : 'The Outrage Index'}`;
+      document.title = `${BRAND} - ${board.tone === 'praise' ? 'Acquitted' : 'The Verdict'}`;
       body.classList.toggle('praise', board.tone === 'praise');
       if (homeBrand) homeBrand.textContent = BRAND;
       if (outrageEyebrow) outrageEyebrow.textContent = copy.eyebrow(homeAuditedCount || board.count || 128);
@@ -3025,6 +3132,9 @@
     function boardRowHtml(row, index, board, copy) {
       const rank = String(index + 1).padStart(2, '0');
       const human = Number(row.humanCount || 0);
+      let comments = Number(row.commentCount || 0);
+      if (!comments) comments = loadDemoComments(commentScopeKey(row)).length;
+      const commentTail = comments > 0 ? ` · <b class="outrage-comments">${comments} comment${comments === 1 ? '' : 's'}</b>` : '';
       const metaTail = human > 0
         ? `<b>${escapeHtml(copy.hu(human))}</b>`
         : `<button class="outrage-meta-action" type="button" data-row-rate="${index}">${escapeHtml(copy.ai)}</button>`;
@@ -3034,7 +3144,7 @@
           <div class="outrage-main">
             <h3 class="outrage-q">${escapeHtml(row.quote)}${index === 0 ? `<span class="outrage-stamp">${copy.stamp}</span>` : ''}</h3>
             <p class="outrage-why">${escapeHtml(row.verdict)}</p>
-            <p class="outrage-meta">${escapeHtml(row.reviewer)} · ${escapeHtml(row.paper)} · ${escapeHtml(row.venue || 'ICLR 2025')} · ${metaTail}</p>
+            <p class="outrage-meta">${escapeHtml(row.reviewer)} · ${escapeHtml(row.paper)} · ${escapeHtml(row.venue || 'ICLR 2025')} · ${metaTail}${commentTail}</p>
           </div>
           <div class="outrage-scorebox">
             <div class="outrage-num">${clampScore(row.score)}</div>
@@ -3092,11 +3202,12 @@
 
     function openRateModal(row = null, source = 'global') {
       const board = homeBoards[homeBoardKind] || homeBoards.overall;
-      rateContext = { row, paperId: row?.paperId || '', reviewerKey: row?.reviewerKey || '', tone: row?.tone || board.tone, source, paperResults: [], reviewerResults: [], selectedPaper: null, conference: 'ICLR', query: '' };
+      rateContext = { row, paperId: row?.paperId || '', reviewerKey: row?.reviewerKey || '', tone: row?.tone || board.tone, source, paperResults: [], reviewerResults: [], selectedPaper: null, conference: 'ICLR', query: '', comments: [], commentsLoading: false };
       rateModal.hidden = false;
       rateModalError.textContent = '';
       renderRateModal();
       if (!row) loadRatePapers('');
+      else loadReviewerComments(row);
     }
 
     function closeRateModal() {
@@ -3110,7 +3221,7 @@
       if (row) {
         const praise = rateContext.tone === 'praise';
         rateModalBody.innerHTML = `
-          <p class="rate-kicker">${praise ? 'Honor Roll vote' : 'Outrage vote'}</p>
+          <p class="rate-kicker">${praise ? 'Acquittal vote' : 'Outrage vote'}</p>
           <h2 id="rateTitle">${escapeHtml(row.reviewer)}</h2>
           <p>${escapeHtml(row.paper)} · ${escapeHtml(row.venue || 'ICLR 2025')}</p>
           <div class="rate-review-card"><strong>${escapeHtml(row.quote)}</strong><span>${escapeHtml(row.verdict)} Current score: ${clampScore(row.score)}</span></div>
@@ -3118,7 +3229,12 @@
             <button class="rate-primary" type="button" data-rate-choice="${praise ? 'up' : 'down'}">${praise ? 'Vouch' : 'Pile on'}</button>
             <button class="rate-secondary" type="button" data-rate-choice="${praise ? 'down' : 'up'}">${praise ? 'Dispute' : 'Defend'}</button>
           </div>
-          <input class="rate-soon" disabled value="Add a comment (coming soon)" />`;
+          <form class="rate-comment-form" data-comment-form>
+            <textarea class="rate-comment-input" id="rateCommentInput" rows="2" maxlength="1000" placeholder="${praise ? 'Say something nice about this review…' : 'Add your own take on this review…'}"></textarea>
+            <button class="rate-primary rate-comment-submit" type="submit">Post comment</button>
+          </form>
+          <p class="rate-comments-head">Comments</p>
+          <div class="rate-comments" id="rateComments">${renderRateCommentsHtml()}</div>`;
         return;
       }
       rateModalBody.innerHTML = `
@@ -3207,6 +3323,7 @@
       rateContext.reviewerKey = rateContext.row.reviewerKey;
       rateContext.tone = board.tone;
       renderRateModal();
+      loadReviewerComments(rateContext.row);
     }
 
     async function submitRateVote(vote) {
@@ -3242,6 +3359,171 @@
         rateModalError.textContent = 'Vote could not be saved.';
       }
     }
+
+    function relTime(iso) {
+      if (!iso) return 'just now';
+      const then = new Date(iso).getTime();
+      if (Number.isNaN(then)) return 'just now';
+      const mins = Math.floor(Math.max(0, Date.now() - then) / 60000);
+      if (mins < 1) return 'just now';
+      if (mins < 60) return `${mins}m ago`;
+      const hrs = Math.floor(mins / 60);
+      if (hrs < 24) return `${hrs}h ago`;
+      return `${Math.floor(hrs / 24)}d ago`;
+    }
+
+    function commentScopeKey(row) {
+      if (row && row.paperId && row.reviewerKey) return `${row.paperId}::${row.reviewerKey}`;
+      return `demo::${row?.paper || ''}::${row?.reviewer || ''}`;
+    }
+
+    function isDemoCommentRow(row) {
+      return !API_BASE || !row || !row.paperId || !row.reviewerKey || String(row.paperId).startsWith('demo-');
+    }
+
+    function loadDemoComments(key) {
+      try {
+        const store = JSON.parse(localStorage.getItem('soDemoComments') || '{}');
+        return Array.isArray(store[key]) ? store[key] : [];
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function saveDemoComment(key, comment) {
+      let store = {};
+      try { store = JSON.parse(localStorage.getItem('soDemoComments') || '{}'); } catch (error) { store = {}; }
+      if (!Array.isArray(store[key])) store[key] = [];
+      store[key].unshift(comment);
+      try { localStorage.setItem('soDemoComments', JSON.stringify(store)); } catch (error) {}
+    }
+
+    let demoCommentSeq = 0;
+
+    function renderRateCommentsHtml() {
+      if (rateContext.commentsLoading) return '<p class="rate-comments-empty">Loading comments…</p>';
+      const list = rateContext.comments || [];
+      if (!list.length) return '<p class="rate-comments-empty">No comments yet. Be the first to weigh in.</p>';
+      return list.map(comment => `
+        <div class="rate-comment">
+          <p class="rate-comment-body">${escapeHtml(comment.body)}</p>
+          <p class="rate-comment-meta">${escapeHtml(comment.author || 'anon')} · ${escapeHtml(relTime(comment.created_at))}</p>
+        </div>`).join('');
+    }
+
+    async function fetchCommentsFor(row) {
+      if (isDemoCommentRow(row)) return loadDemoComments(commentScopeKey(row));
+      try {
+        const response = await apiFetch(`/api/papers/${encodeURIComponent(row.paperId)}/reviewers/${encodeURIComponent(row.reviewerKey)}/comments`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const payload = await response.json();
+        return Array.isArray(payload.items) ? payload.items : [];
+      } catch (error) {
+        return [];
+      }
+    }
+
+    async function postCommentFor(row, body) {
+      const clean = (body || '').trim();
+      if (!clean) return { ok: false, reason: 'empty' };
+      if (isDemoCommentRow(row)) {
+        const comment = { id: `demo-${demoCommentSeq++}`, body: clean, author: 'you', created_at: new Date().toISOString() };
+        saveDemoComment(commentScopeKey(row), comment);
+        return { ok: true, demo: true, items: loadDemoComments(commentScopeKey(row)) };
+      }
+      try {
+        const response = await apiFetch(`/api/papers/${encodeURIComponent(row.paperId)}/reviewers/${encodeURIComponent(row.reviewerKey)}/comments`, {
+          method: 'POST', body: JSON.stringify({ body: clean })
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const payload = await response.json();
+        return { ok: true, items: Array.isArray(payload.items) ? payload.items : [] };
+      } catch (error) {
+        return { ok: false, reason: 'network' };
+      }
+    }
+
+    async function loadReviewerComments(row) {
+      if (!row) return;
+      rateContext.comments = [];
+      rateContext.commentsLoading = true;
+      renderRateModal();
+      rateContext.comments = await fetchCommentsFor(row);
+      rateContext.commentsLoading = false;
+      renderRateModal();
+    }
+
+    async function submitReviewerComment() {
+      const row = rateContext.row;
+      const input = document.getElementById('rateCommentInput');
+      if (!row || !input) return;
+      const body = input.value.trim();
+      if (!body) { rateModalError.textContent = 'Write something first.'; return; }
+      rateModalError.textContent = '';
+      const result = await postCommentFor(row, body);
+      if (!result.ok) { rateModalError.textContent = result.reason === 'empty' ? 'Write something first.' : 'Comment could not be posted.'; return; }
+      rateContext.comments = result.items;
+      renderRateModal();
+      if (result.demo) { rateModalError.textContent = 'Comment added (demo — saved on this device).'; renderCommunityBoard(); }
+    }
+
+    function scorecardCommentRow(reviewer) {
+      return {
+        paperId: state.paperId || publicScorecard?.paper?.paper_id || '',
+        reviewerKey: reviewer.id,
+        paper: state.paper || '',
+        reviewer: reviewer.name
+      };
+    }
+
+    function renderScorecardCommentsHtml(reviewer) {
+      let listHtml;
+      if (reviewer.commentsLoading) {
+        listHtml = '<p class="rate-comments-empty">Loading comments…</p>';
+      } else if (!(reviewer.comments || []).length) {
+        listHtml = '<p class="rate-comments-empty">No comments yet. Be the first to weigh in.</p>';
+      } else {
+        listHtml = reviewer.comments.map(comment => `
+          <div class="rate-comment">
+            <p class="rate-comment-body">${escapeHtml(comment.body)}</p>
+            <p class="rate-comment-meta">${escapeHtml(comment.author || 'anon')} · ${escapeHtml(relTime(comment.created_at))}</p>
+          </div>`).join('');
+      }
+      return `
+        <div class="detail-comments">
+          <p class="rate-comments-head">Comments</p>
+          <form class="rate-comment-form" data-sc-comment-form="${escapeHtml(reviewer.id)}">
+            <textarea class="rate-comment-input" id="scCommentInput" rows="2" maxlength="1000" placeholder="Add your own take on this review…"></textarea>
+            <button class="rate-primary rate-comment-submit" type="submit">Post comment</button>
+          </form>
+          <div class="rate-comments">${listHtml}</div>
+          <p class="detail-comment-status" id="scCommentStatus"></p>
+        </div>`;
+    }
+
+    async function loadScorecardComments(reviewer) {
+      reviewer.commentsLoading = true;
+      renderScoreDetail();
+      reviewer.comments = await fetchCommentsFor(scorecardCommentRow(reviewer));
+      reviewer.commentsLoading = false;
+      reviewer.commentsLoaded = true;
+      renderScoreDetail();
+    }
+
+    async function submitScorecardComment(reviewerId) {
+      const reviewer = reviewers.find(item => item.id === reviewerId);
+      const input = document.getElementById('scCommentInput');
+      const status = document.getElementById('scCommentStatus');
+      if (!reviewer || !input) return;
+      const body = input.value.trim();
+      if (!body) { if (status) status.textContent = 'Write something first.'; return; }
+      const result = await postCommentFor(scorecardCommentRow(reviewer), body);
+      if (!result.ok) { if (status) status.textContent = result.reason === 'empty' ? 'Write something first.' : 'Comment could not be posted.'; return; }
+      reviewer.comments = result.items;
+      reviewer.commentsLoaded = true;
+      renderScoreDetail();
+    }
+
     async function openHomePaper(paperId, source = 'landing') {
       if (!paperId) return;
       const paper = homePapers.find(item => item.paper_id === paperId) || { paper_id: paperId };
@@ -3303,7 +3585,8 @@
       }
       const paperId = paperIdFromValue(value);
       if (paperId) return loadScorecardFromApi(paperId, source, { title: parsePaperTitle(value) });
-      const response = await apiFetch(`/api/conferences/ICLR/papers?query=${encodeURIComponent(value)}&limit=8`);
+      const conference = (landingConference && landingConference.value) || 'ICLR';
+      const response = await apiFetch(`/api/conferences/${encodeURIComponent(conference)}/papers?query=${encodeURIComponent(value)}&limit=8`);
       if (!response.ok) return false;
       const payload = await response.json();
       const items = Array.isArray(payload.items) ? payload.items : [];
@@ -3408,6 +3691,8 @@
         label: plainBand(reviewer.label || scoreBand(Number(reviewer.score || 0)).label),
         summary: reviewer.summary || 'Reviewer comments scored by SecondOpinion.',
         social: reviewer.social || { up: 0, down: 0 },
+        comments: Array.isArray(reviewer.comments) ? reviewer.comments : [],
+        commentsLoaded: true,
         dimensions: (reviewer.dimensions || []).map(item => [item.label, Number(item.score || 0), item.criterion || 'Reviewer quality score.'])
       }));
 
@@ -3615,11 +3900,13 @@
             <span class="guide-item"><i class="guide-swatch"></i>70-84 Solid</span>
             <span class="guide-item"><i class="guide-swatch"></i>85-100 Strong</span>
           </div>
+          ${renderScorecardCommentsHtml(reviewer)}
         </div>`;
 
       requestAnimationFrame(() => {
         scoreDetailClip.querySelectorAll('.metric-fill').forEach(fill => { fill.style.width = fill.dataset.width; });
       });
+      if (!reviewer.commentsLoaded && !reviewer.commentsLoading) loadScorecardComments(reviewer);
       syncLinkedReviewer();
     }
 
@@ -3997,6 +4284,19 @@
       rateContext.paperResults = [];
       rateContext.reviewerResults = [];
       loadRatePapers(rateContext.query || '');
+    });
+
+    rateModal.addEventListener('submit', event => {
+      if (!event.target.closest('[data-comment-form]')) return;
+      event.preventDefault();
+      submitReviewerComment();
+    });
+
+    scoreDetail.addEventListener('submit', event => {
+      const form = event.target.closest('[data-sc-comment-form]');
+      if (!form) return;
+      event.preventDefault();
+      submitScorecardComment(form.dataset.scCommentForm);
     });
 
     outrageBoard.addEventListener('keydown', event => {

@@ -116,3 +116,47 @@ def test_api_search_scorecard_vote_and_job_flow(tmp_path):
     job = client.post("/api/papers/paper2/scoring-jobs")
     assert job.status_code == 200
     assert job.json()["status"] == "queued"
+
+
+def test_reviewer_comment_flow(tmp_path):
+    factory = session_factory_for(tmp_path)
+    seed(factory, tmp_path)
+    settings = ServerSettings(
+        database_url=f"sqlite:///{tmp_path / 'api.db'}",
+        artifact_root=tmp_path / "artifacts",
+        scoring_memory_path=tmp_path / "memory.jsonl",
+    )
+    app = create_app(settings=settings, session_factory=factory)
+    client = TestClient(app)
+
+    empty = client.get("/api/papers/paper1/reviewers/R1/comments")
+    assert empty.status_code == 200
+    assert empty.json()["items"] == []
+
+    created = client.post(
+        "/api/papers/paper1/reviewers/R1/comments",
+        json={"body": "Reviewer 2 asked me to cite 15 of their own papers."},
+    )
+    assert created.status_code == 200
+    assert created.json()["comment"]["body"] == "Reviewer 2 asked me to cite 15 of their own papers."
+    assert created.json()["comment"]["author"].startswith("anon-")
+    assert len(created.json()["items"]) == 1
+
+    listed = client.get("/api/papers/paper1/reviewers/R1/comments")
+    assert listed.json()["items"][0]["body"] == "Reviewer 2 asked me to cite 15 of their own papers."
+
+    # Comments are embedded per reviewer in the public scorecard payload.
+    scorecard = client.get("/api/papers/paper1/scorecard")
+    reviewer = scorecard.json()["reviewers"][0]
+    assert reviewer["comment_count"] == 1
+    assert reviewer["comments"][0]["body"] == "Reviewer 2 asked me to cite 15 of their own papers."
+
+    # Leaderboard rows surface the comment count so busy reviewers stand out.
+    home = client.get("/api/home", params={"conference": "ICLR", "year": 2025})
+    assert home.json()["leaderboards"]["red"][0]["comment_count"] == 1
+
+    # Blank comments are rejected; unknown papers 404.
+    blank = client.post("/api/papers/paper1/reviewers/R1/comments", json={"body": "   "})
+    assert blank.status_code == 400
+    missing = client.post("/api/papers/ghost/reviewers/R1/comments", json={"body": "hi"})
+    assert missing.status_code == 404

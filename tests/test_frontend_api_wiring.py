@@ -7,7 +7,7 @@ def test_frontend_is_api_first_without_static_demo_fallback():
     assert "SECONDOPINION_API_BASE" in html
     assert "https://secondopinion.smartselling.work" in html
     assert "id=\"topResults\"" in html
-    assert "/api/conferences/ICLR/papers" in html
+    assert "/api/conferences/${encodeURIComponent(conference)}/papers" in html
     assert "/api/papers/${encodeURIComponent(paperId)}/scorecard" in html
     assert "./demos/reviewer_public_scorecard_v0.1.json" not in html
     assert "data-paper-result-index" in html
@@ -26,15 +26,18 @@ def test_frontend_search_does_not_treat_plain_words_as_paper_ids():
 def test_frontend_has_community_home_entrypoint():
     html = Path("frontend/index.html").read_text(encoding="utf-8")
 
-    assert "Weak Reject" in html
-    assert "The <mark>Outrage</mark> Index" in html
-    assert "The <mark>Honor</mark> Roll" in html
+    assert "Judge My Reviewers" in html
+    assert "The <mark>Verdict</mark>" in html
+    assert "<mark>Acquitted</mark>" in html
     assert "id=\"outrageBoard\"" in html
     assert "id=\"boardTabs\"" in html
     assert "data-board-tab" in html
     assert "data-board-row" in html
     assert "data-row-rate" in html
     assert "Rate a reviewer" in html
+    assert "data-comment-form" in html
+    assert "data-sc-comment-form" in html
+    assert "/reviewers/${encodeURIComponent(row.reviewerKey)}/comments" in html
     assert "/api/home?conference=ICLR" in html
     assert "overall" in html
     assert "toxic" in html

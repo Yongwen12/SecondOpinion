@@ -13,8 +13,10 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from .config import ServerSettings, settings_from_env
 from .database import init_db, make_engine, make_session_factory
-from .models import Paper, ScoringJob, Vote, utcnow
+from .models import Paper, ReviewerComment, ScoringJob, Vote, utcnow
 from .repository import (
+    add_reviewer_comment,
+    apply_reviewer_comments,
     apply_vote_counts,
     build_leaderboards,
     create_scoring_job,
@@ -22,6 +24,7 @@ from .repository import (
     latest_scorecard,
     latest_scored_papers,
     list_conferences,
+    list_reviewer_comments,
     paper_to_public_dict,
     search_papers,
     upsert_vote,
@@ -109,7 +112,9 @@ def create_app(
         scorecard = latest_scorecard(session, paper_id)
         if scorecard is None:
             raise HTTPException(status_code=404, detail={"code": "scorecard_not_ready"})
-        payload = apply_vote_counts(session, paper_id, scorecard.public_json)
+        payload = apply_reviewer_comments(
+            session, paper_id, apply_vote_counts(session, paper_id, scorecard.public_json)
+        )
         payload.setdefault("paper", {})["paper_id"] = paper_id
         return payload
 
@@ -161,9 +166,58 @@ def create_app(
             vote=selected,
         )
         scorecard = latest_scorecard(session, paper_id)
-        result["scorecard"] = apply_vote_counts(session, paper_id, scorecard.public_json) if scorecard else None
+        result["scorecard"] = (
+            apply_reviewer_comments(session, paper_id, apply_vote_counts(session, paper_id, scorecard.public_json))
+            if scorecard
+            else None
+        )
         if result["scorecard"]:
             result["scorecard"].setdefault("paper", {})["paper_id"] = paper_id
+        response = JSONResponse(result)
+        response.set_cookie(
+            SESSION_COOKIE,
+            session_id,
+            max_age=60 * 60 * 24 * 365,
+            httponly=False,
+            samesite="lax",
+        )
+        return response
+
+    @app.get("/api/papers/{paper_id}/reviewers/{reviewer_key}/comments")
+    def reviewer_comments(
+        paper_id: str,
+        reviewer_key: str,
+        session: Session = Depends(get_session),
+    ) -> dict[str, Any]:
+        return {"items": list_reviewer_comments(session, paper_id, reviewer_key)}
+
+    @app.post("/api/papers/{paper_id}/reviewers/{reviewer_key}/comments")
+    async def create_reviewer_comment(
+        paper_id: str,
+        reviewer_key: str,
+        request: Request,
+        session: Session = Depends(get_session),
+    ) -> JSONResponse:
+        paper = session.get(Paper, paper_id)
+        if paper is None:
+            raise HTTPException(status_code=404, detail={"code": "paper_not_found"})
+        body = await parse_json_body(request)
+        session_id = session_id_from_request(request)
+        enforce_comment_rate_limit(session, session_id)
+        try:
+            comment = add_reviewer_comment(
+                session,
+                paper_id=paper_id,
+                reviewer_key=reviewer_key,
+                session_id=session_id,
+                body=str(body.get("body") or body.get("text") or ""),
+            )
+        except ValueError:
+            raise HTTPException(status_code=400, detail={"code": "comment_empty"})
+        result = {
+            "comment": comment,
+            "items": list_reviewer_comments(session, paper_id, reviewer_key),
+        }
         response = JSONResponse(result)
         response.set_cookie(
             SESSION_COOKIE,
@@ -213,6 +267,22 @@ def enforce_vote_rate_limit(session: Session, session_id: str) -> None:
     ).scalar_one()
     if int(recent_votes or 0) >= VOTE_RATE_LIMIT:
         raise HTTPException(status_code=429, detail={"code": "vote_rate_limited"})
+
+
+COMMENT_RATE_LIMIT = 20
+COMMENT_RATE_WINDOW = dt.timedelta(hours=1)
+
+
+def enforce_comment_rate_limit(session: Session, session_id: str) -> None:
+    window_start = utcnow() - COMMENT_RATE_WINDOW
+    recent_comments = session.execute(
+        select(func.count(ReviewerComment.id)).where(
+            ReviewerComment.session_id == session_id,
+            ReviewerComment.created_at >= window_start,
+        )
+    ).scalar_one()
+    if int(recent_comments or 0) >= COMMENT_RATE_LIMIT:
+        raise HTTPException(status_code=429, detail={"code": "comment_rate_limited"})
 
 
 app = create_app()

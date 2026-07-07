@@ -156,6 +156,17 @@ class Vote(Base):
     updated_at: Mapped[dt.datetime] = mapped_column(DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False)
 
 
+class ReviewerComment(Base):
+    __tablename__ = "reviewer_comments"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    paper_id: Mapped[str] = mapped_column(ForeignKey("papers.paper_id"), index=True, nullable=False)
+    reviewer_key: Mapped[str] = mapped_column(String(40), index=True, nullable=False)
+    session_id: Mapped[str] = mapped_column(String(160), index=True, nullable=False)
+    body: Mapped[str] = mapped_column(Text, nullable=False)
+    created_at: Mapped[dt.datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
+
+
 class LeaderboardSnapshot(Base):
     __tablename__ = "leaderboard_snapshots"
 

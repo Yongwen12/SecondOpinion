@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import uuid
 from collections import defaultdict
 from typing import Any
@@ -13,6 +14,7 @@ from .models import (
     MemoryIndex,
     Paper,
     Review,
+    ReviewerComment,
     ReviewerScore,
     Scorecard,
     ScoringJob,
@@ -505,6 +507,83 @@ def upsert_vote(session: Session, *, paper_id: str, reviewer_key: str, session_i
     return {"paper_id": paper_id, "reviewer_key": reviewer_key, "selected": vote}
 
 
+COMMENT_MAX_LENGTH = 1000
+
+
+def comment_author_handle(session_id: str) -> str:
+    digest = hashlib.sha1(session_id.encode("utf-8")).hexdigest()[:6]
+    return f"anon-{digest}"
+
+
+def comment_to_public_dict(comment: ReviewerComment) -> dict[str, Any]:
+    return {
+        "id": comment.id,
+        "body": comment.body,
+        "author": comment_author_handle(comment.session_id),
+        "created_at": comment.created_at.isoformat() if comment.created_at else None,
+    }
+
+
+def list_reviewer_comments(session: Session, paper_id: str, reviewer_key: str) -> list[dict[str, Any]]:
+    rows = session.execute(
+        select(ReviewerComment)
+        .where(ReviewerComment.paper_id == paper_id, ReviewerComment.reviewer_key == reviewer_key)
+        .order_by(ReviewerComment.created_at.desc(), ReviewerComment.id.desc())
+    ).scalars().all()
+    return [comment_to_public_dict(row) for row in rows]
+
+
+def comments_by_reviewer(session: Session, paper_id: str) -> dict[str, list[dict[str, Any]]]:
+    rows = session.execute(
+        select(ReviewerComment)
+        .where(ReviewerComment.paper_id == paper_id)
+        .order_by(ReviewerComment.created_at.desc(), ReviewerComment.id.desc())
+    ).scalars().all()
+    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in rows:
+        grouped[str(row.reviewer_key)].append(comment_to_public_dict(row))
+    return grouped
+
+
+def comment_counts_by_reviewer(session: Session, paper_id: str) -> dict[str, int]:
+    rows = session.execute(
+        select(ReviewerComment.reviewer_key, func.count(ReviewerComment.id))
+        .where(ReviewerComment.paper_id == paper_id)
+        .group_by(ReviewerComment.reviewer_key)
+    ).all()
+    return {str(reviewer_key): int(count) for reviewer_key, count in rows}
+
+
+def apply_reviewer_comments(session: Session, paper_id: str, public_json: dict[str, Any]) -> dict[str, Any]:
+    scorecard = copy.deepcopy(public_json)
+    grouped = comments_by_reviewer(session, paper_id)
+    for reviewer in scorecard.get("reviewers", []):
+        if not isinstance(reviewer, dict):
+            continue
+        reviewer_key = str(reviewer.get("reviewer_key", ""))
+        items = grouped.get(reviewer_key, [])
+        reviewer["comments"] = items
+        reviewer["comment_count"] = len(items)
+    return scorecard
+
+
+def add_reviewer_comment(
+    session: Session, *, paper_id: str, reviewer_key: str, session_id: str, body: str
+) -> dict[str, Any]:
+    text = (body or "").strip()
+    if not text:
+        raise ValueError("comment body must not be empty")
+    comment = ReviewerComment(
+        paper_id=paper_id,
+        reviewer_key=reviewer_key,
+        session_id=session_id,
+        body=text[:COMMENT_MAX_LENGTH],
+    )
+    session.add(comment)
+    session.flush()
+    return comment_to_public_dict(comment)
+
+
 def build_leaderboards(
     session: Session,
     *,
@@ -520,10 +599,13 @@ def build_leaderboards(
         stmt = stmt.where(ReviewerScore.year == year)
     rows = session.execute(stmt).all()
     counts_by_paper: dict[str, dict[str, dict[str, int]]] = {}
+    comment_counts_by_paper: dict[str, dict[str, int]] = {}
     items = []
     for score, title in rows:
         if score.paper_id not in counts_by_paper:
             counts_by_paper[score.paper_id] = vote_counts_by_reviewer(session, score.paper_id)
+        if score.paper_id not in comment_counts_by_paper:
+            comment_counts_by_paper[score.paper_id] = comment_counts_by_reviewer(session, score.paper_id)
         extra = counts_by_paper[score.paper_id][score.reviewer_key]
         up = extra["up"]
         down = extra["down"]
@@ -537,6 +619,7 @@ def build_leaderboards(
                 "score": score.score,
                 "up": up,
                 "down": down,
+                "comment_count": comment_counts_by_paper[score.paper_id].get(score.reviewer_key, 0),
             }
         )
     red = sorted(items, key=lambda item: (-item["score"], item["reviewer_key"]))[:limit]
