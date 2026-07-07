@@ -26,18 +26,19 @@ def test_frontend_search_does_not_treat_plain_words_as_paper_ids():
 def test_frontend_has_community_home_entrypoint():
     html = Path("frontend/index.html").read_text(encoding="utf-8")
 
-    assert "Review quality, ranked by the community." in html
-    assert "id=\"homeRedList\"" in html
-    assert "id=\"homeBlackList\"" in html
-    assert "id=\"latestPaperList\"" in html
-    assert "class=\"community-grid\"" in html
-    assert "data-home-panel=\"recent\"" in html
-    assert "data-home-panel=\"red\"" in html
-    assert "data-home-board=\"recent\"" in html
-    assert "Least Useful" in html
-    assert "plainBand" in html
+    assert "Weak Reject" in html
+    assert "The <mark>Outrage</mark> Index" in html
+    assert "The <mark>Honor</mark> Roll" in html
+    assert "id=\"outrageBoard\"" in html
+    assert "id=\"boardTabs\"" in html
+    assert "data-board-tab" in html
+    assert "data-board-row" in html
+    assert "data-row-rate" in html
+    assert "Rate a reviewer" in html
     assert "/api/home?conference=ICLR" in html
-    assert "data-home-board-paper" in html
-    assert "Needs Scrutiny" not in html
+    assert "overall" in html
+    assert "toxic" in html
+    assert "helpful" in html
+    assert "Review quality, ranked by the community." not in html
     assert "Red List" not in html
     assert "Black List" not in html
