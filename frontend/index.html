@@ -2450,6 +2450,145 @@
         width: 100%;
       }
     }
+
+    /* ============================================================
+       Detail view (.app-view): unify with the Judge My Reviewers
+       homepage — white, sharp, zero-radius, ink + red + yellow.
+       ============================================================ */
+    .app-view {
+      --ink: #111111;
+      --ink-2: #333333;
+      --muted: #9b9b9b;
+      --line: #ececec;
+      --line-strong: #dcdcdc;
+      --surface: #ffffff;
+      --surface-2: #ffffff;
+      --surface-3: #f5f5f5;
+      --lime: #ffe600;
+      --lime-soft: #fff7cc;
+      --shadow-1: none;
+      --shadow-2: none;
+    }
+
+    .app-view *,
+    .app-view *::before,
+    .app-view *::after { border-radius: 0 !important; }
+
+    .app-view .topbar {
+      min-height: 60px;
+      margin: -18px -10px 24px;
+      padding: 12px 10px;
+      background: #ffffff;
+      border-bottom: 1px solid #ececec;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+    .app-view .brand { color: #111111; font-size: 15px; font-weight: 800; letter-spacing: 0; }
+    .app-view .brand-mark {
+      display: inline-flex;
+      align-items: center;
+      width: auto;
+      height: auto;
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+    .app-view .brand-mark::after {
+      content: "";
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      margin-left: 6px;
+      background: #e10600;
+    }
+
+    .app-view .search-shell--compact { border: 1px solid #dcdcdc; background: #ffffff; }
+    .app-view .search-shell:focus-within { border-color: #111111; box-shadow: none; }
+    .app-view .analyze-button {
+      min-height: 34px;
+      border: 0;
+      background: #111111;
+      color: #ffffff;
+      box-shadow: none;
+      font-weight: 700;
+    }
+    .app-view .analyze-button:hover { background: #e10600; box-shadow: none; transform: none; filter: none; }
+    .app-view .analyze-button:active { box-shadow: none; transform: none; }
+    .app-view .search-results--compact { border: 1px solid #dcdcdc; box-shadow: none; }
+
+    .app-view .surface { border: 1px solid #ececec; background: #ffffff; }
+    .app-view .section-head { min-height: 56px; border-bottom: 1px solid #ececec; }
+    .app-view .section-head h2 { font-weight: 800; letter-spacing: -.01em; }
+
+    /* Score overview: drop the ring, show a big ink number */
+    .app-view .score-section { grid-template-columns: 200px minmax(0, 1fr); gap: 28px; padding: 28px; }
+    .app-view .score-overview {
+      align-content: start;
+      justify-items: start;
+      min-height: 0;
+      padding: 0;
+      border: 0;
+      background: transparent;
+    }
+    .app-view .score-ring { width: auto; aspect-ratio: auto; display: block; background: none; }
+    .app-view .score-ring::before { display: none; }
+    .app-view .score-value { justify-items: start; }
+    .app-view .score-value strong { font-size: 88px; line-height: .86; font-weight: 800; letter-spacing: -.06em; color: #111111; }
+    .app-view .score-value span { margin-top: 10px; color: #9b9b9b; }
+    .app-view .signal-chip {
+      min-height: 26px;
+      padding: 3px 10px;
+      border: 1px solid #ececec;
+      background: #f5f5f5;
+      color: #111111;
+    }
+    .app-view .signal-dot { background: #e10600; box-shadow: none; }
+
+    .app-view .paper-title { font-weight: 800; letter-spacing: -.035em; }
+    .app-view .paper-stats { font-weight: 700; }
+
+    /* Reviewer cards */
+    .app-view .reviewer-card { border: 1px solid #ececec; background: #ffffff; box-shadow: none; }
+    .app-view .reviewer-card:hover { border-color: #111111; background: #ffffff; box-shadow: none; transform: none; }
+    .app-view .reviewer-card.is-active { border: 2px solid #111111; background: #ffffff; box-shadow: none; }
+    .app-view .mini-avatar { border: 1px solid #111111; box-shadow: none; }
+    .app-view .reviewer-score-line strong { color: #111111; }
+    .app-view .chevron { color: #9b9b9b; }
+
+    /* Detail card + metrics -> monochrome bars */
+    .app-view .score-detail-card { border: 1px solid #ececec; background: #ffffff; }
+    .app-view .metric { border: 1px solid #ececec; background: #ffffff; }
+    .app-view .metric-track { background: #ececec; }
+    .app-view .metric-fill,
+    .app-view .metric-fill.blue,
+    .app-view .metric-fill.gold,
+    .app-view .metric-fill.red { background: #111111; }
+    .app-view .detail-score { border: 1px solid #111111; color: #111111; background: #ffffff; }
+    .app-view .guide-swatch,
+    .app-view .guide-item:nth-child(2) .guide-swatch,
+    .app-view .guide-item:nth-child(3) .guide-swatch,
+    .app-view .guide-item:nth-child(4) .guide-swatch { background: #111111; }
+
+    /* Themes / cloud */
+    .app-view .cloud-stage {
+      border: 1px solid #ececec;
+      background:
+        linear-gradient(rgba(17, 17, 17, .03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(17, 17, 17, .03) 1px, transparent 1px),
+        #ffffff;
+      background-size: 32px 32px, 32px 32px, auto;
+    }
+    .app-view .cloud-word[data-tone="green"],
+    .app-view .cloud-word[data-tone="blue"],
+    .app-view .cloud-word[data-tone="gold"] { color: #111111; }
+    .app-view .cloud-word[data-tone="red"] { color: #e10600; }
+
+    /* Comments */
+    .app-view .filter-button.is-active { border-color: #111111; color: #111111; background: #ffffff; }
+    .app-view .comment-row:hover { background: #fafafa; }
   </style>
 </head>
 <body class="is-idle">
@@ -2500,7 +2639,7 @@
     <section class="app-view" aria-label="Review results">
       <header class="topbar">
                 <button class="brand" id="homeButton" type="button" aria-label="Back to search">
-          <span class="brand-mark">SO</span><span>SecondOpinion</span>
+          <span class="brand-mark">Judge My Reviewers</span>
         </button>
         <form class="search-shell search-shell--compact" id="topSearch" novalidate>
           <span class="search-icon" aria-hidden="true">
@@ -3645,7 +3784,7 @@
         score: Number(reviewer.score || 0),
         tone: reviewer.tone || scoreBand(Number(reviewer.score || 0)).className || 'green',
         label: plainBand(reviewer.label || scoreBand(Number(reviewer.score || 0)).label),
-        summary: reviewer.summary || 'Reviewer comments scored by SecondOpinion.',
+        summary: reviewer.summary || 'Reviewer comments scored by Judge My Reviewers.',
         social: reviewer.social || { up: 0, down: 0 },
         comments: Array.isArray(reviewer.comments) ? reviewer.comments : [],
         commentsLoaded: true,
