@@ -373,7 +373,7 @@ def latest_scored_papers(
     limit = max(1, min(50, limit))
     stmt = select(Paper, Scorecard).join(Scorecard, Scorecard.paper_id == Paper.paper_id)
     if conference_id:
-        stmt = stmt.where(Paper.conference_id == conference_id)
+        stmt = stmt.where(or_(Paper.conference_id == conference_id, Paper.venue == conference_id))
     if year is not None:
         stmt = stmt.where(Paper.year == year)
     if conference_id:
@@ -449,7 +449,7 @@ def search_papers(
     limit = max(1, min(50, limit))
     stmt = select(Paper)
     if conference_id:
-        stmt = stmt.where(Paper.conference_id == conference_id)
+        stmt = stmt.where(or_(Paper.conference_id == conference_id, Paper.venue == conference_id))
     if year is not None:
         stmt = stmt.where(Paper.year == year)
     clean_query = query.strip()

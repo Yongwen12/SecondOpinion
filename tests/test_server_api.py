@@ -110,6 +110,10 @@ def test_api_search_scorecard_vote_and_job_flow(tmp_path):
     assert global_search.json()["items"][0]["paper_id"] == "paper3"
     assert global_search.json()["items"][0]["venue"] == "TMLR"
 
+    venue_search = client.get("/api/papers", params={"query": "Paper", "conference": "TMLR", "year": 2025})
+    assert venue_search.status_code == 200
+    assert [item["paper_id"] for item in venue_search.json()["items"]] == ["paper3"]
+
     static_home = client.get("/api/home", params={"year": 2025, "limit": 1})
     assert static_home.status_code == 200
     assert static_home.json()["source"] == "static_home_2025"

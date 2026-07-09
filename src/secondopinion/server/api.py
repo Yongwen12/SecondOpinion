@@ -119,12 +119,13 @@ def create_app(
     @app.get("/api/papers")
     def papers_global(
         query: str = "",
+        conference: str | None = None,
         year: int | None = 2025,
         cursor: str = "",
         limit: int = 20,
         session: Session = Depends(get_session),
     ) -> dict[str, Any]:
-        return search_papers(session, query=query, year=year, cursor=cursor, limit=limit)
+        return search_papers(session, conference_id=conference, query=query, year=year, cursor=cursor, limit=limit)
 
     @app.get("/api/papers/{paper_id}")
     def paper_detail(paper_id: str, session: Session = Depends(get_session)) -> dict[str, Any]:

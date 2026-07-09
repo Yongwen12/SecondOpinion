@@ -40,12 +40,21 @@ def test_frontend_has_community_home_entrypoint():
     assert "data-board-row" in html
     assert "data-row-rate" in html
     assert "Rate a reviewer" in html
+    assert '<option value="TMLR">TMLR</option>' in html
+    assert '<option value="COLM">COLM</option>' in html
+    assert '<option value="MIDL">MIDL</option>' in html
+    assert 'TMLR 2025</option>' in html
+    assert 'COLM 2025</option>' in html
+    assert 'MIDL 2025</option>' in html
     assert "data-comment-form" in html
     assert "data-sc-comment-form" in html
     assert "/reviewers/${encodeURIComponent(row.reviewerKey)}/comments" in html
     assert "/api/home?year=" in html
     assert "/api/papers?query=" in html
+    assert "conference=${encodeURIComponent(selectedVenue)}" in html
+    assert "conference=${encodeURIComponent(rateContext.conference)}" in html
     assert "/api/conferences/ICLR/papers?query=" not in html
+    assert "/api/conferences/${encodeURIComponent(rateContext.conference)}/papers" not in html
     assert "ICLR 2022-2025 sample papers" not in html
     assert "Current 2025 coverage is ICLR, ICML, NeurIPS, TMLR, COLM, and MIDL" in html
     assert "/api/home?conference=ICLR" not in html

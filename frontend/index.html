@@ -2725,10 +2725,14 @@
           <div class="outrage-actions">
             <form class="outrage-search-form" id="landingSearch" novalidate>
               <label class="sr-only" for="landingConference">Conference</label>
-              <select class="outrage-search-conf" id="landingConference" aria-label="Conference">
+              <select class="outrage-search-conf" id="landingConference" aria-label="Venue">
+                <option value="all">All 2025</option>
                 <option value="ICLR">ICLR</option>
-                <option value="NeurIPS">NeurIPS</option>
                 <option value="ICML">ICML</option>
+                <option value="NeurIPS">NeurIPS</option>
+                <option value="TMLR">TMLR</option>
+                <option value="COLM">COLM</option>
+                <option value="MIDL">MIDL</option>
               </select>
               <label class="sr-only" for="landingInput">Search paper, venue, or topic</label>
               <input class="outrage-search-input" id="landingInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Search paper" />
@@ -2950,7 +2954,7 @@
         hu: n => `${n} human${n === 1 ? '' : 's'} co-signed`,
         ai: 'AI verdict only — be the first to pile on',
         cta: '<p><b>Got receipts?</b>Pick the paper, pick the reviewer, pile on — human ratings outrank the AI here.</p><button class="outrage-submit" type="button" data-open-rate>Pile on →</button>',
-        fine: 'Quotes are real, from public ICLR, ICML, and NeurIPS 2025 reviews. Reviewers stay pseudonymous; their scores are permanent. No reviewers were harmed. <b>And yes — statistically, it’s Reviewer #2.</b>',
+        fine: 'Quotes are real, from public ICLR, ICML, NeurIPS, TMLR, COLM, and MIDL 2025 reviews. Reviewers stay pseudonymous; their scores are permanent. No reviewers were harmed. <b>And yes — statistically, it’s Reviewer #2.</b>',
         tier: score => score >= 90 ? '💀' : score >= 80 ? '🔥' : '😬'
       },
       praise: {
@@ -2963,7 +2967,7 @@
         hu: n => `${n} human${n === 1 ? '' : 's'} vouched`,
         ai: 'AI verdict only — be the first to vouch',
         cta: '<p><b>Seen reviewing done right?</b>Pick the paper, pick the reviewer, nominate them for the Honor Roll.</p><button class="outrage-submit" type="button" data-open-rate>Vouch →</button>',
-        fine: 'Quotes are real, from public ICLR, ICML, and NeurIPS 2025 reviews. The good ones get the spotlight too — <b>peer review deserves better villains and better heroes.</b>',
+        fine: 'Quotes are real, from public ICLR, ICML, NeurIPS, TMLR, COLM, and MIDL 2025 reviews. The good ones get the spotlight too — <b>peer review deserves better villains and better heroes.</b>',
         tier: score => score >= 95 ? '🏆' : '⭐'
       }
     };
@@ -3500,13 +3504,17 @@
       rateModalBody.innerHTML = `
         <p class="rate-kicker">Rate a reviewer</p>
         <h2 id="rateTitle">Pick the paper, then the reviewer.</h2>
-        <p>Start with a conference and search the indexed corpus. Row links skip this step.</p>
+        <p>Search across the 2025 public review corpus. Row links skip this step.</p>
         <div class="rate-grid">
-          <label class="rate-control">Conference / year
+          <label class="rate-control">Venue / year
             <select id="rateVenue">
+              <option value="all"${rateContext.conference === 'all' ? ' selected' : ''}>All 2025</option>
               <option value="ICLR"${rateContext.conference === 'ICLR' ? ' selected' : ''}>ICLR 2025</option>
-              <option value="NeurIPS"${rateContext.conference === 'NeurIPS' ? ' selected' : ''}>NeurIPS 2025</option>
               <option value="ICML"${rateContext.conference === 'ICML' ? ' selected' : ''}>ICML 2025</option>
+              <option value="NeurIPS"${rateContext.conference === 'NeurIPS' ? ' selected' : ''}>NeurIPS 2025</option>
+              <option value="TMLR"${rateContext.conference === 'TMLR' ? ' selected' : ''}>TMLR 2025</option>
+              <option value="COLM"${rateContext.conference === 'COLM' ? ' selected' : ''}>COLM 2025</option>
+              <option value="MIDL"${rateContext.conference === 'MIDL' ? ' selected' : ''}>MIDL 2025</option>
             </select>
           </label>
           <label class="rate-control">Paper
@@ -3534,7 +3542,8 @@
         return;
       }
       try {
-        const response = await apiFetch(`/api/conferences/${encodeURIComponent(rateContext.conference)}/papers?query=${encodeURIComponent(rateContext.query)}&year=2025&limit=8`);
+        const venueParam = rateContext.conference && rateContext.conference !== 'all' ? `&conference=${encodeURIComponent(rateContext.conference)}` : '';
+        const response = await apiFetch(`/api/papers?query=${encodeURIComponent(rateContext.query)}&year=2025&limit=8${venueParam}`);
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const payload = await response.json();
         rateContext.paperResults = Array.isArray(payload.items) ? payload.items : [];
@@ -3845,7 +3854,9 @@
       }
       const paperId = paperIdFromValue(value);
       if (paperId) return loadScorecardFromApi(paperId, source, { title: parsePaperTitle(value) });
-      const response = await apiFetch(`/api/papers?query=${encodeURIComponent(value)}&year=${encodeURIComponent(homeYear)}&limit=8`);
+      const selectedVenue = landingConference && landingConference.value && landingConference.value !== 'all' ? landingConference.value : '';
+      const venueParam = selectedVenue ? `&conference=${encodeURIComponent(selectedVenue)}` : '';
+      const response = await apiFetch(`/api/papers?query=${encodeURIComponent(value)}&year=${encodeURIComponent(homeYear)}&limit=8${venueParam}`);
       if (!response.ok) return false;
       const payload = await response.json();
       const items = Array.isArray(payload.items) ? payload.items : [];
