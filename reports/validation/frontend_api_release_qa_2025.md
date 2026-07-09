@@ -322,3 +322,28 @@ Failing production checks:
 - reference scorecard `Ni4jNyroJZ` returns 0 reviewers and 0 comments
 
 Interpretation: the current production domain is reachable, but it has not yet been updated with the 2025 V1 frontend, static home snapshot, API changes, and scored dataset. The release remains pending production deployment and a passing production-domain smoke run.
+
+
+### Production-Domain Release Smoke Pass
+
+After deploying commit `0bd3ad5`, importing the 2025 V1 SQLite snapshot into production Postgres, setting `SECONDOPINION_HOME_SNAPSHOT`, and restarting `secondopinion-api`, the production-domain release smoke passed.
+
+Command:
+
+```powershell
+python -m secondopinion.tools.release_smoke --frontend-url https://yongwen12.github.io/SecondOpinion/ --api-url https://secondopinion.smartselling.work --out data/validation/release_smoke_prod_2025.json --markdown reports/validation/release_smoke_prod_2025.md
+```
+
+Result: `passed`, 9 checks, 0 failures.
+
+Production evidence:
+
+- frontend HTTP 200
+- frontend contains the 2025 V1 coverage copy
+- frontend default API base points at `https://secondopinion.smartselling.work`
+- API `/health` HTTP 200
+- `/api/home?year=2025&limit=12` returns `source=static_home_2025`
+- home stats match `26,749 papers / 128,723 reviews/comments / 99,671 scored official reviews`
+- all five leaderboards return 20 rows
+- global search returns a result for `CrossSpectra`
+- reference scorecard `Ni4jNyroJZ` returns 4 reviewers and 4 comments

@@ -260,3 +260,18 @@ python -m secondopinion.tools.release_smoke --frontend-url https://yongwen12.git
 ```
 
 Release can be considered production-ready only after this production-domain smoke returns `status=passed`.
+
+## Final Production Release Result
+
+Production deployment completed on 2026-07-09.
+
+- Deployed commit: `0bd3ad5`
+- Production API: `https://secondopinion.smartselling.work`
+- Production frontend: `https://yongwen12.github.io/SecondOpinion/`
+- Production database counts after import: 26,749 papers and 99,671 reviewer score rows
+- Final production smoke: `passed`, 9 checks, 0 failures
+
+Final smoke artifacts:
+
+- `data/validation/release_smoke_prod_2025.json`
+- `reports/validation/release_smoke_prod_2025.md`
