@@ -1,0 +1,131 @@
+{
+  "schema_version": "openreview-scale-estimate-v0.1",
+  "created_at": "2026-07-08T19:04:36+00:00",
+  "status": "blocked_missing_inventory_sample",
+  "max_total_cost_usd": 25.0,
+  "baseline": {
+    "source": "batch_cost_review",
+    "request_count": 304753,
+    "estimated_batch_cost_usd": 76.9724,
+    "cost_per_review_usd": 0.000253,
+    "input_tokens_per_review": 1841.1,
+    "output_tokens_per_review": 109.5
+  },
+  "summary": {
+    "venue_count": 9,
+    "estimated_venue_count": 8,
+    "blocked_venue_count": 1,
+    "blocked_venues": [
+      "AISTATS"
+    ],
+    "estimated_review_count": 931,
+    "estimated_batch_cost_usd": 0.2355,
+    "estimated_storage_mb": 17.05
+  },
+  "venues": [
+    {
+      "venue_id": "ICLR",
+      "status": "open_reviews_available",
+      "estimate_status": "estimated",
+      "sample_paper_count": 50,
+      "sample_review_count": 188,
+      "mean_reviews_per_paper": 3.76,
+      "assumed_full_paper_count": 50,
+      "estimated_review_count": 188,
+      "estimated_batch_cost_usd": 0.0476,
+      "estimated_storage_mb": 2.7
+    },
+    {
+      "venue_id": "ICML",
+      "status": "open_reviews_available",
+      "estimate_status": "estimated",
+      "sample_paper_count": 50,
+      "sample_review_count": 191,
+      "mean_reviews_per_paper": 3.82,
+      "assumed_full_paper_count": 50,
+      "estimated_review_count": 191,
+      "estimated_batch_cost_usd": 0.0483,
+      "estimated_storage_mb": 2.73
+    },
+    {
+      "venue_id": "NEURIPS",
+      "status": "open_reviews_available",
+      "estimate_status": "estimated",
+      "sample_paper_count": 50,
+      "sample_review_count": 202,
+      "mean_reviews_per_paper": 4.04,
+      "assumed_full_paper_count": 50,
+      "estimated_review_count": 202,
+      "estimated_batch_cost_usd": 0.0511,
+      "estimated_storage_mb": 2.82
+    },
+    {
+      "venue_id": "TMLR",
+      "status": "no_public_reviews",
+      "estimate_status": "estimated",
+      "sample_paper_count": 50,
+      "sample_review_count": 0,
+      "mean_reviews_per_paper": 0.0,
+      "assumed_full_paper_count": 50,
+      "estimated_review_count": 0,
+      "estimated_batch_cost_usd": 0.0,
+      "estimated_storage_mb": 1.2
+    },
+    {
+      "venue_id": "COLM",
+      "status": "open_reviews_available",
+      "estimate_status": "estimated",
+      "sample_paper_count": 50,
+      "sample_review_count": 187,
+      "mean_reviews_per_paper": 3.74,
+      "assumed_full_paper_count": 50,
+      "estimated_review_count": 187,
+      "estimated_batch_cost_usd": 0.0473,
+      "estimated_storage_mb": 2.7
+    },
+    {
+      "venue_id": "AISTATS",
+      "status": "no_sample_notes",
+      "estimate_status": "blocked_missing_inventory_sample",
+      "reason": "Inventory probe has no sample paper/review counts yet, usually because OpenReview auth is blocked.",
+      "sample_paper_count": 0,
+      "sample_review_count": 0
+    },
+    {
+      "venue_id": "UAI",
+      "status": "no_public_reviews",
+      "estimate_status": "estimated",
+      "sample_paper_count": 50,
+      "sample_review_count": 0,
+      "mean_reviews_per_paper": 0.0,
+      "assumed_full_paper_count": 50,
+      "estimated_review_count": 0,
+      "estimated_batch_cost_usd": 0.0,
+      "estimated_storage_mb": 1.2
+    },
+    {
+      "venue_id": "CORL",
+      "status": "no_public_reviews",
+      "estimate_status": "estimated",
+      "sample_paper_count": 50,
+      "sample_review_count": 0,
+      "mean_reviews_per_paper": 0.0,
+      "assumed_full_paper_count": 50,
+      "estimated_review_count": 0,
+      "estimated_batch_cost_usd": 0.0,
+      "estimated_storage_mb": 1.2
+    },
+    {
+      "venue_id": "MIDL",
+      "status": "open_reviews_available",
+      "estimate_status": "estimated",
+      "sample_paper_count": 50,
+      "sample_review_count": 163,
+      "mean_reviews_per_paper": 3.26,
+      "assumed_full_paper_count": 50,
+      "estimated_review_count": 163,
+      "estimated_batch_cost_usd": 0.0412,
+      "estimated_storage_mb": 2.5
+    }
+  ]
+}

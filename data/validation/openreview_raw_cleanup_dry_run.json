@@ -1,0 +1,28 @@
+{
+  "schema_version": "openreview-raw-cleanup-v0.1",
+  "created_at": "2026-07-09T14:46:34+00:00",
+  "status": "dry_run",
+  "execute": false,
+  "confirm_token_required": "delete-raw-openreview",
+  "raw_root": "data\\raw\\openreview",
+  "before": {
+    "root": "data\\raw\\openreview",
+    "exists": true,
+    "file_count": 1,
+    "raw_note_page_count": 0,
+    "total_bytes": 263,
+    "total_gb": 0.0,
+    "sample_files": []
+  },
+  "after": {
+    "root": "data\\raw\\openreview",
+    "exists": true,
+    "file_count": 1,
+    "raw_note_page_count": 0,
+    "total_bytes": 263,
+    "total_gb": 0.0,
+    "sample_files": []
+  },
+  "deleted": false,
+  "errors": []
+}

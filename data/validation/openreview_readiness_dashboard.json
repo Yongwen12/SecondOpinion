@@ -1,0 +1,473 @@
+{
+  "schema_version": "openreview-readiness-dashboard-v0.1",
+  "created_at": "2026-07-08T19:16:41+00:00",
+  "status": "run_priority1_pilot",
+  "recommendation": "Run safe 50-paper pilots for ready venues, then check pilot readiness.",
+  "next_commands": [
+    "python -m secondopinion.tools.openreview_safe_pipeline --venues data/config/openreview_venues_2025.json --venue COLM --venue MIDL --pull-limit 50 --execute-safe"
+  ],
+  "paths": {
+    "secret": "data/validation/openreview_secret_check.json",
+    "auth_check": "data/validation/openreview_auth_check.json",
+    "safe_pipeline": "data/validation/openreview_safe_pipeline.json",
+    "challenge_resume": "data/validation/openreview_challenge_resume.json",
+    "cookie_handoff": "data/validation/openreview_cookie_handoff.json",
+    "cookie_preflight": "data/validation/openreview_cookie_preflight.json",
+    "scope_audit": "data/validation/openreview_scope_audit_2025.json",
+    "data_minimization": "data/validation/openreview_data_minimization_audit.json",
+    "invitation_audit": "data/validation/openreview_invitation_audit_2025.json",
+    "probe_queue": "data/validation/openreview_probe_queue_2025.json",
+    "probe_queue_runner": "data/validation/openreview_probe_queue_runner.json",
+    "probe_results": "data/validation/openreview_probe_results_2025.json",
+    "resolved_inventory": "data/validation/openreview_resolved_inventory_2025.json",
+    "resolved_pipeline": "data/validation/openreview_resolved_pipeline.json",
+    "snapshot_recovery": "data/validation/openreview_snapshot_recovery.json",
+    "batch_cost": "data/validation/batch_cost_review.json",
+    "scale_estimate": "data/validation/openreview_scale_estimate.json",
+    "submit_preflight": "data/validation/openreview_batch_submit_preflight.json",
+    "runbook": "data/validation/openreview_execution_runbook_2025.json",
+    "pilot_readiness_iclr": "data/validation/openreview_pilot_readiness_iclr.json",
+    "pilot_readiness_icml": "data/validation/openreview_pilot_readiness_icml.json",
+    "pilot_readiness_neurips": "data/validation/openreview_pilot_readiness_neurips.json"
+  },
+  "freshness": {
+    "source": "auth_check",
+    "source_timestamp": "2026-07-08T19:04:23+00:00",
+    "stale_reports": [],
+    "missing_reports": [],
+    "items": {
+      "secret": {
+        "timestamp": "",
+        "status": "current"
+      },
+      "auth_check": {
+        "timestamp": "2026-07-08T19:04:23+00:00",
+        "status": "current"
+      },
+      "safe_pipeline": {
+        "timestamp": "2026-07-08T19:04:36+00:00",
+        "status": "current"
+      },
+      "challenge_resume": {
+        "timestamp": "2026-07-07T10:03:29+00:00",
+        "status": "current"
+      },
+      "cookie_handoff": {
+        "timestamp": "2026-07-07T10:33:50+00:00",
+        "status": "current"
+      },
+      "cookie_preflight": {
+        "timestamp": "2026-07-07T10:33:50+00:00",
+        "status": "current"
+      },
+      "scope_audit": {
+        "timestamp": "2026-07-08T19:07:55+00:00",
+        "status": "current"
+      },
+      "data_minimization": {
+        "timestamp": "2026-07-07T10:34:33+00:00",
+        "status": "current"
+      },
+      "invitation_audit": {
+        "timestamp": "2026-07-07T10:33:50+00:00",
+        "status": "current"
+      },
+      "probe_queue": {
+        "timestamp": "2026-07-07T10:33:50+00:00",
+        "status": "current"
+      },
+      "probe_queue_runner": {
+        "timestamp": "2026-07-07T10:03:37+00:00",
+        "status": "current"
+      },
+      "probe_results": {
+        "timestamp": "2026-07-08T19:06:20+00:00",
+        "status": "current"
+      },
+      "resolved_inventory": {
+        "timestamp": "2026-07-08T19:06:00+00:00",
+        "status": "current"
+      },
+      "resolved_pipeline": {
+        "timestamp": "2026-07-07T10:36:31+00:00",
+        "status": "current"
+      },
+      "snapshot_recovery": {
+        "timestamp": "2026-07-07T10:34:33+00:00",
+        "status": "current"
+      },
+      "batch_cost": {
+        "timestamp": "2026-07-08T19:04:36+00:00",
+        "status": "current"
+      },
+      "scale_estimate": {
+        "timestamp": "2026-07-08T19:04:36+00:00",
+        "status": "current"
+      },
+      "submit_preflight": {
+        "timestamp": "2026-07-07T10:34:34+00:00",
+        "status": "current"
+      },
+      "runbook": {
+        "timestamp": "2026-07-06T21:01:07+00:00",
+        "status": "current"
+      },
+      "pilot_readiness_iclr": {
+        "timestamp": "2026-07-07T10:13:38+00:00",
+        "status": "current"
+      },
+      "pilot_readiness_icml": {
+        "timestamp": "2026-07-07T10:13:38+00:00",
+        "status": "current"
+      },
+      "pilot_readiness_neurips": {
+        "timestamp": "2026-07-07T10:13:38+00:00",
+        "status": "current"
+      }
+    }
+  },
+  "auth": {
+    "ok": true,
+    "recommendation": "run_openreview_pipeline_gate",
+    "cookie_names": [
+      "_ga",
+      "GCILB",
+      "openreview.refreshToken",
+      "openreview.accessToken",
+      "openreview.user",
+      "_ga_GTB25PBMVL"
+    ],
+    "cookie_warnings": [
+      "missing_cf_clearance_cookie"
+    ],
+    "api_ok": true,
+    "api_status": "ok",
+    "api_recommendation": "run_inventory"
+  },
+  "pipeline": {
+    "gate_status": "ready_for_safe_runner_execute",
+    "action": "dry_run_safe_stages",
+    "ran_inventory": true,
+    "ready_to_pull": [
+      "ICLR",
+      "ICML",
+      "NEURIPS",
+      "COLM",
+      "MIDL"
+    ],
+    "blocked_openreview_auth": [],
+    "target_or_probe": [
+      "ICLR",
+      "ICML",
+      "NEURIPS",
+      "TMLR",
+      "COLM",
+      "AISTATS",
+      "UAI",
+      "CORL",
+      "MIDL"
+    ],
+    "excluded": [
+      "JMLR",
+      "JAIR",
+      "MLJ"
+    ]
+  },
+  "challenge_resume": {
+    "status": "ready_for_safe_execute",
+    "recommendation": "inspect_resolved_inventory_then_run_execute_safe",
+    "auth_status": "ok",
+    "probe_runner": {
+      "execute": true,
+      "status_counts": {
+        "success": 11
+      },
+      "probe_count": 11
+    },
+    "auth_diagnosis": {
+      "reason": "auth_ok",
+      "next_command": "continue_probe_queue",
+      "secret_ok": true,
+      "cookie_set": true,
+      "token_set": false,
+      "cookie_names": [
+        "_ga",
+        "GCILB",
+        "openreview.refreshToken",
+        "openreview.accessToken",
+        "openreview.user",
+        "_ga_GTB25PBMVL"
+      ],
+      "cookie_warnings": [
+        "missing_cf_clearance_cookie"
+      ],
+      "auth_status": "ok"
+    }
+  },
+  "cookie_handoff": {
+    "status": "auth_ready",
+    "diagnosis_reason": "auth_ok",
+    "cookie_names_seen": [
+      "_ga",
+      "GCILB",
+      "openreview.refreshToken",
+      "openreview.accessToken",
+      "openreview.user",
+      "_ga_GTB25PBMVL"
+    ],
+    "cookie_warnings": [
+      "missing_cf_clearance_cookie"
+    ],
+    "commands": [
+      "python -m secondopinion.tools.openreview_cookie_preflight --cookie-file path\\to\\browser-cookies.txt",
+      "python -m secondopinion.tools.openreview_secret_check --cookie-file path\\to\\browser-cookies.txt --out data/validation/openreview_secret_check.json",
+      "python -m secondopinion.tools.openreview_challenge_resume --cookie-file path\\to\\browser-cookies.txt --execute-probe --skip-existing",
+      "python -m secondopinion.tools.openreview_local_refresh --max-total-cost-usd 25"
+    ]
+  },
+  "cookie_preflight": {
+    "status": "ready_for_auth_check",
+    "recommendation": "run_openreview_auth_check_then_probe",
+    "blocking_warnings": [],
+    "soft_warnings": [
+      "missing_cf_clearance_cookie"
+    ]
+  },
+  "scope_audit": {
+    "status": "passed",
+    "target_count": 6,
+    "excluded_count": 6,
+    "target_venue_ids": [
+      "ICLR",
+      "ICML",
+      "NEURIPS",
+      "TMLR",
+      "COLM",
+      "MIDL"
+    ],
+    "priority1_core_ids": [
+      "ICLR",
+      "ICML",
+      "NEURIPS",
+      "TMLR"
+    ],
+    "priority2_probe_ids": [
+      "COLM",
+      "MIDL"
+    ],
+    "explicitly_excluded_top_journal_ids": [
+      "JAIR",
+      "JMLR",
+      "MLJ"
+    ],
+    "warnings": [],
+    "errors": []
+  },
+  "data_minimization": {
+    "status": "passed",
+    "normalized_file_count": 19,
+    "batch_file_count": 120,
+    "normalized_failed_count": 0,
+    "batch_failed_count": 0,
+    "total_papers_seen": 25007,
+    "total_reviews_seen": 98903,
+    "batch_request_count": 182480
+  },
+  "invitation_audit": {
+    "venue_count": 11,
+    "issue_counts": {
+      "multiple_invitation_candidates": 3
+    },
+    "ready_candidate_count": 8,
+    "single_candidate_ready": [
+      "ICLR",
+      "ICML",
+      "NEURIPS",
+      "TMLR",
+      "COLM"
+    ],
+    "multi_candidate_ready": [
+      "AISTATS",
+      "UAI",
+      "CORL"
+    ],
+    "needs_attention": [],
+    "multi_candidate_venues": [
+      "AISTATS",
+      "UAI",
+      "CORL"
+    ],
+    "excluded": [
+      "JMLR",
+      "JAIR",
+      "MLJ"
+    ]
+  },
+  "probe_queue": {
+    "probe_count": 11,
+    "venue_count": 8,
+    "multi_candidate_probe_count": 6,
+    "core_priority1": [
+      "ICLR",
+      "ICML",
+      "NEURIPS",
+      "TMLR"
+    ],
+    "probe_priority2": [
+      "AISTATS",
+      "COLM",
+      "CORL",
+      "UAI"
+    ]
+  },
+  "probe_queue_runner": {
+    "execute": true,
+    "success": 11
+  },
+  "probe_results": {
+    "probe_result_count": 15,
+    "venue_count": 8,
+    "status_counts": {
+      "no_public_reviews": 5,
+      "selected_public_reviews": 3
+    },
+    "selected_for_scoring": [
+      "ICLR",
+      "ICML",
+      "NEURIPS"
+    ],
+    "blocked_auth": [],
+    "missing_results": [],
+    "no_public_reviews": [
+      "AISTATS",
+      "COLM",
+      "CORL",
+      "TMLR",
+      "UAI"
+    ],
+    "needs_larger_probe": []
+  },
+  "resolved_inventory": {
+    "venue_count": 12,
+    "status_counts": {
+      "excluded_no_public_reviews": 6,
+      "missing_probe_results": 1,
+      "no_public_reviews": 2,
+      "open_reviews_available": 3
+    },
+    "ready_to_pull_and_score": [
+      "ICLR",
+      "ICML",
+      "NEURIPS"
+    ],
+    "needs_probe_results": [
+      "MIDL"
+    ],
+    "needs_larger_probe": [],
+    "blocked_openreview_auth": [],
+    "skipped_not_open_review": [
+      "AISTATS",
+      "UAI",
+      "CORL",
+      "JMLR",
+      "JAIR",
+      "MLJ"
+    ]
+  },
+  "resolved_pipeline": {
+    "action": "dry_run_safe_stages",
+    "skipped_existing": 4,
+    "dry_run": 1
+  },
+  "pilot_readiness": {
+    "ICLR": {
+      "status": "ready_for_full_pull",
+      "recommendation": "run_full_pull",
+      "paper_count": 50,
+      "review_count": 188,
+      "request_count": 188,
+      "estimated_batch_cost_usd": 0.0447,
+      "errors": [],
+      "warnings": []
+    },
+    "ICML": {
+      "status": "ready_for_full_pull",
+      "recommendation": "run_full_pull",
+      "paper_count": 50,
+      "review_count": 191,
+      "request_count": 191,
+      "estimated_batch_cost_usd": 0.0448,
+      "errors": [],
+      "warnings": []
+    },
+    "NEURIPS": {
+      "status": "ready_for_full_pull",
+      "recommendation": "run_full_pull",
+      "paper_count": 50,
+      "review_count": 202,
+      "request_count": 202,
+      "estimated_batch_cost_usd": 0.0501,
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "snapshot_recovery": {
+    "snapshot_count": 16,
+    "recoverable_count": 0,
+    "status_counts": {
+      "complete": 16
+    },
+    "recoverable_snapshots": []
+  },
+  "batch_cost": {
+    "manifest_count": 444,
+    "included_manifest_count": 430,
+    "excluded_manifest_count": 14,
+    "request_count": 304753,
+    "estimated_input_tokens": 561069971,
+    "estimated_output_tokens": 33385260,
+    "estimated_batch_cost_usd": 76.9724
+  },
+  "scale_estimate": {
+    "status": "blocked_missing_inventory_sample",
+    "venue_count": 9,
+    "estimated_venue_count": 8,
+    "blocked_venue_count": 1,
+    "blocked_venues": [
+      "AISTATS"
+    ],
+    "estimated_review_count": 931,
+    "estimated_batch_cost_usd": 0.2355,
+    "estimated_storage_mb": 17.05
+  },
+  "submit_preflight": {
+    "status": "blocked_explicit_approval_required",
+    "consistency_status": "ok",
+    "batch_cost_status": "ready_for_cost_review",
+    "estimated_batch_cost_usd": 21.9817,
+    "request_count": 91240,
+    "manifest_count": 104,
+    "max_total_cost_usd": 25.0,
+    "allow_submit": false
+  },
+  "runbook_summary": {
+    "core_priority1": [
+      "ICLR",
+      "ICML",
+      "NEURIPS",
+      "TMLR"
+    ],
+    "probe_priority2": [
+      "AISTATS",
+      "COLM",
+      "CORL",
+      "UAI"
+    ],
+    "excluded": [
+      "JAIR",
+      "JMLR",
+      "MLJ"
+    ],
+    "phase_count": 5
+  }
+}

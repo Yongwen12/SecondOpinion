@@ -2,10 +2,13 @@ from __future__ import annotations
 
 import datetime as dt
 import hashlib
+import re
 from typing import Any
 
 from .text import clean_text, first_number, text_from_content, unwrap_content_value
 
+
+REVIEW_INVITATION_RE = re.compile(r"/-/((official_)?review\d*)$")
 
 REVIEW_TEXT_KEYS = [
     "summary",
@@ -14,12 +17,39 @@ REVIEW_TEXT_KEYS = [
     "strengths",
     "weaknesses",
     "questions",
+    "questions_for_authors",
     "limitations",
     "clarity,_quality,_novelty_and_reproducibility",
     "summary_of_the_paper",
     "contributions",
+    "claims_and_evidence",
+    "methods_and_evaluation_criteria",
+    "theoretical_claims",
+    "experimental_designs_or_analyses",
+    "supplementary_material",
+    "relation_to_broader_scientific_literature",
+    "essential_references_not_discussed",
+    "other_strengths_and_weaknesses",
+    "other_comments_or_suggestions",
+    "strengths_and_weaknesses",
+    "quality",
+    "clarity",
+    "significance",
+    "originality",
+    "final_justification",
+    "ethical_concerns",
+    "paper_formatting_concerns",
 ]
 
+SUMMARY_KEYS = ["summary", "summary_of_the_paper"]
+STRENGTH_KEYS = ["strengths"]
+WEAKNESS_KEYS = [
+    "weaknesses",
+    "limitations",
+    "other_strengths_and_weaknesses",
+    "strengths_and_weaknesses",
+]
+QUESTION_KEYS = ["questions", "questions_for_authors"]
 RATING_KEYS = ["rating", "recommendation", "overall_recommendation"]
 CONFIDENCE_KEYS = ["confidence", "reviewer_confidence"]
 
@@ -65,19 +95,64 @@ def note_id(note: dict[str, Any]) -> str:
     return str(note.get("id") or note.get("forum") or stable_id(note))
 
 
+def timestamp_ms(note: dict[str, Any], *keys: str) -> int | None:
+    for key in keys:
+        value = note.get(key)
+        if isinstance(value, (int, float)):
+            return int(value)
+    return None
+
+
+def iso_from_ms(value: int | None) -> str:
+    if value is None:
+        return ""
+    return dt.datetime.fromtimestamp(value / 1000, tz=dt.timezone.utc).replace(microsecond=0).isoformat()
+
+
+def note_timestamps(note: dict[str, Any]) -> dict[str, Any]:
+    created_ms = timestamp_ms(note, "cdate", "tcdate")
+    modified_ms = timestamp_ms(note, "mdate", "tmdate", "tcdate")
+    return {
+        "created_ms": created_ms,
+        "modified_ms": modified_ms,
+        "created_at": iso_from_ms(created_ms),
+        "modified_at": iso_from_ms(modified_ms),
+    }
+
+
 def stable_id(value: Any) -> str:
     payload = repr(value).encode("utf-8")
     return hashlib.sha1(payload).hexdigest()[:12]
 
 
-def invitation_text(note: dict[str, Any]) -> str:
-    invitations = note.get("invitations") or []
-    if isinstance(invitations, str):
-        invitations = [invitations]
+def invitation_values(note: dict[str, Any]) -> list[str]:
+    raw_invitations = note.get("invitations") or []
+    if isinstance(raw_invitations, str):
+        invitations = [raw_invitations]
+    elif isinstance(raw_invitations, list):
+        invitations = list(raw_invitations)
+    else:
+        invitations = []
     invitation = note.get("invitation")
     if invitation:
         invitations.append(invitation)
-    return " ".join(str(item) for item in invitations)
+    return [str(item) for item in invitations]
+
+
+def invitation_text(note: dict[str, Any]) -> str:
+    return " ".join(invitation_values(note))
+
+
+def first_content_text(content: dict[str, Any], keys: list[str]) -> str:
+    for key in keys:
+        text = text_from_content(content, [key])
+        if text:
+            return text
+    return ""
+
+
+def is_review_invitation(invitation: str) -> bool:
+    return bool(REVIEW_INVITATION_RE.search(invitation.lower()))
 
 
 def get_replies(note: dict[str, Any]) -> list[dict[str, Any]]:
@@ -87,8 +162,7 @@ def get_replies(note: dict[str, Any]) -> list[dict[str, Any]]:
 
 
 def is_review(reply: dict[str, Any]) -> bool:
-    invite = invitation_text(reply).lower()
-    return "official_review" in invite or invite.endswith("/-/review") or "/review" in invite
+    return any(is_review_invitation(invitation) for invitation in invitation_values(reply))
 
 
 def is_decision(reply: dict[str, Any]) -> bool:
@@ -114,16 +188,15 @@ def normalize_review(reply: dict[str, Any], paper_id: str, snapshot_time: str) -
     rating_raw = text_from_content(content, RATING_KEYS)
     confidence_raw = text_from_content(content, CONFIDENCE_KEYS)
     review_id = note_id(reply)
-    field_text = {key: text_from_content(content, [key]) for key in REVIEW_TEXT_KEYS if key in content}
     review_text = text_from_content(content, REVIEW_TEXT_KEYS)
     return {
         "review_id": review_id,
         "paper_id": paper_id,
         "review_text": review_text,
-        "summary": field_text.get("summary", "") or field_text.get("summary_of_the_paper", ""),
-        "strengths": field_text.get("strengths", ""),
-        "weaknesses": field_text.get("weaknesses", ""),
-        "questions": field_text.get("questions", ""),
+        "summary": first_content_text(content, SUMMARY_KEYS),
+        "strengths": text_from_content(content, STRENGTH_KEYS),
+        "weaknesses": text_from_content(content, WEAKNESS_KEYS),
+        "questions": text_from_content(content, QUESTION_KEYS),
         "rating_raw": rating_raw,
         "rating_normalized": normalize_rating(rating_raw),
         "confidence_raw": confidence_raw,
@@ -131,6 +204,7 @@ def normalize_review(reply: dict[str, Any], paper_id: str, snapshot_time: str) -
         "review_stage": "initial",
         "raw_invitation": invitation_text(reply),
         "snapshot_time": snapshot_time,
+        "openreview_timestamps": note_timestamps(reply),
     }
 
 
@@ -142,7 +216,6 @@ def normalize_submission(note: dict[str, Any], *, venue: str, year: int) -> dict
 
     decision = "Unknown"
     decisions = []
-    rebuttals = []
     reviews = []
     for reply in replies:
         if is_review(reply):
@@ -151,14 +224,7 @@ def normalize_submission(note: dict[str, Any], *, venue: str, year: int) -> dict
             decision_text = text_from_content(reply.get("content") or {}, ["decision", "recommendation", "comment"])
             if decision_text:
                 decision = decision_text
-            decisions.append({"id": note_id(reply), "text": decision_text})
-        elif is_rebuttal(reply):
-            rebuttals.append(
-                {
-                    "id": note_id(reply),
-                    "text": text_from_content(reply.get("content") or {}, ["comment", "response", "rebuttal", "title"]),
-                }
-            )
+            decisions.append({"id": note_id(reply), "text": decision_text, "openreview_timestamps": note_timestamps(reply)})
 
     return {
         "paper_id": paper_id,
@@ -168,13 +234,12 @@ def normalize_submission(note: dict[str, Any], *, venue: str, year: int) -> dict
         "title": text_from_content(content, ["title"]),
         "abstract": text_from_content(content, ["abstract"]),
         "authors_anonymized": bool(text_from_content(content, ["authors"]).lower().find("anonymous") >= 0),
-        "pdf_url": normalize_pdf_url(content.get("pdf")),
         "decision": clean_text(decision),
         "reviews": reviews,
-        "rebuttals": rebuttals,
         "decisions": decisions,
         "raw_invitation": invitation_text(note),
         "snapshot_time": snapshot_time,
+        "openreview_timestamps": note_timestamps(note),
     }
 
 

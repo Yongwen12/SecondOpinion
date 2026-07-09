@@ -1,0 +1,59 @@
+{
+  "schema_version": "batch-cost-review-v0.1",
+  "created_at": "2026-07-07T10:33:42+00:00",
+  "status": "ready_for_cost_review",
+  "max_total_cost_usd": 25.0,
+  "summary": {
+    "manifest_count": 3,
+    "included_manifest_count": 3,
+    "excluded_manifest_count": 0,
+    "request_count": 82219,
+    "estimated_input_tokens": 146697545,
+    "estimated_output_tokens": 8221900,
+    "estimated_batch_cost_usd": 19.8084
+  },
+  "manifests": [
+    {
+      "path": "data\\batch\\iclr_2025_full_batch_manifest.json",
+      "dataset": "data/normalized/iclr_2025_full.json",
+      "model": "gpt-5.4-nano",
+      "request_count": 46748,
+      "estimated_input_tokens": 83109880,
+      "estimated_output_tokens": 4674800,
+      "estimated_batch_cost_usd": 11.2327,
+      "excluded_request_count": 0,
+      "is_part_manifest": false,
+      "source_manifest_path": "",
+      "included_in_total": true,
+      "excluded_from_total_reason": ""
+    },
+    {
+      "path": "data\\batch\\icml_2025_full_batch_manifest.json",
+      "dataset": "data/normalized/icml_2025_full.json",
+      "model": "gpt-5.4-nano",
+      "request_count": 13102,
+      "estimated_input_tokens": 22387878,
+      "estimated_output_tokens": 1310200,
+      "estimated_batch_cost_usd": 3.0577,
+      "excluded_request_count": 0,
+      "is_part_manifest": false,
+      "source_manifest_path": "",
+      "included_in_total": true,
+      "excluded_from_total_reason": ""
+    },
+    {
+      "path": "data\\batch\\neurips_2025_full_batch_manifest.json",
+      "dataset": "data/normalized/neurips_2025_full.json",
+      "model": "gpt-5.4-nano",
+      "request_count": 22369,
+      "estimated_input_tokens": 41199787,
+      "estimated_output_tokens": 2236900,
+      "estimated_batch_cost_usd": 5.518,
+      "excluded_request_count": 0,
+      "is_part_manifest": false,
+      "source_manifest_path": "",
+      "included_in_total": true,
+      "excluded_from_total_reason": ""
+    }
+  ]
+}

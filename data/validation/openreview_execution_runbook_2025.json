@@ -1,0 +1,101 @@
+{
+  "schema_version": "openreview-execution-runbook-v0.1",
+  "created_at": "2026-07-06T21:01:07+00:00",
+  "venues_path": "data/config/openreview_venues_2025.json",
+  "model": "gpt-5.4-nano",
+  "sample_limit": 50,
+  "max_submit_cost_usd": 25.0,
+  "batch_cost_limit_usd": 25.0,
+  "summary": {
+    "core_priority1": [
+      "ICLR",
+      "ICML",
+      "NEURIPS",
+      "TMLR"
+    ],
+    "probe_priority2": [
+      "AISTATS",
+      "COLM",
+      "CORL",
+      "UAI"
+    ],
+    "excluded": [
+      "JAIR",
+      "JMLR",
+      "MLJ"
+    ],
+    "phase_count": 5
+  },
+  "phases": [
+    {
+      "phase": "install_cookie_and_probe_inventory",
+      "purpose": "Install a browser-verified OpenReview cookie, then confirm which 2025 venues expose public reviews.",
+      "commands": [
+        "python -m secondopinion.tools.openreview_challenge_resume --cookie-file path\\to\\browser-cookies.txt --execute-probe --skip-existing --pull-limit 50",
+        "python -m secondopinion.tools.openreview_secret_check --out data/validation/openreview_secret_check.json",
+        "python -m secondopinion.tools.openreview_local_refresh --max-total-cost-usd 25.0"
+      ],
+      "success_gate": "openreview_resolved_inventory.ready_to_pull_and_score contains venues confirmed by candidate-level public-review probes"
+    },
+    {
+      "phase": "priority1_pilots",
+      "purpose": "Run safe pull/build stages for core 2025 venues with a small paper limit before any full crawl.",
+      "venues": [
+        "ICLR",
+        "ICML",
+        "NEURIPS",
+        "TMLR"
+      ],
+      "commands": [
+        "python -m secondopinion.tools.openreview_safe_pipeline --venues data/config/openreview_venues_2025.json --venue ICLR --pull-limit 50 --cookie-file path\\to\\browser-cookies.txt --execute-safe --max-submit-cost-usd 25.0 --batch-cost-limit-usd 25.0",
+        "python -m secondopinion.tools.openreview_safe_pipeline --venues data/config/openreview_venues_2025.json --venue ICML --pull-limit 50 --cookie-file path\\to\\browser-cookies.txt --execute-safe --max-submit-cost-usd 25.0 --batch-cost-limit-usd 25.0",
+        "python -m secondopinion.tools.openreview_safe_pipeline --venues data/config/openreview_venues_2025.json --venue NEURIPS --pull-limit 50 --cookie-file path\\to\\browser-cookies.txt --execute-safe --max-submit-cost-usd 25.0 --batch-cost-limit-usd 25.0",
+        "python -m secondopinion.tools.openreview_safe_pipeline --venues data/config/openreview_venues_2025.json --venue TMLR --pull-limit 50 --cookie-file path\\to\\browser-cookies.txt --execute-safe --max-submit-cost-usd 25.0 --batch-cost-limit-usd 25.0"
+      ],
+      "success_gate": "openreview_pilot_readiness returns ready_for_full_pull for each selected venue; interrupted pulls leave manifest.failed=true and can be rerun with --resume"
+    },
+    {
+      "phase": "priority1_full_pull_and_batch_build",
+      "purpose": "Promote core venues to full safe pull/build only after their pilots pass readiness checks.",
+      "venues": [
+        "ICLR",
+        "ICML",
+        "NEURIPS",
+        "TMLR"
+      ],
+      "commands": [
+        "python -m secondopinion.tools.openreview_safe_pipeline --venues data/config/openreview_venues_2025.json --venue ICLR --cookie-file path\\to\\browser-cookies.txt --execute-safe --max-submit-cost-usd 25.0 --batch-cost-limit-usd 25.0",
+        "python -m secondopinion.tools.openreview_safe_pipeline --venues data/config/openreview_venues_2025.json --venue ICML --cookie-file path\\to\\browser-cookies.txt --execute-safe --max-submit-cost-usd 25.0 --batch-cost-limit-usd 25.0",
+        "python -m secondopinion.tools.openreview_safe_pipeline --venues data/config/openreview_venues_2025.json --venue NEURIPS --cookie-file path\\to\\browser-cookies.txt --execute-safe --max-submit-cost-usd 25.0 --batch-cost-limit-usd 25.0",
+        "python -m secondopinion.tools.openreview_safe_pipeline --venues data/config/openreview_venues_2025.json --venue TMLR --cookie-file path\\to\\browser-cookies.txt --execute-safe --max-submit-cost-usd 25.0 --batch-cost-limit-usd 25.0"
+      ],
+      "success_gate": "batch_cost_review is under budget and no submit_batch has been run; interrupted pulls leave manifest.next_offset for --resume"
+    },
+    {
+      "phase": "priority2_public_review_probe",
+      "purpose": "Only pull and score candidate venues after inventory confirms public official-review coverage.",
+      "venues": [
+        "AISTATS",
+        "COLM",
+        "CORL",
+        "UAI"
+      ],
+      "commands": [
+        "python -m secondopinion.tools.openreview_safe_pipeline --venues data/config/openreview_venues_2025.json --venue AISTATS --pull-limit 50 --cookie-file path\\to\\browser-cookies.txt --execute-safe --max-submit-cost-usd 25.0 --batch-cost-limit-usd 25.0",
+        "python -m secondopinion.tools.openreview_safe_pipeline --venues data/config/openreview_venues_2025.json --venue COLM --pull-limit 50 --cookie-file path\\to\\browser-cookies.txt --execute-safe --max-submit-cost-usd 25.0 --batch-cost-limit-usd 25.0",
+        "python -m secondopinion.tools.openreview_safe_pipeline --venues data/config/openreview_venues_2025.json --venue CORL --pull-limit 50 --cookie-file path\\to\\browser-cookies.txt --execute-safe --max-submit-cost-usd 25.0 --batch-cost-limit-usd 25.0",
+        "python -m secondopinion.tools.openreview_safe_pipeline --venues data/config/openreview_venues_2025.json --venue UAI --pull-limit 50 --cookie-file path\\to\\browser-cookies.txt --execute-safe --max-submit-cost-usd 25.0 --batch-cost-limit-usd 25.0"
+      ],
+      "success_gate": "score only venues whose sample quality shows non-empty public reviews"
+    },
+    {
+      "phase": "batch_submit_after_cost_review",
+      "purpose": "Submit OpenAI Batch jobs only after manifests exist and total estimated cost is acceptable.",
+      "commands": [
+        "python -m secondopinion.tools.batch_cost_review --manifest data/batch/**/*_manifest.json --out data/validation/batch_cost_review.json --markdown reports/validation/batch_cost_review.md --max-total-cost-usd 25.0",
+        "python -m secondopinion.tools.openreview_plan_runner --plan data/validation/openreview_ingestion_plan_2025.json --include-costly --stage submit_batch --max-submit-cost-usd 25.0"
+      ],
+      "success_gate": "human approval for OpenAI spend; submit_batch is intentionally separate from safe pipeline"
+    }
+  ]
+}

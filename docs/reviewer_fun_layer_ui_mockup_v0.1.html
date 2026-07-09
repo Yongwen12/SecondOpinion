@@ -1,0 +1,938 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SecondOpinion Fun Layer UI Mockup v0.1</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #17212b;
+        --muted: #66727f;
+        --line: #d8e0e7;
+        --soft-line: #e8edf1;
+        --paper: #f6f8fa;
+        --surface: #ffffff;
+        --green: #188557;
+        --green-soft: #eaf8f0;
+        --red: #b94141;
+        --red-soft: #fff0ef;
+        --gold: #b98422;
+        --gold-soft: #fff6df;
+        --blue: #2a6fba;
+        --blue-soft: #edf5ff;
+        --violet: #6f52b5;
+        --violet-soft: #f5efff;
+        --shadow: 0 18px 60px rgba(23, 33, 43, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background:
+          linear-gradient(180deg, rgba(255,255,255,0.9), rgba(246,248,250,0.94)),
+          repeating-linear-gradient(90deg, rgba(23,33,43,0.025) 0 1px, transparent 1px 16px);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+
+      .app-shell {
+        min-height: 100vh;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 16px clamp(18px, 4vw, 54px);
+        border-bottom: 1px solid rgba(216, 224, 231, 0.78);
+        background: rgba(255,255,255,0.88);
+        backdrop-filter: blur(18px);
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--ink);
+        font-weight: 900;
+        text-decoration: none;
+      }
+
+      .brand-mark {
+        display: inline-grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        border: 2px solid var(--ink);
+        background: #dff6ec;
+        box-shadow: 4px 4px 0 var(--ink);
+        font-size: 13px;
+      }
+
+      .top-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .ghost-button,
+      .primary-button,
+      .reaction-button {
+        min-height: 38px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        cursor: pointer;
+        background: #fff;
+        font-weight: 800;
+      }
+
+      .ghost-button {
+        padding: 0 12px;
+        color: var(--muted);
+      }
+
+      .primary-button {
+        padding: 0 18px;
+        color: #fff;
+        border-color: #0f6540;
+        background: var(--green);
+        box-shadow: 0 7px 22px rgba(24, 133, 87, 0.22);
+      }
+
+      main {
+        display: grid;
+        gap: 24px;
+        width: min(1220px, calc(100vw - 32px));
+        margin: 0 auto;
+        padding: 28px 0 54px;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 0.92fr) minmax(380px, 0.58fr);
+        gap: 22px;
+        align-items: stretch;
+      }
+
+      .search-panel,
+      .paper-score-panel,
+      .leaderboard,
+      .reviewer-card,
+      .detail-panel {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--surface);
+        box-shadow: var(--shadow);
+      }
+
+      .search-panel {
+        display: grid;
+        align-content: center;
+        gap: 20px;
+        min-height: 254px;
+        padding: clamp(22px, 4vw, 34px);
+      }
+
+      .eyebrow {
+        margin: 0;
+        color: var(--green);
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        max-width: 720px;
+        margin-bottom: 8px;
+        font-size: clamp(38px, 6vw, 72px);
+        line-height: 0.96;
+        letter-spacing: 0;
+      }
+
+      .hero-copy {
+        max-width: 760px;
+        margin: 0;
+        color: var(--muted);
+        font-size: 17px;
+        line-height: 1.6;
+      }
+
+      .search-row {
+        display: grid;
+        grid-template-columns: 154px minmax(0, 1fr) auto;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .search-row select,
+      .search-row input {
+        width: 100%;
+        min-height: 48px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fbfcfd;
+        color: var(--ink);
+        font-weight: 750;
+      }
+
+      .search-row select {
+        padding: 0 12px;
+      }
+
+      .search-row input {
+        padding: 0 14px;
+      }
+
+      .paper-score-panel {
+        display: grid;
+        gap: 18px;
+        padding: 22px;
+      }
+
+      .paper-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        min-height: 28px;
+        padding: 4px 10px;
+        border: 1px solid var(--soft-line);
+        border-radius: 999px;
+        background: #fbfcfd;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 850;
+      }
+
+      .score-hero {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 18px;
+        align-items: center;
+      }
+
+      .score-ring {
+        display: grid;
+        place-items: center;
+        width: 126px;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background:
+          radial-gradient(circle at center, #fff 0 56%, transparent 57%),
+          conic-gradient(var(--green) 0 82%, #e6ecef 82% 100%);
+      }
+
+      .score-ring strong {
+        display: block;
+        font-size: 38px;
+        line-height: 1;
+      }
+
+      .score-ring span {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 850;
+        text-align: center;
+      }
+
+      .score-summary h2 {
+        margin-bottom: 8px;
+        font-size: 26px;
+      }
+
+      .score-summary p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      .quick-facts {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .fact {
+        display: grid;
+        gap: 4px;
+        min-height: 74px;
+        padding: 12px;
+        border: 1px solid var(--soft-line);
+        border-radius: 8px;
+        background: #fbfcfd;
+      }
+
+      .fact span {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 850;
+      }
+
+      .fact strong {
+        font-size: 18px;
+      }
+
+      .section-head {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .section-head h2 {
+        margin: 0;
+        font-size: 28px;
+      }
+
+      .section-head p {
+        margin: 6px 0 0;
+        color: var(--muted);
+      }
+
+      .board-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .leaderboard {
+        overflow: hidden;
+      }
+
+      .leaderboard.good {
+        border-top: 4px solid var(--green);
+      }
+
+      .leaderboard.watch {
+        border-top: 4px solid var(--gold);
+      }
+
+      .leaderboard-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 16px 18px;
+        border-bottom: 1px solid var(--soft-line);
+      }
+
+      .leaderboard-head h3 {
+        margin: 0;
+        font-size: 17px;
+      }
+
+      .leaderboard ol {
+        display: grid;
+        gap: 0;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .rank-row {
+        display: grid;
+        grid-template-columns: 34px 40px minmax(0, 1fr) auto;
+        gap: 10px;
+        align-items: center;
+        padding: 12px 18px;
+        border-bottom: 1px solid var(--soft-line);
+      }
+
+      .rank-row:last-child {
+        border-bottom: 0;
+      }
+
+      .rank-no {
+        display: grid;
+        place-items: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        background: var(--paper);
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .rank-row strong {
+        display: block;
+      }
+
+      .rank-row span {
+        display: block;
+        margin-top: 2px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .tier-score {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 58px;
+        min-height: 32px;
+        padding: 5px 9px;
+        border-radius: 8px;
+        color: #fff;
+        background: var(--ink);
+        font-weight: 900;
+      }
+
+      .reviewer-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .reviewer-card {
+        display: grid;
+        gap: 14px;
+        padding: 16px;
+        min-width: 0;
+      }
+
+      .reviewer-card.featured {
+        border-color: rgba(24, 133, 87, 0.46);
+        background: linear-gradient(180deg, #ffffff, #f7fffb);
+      }
+
+      .card-top {
+        display: grid;
+        grid-template-columns: 54px minmax(0, 1fr) auto;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .avatar {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        grid-template-rows: repeat(5, 1fr);
+        width: 48px;
+        aspect-ratio: 1;
+        border: 2px solid var(--ink);
+        background: #fff;
+        box-shadow: 3px 3px 0 var(--ink);
+      }
+
+      .avatar i {
+        display: block;
+      }
+
+      .avatar.operator i:nth-child(3),
+      .avatar.operator i:nth-child(7),
+      .avatar.operator i:nth-child(9),
+      .avatar.operator i:nth-child(11),
+      .avatar.operator i:nth-child(12),
+      .avatar.operator i:nth-child(13),
+      .avatar.operator i:nth-child(14),
+      .avatar.operator i:nth-child(15),
+      .avatar.operator i:nth-child(18),
+      .avatar.operator i:nth-child(22),
+      .avatar.operator i:nth-child(24) {
+        background: #1e9662;
+      }
+
+      .avatar.rigorist i:nth-child(2),
+      .avatar.rigorist i:nth-child(4),
+      .avatar.rigorist i:nth-child(8),
+      .avatar.rigorist i:nth-child(12),
+      .avatar.rigorist i:nth-child(13),
+      .avatar.rigorist i:nth-child(14),
+      .avatar.rigorist i:nth-child(17),
+      .avatar.rigorist i:nth-child(19),
+      .avatar.rigorist i:nth-child(22),
+      .avatar.rigorist i:nth-child(24) {
+        background: #2a6fba;
+      }
+
+      .avatar.thunder i:nth-child(1),
+      .avatar.thunder i:nth-child(5),
+      .avatar.thunder i:nth-child(7),
+      .avatar.thunder i:nth-child(9),
+      .avatar.thunder i:nth-child(13),
+      .avatar.thunder i:nth-child(17),
+      .avatar.thunder i:nth-child(19),
+      .avatar.thunder i:nth-child(21),
+      .avatar.thunder i:nth-child(25) {
+        background: #b98422;
+      }
+
+      .reviewer-title {
+        min-width: 0;
+      }
+
+      .archetype-line {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 14px;
+        font-weight: 950;
+      }
+
+      .nickname {
+        display: block;
+        margin-top: 3px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 850;
+      }
+
+      .quote {
+        min-height: 94px;
+        margin: 0;
+        padding: 12px;
+        border-left: 4px solid var(--green);
+        border-radius: 7px;
+        background: #f5faf7;
+        color: #26323d;
+        line-height: 1.5;
+      }
+
+      .reviewer-card.thunder .quote {
+        border-left-color: var(--gold);
+        background: var(--gold-soft);
+      }
+
+      .reactions {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .reaction-button {
+        display: grid;
+        gap: 2px;
+        min-height: 54px;
+        padding: 6px 4px;
+        color: var(--ink);
+        font-size: 13px;
+      }
+
+      .reaction-button span {
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 850;
+      }
+
+      .card-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .detail-panel {
+        display: grid;
+        grid-template-columns: minmax(320px, 0.85fr) minmax(0, 1fr);
+        gap: 20px;
+        padding: 18px;
+      }
+
+      .detail-copy {
+        display: grid;
+        gap: 14px;
+      }
+
+      .tagline-box {
+        padding: 14px;
+        border: 1px solid var(--soft-line);
+        border-radius: 8px;
+        background: var(--green-soft);
+      }
+
+      .tagline-box b {
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      .tagline-box p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      .score-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .score-row {
+        display: grid;
+        grid-template-columns: minmax(150px, 0.52fr) minmax(0, 1fr) 44px;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .score-row span {
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 850;
+      }
+
+      .track {
+        height: 10px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: #edf1f4;
+      }
+
+      .fill {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: var(--green);
+      }
+
+      .share-card {
+        display: grid;
+        gap: 16px;
+        align-content: space-between;
+        min-height: 360px;
+        padding: 20px;
+        border: 2px solid var(--ink);
+        border-radius: 8px;
+        background:
+          linear-gradient(135deg, rgba(223,246,236,0.98), rgba(255,246,223,0.96)),
+          repeating-linear-gradient(0deg, rgba(23,33,43,0.04) 0 1px, transparent 1px 12px);
+        box-shadow: 7px 7px 0 var(--ink);
+      }
+
+      .share-card h3 {
+        margin: 0;
+        font-size: 28px;
+        line-height: 1.08;
+      }
+
+      .share-card .quote {
+        background: rgba(255,255,255,0.74);
+      }
+
+      .boundary-note {
+        margin: 0;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.45;
+      }
+
+      @media (max-width: 980px) {
+        .hero,
+        .board-grid,
+        .detail-panel {
+          grid-template-columns: 1fr;
+        }
+
+        .reviewer-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 680px) {
+        .topbar,
+        .top-actions,
+        .section-head,
+        .card-actions {
+          align-items: stretch;
+          flex-direction: column;
+        }
+
+        .search-row,
+        .score-hero,
+        .quick-facts,
+        .reviewer-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .rank-row {
+          grid-template-columns: 30px 38px minmax(0, 1fr);
+        }
+
+        .rank-row .tier-score {
+          grid-column: 3;
+          justify-self: start;
+        }
+
+        .reactions {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="SecondOpinion">
+          <span class="brand-mark">SO</span>
+          <span>SecondOpinion</span>
+        </a>
+        <div class="top-actions">
+          <button class="ghost-button" type="button">榜单</button>
+          <button class="ghost-button" type="button">分享卡</button>
+          <button class="primary-button" type="button">Analyze</button>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero" aria-label="Search and paper score">
+          <div class="search-panel">
+            <div>
+              <p class="eyebrow">Reviewer Reputation Board</p>
+              <h1>Time to review the reviewers.</h1>
+              <p class="hero-copy">
+                选择会议和文章，SecondOpinion 只展示对作者有用的结论：总体审稿质量、reviewer 榜单、可传播称号和代表性评论。
+              </p>
+            </div>
+            <div class="search-row">
+              <select aria-label="Conference">
+                <option>ICLR 2026</option>
+                <option>NeurIPS</option>
+                <option>ICML</option>
+                <option>ACL</option>
+              </select>
+              <input aria-label="Paper search" value="https://openreview.net/forum?id=second-opinion-demo">
+              <button class="primary-button" type="button">Analyze</button>
+            </div>
+          </div>
+
+          <aside class="paper-score-panel">
+            <div class="paper-meta">
+              <span class="pill">ICLR 2026</span>
+              <span class="pill">Paper-scoped nicknames</span>
+              <span class="pill">No real identities</span>
+            </div>
+            <div class="score-hero">
+              <div class="score-ring">
+                <span><strong>82</strong>/100</span>
+              </div>
+              <div class="score-summary">
+                <h2>Paper reviewer quality</h2>
+                <p>这篇文章的审稿反馈整体可执行，最高分 reviewer 给出了清晰实验路线；最低分 reviewer 的问题主要是落点不够明确。</p>
+              </div>
+            </div>
+            <div class="quick-facts">
+              <div class="fact">
+                <span>Best reviewer</span>
+                <strong>🦅 实干派 · Baseline Hawk</strong>
+              </div>
+              <div class="fact">
+                <span>Needs attention</span>
+                <strong>⚡ 雷声大雨点小 · Vague Thunder</strong>
+              </div>
+            </div>
+          </aside>
+        </section>
+
+        <section aria-label="Leaderboards">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Social score</p>
+              <h2>红榜 / 灰榜</h2>
+              <p>系统分为主，社区 reaction 为辅。灰榜评价的是评论体验，不评价真实的人。</p>
+            </div>
+            <button class="ghost-button" type="button">Top 10</button>
+          </div>
+          <div class="board-grid" style="margin-top: 14px;">
+            <article class="leaderboard good">
+              <div class="leaderboard-head">
+                <h3>Most Helpful Reviewers</h3>
+                <span class="pill">Red List</span>
+              </div>
+              <ol>
+                <li class="rank-row">
+                  <span class="rank-no">1</span>
+                  <span class="avatar operator" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                  <span><strong>Baseline Hawk</strong><span>🦅 实干派 · 给得出、改得动</span></span>
+                  <b class="tier-score">S · 91</b>
+                </li>
+                <li class="rank-row">
+                  <span class="rank-no">2</span>
+                  <span class="avatar rigorist" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                  <span><strong>Evidence Anchor</strong><span>🔬 较真党 · 证据扎实</span></span>
+                  <b class="tier-score">A · 84</b>
+                </li>
+                <li class="rank-row">
+                  <span class="rank-no">3</span>
+                  <span class="avatar operator" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                  <span><strong>Clarity Guide</strong><span>🔧 路线指引 · 下一步明确</span></span>
+                  <b class="tier-score">A · 79</b>
+                </li>
+              </ol>
+            </article>
+
+            <article class="leaderboard watch">
+              <div class="leaderboard-head">
+                <h3>Needs More Signal</h3>
+                <span class="pill">Gray List</span>
+              </div>
+              <ol>
+                <li class="rank-row">
+                  <span class="rank-no">1</span>
+                  <span class="avatar thunder" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                  <span><strong>Vague Thunder</strong><span>⚡ 雷声大雨点小 · 落点模糊</span></span>
+                  <b class="tier-score">C · 44</b>
+                </li>
+                <li class="rank-row">
+                  <span class="rank-no">2</span>
+                  <span class="avatar thunder" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                  <span><strong>Drifting Cloud</strong><span>🌫️ 飘过型 · 没留下什么</span></span>
+                  <b class="tier-score">D · 36</b>
+                </li>
+                <li class="rank-row">
+                  <span class="rank-no">3</span>
+                  <span class="avatar rigorist" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                  <span><strong>Sweet Cloud</strong><span>😇 嘴甜话空 · 语气很好</span></span>
+                  <b class="tier-score">B · 58</b>
+                </li>
+              </ol>
+            </article>
+          </div>
+        </section>
+
+        <section aria-label="Reviewer cards">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Reputation board</p>
+              <h2>Reviewer cards</h2>
+              <p>正面只显示称号、假名、总分、金句和 reaction。六维分数下沉到详情。</p>
+            </div>
+          </div>
+
+          <div class="reviewer-grid" style="margin-top: 14px;">
+            <article class="reviewer-card featured">
+              <div class="card-top">
+                <span class="avatar operator" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                <span class="reviewer-title">
+                  <span class="archetype-line">🦅 实干派 · Baseline Hawk</span>
+                  <span class="nickname">The Operator · 给得出、改得动</span>
+                </span>
+                <b class="tier-score">S · 91</b>
+              </div>
+              <blockquote class="quote">“Please compare against a standard retrieval baseline and report runtime.”</blockquote>
+              <div class="reactions">
+                <button class="reaction-button" type="button">👏 128<span>好审稿</span></button>
+                <button class="reaction-button" type="button">😤 34<span>我也遇过</span></button>
+                <button class="reaction-button" type="button">😂 9<span>经典 R2</span></button>
+                <button class="reaction-button" type="button">🌫️ 3<span>没看懂</span></button>
+              </div>
+              <div class="card-actions">
+                <button class="ghost-button" type="button">查看详情</button>
+                <button class="ghost-button" type="button">分享</button>
+              </div>
+            </article>
+
+            <article class="reviewer-card">
+              <div class="card-top">
+                <span class="avatar rigorist" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                <span class="reviewer-title">
+                  <span class="archetype-line">🔬 较真党 · Evidence Anchor</span>
+                  <span class="nickname">The Rigorist · rebuttal 也打不动</span>
+                </span>
+                <b class="tier-score">A · 84</b>
+              </div>
+              <blockquote class="quote">“The response still does not explain why the ablation supports the central claim.”</blockquote>
+              <div class="reactions">
+                <button class="reaction-button" type="button">👏 91<span>好审稿</span></button>
+                <button class="reaction-button" type="button">😤 48<span>我也遇过</span></button>
+                <button class="reaction-button" type="button">😂 12<span>经典 R2</span></button>
+                <button class="reaction-button" type="button">🌫️ 4<span>没看懂</span></button>
+              </div>
+              <div class="card-actions">
+                <button class="ghost-button" type="button">查看详情</button>
+                <button class="ghost-button" type="button">分享</button>
+              </div>
+            </article>
+
+            <article class="reviewer-card thunder">
+              <div class="card-top">
+                <span class="avatar thunder" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                <span class="reviewer-title">
+                  <span class="archetype-line">⚡ 雷声大雨点小 · Vague Thunder</span>
+                  <span class="nickname">气势很足，落点模糊</span>
+                </span>
+                <b class="tier-score">C · 44</b>
+              </div>
+              <blockquote class="quote">“The paper is not convincing and needs more experiments.”</blockquote>
+              <div class="reactions">
+                <button class="reaction-button" type="button">👏 12<span>好审稿</span></button>
+                <button class="reaction-button" type="button">😤 119<span>我也遇过</span></button>
+                <button class="reaction-button" type="button">😂 86<span>经典 R2</span></button>
+                <button class="reaction-button" type="button">🌫️ 47<span>没看懂</span></button>
+              </div>
+              <div class="card-actions">
+                <button class="ghost-button" type="button">查看详情</button>
+                <button class="ghost-button" type="button">不生成分享卡</button>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="detail-panel" aria-label="Reviewer detail and share card">
+          <article class="detail-copy">
+            <div class="card-top">
+              <span class="avatar operator" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+              <span class="reviewer-title">
+                <span class="archetype-line">🦅 实干派 · Baseline Hawk</span>
+                <span class="nickname">Tier S · Total 91</span>
+              </span>
+              <b class="tier-score">S · 91</b>
+            </div>
+            <div class="tagline-box">
+              <b>人设签名</b>
+              <p>给得出、改得动、有依据。这个称号来自明确性、可操作性、证据三个维度的高分。</p>
+            </div>
+            <div class="score-list">
+              <div class="score-row"><span>明确性 Specificity</span><div class="track"><i class="fill" style="width:92%"></i></div><b>92</b></div>
+              <div class="score-row"><span>证据 Evidence</span><div class="track"><i class="fill" style="width:88%"></i></div><b>88</b></div>
+              <div class="score-row"><span>可操作性 Actionability</span><div class="track"><i class="fill" style="width:95%"></i></div><b>95</b></div>
+              <div class="score-row"><span>一致度 Agreement</span><div class="track"><i class="fill" style="width:74%; background: var(--blue);"></i></div><b>74</b></div>
+              <div class="score-row"><span>rebuttal 后仍成立</span><div class="track"><i class="fill" style="width:81%"></i></div><b>81</b></div>
+              <div class="score-row"><span>语气 Tone</span><div class="track"><i class="fill" style="width:96%"></i></div><b>96</b></div>
+            </div>
+          </article>
+
+          <aside class="share-card">
+            <p class="eyebrow">Shareable card preview</p>
+            <div class="card-top">
+              <span class="avatar operator" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+              <span class="reviewer-title">
+                <span class="archetype-line">Time to review the reviewers.</span>
+                <span class="nickname">🦅 实干派 · Baseline Hawk</span>
+              </span>
+              <b class="tier-score">S · 91</b>
+            </div>
+            <h3>给得出、改得动、有依据。</h3>
+            <blockquote class="quote">“Please compare against a standard retrieval baseline and report runtime.”</blockquote>
+            <p class="boundary-note">Scores the usefulness of review comments, not reviewers as people.</p>
+          </aside>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,52 @@
+{
+  "id": "batch_6a4cd757d1f88190ba61f84c8e8a9bb5",
+  "object": "batch",
+  "endpoint": "/v1/chat/completions",
+  "model": "gpt-5.4-nano-2026-03-17",
+  "errors": {
+    "object": "list",
+    "data": [
+      {
+        "code": "token_limit_exceeded",
+        "message": "Enqueued token limit reached for gpt-5.4-nano in organization org-YFiWUglfvhYqwgpbv7zaTzjm. Limit: 2,000,000 enqueued tokens. Please try again once some in_progress batches have been completed.",
+        "param": null,
+        "line": null
+      }
+    ]
+  },
+  "input_file_id": "file-5eNWpA6KcYRmEjzKMtwurY",
+  "completion_window": "24h",
+  "status": "failed",
+  "output_file_id": null,
+  "error_file_id": null,
+  "created_at": 1783420759,
+  "in_progress_at": null,
+  "expires_at": 1783507159,
+  "finalizing_at": null,
+  "completed_at": null,
+  "failed_at": 1783420820,
+  "expired_at": null,
+  "cancelling_at": null,
+  "cancelled_at": null,
+  "request_counts": {
+    "total": 0,
+    "completed": 0,
+    "failed": 0
+  },
+  "usage": {
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "total_tokens": 0,
+    "input_tokens_details": {
+      "cached_tokens": 0
+    },
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    }
+  },
+  "metadata": {
+    "project": "secondopinion",
+    "dataset": "iclr_2025_full",
+    "model": "gpt-5.4-nano"
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "schema_version": "openreview-plan-runner-v0.1",
+  "execute": false,
+  "skip_existing": true,
+  "check_inputs": true,
+  "max_submit_cost_usd": 25.0,
+  "status_counts": {
+    "skipped_existing": 4,
+    "dry_run": 1
+  },
+  "steps": [
+    {
+      "venue_id": "ICLR",
+      "name": "pull",
+      "status": "skipped_existing",
+      "reason": "all_path_outputs_exist",
+      "command": "python -m secondopinion.tools.openreview_pull --venue ICLR --year 2025 --invitation ICLR.cc/2025/Conference/-/Submission --output data/normalized/iclr_2025_sample50.json --details replies --page-size 100 --polite-delay 0.2 --snapshot iclr_2025_sample50 --limit 50",
+      "writes": [
+        "data/normalized/iclr_2025_sample50.json"
+      ],
+      "requires_network": true,
+      "requires_openreview_auth": false,
+      "requires_openai_key": false,
+      "existing_outputs": [
+        "data/normalized/iclr_2025_sample50.json"
+      ]
+    },
+    {
+      "venue_id": "ICLR",
+      "name": "quality",
+      "status": "skipped_existing",
+      "reason": "all_path_outputs_exist",
+      "command": "python -m secondopinion.tools.data_quality_report --input data/normalized/iclr_2025_sample50.json --json-out data/validation/iclr_2025_sample50_quality.json --markdown-out reports/validation/iclr_2025_sample50_quality.md",
+      "writes": [
+        "data/validation/iclr_2025_sample50_quality.json",
+        "reports/validation/iclr_2025_sample50_quality.md"
+      ],
+      "requires_network": false,
+      "requires_openreview_auth": false,
+      "requires_openai_key": false,
+      "existing_outputs": [
+        "data/validation/iclr_2025_sample50_quality.json",
+        "reports/validation/iclr_2025_sample50_quality.md"
+      ]
+    },
+    {
+      "venue_id": "ICLR",
+      "name": "ingest",
+      "status": "dry_run",
+      "reason": "",
+      "command": "python -m secondopinion.tools.ingest_normalized --input data/normalized/iclr_2025_sample50.json",
+      "writes": [
+        "SECONDOPINION_DATABASE_URL"
+      ],
+      "requires_network": false,
+      "requires_openreview_auth": false,
+      "requires_openai_key": false
+    },
+    {
+      "venue_id": "ICLR",
+      "name": "build_batch",
+      "status": "skipped_existing",
+      "reason": "all_path_outputs_exist",
+      "command": "python -m secondopinion.tools.build_scoring_batch --input data/normalized/iclr_2025_sample50.json --output data/batch/iclr_2025_sample50_batch.jsonl --manifest data/batch/iclr_2025_sample50_batch_manifest.json --model gpt-5.4-nano",
+      "writes": [
+        "data/batch/iclr_2025_sample50_batch.jsonl",
+        "data/batch/iclr_2025_sample50_batch_manifest.json"
+      ],
+      "requires_network": false,
+      "requires_openreview_auth": false,
+      "requires_openai_key": false,
+      "existing_outputs": [
+        "data/batch/iclr_2025_sample50_batch.jsonl",
+        "data/batch/iclr_2025_sample50_batch_manifest.json"
+      ]
+    },
+    {
+      "venue_id": "ICLR",
+      "name": "split_batch",
+      "status": "skipped_existing",
+      "reason": "all_path_outputs_exist",
+      "command": "python -m secondopinion.tools.split_scoring_batch --input data/batch/iclr_2025_sample50_batch.jsonl --manifest data/batch/iclr_2025_sample50_batch_manifest.json --output-dir data/batch/iclr_2025_sample50_parts --prefix iclr_2025 --max-estimated-input-tokens 1600000",
+      "writes": [
+        "data/batch/iclr_2025_sample50_parts"
+      ],
+      "requires_network": false,
+      "requires_openreview_auth": false,
+      "requires_openai_key": false,
+      "existing_outputs": [
+        "data/batch/iclr_2025_sample50_parts"
+      ]
+    }
+  ]
+}

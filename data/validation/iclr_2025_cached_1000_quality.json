@@ -1,0 +1,34 @@
+{
+  "dataset": "iclr_2025",
+  "paper_count": 1000,
+  "review_count": 3926,
+  "reviews_per_paper": {
+    "min": 0,
+    "max": 7,
+    "mean": 3.926,
+    "histogram": {
+      "0": 29,
+      "3": 156,
+      "4": 646,
+      "5": 144,
+      "6": 21,
+      "7": 4
+    }
+  },
+  "empty_core_review_count": 0,
+  "empty_core_review_rate": 0.0,
+  "decision_coverage_count": 750,
+  "decision_coverage_rate": 0.75,
+  "abstract_coverage_count": 1000,
+  "abstract_coverage_rate": 1.0,
+  "rating_coverage_count": 3926,
+  "rating_coverage_rate": 1.0,
+  "confidence_coverage_count": 3926,
+  "confidence_coverage_rate": 1.0,
+  "decision_counts": {
+    "Reject": 473,
+    "Accept (Poster)": 244,
+    "Accept (Spotlight)": 21,
+    "Accept (Oral)": 12
+  }
+}

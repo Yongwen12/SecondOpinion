@@ -1,0 +1,156 @@
+{
+  "schema_version": "openreview-probe-queue-v0.1",
+  "created_at": "2026-07-07T10:33:50+00:00",
+  "sample_limit": 50,
+  "summary": {
+    "probe_count": 11,
+    "venue_count": 8,
+    "multi_candidate_probe_count": 6,
+    "core_priority1": [
+      "ICLR",
+      "ICML",
+      "NEURIPS",
+      "TMLR"
+    ],
+    "probe_priority2": [
+      "AISTATS",
+      "COLM",
+      "CORL",
+      "UAI"
+    ]
+  },
+  "items": [
+    {
+      "venue_id": "ICLR",
+      "priority": 1,
+      "candidate_index": 0,
+      "candidate_count": 1,
+      "invitation": "ICLR.cc/2025/Conference/-/Submission",
+      "expected_group_url": "https://openreview.net/group?id=ICLR.cc/2025/Conference",
+      "purpose": "confirm_public_reviews",
+      "result_json": "data/validation/openreview_probe_iclr_c1_50.json",
+      "result_markdown": "reports/validation/openreview_probe_iclr_c1_50.md",
+      "command": "python -m secondopinion.tools.openreview_probe_invitation --venue ICLR --invitation \"ICLR.cc/2025/Conference/-/Submission\" --sample-limit 50 --out data/validation/openreview_probe_iclr_c1_50.json --markdown reports/validation/openreview_probe_iclr_c1_50.md"
+    },
+    {
+      "venue_id": "ICML",
+      "priority": 1,
+      "candidate_index": 0,
+      "candidate_count": 1,
+      "invitation": "ICML.cc/2025/Conference/-/Submission",
+      "expected_group_url": "https://openreview.net/group?id=ICML.cc/2025/Conference",
+      "purpose": "confirm_public_reviews",
+      "result_json": "data/validation/openreview_probe_icml_c1_50.json",
+      "result_markdown": "reports/validation/openreview_probe_icml_c1_50.md",
+      "command": "python -m secondopinion.tools.openreview_probe_invitation --venue ICML --invitation \"ICML.cc/2025/Conference/-/Submission\" --sample-limit 50 --out data/validation/openreview_probe_icml_c1_50.json --markdown reports/validation/openreview_probe_icml_c1_50.md"
+    },
+    {
+      "venue_id": "NEURIPS",
+      "priority": 1,
+      "candidate_index": 0,
+      "candidate_count": 1,
+      "invitation": "NeurIPS.cc/2025/Conference/-/Submission",
+      "expected_group_url": "https://openreview.net/group?id=NeurIPS.cc/2025/Conference",
+      "purpose": "confirm_public_reviews",
+      "result_json": "data/validation/openreview_probe_neurips_c1_50.json",
+      "result_markdown": "reports/validation/openreview_probe_neurips_c1_50.md",
+      "command": "python -m secondopinion.tools.openreview_probe_invitation --venue NEURIPS --invitation \"NeurIPS.cc/2025/Conference/-/Submission\" --sample-limit 50 --out data/validation/openreview_probe_neurips_c1_50.json --markdown reports/validation/openreview_probe_neurips_c1_50.md"
+    },
+    {
+      "venue_id": "TMLR",
+      "priority": 1,
+      "candidate_index": 0,
+      "candidate_count": 1,
+      "invitation": "TMLR/-/Submission",
+      "expected_group_url": "https://openreview.net/group?id=TMLR",
+      "purpose": "confirm_public_reviews",
+      "result_json": "data/validation/openreview_probe_tmlr_c1_50.json",
+      "result_markdown": "reports/validation/openreview_probe_tmlr_c1_50.md",
+      "command": "python -m secondopinion.tools.openreview_probe_invitation --venue TMLR --invitation \"TMLR/-/Submission\" --sample-limit 50 --out data/validation/openreview_probe_tmlr_c1_50.json --markdown reports/validation/openreview_probe_tmlr_c1_50.md"
+    },
+    {
+      "venue_id": "AISTATS",
+      "priority": 2,
+      "candidate_index": 0,
+      "candidate_count": 2,
+      "invitation": "AISTATS.cc/2025/Conference/-/Submission",
+      "expected_group_url": "https://openreview.net/group?id=AISTATS.cc/2025/Conference",
+      "purpose": "resolve_multi_candidate",
+      "result_json": "data/validation/openreview_probe_aistats_c1_50.json",
+      "result_markdown": "reports/validation/openreview_probe_aistats_c1_50.md",
+      "command": "python -m secondopinion.tools.openreview_probe_invitation --venue AISTATS --invitation \"AISTATS.cc/2025/Conference/-/Submission\" --sample-limit 50 --out data/validation/openreview_probe_aistats_c1_50.json --markdown reports/validation/openreview_probe_aistats_c1_50.md"
+    },
+    {
+      "venue_id": "AISTATS",
+      "priority": 2,
+      "candidate_index": 1,
+      "candidate_count": 2,
+      "invitation": "aistats.org/AISTATS/2025/Conference/-/Submission",
+      "expected_group_url": "https://openreview.net/group?id=aistats.org/AISTATS/2025/Conference",
+      "purpose": "resolve_multi_candidate",
+      "result_json": "data/validation/openreview_probe_aistats_c2_50.json",
+      "result_markdown": "reports/validation/openreview_probe_aistats_c2_50.md",
+      "command": "python -m secondopinion.tools.openreview_probe_invitation --venue AISTATS --invitation \"aistats.org/AISTATS/2025/Conference/-/Submission\" --sample-limit 50 --out data/validation/openreview_probe_aistats_c2_50.json --markdown reports/validation/openreview_probe_aistats_c2_50.md"
+    },
+    {
+      "venue_id": "COLM",
+      "priority": 2,
+      "candidate_index": 0,
+      "candidate_count": 1,
+      "invitation": "colmweb.org/2025/Conference/-/Submission",
+      "expected_group_url": "https://openreview.net/group?id=colmweb.org/2025/Conference",
+      "purpose": "confirm_public_reviews",
+      "result_json": "data/validation/openreview_probe_colm_c1_50.json",
+      "result_markdown": "reports/validation/openreview_probe_colm_c1_50.md",
+      "command": "python -m secondopinion.tools.openreview_probe_invitation --venue COLM --invitation \"colmweb.org/2025/Conference/-/Submission\" --sample-limit 50 --out data/validation/openreview_probe_colm_c1_50.json --markdown reports/validation/openreview_probe_colm_c1_50.md"
+    },
+    {
+      "venue_id": "CORL",
+      "priority": 2,
+      "candidate_index": 0,
+      "candidate_count": 2,
+      "invitation": "robot-learning.org/CoRL/2025/Conference/-/Submission",
+      "expected_group_url": "https://openreview.net/group?id=robot-learning.org/CoRL/2025/Conference",
+      "purpose": "resolve_multi_candidate",
+      "result_json": "data/validation/openreview_probe_corl_c1_50.json",
+      "result_markdown": "reports/validation/openreview_probe_corl_c1_50.md",
+      "command": "python -m secondopinion.tools.openreview_probe_invitation --venue CORL --invitation \"robot-learning.org/CoRL/2025/Conference/-/Submission\" --sample-limit 50 --out data/validation/openreview_probe_corl_c1_50.json --markdown reports/validation/openreview_probe_corl_c1_50.md"
+    },
+    {
+      "venue_id": "CORL",
+      "priority": 2,
+      "candidate_index": 1,
+      "candidate_count": 2,
+      "invitation": "CoRL.cc/2025/Conference/-/Submission",
+      "expected_group_url": "https://openreview.net/group?id=CoRL.cc/2025/Conference",
+      "purpose": "resolve_multi_candidate",
+      "result_json": "data/validation/openreview_probe_corl_c2_50.json",
+      "result_markdown": "reports/validation/openreview_probe_corl_c2_50.md",
+      "command": "python -m secondopinion.tools.openreview_probe_invitation --venue CORL --invitation \"CoRL.cc/2025/Conference/-/Submission\" --sample-limit 50 --out data/validation/openreview_probe_corl_c2_50.json --markdown reports/validation/openreview_probe_corl_c2_50.md"
+    },
+    {
+      "venue_id": "UAI",
+      "priority": 2,
+      "candidate_index": 0,
+      "candidate_count": 2,
+      "invitation": "auai.org/UAI/2025/Conference/-/Submission",
+      "expected_group_url": "https://openreview.net/group?id=auai.org/UAI/2025/Conference",
+      "purpose": "resolve_multi_candidate",
+      "result_json": "data/validation/openreview_probe_uai_c1_50.json",
+      "result_markdown": "reports/validation/openreview_probe_uai_c1_50.md",
+      "command": "python -m secondopinion.tools.openreview_probe_invitation --venue UAI --invitation \"auai.org/UAI/2025/Conference/-/Submission\" --sample-limit 50 --out data/validation/openreview_probe_uai_c1_50.json --markdown reports/validation/openreview_probe_uai_c1_50.md"
+    },
+    {
+      "venue_id": "UAI",
+      "priority": 2,
+      "candidate_index": 1,
+      "candidate_count": 2,
+      "invitation": "UAI.cc/2025/Conference/-/Submission",
+      "expected_group_url": "https://openreview.net/group?id=UAI.cc/2025/Conference",
+      "purpose": "resolve_multi_candidate",
+      "result_json": "data/validation/openreview_probe_uai_c2_50.json",
+      "result_markdown": "reports/validation/openreview_probe_uai_c2_50.md",
+      "command": "python -m secondopinion.tools.openreview_probe_invitation --venue UAI --invitation \"UAI.cc/2025/Conference/-/Submission\" --sample-limit 50 --out data/validation/openreview_probe_uai_c2_50.json --markdown reports/validation/openreview_probe_uai_c2_50.md"
+    }
+  ]
+}

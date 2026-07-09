@@ -1,0 +1,42 @@
+{
+  "id": "batch_6a4cd760e9208190b44eb91bb83def8e",
+  "object": "batch",
+  "endpoint": "/v1/chat/completions",
+  "model": "gpt-5.4-nano-2026-03-17",
+  "errors": null,
+  "input_file_id": "file-KS5wDkovQWGkAaT1DbZYPP",
+  "completion_window": "24h",
+  "status": "completed",
+  "output_file_id": "file-2EPHmJJvqF2u6KkEN3gQKx",
+  "error_file_id": null,
+  "created_at": 1783420768,
+  "in_progress_at": 1783420770,
+  "expires_at": 1783507168,
+  "finalizing_at": 1783420955,
+  "completed_at": 1783421013,
+  "failed_at": null,
+  "expired_at": null,
+  "cancelling_at": null,
+  "cancelled_at": null,
+  "request_counts": {
+    "total": 882,
+    "completed": 882,
+    "failed": 0
+  },
+  "usage": {
+    "input_tokens": 1336728,
+    "output_tokens": 73551,
+    "total_tokens": 1410279,
+    "input_tokens_details": {
+      "cached_tokens": 0
+    },
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    }
+  },
+  "metadata": {
+    "project": "secondopinion",
+    "dataset": "iclr_2025_full",
+    "model": "gpt-5.4-nano"
+  }
+}

@@ -1,0 +1,22 @@
+# OpenReview Safe Pipeline
+
+- Created: `2026-07-08T19:04:36+00:00`
+- Action: `dry_run_safe_stages`
+- Execute safe stages: `False`
+- Auth setup: `-`
+- Auth cookie names: `-`
+- Selected venues: `AISTATS, UAI, CORL`
+- Pull limit: `50`
+- Gate status: `ready_for_safe_runner_execute`
+- Recommendation: Run the generated plan runner through pull/quality/ingest/build/split first; submit OpenAI batch only after cost review.
+- Inventory probe ran: `True`
+- Runner dry-run ran: `True`
+- Target/probe venues: `ICLR, ICML, NEURIPS, TMLR, COLM, AISTATS, UAI, CORL, MIDL`
+- Excluded venues: `JMLR, JAIR, MLJ`
+- Plan ready: `ICLR, ICML, NEURIPS, COLM, MIDL`
+- Plan blocked auth: `-`
+- Safe runner counts: `{'skipped': 3}`
+- Estimated batch cost USD: `76.9724`
+- Scale estimate: `blocked_missing_inventory_sample`
+- Scale blocked venues: `AISTATS`
+- Pilot readiness: `not_ready`

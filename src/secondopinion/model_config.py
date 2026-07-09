@@ -5,7 +5,7 @@ from typing import Any
 
 
 DEFAULT_CHEAP_MODEL = "gpt-5-nano"
-DEFAULT_REASONING_EFFORT = "minimal"
+DEFAULT_REASONING_EFFORT = "none"
 
 
 def is_gpt5_model(model: str) -> bool:

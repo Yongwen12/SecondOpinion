@@ -1,0 +1,33 @@
+{
+  "schema_version": "openreview-plan-runner-v0.1",
+  "execute": false,
+  "skip_existing": true,
+  "check_inputs": true,
+  "max_submit_cost_usd": 25.0,
+  "status_counts": {
+    "skipped": 3
+  },
+  "steps": [
+    {
+      "venue_id": "AISTATS",
+      "name": "blocked",
+      "status": "skipped",
+      "reason": "inventory status is no_sample_notes",
+      "command": ""
+    },
+    {
+      "venue_id": "UAI",
+      "name": "blocked",
+      "status": "skipped",
+      "reason": "inventory status is no_public_reviews",
+      "command": ""
+    },
+    {
+      "venue_id": "CORL",
+      "name": "blocked",
+      "status": "skipped",
+      "reason": "inventory status is no_public_reviews",
+      "command": ""
+    }
+  ]
+}

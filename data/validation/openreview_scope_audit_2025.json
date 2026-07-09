@@ -1,0 +1,211 @@
+{
+  "schema_version": "openreview-scope-audit-v0.1",
+  "created_at": "2026-07-08T19:07:55+00:00",
+  "status": "passed",
+  "completeness": {
+    "target_count": 6,
+    "excluded_count": 6,
+    "target_venue_ids": [
+      "ICLR",
+      "ICML",
+      "NEURIPS",
+      "TMLR",
+      "COLM",
+      "MIDL"
+    ],
+    "excluded_venue_ids": [
+      "AISTATS",
+      "CORL",
+      "UAI",
+      "JAIR",
+      "JMLR",
+      "MLJ"
+    ],
+    "priority1_core_ids": [
+      "ICLR",
+      "ICML",
+      "NEURIPS",
+      "TMLR"
+    ],
+    "priority2_probe_ids": [
+      "COLM",
+      "MIDL"
+    ],
+    "explicitly_excluded_top_journal_ids": [
+      "JAIR",
+      "JMLR",
+      "MLJ"
+    ],
+    "buckets": {
+      "priority1_core": [
+        {
+          "venue_id": "ICLR",
+          "priority": 1,
+          "category": "top_conference",
+          "scope_decision": "score_public_reviews",
+          "review_policy": "fully_open_public_reviews",
+          "candidate_count": 1
+        },
+        {
+          "venue_id": "ICML",
+          "priority": 1,
+          "category": "top_conference",
+          "scope_decision": "score_public_reviews",
+          "review_policy": "partially_open_public_reviews",
+          "candidate_count": 1
+        },
+        {
+          "venue_id": "NEURIPS",
+          "priority": 1,
+          "category": "top_conference",
+          "scope_decision": "score_public_reviews",
+          "review_policy": "partially_open_public_reviews",
+          "candidate_count": 1
+        },
+        {
+          "venue_id": "TMLR",
+          "priority": 1,
+          "category": "top_journal",
+          "scope_decision": "score_public_reviews",
+          "review_policy": "open_public_reviews",
+          "candidate_count": 1
+        }
+      ],
+      "priority2_probe": [
+        {
+          "venue_id": "COLM",
+          "priority": 2,
+          "category": "top_conference",
+          "scope_decision": "score_public_reviews",
+          "review_policy": "open_public_reviews",
+          "candidate_count": 2
+        },
+        {
+          "venue_id": "MIDL",
+          "priority": 2,
+          "category": "top_domain_conference",
+          "scope_decision": "score_public_reviews",
+          "review_policy": "open_public_reviews",
+          "candidate_count": 1
+        }
+      ],
+      "excluded_top_journals": [
+        {
+          "venue_id": "JAIR",
+          "priority": 3,
+          "category": "top_journal",
+          "scope_decision": "exclude_no_public_reviews",
+          "review_policy": "not_openreview_public_reviews",
+          "candidate_count": 0
+        },
+        {
+          "venue_id": "JMLR",
+          "priority": 3,
+          "category": "top_journal",
+          "scope_decision": "exclude_no_public_reviews",
+          "review_policy": "not_openreview_public_reviews",
+          "candidate_count": 0
+        },
+        {
+          "venue_id": "MLJ",
+          "priority": 3,
+          "category": "top_journal",
+          "scope_decision": "exclude_no_public_reviews",
+          "review_policy": "not_openreview_public_reviews",
+          "candidate_count": 0
+        }
+      ],
+      "other": [
+        {
+          "venue_id": "AISTATS",
+          "priority": 2,
+          "category": "top_conference",
+          "scope_decision": "exclude_no_public_reviews",
+          "review_policy": "verify_public_review_coverage",
+          "candidate_count": 2
+        },
+        {
+          "venue_id": "CORL",
+          "priority": 2,
+          "category": "top_conference",
+          "scope_decision": "exclude_no_public_reviews",
+          "review_policy": "verify_public_review_coverage",
+          "candidate_count": 2
+        },
+        {
+          "venue_id": "UAI",
+          "priority": 2,
+          "category": "top_conference",
+          "scope_decision": "exclude_no_public_reviews",
+          "review_policy": "verify_public_review_coverage",
+          "candidate_count": 2
+        }
+      ]
+    }
+  },
+  "config": {
+    "venue_count": 12,
+    "core_venues": [
+      "ICLR",
+      "ICML",
+      "NEURIPS",
+      "TMLR"
+    ],
+    "missing_core_venues": [],
+    "target_scope_decisions": [
+      "probe_then_score_if_public",
+      "score_public_reviews"
+    ],
+    "excluded_scope_decisions": [
+      "exclude_no_public_reviews",
+      "exclude_not_openreview"
+    ],
+    "excluded_top_journals": [
+      "JAIR",
+      "JMLR",
+      "MLJ"
+    ],
+    "missing_excluded_top_journals": []
+  },
+  "inventory": {
+    "venue_count": 12,
+    "status_counts": {
+      "excluded_no_public_reviews": 3,
+      "no_public_reviews": 3,
+      "no_sample_notes": 1,
+      "open_reviews_available": 5
+    },
+    "ready_to_pull_and_score": [
+      "ICLR",
+      "ICML",
+      "NEURIPS",
+      "COLM",
+      "MIDL"
+    ],
+    "needs_openreview_auth": [],
+    "missing_configured_venues": []
+  },
+  "plan": {
+    "venue_count": 12,
+    "readiness_counts": {
+      "ready": 5,
+      "needs_manual_inspection": 4,
+      "excluded_not_scored": 3
+    },
+    "ready": [
+      "ICLR",
+      "ICML",
+      "NEURIPS",
+      "COLM",
+      "MIDL"
+    ],
+    "blocked_openreview_auth": [],
+    "excluded_not_scored": [
+      "JMLR",
+      "JAIR",
+      "MLJ"
+    ]
+  },
+  "errors": [],
+  "warnings": []
+}

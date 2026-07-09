@@ -1,0 +1,172 @@
+{
+  "schema_version": "openreview-safe-pipeline-v0.1",
+  "created_at": "2026-07-08T19:04:36+00:00",
+  "action": "dry_run_safe_stages",
+  "execute_safe": false,
+  "auth_setup": {},
+  "selected_venues": [
+    "AISTATS",
+    "UAI",
+    "CORL"
+  ],
+  "pull_limit": 50,
+  "safe_stages": [
+    "pull",
+    "filter_normalized",
+    "quality",
+    "ingest",
+    "build_batch",
+    "split_batch"
+  ],
+  "gate_status": "ready_for_safe_runner_execute",
+  "gate_recommendation": "Run the generated plan runner through pull/quality/ingest/build/split first; submit OpenAI batch only after cost review.",
+  "ran_inventory": true,
+  "ran_runner_dry_run": true,
+  "inventory_summary": {
+    "venue_count": 12,
+    "status_counts": {
+      "excluded_no_public_reviews": 3,
+      "no_public_reviews": 3,
+      "no_sample_notes": 1,
+      "open_reviews_available": 5
+    },
+    "ready_to_pull_and_score": [
+      "ICLR",
+      "ICML",
+      "NEURIPS",
+      "COLM",
+      "MIDL"
+    ],
+    "needs_openreview_auth": [],
+    "needs_manual_inspection": [
+      "AISTATS"
+    ],
+    "skipped_not_open_review": [
+      "JMLR",
+      "JAIR",
+      "MLJ"
+    ]
+  },
+  "plan_summary": {
+    "venue_count": 12,
+    "readiness_counts": {
+      "ready": 5,
+      "needs_manual_inspection": 4,
+      "excluded_not_scored": 3
+    },
+    "ready": [
+      "ICLR",
+      "ICML",
+      "NEURIPS",
+      "COLM",
+      "MIDL"
+    ],
+    "blocked_openreview_auth": [],
+    "manual_year_filter_required": [],
+    "needs_manual_inspection": [
+      "TMLR",
+      "AISTATS",
+      "UAI",
+      "CORL"
+    ],
+    "excluded_not_scored": [
+      "JMLR",
+      "JAIR",
+      "MLJ"
+    ]
+  },
+  "scope_matrix_summary": {
+    "venue_count": 12,
+    "execution_state_counts": {
+      "excluded": 3,
+      "needs_manual_inspection": 4,
+      "ready_to_pull": 5
+    },
+    "scope_decision_counts": {
+      "exclude_no_public_reviews": 3,
+      "probe_then_score_if_public": 3,
+      "score_public_reviews": 6
+    },
+    "target_or_probe": [
+      "ICLR",
+      "ICML",
+      "NEURIPS",
+      "TMLR",
+      "COLM",
+      "AISTATS",
+      "UAI",
+      "CORL",
+      "MIDL"
+    ],
+    "excluded": [
+      "JMLR",
+      "JAIR",
+      "MLJ"
+    ],
+    "ready_to_pull": [
+      "ICLR",
+      "ICML",
+      "NEURIPS",
+      "COLM",
+      "MIDL"
+    ],
+    "blocked_openreview_auth": [],
+    "needs_inventory_probe": []
+  },
+  "safe_runner_status_counts": {
+    "skipped": 3
+  },
+  "batch_cost_summary": {
+    "manifest_count": 444,
+    "included_manifest_count": 430,
+    "excluded_manifest_count": 14,
+    "request_count": 304753,
+    "estimated_input_tokens": 561069971,
+    "estimated_output_tokens": 33385260,
+    "estimated_batch_cost_usd": 76.9724
+  },
+  "scale_estimate_status": "blocked_missing_inventory_sample",
+  "scale_estimate_summary": {
+    "venue_count": 9,
+    "estimated_venue_count": 8,
+    "blocked_venue_count": 1,
+    "blocked_venues": [
+      "AISTATS"
+    ],
+    "estimated_review_count": 931,
+    "estimated_batch_cost_usd": 0.2355,
+    "estimated_storage_mb": 17.05
+  },
+  "pilot_readiness_status": "not_ready",
+  "pilot_readiness_errors": [
+    "missing_normalized_dataset",
+    "missing_quality_report",
+    "missing_batch_manifest"
+  ],
+  "paths": {
+    "auth_out": "data/validation/openreview_auth_check.json",
+    "inventory_out": "data/validation/openreview_venue_inventory_2025.json",
+    "inventory_markdown": "reports/validation/openreview_venue_inventory_2025.md",
+    "plan_out": "data/validation/openreview_ingestion_plan_2025.json",
+    "plan_markdown": "reports/validation/openreview_ingestion_plan_2025.md",
+    "runner_out": "data/validation/openreview_plan_runner_last.json",
+    "runner_markdown": "reports/validation/openreview_plan_runner_last.md",
+    "scope_audit_out": "data/validation/openreview_scope_audit_2025.json",
+    "scope_audit_markdown": "reports/validation/openreview_scope_audit_2025.md",
+    "scope_matrix_out": "data/validation/openreview_scope_matrix_2025.json",
+    "scope_matrix_markdown": "reports/validation/openreview_scope_matrix_2025.md",
+    "gate_out": "data/validation/openreview_pipeline_gate.json",
+    "gate_markdown": "reports/validation/openreview_pipeline_gate.md",
+    "safe_runner_out": "data/validation/openreview_safe_runner_last.json",
+    "safe_runner_markdown": "reports/validation/openreview_safe_runner_last.md",
+    "cost_out": "data/validation/batch_cost_review.json",
+    "cost_markdown": "reports/validation/batch_cost_review.md",
+    "summary_out": "data/validation/openreview_safe_pipeline.json",
+    "summary_markdown": "reports/validation/openreview_safe_pipeline.md",
+    "auth_setup_out": "data/validation/openreview_auth_setup.json",
+    "pilot_readiness_out": "data/validation/openreview_pilot_readiness.json",
+    "pilot_readiness_markdown": "reports/validation/openreview_pilot_readiness.md",
+    "scale_estimate_out": "data/validation/openreview_scale_estimate.json",
+    "scale_estimate_markdown": "reports/validation/openreview_scale_estimate.md"
+  }
+}

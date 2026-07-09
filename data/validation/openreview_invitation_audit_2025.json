@@ -1,0 +1,228 @@
+{
+  "schema_version": "openreview-invitation-audit-v0.1",
+  "created_at": "2026-07-07T10:33:50+00:00",
+  "summary": {
+    "venue_count": 11,
+    "issue_counts": {
+      "multiple_invitation_candidates": 3
+    },
+    "ready_candidate_count": 8,
+    "single_candidate_ready": [
+      "ICLR",
+      "ICML",
+      "NEURIPS",
+      "TMLR",
+      "COLM"
+    ],
+    "multi_candidate_ready": [
+      "AISTATS",
+      "UAI",
+      "CORL"
+    ],
+    "needs_attention": [],
+    "multi_candidate_venues": [
+      "AISTATS",
+      "UAI",
+      "CORL"
+    ],
+    "excluded": [
+      "JMLR",
+      "JAIR",
+      "MLJ"
+    ]
+  },
+  "venues": [
+    {
+      "venue_id": "ICLR",
+      "name": "International Conference on Learning Representations",
+      "priority": 1,
+      "scope_decision": "score_public_reviews",
+      "status": "ready_for_api_probe",
+      "selected_invitation": "ICLR.cc/2025/Conference/-/Submission",
+      "selected_group": "ICLR.cc/2025/Conference",
+      "expected_group_url": "https://openreview.net/group?id=ICLR.cc/2025/Conference",
+      "invitation_candidates": [
+        "ICLR.cc/2025/Conference/-/Submission"
+      ],
+      "evidence_urls": [
+        "https://iclr.cc/",
+        "https://openreview.net/group?id=ICLR.cc/2025/Conference"
+      ],
+      "issues": []
+    },
+    {
+      "venue_id": "ICML",
+      "name": "International Conference on Machine Learning",
+      "priority": 1,
+      "scope_decision": "score_public_reviews",
+      "status": "ready_for_api_probe",
+      "selected_invitation": "ICML.cc/2025/Conference/-/Submission",
+      "selected_group": "ICML.cc/2025/Conference",
+      "expected_group_url": "https://openreview.net/group?id=ICML.cc/2025/Conference",
+      "invitation_candidates": [
+        "ICML.cc/2025/Conference/-/Submission"
+      ],
+      "evidence_urls": [
+        "https://icml.cc/",
+        "https://openreview.net/group?id=ICML.cc/2025/Conference"
+      ],
+      "issues": []
+    },
+    {
+      "venue_id": "NEURIPS",
+      "name": "Neural Information Processing Systems",
+      "priority": 1,
+      "scope_decision": "score_public_reviews",
+      "status": "ready_for_api_probe",
+      "selected_invitation": "NeurIPS.cc/2025/Conference/-/Submission",
+      "selected_group": "NeurIPS.cc/2025/Conference",
+      "expected_group_url": "https://openreview.net/group?id=NeurIPS.cc/2025/Conference",
+      "invitation_candidates": [
+        "NeurIPS.cc/2025/Conference/-/Submission"
+      ],
+      "evidence_urls": [
+        "https://neurips.cc/",
+        "https://openreview.net/group?id=NeurIPS.cc/2025/Conference"
+      ],
+      "issues": []
+    },
+    {
+      "venue_id": "TMLR",
+      "name": "Transactions on Machine Learning Research",
+      "priority": 1,
+      "scope_decision": "score_public_reviews",
+      "status": "ready_for_api_probe",
+      "selected_invitation": "TMLR/-/Submission",
+      "selected_group": "TMLR",
+      "expected_group_url": "https://openreview.net/group?id=TMLR",
+      "invitation_candidates": [
+        "TMLR/-/Submission"
+      ],
+      "evidence_urls": [
+        "https://jmlr.org/tmlr/",
+        "https://openreview.net/group?id=TMLR"
+      ],
+      "issues": []
+    },
+    {
+      "venue_id": "COLM",
+      "name": "Conference on Language Modeling",
+      "priority": 2,
+      "scope_decision": "probe_then_score_if_public",
+      "status": "ready_for_api_probe",
+      "selected_invitation": "colmweb.org/2025/Conference/-/Submission",
+      "selected_group": "colmweb.org/2025/Conference",
+      "expected_group_url": "https://openreview.net/group?id=colmweb.org/2025/Conference",
+      "invitation_candidates": [
+        "colmweb.org/2025/Conference/-/Submission"
+      ],
+      "evidence_urls": [
+        "https://colmweb.org/",
+        "https://openreview.net/group?id=colmweb.org/2025/Conference"
+      ],
+      "issues": []
+    },
+    {
+      "venue_id": "AISTATS",
+      "name": "International Conference on Artificial Intelligence and Statistics",
+      "priority": 2,
+      "scope_decision": "probe_then_score_if_public",
+      "status": "ready_for_multi_candidate_probe",
+      "selected_invitation": "AISTATS.cc/2025/Conference/-/Submission",
+      "selected_group": "AISTATS.cc/2025/Conference",
+      "expected_group_url": "https://openreview.net/group?id=AISTATS.cc/2025/Conference",
+      "invitation_candidates": [
+        "AISTATS.cc/2025/Conference/-/Submission",
+        "aistats.org/AISTATS/2025/Conference/-/Submission"
+      ],
+      "evidence_urls": [
+        "https://aistats.org/",
+        "https://openreview.net/group?id=AISTATS.cc/2025/Conference"
+      ],
+      "issues": [
+        "multiple_invitation_candidates"
+      ]
+    },
+    {
+      "venue_id": "UAI",
+      "name": "Conference on Uncertainty in Artificial Intelligence",
+      "priority": 2,
+      "scope_decision": "probe_then_score_if_public",
+      "status": "ready_for_multi_candidate_probe",
+      "selected_invitation": "auai.org/UAI/2025/Conference/-/Submission",
+      "selected_group": "auai.org/UAI/2025/Conference",
+      "expected_group_url": "https://openreview.net/group?id=auai.org/UAI/2025/Conference",
+      "invitation_candidates": [
+        "auai.org/UAI/2025/Conference/-/Submission",
+        "UAI.cc/2025/Conference/-/Submission"
+      ],
+      "evidence_urls": [
+        "https://www.auai.org/",
+        "https://openreview.net/group?id=auai.org/UAI/2025/Conference"
+      ],
+      "issues": [
+        "multiple_invitation_candidates"
+      ]
+    },
+    {
+      "venue_id": "CORL",
+      "name": "Conference on Robot Learning",
+      "priority": 2,
+      "scope_decision": "probe_then_score_if_public",
+      "status": "ready_for_multi_candidate_probe",
+      "selected_invitation": "robot-learning.org/CoRL/2025/Conference/-/Submission",
+      "selected_group": "robot-learning.org/CoRL/2025/Conference",
+      "expected_group_url": "https://openreview.net/group?id=robot-learning.org/CoRL/2025/Conference",
+      "invitation_candidates": [
+        "robot-learning.org/CoRL/2025/Conference/-/Submission",
+        "CoRL.cc/2025/Conference/-/Submission"
+      ],
+      "evidence_urls": [
+        "https://www.corl.org/",
+        "https://openreview.net/group?id=robot-learning.org/CoRL/2025/Conference"
+      ],
+      "issues": [
+        "multiple_invitation_candidates"
+      ]
+    },
+    {
+      "venue_id": "JMLR",
+      "name": "Journal of Machine Learning Research",
+      "priority": 3,
+      "scope_decision": "exclude_no_public_reviews",
+      "status": "excluded",
+      "selected_invitation": "",
+      "selected_group": "",
+      "expected_group_url": "",
+      "invitation_candidates": [],
+      "evidence_urls": [],
+      "issues": []
+    },
+    {
+      "venue_id": "JAIR",
+      "name": "Journal of Artificial Intelligence Research",
+      "priority": 3,
+      "scope_decision": "exclude_no_public_reviews",
+      "status": "excluded",
+      "selected_invitation": "",
+      "selected_group": "",
+      "expected_group_url": "",
+      "invitation_candidates": [],
+      "evidence_urls": [],
+      "issues": []
+    },
+    {
+      "venue_id": "MLJ",
+      "name": "Machine Learning",
+      "priority": 3,
+      "scope_decision": "exclude_no_public_reviews",
+      "status": "excluded",
+      "selected_invitation": "",
+      "selected_group": "",
+      "expected_group_url": "",
+      "invitation_candidates": [],
+      "evidence_urls": [],
+      "issues": []
+    }
+  ]
+}

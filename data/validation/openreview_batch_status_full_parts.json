@@ -1,0 +1,1857 @@
+{
+  "schema_version": "openreview-batch-status-full-parts-v0.1",
+  "created_at": "2026-07-07T10:45:04+00:00",
+  "openai_submit_used": false,
+  "submitted_count": 92,
+  "status_counts": {
+    "completed": 1,
+    "failed": 90,
+    "in_progress": 1
+  },
+  "request_count": 82219,
+  "estimated_batch_cost_usd": 19.8083,
+  "completed_count": 1,
+  "has_outputs": false,
+  "items": [
+    {
+      "index": 1,
+      "batch_id": "batch_6a4cd757d1f88190ba61f84c8e8a9bb5",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part01_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part01_batch.jsonl",
+      "request_count": 901,
+      "estimated_batch_cost_usd": 0.2162,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420759,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507159
+    },
+    {
+      "index": 2,
+      "batch_id": "batch_6a4cd75bb9d4819087301b620a373873",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part02_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part02_batch.jsonl",
+      "request_count": 898,
+      "estimated_batch_cost_usd": 0.2161,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420763,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507163
+    },
+    {
+      "index": 3,
+      "batch_id": "batch_6a4cd760e9208190b44eb91bb83def8e",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part03_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part03_batch.jsonl",
+      "request_count": 882,
+      "estimated_batch_cost_usd": 0.2151,
+      "remote_status": "completed",
+      "request_counts": {
+        "total": 882,
+        "completed": 882,
+        "failed": 0
+      },
+      "output_file_id": "file-2EPHmJJvqF2u6KkEN3gQKx",
+      "error_file_id": "",
+      "created_at": 1783420768,
+      "in_progress_at": 1783420770,
+      "completed_at": 1783421013,
+      "expires_at": 1783507168
+    },
+    {
+      "index": 4,
+      "batch_id": "batch_6a4cd7637eb481908733dbc5e446db46",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part04_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part04_batch.jsonl",
+      "request_count": 895,
+      "estimated_batch_cost_usd": 0.2159,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420771,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507171
+    },
+    {
+      "index": 5,
+      "batch_id": "batch_6a4cd767afe4819099f9568d8bc280dc",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part05_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part05_batch.jsonl",
+      "request_count": 890,
+      "estimated_batch_cost_usd": 0.2156,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420775,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507175
+    },
+    {
+      "index": 6,
+      "batch_id": "batch_6a4cd76a58448190b478c4530fb7043c",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part06_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part06_batch.jsonl",
+      "request_count": 896,
+      "estimated_batch_cost_usd": 0.216,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420778,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507178
+    },
+    {
+      "index": 7,
+      "batch_id": "batch_6a4cd76d4ce88190a64df93e5ee64c13",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part07_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part07_batch.jsonl",
+      "request_count": 903,
+      "estimated_batch_cost_usd": 0.2163,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420781,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507181
+    },
+    {
+      "index": 8,
+      "batch_id": "batch_6a4cd770620c8190b6be9ef77d60a0c7",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part08_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part08_batch.jsonl",
+      "request_count": 892,
+      "estimated_batch_cost_usd": 0.2157,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420784,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507184
+    },
+    {
+      "index": 9,
+      "batch_id": "batch_6a4cd77348f08190a927e128636b51eb",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part09_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part09_batch.jsonl",
+      "request_count": 890,
+      "estimated_batch_cost_usd": 0.2155,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420787,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507187
+    },
+    {
+      "index": 10,
+      "batch_id": "batch_6a4cd775c85c819088306d2b3c119240",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part10_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part10_batch.jsonl",
+      "request_count": 896,
+      "estimated_batch_cost_usd": 0.2158,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420789,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507189
+    },
+    {
+      "index": 11,
+      "batch_id": "batch_6a4cd779683c81909dc20d911a124f91",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part11_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part11_batch.jsonl",
+      "request_count": 899,
+      "estimated_batch_cost_usd": 0.2161,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420793,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507193
+    },
+    {
+      "index": 12,
+      "batch_id": "batch_6a4cd77c41348190864094dd6e51027d",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part12_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part12_batch.jsonl",
+      "request_count": 898,
+      "estimated_batch_cost_usd": 0.216,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420796,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507196
+    },
+    {
+      "index": 13,
+      "batch_id": "batch_6a4cd77f09408190a785653e17bd45e6",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part13_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part13_batch.jsonl",
+      "request_count": 907,
+      "estimated_batch_cost_usd": 0.2167,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420799,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507199
+    },
+    {
+      "index": 14,
+      "batch_id": "batch_6a4cd781cb308190af9eb5a58d0d91d0",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part14_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part14_batch.jsonl",
+      "request_count": 900,
+      "estimated_batch_cost_usd": 0.2161,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420801,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507201
+    },
+    {
+      "index": 15,
+      "batch_id": "batch_6a4cd7851f7c8190bc6e31346b3c8f4b",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part15_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part15_batch.jsonl",
+      "request_count": 902,
+      "estimated_batch_cost_usd": 0.2164,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420805,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507205
+    },
+    {
+      "index": 16,
+      "batch_id": "batch_6a4cd787dbcc8190abf053678491ddb7",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part16_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part16_batch.jsonl",
+      "request_count": 900,
+      "estimated_batch_cost_usd": 0.2162,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420807,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507207
+    },
+    {
+      "index": 17,
+      "batch_id": "batch_6a4cd78c591c8190a99dead3764dd9cf",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part17_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part17_batch.jsonl",
+      "request_count": 888,
+      "estimated_batch_cost_usd": 0.2153,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420812,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507212
+    },
+    {
+      "index": 18,
+      "batch_id": "batch_6a4cd78f1a488190aa7c6a55b4c8dfc6",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part18_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part18_batch.jsonl",
+      "request_count": 902,
+      "estimated_batch_cost_usd": 0.2162,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420815,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507215
+    },
+    {
+      "index": 19,
+      "batch_id": "batch_6a4cd7934284819093ad066c127cb268",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part19_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part19_batch.jsonl",
+      "request_count": 899,
+      "estimated_batch_cost_usd": 0.2161,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420819,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507219
+    },
+    {
+      "index": 20,
+      "batch_id": "batch_6a4cd79610f08190acf9c1036aa8ba47",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part20_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part20_batch.jsonl",
+      "request_count": 891,
+      "estimated_batch_cost_usd": 0.2157,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420822,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507222
+    },
+    {
+      "index": 21,
+      "batch_id": "batch_6a4cd79900b4819082749593857fec79",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part21_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part21_batch.jsonl",
+      "request_count": 902,
+      "estimated_batch_cost_usd": 0.2162,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420825,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507225
+    },
+    {
+      "index": 22,
+      "batch_id": "batch_6a4cd79b6a6481909c8d89ddcbc2ec93",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part22_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part22_batch.jsonl",
+      "request_count": 899,
+      "estimated_batch_cost_usd": 0.216,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420827,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507227
+    },
+    {
+      "index": 23,
+      "batch_id": "batch_6a4cd79dd0308190b4c0d6dbdaca84d9",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part23_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part23_batch.jsonl",
+      "request_count": 899,
+      "estimated_batch_cost_usd": 0.2161,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420829,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507229
+    },
+    {
+      "index": 24,
+      "batch_id": "batch_6a4cd7a0d88c8190998833e402445c47",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part24_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part24_batch.jsonl",
+      "request_count": 903,
+      "estimated_batch_cost_usd": 0.2163,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420832,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507232
+    },
+    {
+      "index": 25,
+      "batch_id": "batch_6a4cd7a400448190a764fea023890fa0",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part25_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part25_batch.jsonl",
+      "request_count": 899,
+      "estimated_batch_cost_usd": 0.216,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420836,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507236
+    },
+    {
+      "index": 26,
+      "batch_id": "batch_6a4cd7a674cc8190a9920e2c9a40addf",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part26_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part26_batch.jsonl",
+      "request_count": 883,
+      "estimated_batch_cost_usd": 0.2151,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420838,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507238
+    },
+    {
+      "index": 27,
+      "batch_id": "batch_6a4cd7ab5a848190bae7efe1889f5534",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part27_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part27_batch.jsonl",
+      "request_count": 897,
+      "estimated_batch_cost_usd": 0.2159,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420843,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507243
+    },
+    {
+      "index": 28,
+      "batch_id": "batch_6a4cd7ae1bec8190852ead2a15a30b9c",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part28_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part28_batch.jsonl",
+      "request_count": 895,
+      "estimated_batch_cost_usd": 0.2158,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420846,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507246
+    },
+    {
+      "index": 29,
+      "batch_id": "batch_6a4cd7b290e8819094aeff67afd5cf89",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part29_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part29_batch.jsonl",
+      "request_count": 897,
+      "estimated_batch_cost_usd": 0.216,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420850,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507250
+    },
+    {
+      "index": 30,
+      "batch_id": "batch_6a4cd7b547a881909cf3af9268dfd1ff",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part30_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part30_batch.jsonl",
+      "request_count": 909,
+      "estimated_batch_cost_usd": 0.2167,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420853,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507253
+    },
+    {
+      "index": 31,
+      "batch_id": "batch_6a4cd7b8209481908ebabe42484f179c",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part31_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part31_batch.jsonl",
+      "request_count": 896,
+      "estimated_batch_cost_usd": 0.2159,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420856,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507256
+    },
+    {
+      "index": 32,
+      "batch_id": "batch_6a4cd7baf9588190b424801c9ca40cf2",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part32_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part32_batch.jsonl",
+      "request_count": 892,
+      "estimated_batch_cost_usd": 0.2157,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420858,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507258
+    },
+    {
+      "index": 33,
+      "batch_id": "batch_6a4cd7bdf21c8190ac432152c6a452d6",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part33_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part33_batch.jsonl",
+      "request_count": 903,
+      "estimated_batch_cost_usd": 0.2163,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420861,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507261
+    },
+    {
+      "index": 34,
+      "batch_id": "batch_6a4cd7c0ac5481909627ab35f15f2f1b",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part34_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part34_batch.jsonl",
+      "request_count": 904,
+      "estimated_batch_cost_usd": 0.2165,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420864,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507264
+    },
+    {
+      "index": 35,
+      "batch_id": "batch_6a4cd7c420a08190940f0e3db5474a14",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part35_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part35_batch.jsonl",
+      "request_count": 905,
+      "estimated_batch_cost_usd": 0.2165,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420868,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507268
+    },
+    {
+      "index": 36,
+      "batch_id": "batch_6a4cd7c76ac88190bf5bd0ba8b9e32c3",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part36_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part36_batch.jsonl",
+      "request_count": 907,
+      "estimated_batch_cost_usd": 0.2165,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420871,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507271
+    },
+    {
+      "index": 37,
+      "batch_id": "batch_6a4cd7ca70c08190b5042baa50a03c10",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part37_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part37_batch.jsonl",
+      "request_count": 902,
+      "estimated_batch_cost_usd": 0.2162,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420874,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507274
+    },
+    {
+      "index": 38,
+      "batch_id": "batch_6a4cd7cd4c408190a7d3559304e86b6b",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part38_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part38_batch.jsonl",
+      "request_count": 894,
+      "estimated_batch_cost_usd": 0.2159,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420877,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507277
+    },
+    {
+      "index": 39,
+      "batch_id": "batch_6a4cd7d0500881909c6347e1343f564a",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part39_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part39_batch.jsonl",
+      "request_count": 907,
+      "estimated_batch_cost_usd": 0.2167,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420880,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507280
+    },
+    {
+      "index": 40,
+      "batch_id": "batch_6a4cd7d28c7081908c08fa53f00846d2",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part40_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part40_batch.jsonl",
+      "request_count": 905,
+      "estimated_batch_cost_usd": 0.2165,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420882,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507282
+    },
+    {
+      "index": 41,
+      "batch_id": "batch_6a4cd7d52b208190b52c632725fb7a17",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part41_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part41_batch.jsonl",
+      "request_count": 902,
+      "estimated_batch_cost_usd": 0.2163,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420885,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507285
+    },
+    {
+      "index": 42,
+      "batch_id": "batch_6a4cd7d7ab548190a8ae3cefeadaf9cc",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part42_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part42_batch.jsonl",
+      "request_count": 896,
+      "estimated_batch_cost_usd": 0.2159,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420887,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507287
+    },
+    {
+      "index": 43,
+      "batch_id": "batch_6a4cd7dae5f88190b17db0500c7e94b6",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part43_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part43_batch.jsonl",
+      "request_count": 907,
+      "estimated_batch_cost_usd": 0.2166,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420890,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507290
+    },
+    {
+      "index": 44,
+      "batch_id": "batch_6a4cd7dd63f08190a5ae830ad271a02f",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part44_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part44_batch.jsonl",
+      "request_count": 906,
+      "estimated_batch_cost_usd": 0.2166,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420893,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507293
+    },
+    {
+      "index": 45,
+      "batch_id": "batch_6a4cd7e05dd08190a9efb9f719e73a4a",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part45_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part45_batch.jsonl",
+      "request_count": 911,
+      "estimated_batch_cost_usd": 0.2169,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420896,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507296
+    },
+    {
+      "index": 46,
+      "batch_id": "batch_6a4cd7e354f88190b53aa0a6de4aebcb",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part46_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part46_batch.jsonl",
+      "request_count": 899,
+      "estimated_batch_cost_usd": 0.2162,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420899,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507299
+    },
+    {
+      "index": 47,
+      "batch_id": "batch_6a4cd7e6775c8190a8142f3f88957e3a",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part47_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part47_batch.jsonl",
+      "request_count": 902,
+      "estimated_batch_cost_usd": 0.2163,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420902,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507302
+    },
+    {
+      "index": 48,
+      "batch_id": "batch_6a4cd7e9ef54819089bca1f10cdf0cc7",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part48_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part48_batch.jsonl",
+      "request_count": 917,
+      "estimated_batch_cost_usd": 0.2173,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420905,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507305
+    },
+    {
+      "index": 49,
+      "batch_id": "batch_6a4cd7ed1c308190aa2d079b330f7b41",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part49_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part49_batch.jsonl",
+      "request_count": 904,
+      "estimated_batch_cost_usd": 0.2164,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420909,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507309
+    },
+    {
+      "index": 50,
+      "batch_id": "batch_6a4cd7f0a83c8190806c858629c69d5e",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part50_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part50_batch.jsonl",
+      "request_count": 897,
+      "estimated_batch_cost_usd": 0.2159,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420912,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507312
+    },
+    {
+      "index": 51,
+      "batch_id": "batch_6a4cd7f316b88190aba4a8d57d027f19",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part51_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part51_batch.jsonl",
+      "request_count": 899,
+      "estimated_batch_cost_usd": 0.2162,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420915,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507315
+    },
+    {
+      "index": 52,
+      "batch_id": "batch_6a4cd7f59f2c81908c7a2adb6e37c7cc",
+      "manifest_path": "data/batch/iclr_2025_full_parts\\iclr_2025_part52_manifest.json",
+      "jsonl_path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part52_batch.jsonl",
+      "request_count": 881,
+      "estimated_batch_cost_usd": 0.2104,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420917,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507317
+    },
+    {
+      "index": 53,
+      "batch_id": "batch_6a4cd7f90470819092fb3a14f447591a",
+      "manifest_path": "data/batch/icml_2025_full_parts\\icml_2025_part01_manifest.json",
+      "jsonl_path": "data\\batch\\icml_2025_full_parts\\icml_2025_part01_batch.jsonl",
+      "request_count": 928,
+      "estimated_batch_cost_usd": 0.218,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420921,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507321
+    },
+    {
+      "index": 54,
+      "batch_id": "batch_6a4cd7fc2ff0819099f887495a036ef8",
+      "manifest_path": "data/batch/icml_2025_full_parts\\icml_2025_part02_manifest.json",
+      "jsonl_path": "data\\batch\\icml_2025_full_parts\\icml_2025_part02_batch.jsonl",
+      "request_count": 941,
+      "estimated_batch_cost_usd": 0.2188,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420924,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507324
+    },
+    {
+      "index": 55,
+      "batch_id": "batch_6a4cd7ff94a88190b239fa8258a2b58f",
+      "manifest_path": "data/batch/icml_2025_full_parts\\icml_2025_part03_manifest.json",
+      "jsonl_path": "data\\batch\\icml_2025_full_parts\\icml_2025_part03_batch.jsonl",
+      "request_count": 933,
+      "estimated_batch_cost_usd": 0.2182,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420927,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507327
+    },
+    {
+      "index": 56,
+      "batch_id": "batch_6a4cd80359e4819099ac837606c13824",
+      "manifest_path": "data/batch/icml_2025_full_parts\\icml_2025_part04_manifest.json",
+      "jsonl_path": "data\\batch\\icml_2025_full_parts\\icml_2025_part04_batch.jsonl",
+      "request_count": 939,
+      "estimated_batch_cost_usd": 0.2186,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420931,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507331
+    },
+    {
+      "index": 57,
+      "batch_id": "batch_6a4cd805e0ec8190a13bb583dcd9f90a",
+      "manifest_path": "data/batch/icml_2025_full_parts\\icml_2025_part05_manifest.json",
+      "jsonl_path": "data\\batch\\icml_2025_full_parts\\icml_2025_part05_batch.jsonl",
+      "request_count": 939,
+      "estimated_batch_cost_usd": 0.2186,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420933,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507333
+    },
+    {
+      "index": 58,
+      "batch_id": "batch_6a4cd808fb1c819086b6e718a2fc6acb",
+      "manifest_path": "data/batch/icml_2025_full_parts\\icml_2025_part06_manifest.json",
+      "jsonl_path": "data\\batch\\icml_2025_full_parts\\icml_2025_part06_batch.jsonl",
+      "request_count": 928,
+      "estimated_batch_cost_usd": 0.2178,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420936,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507336
+    },
+    {
+      "index": 59,
+      "batch_id": "batch_6a4cd80c69ec8190b88e6f595e63b11b",
+      "manifest_path": "data/batch/icml_2025_full_parts\\icml_2025_part07_manifest.json",
+      "jsonl_path": "data\\batch\\icml_2025_full_parts\\icml_2025_part07_batch.jsonl",
+      "request_count": 938,
+      "estimated_batch_cost_usd": 0.2186,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420940,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507340
+    },
+    {
+      "index": 60,
+      "batch_id": "batch_6a4cd80f70c88190a22e744609c6fd56",
+      "manifest_path": "data/batch/icml_2025_full_parts\\icml_2025_part08_manifest.json",
+      "jsonl_path": "data\\batch\\icml_2025_full_parts\\icml_2025_part08_batch.jsonl",
+      "request_count": 940,
+      "estimated_batch_cost_usd": 0.2186,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420943,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507343
+    },
+    {
+      "index": 61,
+      "batch_id": "batch_6a4cd812222081908c7e864e2444e823",
+      "manifest_path": "data/batch/icml_2025_full_parts\\icml_2025_part09_manifest.json",
+      "jsonl_path": "data\\batch\\icml_2025_full_parts\\icml_2025_part09_batch.jsonl",
+      "request_count": 929,
+      "estimated_batch_cost_usd": 0.218,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420946,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507346
+    },
+    {
+      "index": 62,
+      "batch_id": "batch_6a4cd8151cd08190b46e1923ccd6c628",
+      "manifest_path": "data/batch/icml_2025_full_parts\\icml_2025_part10_manifest.json",
+      "jsonl_path": "data\\batch\\icml_2025_full_parts\\icml_2025_part10_batch.jsonl",
+      "request_count": 943,
+      "estimated_batch_cost_usd": 0.2188,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420949,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507349
+    },
+    {
+      "index": 63,
+      "batch_id": "batch_6a4cd817dfbc8190ba9482c2ef32c1b4",
+      "manifest_path": "data/batch/icml_2025_full_parts\\icml_2025_part11_manifest.json",
+      "jsonl_path": "data\\batch\\icml_2025_full_parts\\icml_2025_part11_batch.jsonl",
+      "request_count": 934,
+      "estimated_batch_cost_usd": 0.2183,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420951,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507351
+    },
+    {
+      "index": 64,
+      "batch_id": "batch_6a4cd81ad38881909effd12ead3d65a1",
+      "manifest_path": "data/batch/icml_2025_full_parts\\icml_2025_part12_manifest.json",
+      "jsonl_path": "data\\batch\\icml_2025_full_parts\\icml_2025_part12_batch.jsonl",
+      "request_count": 935,
+      "estimated_batch_cost_usd": 0.2183,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420954,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507354
+    },
+    {
+      "index": 65,
+      "batch_id": "batch_6a4cd81e18c4819087cc95f229ae91af",
+      "manifest_path": "data/batch/icml_2025_full_parts\\icml_2025_part13_manifest.json",
+      "jsonl_path": "data\\batch\\icml_2025_full_parts\\icml_2025_part13_batch.jsonl",
+      "request_count": 945,
+      "estimated_batch_cost_usd": 0.219,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420958,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507358
+    },
+    {
+      "index": 66,
+      "batch_id": "batch_6a4cd8213e2c8190b66446eed7f06ea1",
+      "manifest_path": "data/batch/icml_2025_full_parts\\icml_2025_part14_manifest.json",
+      "jsonl_path": "data\\batch\\icml_2025_full_parts\\icml_2025_part14_batch.jsonl",
+      "request_count": 930,
+      "estimated_batch_cost_usd": 0.218,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420961,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507361
+    },
+    {
+      "index": 67,
+      "batch_id": "batch_6a4cd823cfc88190b49067eb265ea5ae",
+      "manifest_path": "data/batch/neurips_2025_full_parts\\neurips_2025_part01_manifest.json",
+      "jsonl_path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part01_batch.jsonl",
+      "request_count": 860,
+      "estimated_batch_cost_usd": 0.2136,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420963,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507363
+    },
+    {
+      "index": 68,
+      "batch_id": "batch_6a4cd82654308190b28c221ff6a0a7f8",
+      "manifest_path": "data/batch/neurips_2025_full_parts\\neurips_2025_part02_manifest.json",
+      "jsonl_path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part02_batch.jsonl",
+      "request_count": 875,
+      "estimated_batch_cost_usd": 0.2146,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420966,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507366
+    },
+    {
+      "index": 69,
+      "batch_id": "batch_6a4cd829676c81908f5cef1462147fac",
+      "manifest_path": "data/batch/neurips_2025_full_parts\\neurips_2025_part03_manifest.json",
+      "jsonl_path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part03_batch.jsonl",
+      "request_count": 861,
+      "estimated_batch_cost_usd": 0.2137,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420969,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507369
+    },
+    {
+      "index": 70,
+      "batch_id": "batch_6a4cd82bf25081909f9f7f0b8f0efe33",
+      "manifest_path": "data/batch/neurips_2025_full_parts\\neurips_2025_part04_manifest.json",
+      "jsonl_path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part04_batch.jsonl",
+      "request_count": 866,
+      "estimated_batch_cost_usd": 0.2141,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420971,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507371
+    },
+    {
+      "index": 71,
+      "batch_id": "batch_6a4cd82e67908190adf75762824a98d6",
+      "manifest_path": "data/batch/neurips_2025_full_parts\\neurips_2025_part05_manifest.json",
+      "jsonl_path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part05_batch.jsonl",
+      "request_count": 880,
+      "estimated_batch_cost_usd": 0.2149,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420974,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507374
+    },
+    {
+      "index": 72,
+      "batch_id": "batch_6a4cd8314728819089803bf85873273b",
+      "manifest_path": "data/batch/neurips_2025_full_parts\\neurips_2025_part06_manifest.json",
+      "jsonl_path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part06_batch.jsonl",
+      "request_count": 869,
+      "estimated_batch_cost_usd": 0.2142,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420977,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507377
+    },
+    {
+      "index": 73,
+      "batch_id": "batch_6a4cd8338db48190a04d273310b94766",
+      "manifest_path": "data/batch/neurips_2025_full_parts\\neurips_2025_part07_manifest.json",
+      "jsonl_path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part07_batch.jsonl",
+      "request_count": 870,
+      "estimated_batch_cost_usd": 0.2142,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420979,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507379
+    },
+    {
+      "index": 74,
+      "batch_id": "batch_6a4cd83718508190b2351002516aaed6",
+      "manifest_path": "data/batch/neurips_2025_full_parts\\neurips_2025_part08_manifest.json",
+      "jsonl_path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part08_batch.jsonl",
+      "request_count": 868,
+      "estimated_batch_cost_usd": 0.2142,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420983,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507383
+    },
+    {
+      "index": 75,
+      "batch_id": "batch_6a4cd839c20081909e98e5843ac8178e",
+      "manifest_path": "data/batch/neurips_2025_full_parts\\neurips_2025_part09_manifest.json",
+      "jsonl_path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part09_batch.jsonl",
+      "request_count": 869,
+      "estimated_batch_cost_usd": 0.2142,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420985,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507385
+    },
+    {
+      "index": 76,
+      "batch_id": "batch_6a4cd83d1f6c8190a6b38f3c7d3f7144",
+      "manifest_path": "data/batch/neurips_2025_full_parts\\neurips_2025_part10_manifest.json",
+      "jsonl_path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part10_batch.jsonl",
+      "request_count": 865,
+      "estimated_batch_cost_usd": 0.2139,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420989,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507389
+    },
+    {
+      "index": 77,
+      "batch_id": "batch_6a4cd840038c8190bcea439ff8f6babe",
+      "manifest_path": "data/batch/neurips_2025_full_parts\\neurips_2025_part11_manifest.json",
+      "jsonl_path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part11_batch.jsonl",
+      "request_count": 870,
+      "estimated_batch_cost_usd": 0.2143,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420992,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507392
+    },
+    {
+      "index": 78,
+      "batch_id": "batch_6a4cd84337388190b006430c8d5263b7",
+      "manifest_path": "data/batch/neurips_2025_full_parts\\neurips_2025_part12_manifest.json",
+      "jsonl_path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part12_batch.jsonl",
+      "request_count": 872,
+      "estimated_batch_cost_usd": 0.2144,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420995,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507395
+    },
+    {
+      "index": 79,
+      "batch_id": "batch_6a4cd8464f3c819080682ae98c5c1628",
+      "manifest_path": "data/batch/neurips_2025_full_parts\\neurips_2025_part13_manifest.json",
+      "jsonl_path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part13_batch.jsonl",
+      "request_count": 872,
+      "estimated_batch_cost_usd": 0.2143,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783420998,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507398
+    },
+    {
+      "index": 80,
+      "batch_id": "batch_6a4cd849fc008190aa069f674870b02d",
+      "manifest_path": "data/batch/neurips_2025_full_parts\\neurips_2025_part14_manifest.json",
+      "jsonl_path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part14_batch.jsonl",
+      "request_count": 875,
+      "estimated_batch_cost_usd": 0.2145,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783421001,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507401
+    },
+    {
+      "index": 81,
+      "batch_id": "batch_6a4cd84cc7888190b5beaf47062d7c48",
+      "manifest_path": "data/batch/neurips_2025_full_parts\\neurips_2025_part15_manifest.json",
+      "jsonl_path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part15_batch.jsonl",
+      "request_count": 874,
+      "estimated_batch_cost_usd": 0.2146,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783421004,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507404
+    },
+    {
+      "index": 82,
+      "batch_id": "batch_6a4cd8503e3c8190aa31b7423787d62c",
+      "manifest_path": "data/batch/neurips_2025_full_parts\\neurips_2025_part16_manifest.json",
+      "jsonl_path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part16_batch.jsonl",
+      "request_count": 876,
+      "estimated_batch_cost_usd": 0.2147,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783421008,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507408
+    },
+    {
+      "index": 83,
+      "batch_id": "batch_6a4cd8532ad481908667c1eacb65694d",
+      "manifest_path": "data/batch/neurips_2025_full_parts\\neurips_2025_part17_manifest.json",
+      "jsonl_path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part17_batch.jsonl",
+      "request_count": 865,
+      "estimated_batch_cost_usd": 0.2139,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783421011,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507411
+    },
+    {
+      "index": 84,
+      "batch_id": "batch_6a4cd855f90081909ea8a39d120e537c",
+      "manifest_path": "data/batch/neurips_2025_full_parts\\neurips_2025_part18_manifest.json",
+      "jsonl_path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part18_batch.jsonl",
+      "request_count": 874,
+      "estimated_batch_cost_usd": 0.2145,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783421013,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507413
+    },
+    {
+      "index": 85,
+      "batch_id": "batch_6a4cd85883608190a53cc70b9bdcfacf",
+      "manifest_path": "data/batch/neurips_2025_full_parts\\neurips_2025_part19_manifest.json",
+      "jsonl_path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part19_batch.jsonl",
+      "request_count": 872,
+      "estimated_batch_cost_usd": 0.2144,
+      "remote_status": "in_progress",
+      "request_counts": {
+        "total": 872,
+        "completed": 757,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783421016,
+      "in_progress_at": 1783421017,
+      "completed_at": null,
+      "expires_at": 1783507416
+    },
+    {
+      "index": 86,
+      "batch_id": "batch_6a4cd85b06a481909a0bf0f7fc7b24a2",
+      "manifest_path": "data/batch/neurips_2025_full_parts\\neurips_2025_part20_manifest.json",
+      "jsonl_path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part20_batch.jsonl",
+      "request_count": 867,
+      "estimated_batch_cost_usd": 0.2141,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783421019,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507419
+    },
+    {
+      "index": 87,
+      "batch_id": "batch_6a4cd85d586881908058b2d23be52860",
+      "manifest_path": "data/batch/neurips_2025_full_parts\\neurips_2025_part21_manifest.json",
+      "jsonl_path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part21_batch.jsonl",
+      "request_count": 874,
+      "estimated_batch_cost_usd": 0.2144,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783421021,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507421
+    },
+    {
+      "index": 88,
+      "batch_id": "batch_6a4cd85ffa848190a53a2d6b114ecf3f",
+      "manifest_path": "data/batch/neurips_2025_full_parts\\neurips_2025_part22_manifest.json",
+      "jsonl_path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part22_batch.jsonl",
+      "request_count": 869,
+      "estimated_batch_cost_usd": 0.2142,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783421023,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507423
+    },
+    {
+      "index": 89,
+      "batch_id": "batch_6a4cd862cae48190acf83d16e674d8d6",
+      "manifest_path": "data/batch/neurips_2025_full_parts\\neurips_2025_part23_manifest.json",
+      "jsonl_path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part23_batch.jsonl",
+      "request_count": 864,
+      "estimated_batch_cost_usd": 0.214,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783421026,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507426
+    },
+    {
+      "index": 90,
+      "batch_id": "batch_6a4cd865505c8190b4117633ef227443",
+      "manifest_path": "data/batch/neurips_2025_full_parts\\neurips_2025_part24_manifest.json",
+      "jsonl_path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part24_batch.jsonl",
+      "request_count": 854,
+      "estimated_batch_cost_usd": 0.2133,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783421029,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507429
+    },
+    {
+      "index": 91,
+      "batch_id": "batch_6a4cd867c63c8190a06a6c43808998f8",
+      "manifest_path": "data/batch/neurips_2025_full_parts\\neurips_2025_part25_manifest.json",
+      "jsonl_path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part25_batch.jsonl",
+      "request_count": 860,
+      "estimated_batch_cost_usd": 0.2137,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783421031,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507431
+    },
+    {
+      "index": 92,
+      "batch_id": "batch_6a4cd86a0a1c8190a3b63adf5c4e2b01",
+      "manifest_path": "data/batch/neurips_2025_full_parts\\neurips_2025_part26_manifest.json",
+      "jsonl_path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part26_batch.jsonl",
+      "request_count": 648,
+      "estimated_batch_cost_usd": 0.163,
+      "remote_status": "failed",
+      "request_counts": {
+        "total": 0,
+        "completed": 0,
+        "failed": 0
+      },
+      "output_file_id": "",
+      "error_file_id": "",
+      "created_at": 1783421034,
+      "in_progress_at": null,
+      "completed_at": null,
+      "expires_at": 1783507434
+    }
+  ]
+}

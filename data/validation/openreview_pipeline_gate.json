@@ -1,0 +1,169 @@
+{
+  "schema_version": "openreview-pipeline-gate-v0.1",
+  "created_at": "2026-07-08T19:04:34+00:00",
+  "status": "ready_for_safe_runner_execute",
+  "recommendation": "Run the generated plan runner through pull/quality/ingest/build/split first; submit OpenAI batch only after cost review.",
+  "secret_check": {
+    "schema_version": "openreview-secret-check-v0.1",
+    "ok": true,
+    "recommendation": "run_openreview_pipeline_gate",
+    "cookie": {
+      "set": true,
+      "source": "OPENREVIEW_COOKIE_FILE",
+      "format": "raw_header",
+      "path": "data\\secrets\\openreview.cookie",
+      "cookie_count": 6,
+      "cookie_names": [
+        "_ga",
+        "GCILB",
+        "openreview.refreshToken",
+        "openreview.accessToken",
+        "openreview.user",
+        "_ga_GTB25PBMVL"
+      ],
+      "byte_length": 2217,
+      "diagnostics": {
+        "has_openreview_login_cookie": true,
+        "has_clearance_cookie": false,
+        "expected_login_cookie_names": [
+          "openreview.accessToken",
+          "openreview.sid",
+          "openreview_session",
+          "openreview_token"
+        ],
+        "expected_clearance_cookie_names": [
+          "cf_clearance",
+          "openreview.clearanceToken"
+        ],
+        "warnings": [
+          "missing_cf_clearance_cookie"
+        ]
+      }
+    },
+    "token": {
+      "set": false,
+      "source": "",
+      "byte_length": 0
+    }
+  },
+  "auth": {
+    "schema_version": "openreview-auth-check-v0.1",
+    "checked_at": "2026-07-08T19:04:23+00:00",
+    "ok": true,
+    "status": "ok",
+    "recommendation": "run_inventory",
+    "invitation": "ICLR.cc/2025/Conference/-/Submission",
+    "sample_limit": 1,
+    "environment": {
+      "cookie_set": true,
+      "token_set": false,
+      "user_agent": "SecondOpinion-MVP/0.1",
+      "api_base": "https://api2.openreview.net"
+    },
+    "api_note_count": 1
+  },
+  "inventory_summary": {
+    "venue_count": 12,
+    "status_counts": {
+      "excluded_no_public_reviews": 3,
+      "no_public_reviews": 3,
+      "no_sample_notes": 1,
+      "open_reviews_available": 5
+    },
+    "ready_to_pull_and_score": [
+      "ICLR",
+      "ICML",
+      "NEURIPS",
+      "COLM",
+      "MIDL"
+    ],
+    "needs_openreview_auth": [],
+    "needs_manual_inspection": [
+      "AISTATS"
+    ],
+    "skipped_not_open_review": [
+      "JMLR",
+      "JAIR",
+      "MLJ"
+    ]
+  },
+  "plan_summary": {
+    "venue_count": 12,
+    "readiness_counts": {
+      "ready": 5,
+      "needs_manual_inspection": 4,
+      "excluded_not_scored": 3
+    },
+    "ready": [
+      "ICLR",
+      "ICML",
+      "NEURIPS",
+      "COLM",
+      "MIDL"
+    ],
+    "blocked_openreview_auth": [],
+    "manual_year_filter_required": [],
+    "needs_manual_inspection": [
+      "TMLR",
+      "AISTATS",
+      "UAI",
+      "CORL"
+    ],
+    "excluded_not_scored": [
+      "JMLR",
+      "JAIR",
+      "MLJ"
+    ]
+  },
+  "runner_status_counts": {
+    "skipped_existing": 22,
+    "dry_run": 13,
+    "skipped": 12,
+    "blocked_missing_input": 5
+  },
+  "scope_matrix_summary": {
+    "venue_count": 12,
+    "execution_state_counts": {
+      "excluded": 3,
+      "needs_manual_inspection": 4,
+      "ready_to_pull": 5
+    },
+    "scope_decision_counts": {
+      "exclude_no_public_reviews": 3,
+      "probe_then_score_if_public": 3,
+      "score_public_reviews": 6
+    },
+    "target_or_probe": [
+      "ICLR",
+      "ICML",
+      "NEURIPS",
+      "TMLR",
+      "COLM",
+      "AISTATS",
+      "UAI",
+      "CORL",
+      "MIDL"
+    ],
+    "excluded": [
+      "JMLR",
+      "JAIR",
+      "MLJ"
+    ],
+    "ready_to_pull": [
+      "ICLR",
+      "ICML",
+      "NEURIPS",
+      "COLM",
+      "MIDL"
+    ],
+    "blocked_openreview_auth": [],
+    "needs_inventory_probe": []
+  },
+  "scope_audit_status": "passed",
+  "scope_audit_errors": [],
+  "scope_audit_warnings": [],
+  "max_submit_cost_usd": 25.0,
+  "pull_limit": 50,
+  "ran_inventory": true,
+  "ran_runner_dry_run": true
+}

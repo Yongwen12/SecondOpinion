@@ -1,0 +1,51 @@
+{
+  "schema_version": "openreview-probe-invitation-v0.1",
+  "created_at": "2026-07-08T18:38:17+00:00",
+  "venue_id": "COLM",
+  "invitation": "colmweb.org/COLM/2025/Conference/-/Submission",
+  "sample_limit": 20,
+  "details": "replies",
+  "status": "success",
+  "recommendation": "candidate_has_public_reviews",
+  "attempt": {
+    "invitation": "colmweb.org/COLM/2025/Conference/-/Submission",
+    "probe_status": "success",
+    "api_note_count": 20
+  },
+  "sample_stats": {
+    "paper_count": 20,
+    "reply_count": 344,
+    "review_count": 75,
+    "papers_with_reviews": 20,
+    "review_coverage_rate": 1.0,
+    "mean_reviews_per_paper": 3.75,
+    "papers_with_decisions": 20,
+    "decision_coverage_rate": 1.0,
+    "papers_with_ratings": 20,
+    "rating_coverage_rate": 1.0,
+    "papers_with_confidence": 20,
+    "confidence_coverage_rate": 1.0
+  },
+  "review_invitation_counts": {
+    "colmweb.org/COLM/2025/Conference/Submission1766/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 3,
+    "colmweb.org/COLM/2025/Conference/Submission1770/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 4,
+    "colmweb.org/COLM/2025/Conference/Submission1781/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 4,
+    "colmweb.org/COLM/2025/Conference/Submission1788/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 4,
+    "colmweb.org/COLM/2025/Conference/Submission1790/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 4,
+    "colmweb.org/COLM/2025/Conference/Submission1813/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 3,
+    "colmweb.org/COLM/2025/Conference/Submission1825/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 4,
+    "colmweb.org/COLM/2025/Conference/Submission1833/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 3,
+    "colmweb.org/COLM/2025/Conference/Submission1838/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 3,
+    "colmweb.org/COLM/2025/Conference/Submission1841/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 4,
+    "colmweb.org/COLM/2025/Conference/Submission1847/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 5,
+    "colmweb.org/COLM/2025/Conference/Submission1853/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 3,
+    "colmweb.org/COLM/2025/Conference/Submission1884/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 4,
+    "colmweb.org/COLM/2025/Conference/Submission1888/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 3,
+    "colmweb.org/COLM/2025/Conference/Submission1893/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 4,
+    "colmweb.org/COLM/2025/Conference/Submission1903/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 4,
+    "colmweb.org/COLM/2025/Conference/Submission1912/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 4,
+    "colmweb.org/COLM/2025/Conference/Submission1939/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 4,
+    "colmweb.org/COLM/2025/Conference/Submission1944/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 4,
+    "colmweb.org/COLM/2025/Conference/Submission1951/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 4
+  }
+}

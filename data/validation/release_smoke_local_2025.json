@@ -1,0 +1,76 @@
+{
+  "schema_version": "release-smoke-v0.1",
+  "created_at": "2026-07-09T15:43:12+00:00",
+  "status": "passed",
+  "frontend_url": "http://127.0.0.1:8766/index.html?api=http%3A%2F%2F127.0.0.1%3A8765",
+  "api_url": "http://127.0.0.1:8765",
+  "summary": {
+    "check_count": 9,
+    "failed_count": 0
+  },
+  "checks": [
+    {
+      "name": "frontend_status",
+      "ok": true,
+      "message": "Frontend returned HTTP 200",
+      "elapsed_ms": 125
+    },
+    {
+      "name": "frontend_coverage_copy",
+      "ok": true,
+      "message": "Frontend contains 2025 V1 coverage copy"
+    },
+    {
+      "name": "frontend_api_default",
+      "ok": true,
+      "message": "Frontend default API base is production API"
+    },
+    {
+      "name": "api_health",
+      "ok": true,
+      "message": "API health returned HTTP 200",
+      "elapsed_ms": 12
+    },
+    {
+      "name": "api_home_static",
+      "ok": true,
+      "message": "Home returned HTTP 200 source=static_home_2025",
+      "elapsed_ms": 6
+    },
+    {
+      "name": "api_home_stats",
+      "ok": true,
+      "message": "Home stats match 2025 V1 release counts",
+      "stats": {
+        "paper_count": 26749,
+        "review_count": 128723,
+        "scored_review_count": 99671,
+        "audited_count": 99671
+      }
+    },
+    {
+      "name": "api_home_boards",
+      "ok": true,
+      "message": "Home leaderboards include publishable rows",
+      "board_counts": {
+        "overall": 20,
+        "toxic": 20,
+        "helpful": 20,
+        "red": 20,
+        "black": 20
+      }
+    },
+    {
+      "name": "api_global_search",
+      "ok": true,
+      "message": "Global search returned 1 items for 'CrossSpectra'",
+      "elapsed_ms": 219
+    },
+    {
+      "name": "api_scorecard",
+      "ok": true,
+      "message": "Scorecard Ni4jNyroJZ returned 4 reviewers and 4 comments",
+      "elapsed_ms": 11
+    }
+  ]
+}

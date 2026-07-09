@@ -54,7 +54,7 @@ def import_normalized_dataset(session: Session, path: str | Path) -> dict[str, A
         paper.title = str(paper_item.get("title") or "Untitled submission")
         paper.abstract = str(paper_item.get("abstract") or "")
         paper.decision = str(paper_item.get("decision") or "")
-        paper.pdf_url = str(paper_item.get("pdf_url") or "")
+        paper.pdf_url = ""
         paper.source_json = compact_paper_source(paper_item)
         paper_count += 1
         for index, review_item in enumerate(paper_item.get("reviews") or [], start=1):
@@ -95,7 +95,6 @@ def import_normalized_dataset(session: Session, path: str | Path) -> dict[str, A
 def compact_paper_source(paper: dict[str, Any]) -> dict[str, Any]:
     return {
         "authors_anonymized": paper.get("authors_anonymized"),
-        "rebuttals": paper.get("rebuttals", []),
         "decisions": paper.get("decisions", []),
     }
 

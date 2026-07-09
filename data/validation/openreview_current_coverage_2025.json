@@ -1,0 +1,194 @@
+{
+  "schema_version": "openreview-current-coverage-v0.1",
+  "created_at": "2026-07-08T19:07:42+00:00",
+  "summary": {
+    "venue_count": 12,
+    "scored_venues": [
+      "ICLR",
+      "ICML",
+      "NEURIPS",
+      "TMLR",
+      "COLM",
+      "MIDL"
+    ],
+    "excluded_venues": [
+      "AISTATS",
+      "UAI",
+      "CORL",
+      "JMLR",
+      "JAIR",
+      "MLJ"
+    ],
+    "not_scored_venues": [],
+    "total_papers_2025": 26749,
+    "total_reviews_2025": 128723,
+    "total_scored_reviews_2025": 99671
+  },
+  "venues": [
+    {
+      "venue_id": "ICLR",
+      "category": "top_conference",
+      "scope_decision": "score_public_reviews",
+      "review_policy": "fully_open_public_reviews",
+      "status": "scored",
+      "paper_count_2025": 11672,
+      "review_count_2025": 46748,
+      "scored_review_count_2025": 46748,
+      "source_notes": [
+        "Spec target: full 2025 ICLR public OpenReview corpus.",
+        "ICLR is treated as fully open public review scope; API probe confirms concrete review availability once OpenReview auth/challenge is satisfied."
+      ]
+    },
+    {
+      "venue_id": "ICML",
+      "category": "top_conference",
+      "scope_decision": "score_public_reviews",
+      "review_policy": "partially_open_public_reviews",
+      "status": "scored",
+      "paper_count_2025": 3422,
+      "review_count_2025": 13451,
+      "scored_review_count_2025": 13102,
+      "source_notes": [
+        "Spec target: public ICML 2025 reviews, accepted plus public opt-in rejected papers where visible.",
+        "ICML is treated as partial public review scope; API probe determines exact public coverage after OpenReview auth/challenge is satisfied."
+      ]
+    },
+    {
+      "venue_id": "NEURIPS",
+      "category": "top_conference",
+      "scope_decision": "score_public_reviews",
+      "review_policy": "partially_open_public_reviews",
+      "status": "scored",
+      "paper_count_2025": 5540,
+      "review_count_2025": 22751,
+      "scored_review_count_2025": 22369,
+      "source_notes": [
+        "Spec target: public NeurIPS 2025 reviews, accepted plus public opt-in rejected papers where visible.",
+        "NeurIPS is treated as partial public review scope; API probe determines exact public coverage after OpenReview auth/challenge is satisfied."
+      ]
+    },
+    {
+      "venue_id": "TMLR",
+      "category": "top_journal",
+      "scope_decision": "score_public_reviews",
+      "review_policy": "open_public_reviews",
+      "status": "scored",
+      "paper_count_2025": 5588,
+      "review_count_2025": 43830,
+      "scored_review_count_2025": 15526,
+      "source_notes": [
+        "Rolling OpenReview journal: pull all public submissions, then filter by 2025 decision/activity.",
+        "Second-round probe confirms public replies exist on older/decided submissions, but latest under-review submissions have no public replies.",
+        "TMLR needs a rolling extractor that filters decided/activity-2025 submissions and reads paper-level Official_Comment threads."
+      ]
+    },
+    {
+      "venue_id": "COLM",
+      "category": "top_conference",
+      "scope_decision": "score_public_reviews",
+      "review_policy": "open_public_reviews",
+      "status": "scored",
+      "paper_count_2025": 418,
+      "review_count_2025": 1586,
+      "scored_review_count_2025": 1569,
+      "source_notes": [
+        "Probe on 2026-07-08 found public official reviews on colmweb.org/COLM/2025/Conference/-/Submission: 20/20 sampled papers, 75 reviews."
+      ]
+    },
+    {
+      "venue_id": "AISTATS",
+      "category": "top_conference",
+      "scope_decision": "exclude_no_public_reviews",
+      "review_policy": "verify_public_review_coverage",
+      "status": "excluded",
+      "paper_count_2025": 0,
+      "review_count_2025": 0,
+      "scored_review_count_2025": 0,
+      "source_notes": [
+        "Recheck on 2026-07-08: AISTATS.cc Submission/Post_Submission returned 0 papers; aistats.org/AISTATS Submission/Post_Submission each sampled 50 papers with 0 replies and 0 official reviews. Mark excluded until public official reviews become visible."
+      ]
+    },
+    {
+      "venue_id": "UAI",
+      "category": "top_conference",
+      "scope_decision": "exclude_no_public_reviews",
+      "review_policy": "verify_public_review_coverage",
+      "status": "excluded",
+      "paper_count_2025": 0,
+      "review_count_2025": 0,
+      "scored_review_count_2025": 0,
+      "source_notes": [
+        "Recheck on 2026-07-08: auai.org/UAI/2025/Conference/-/Submission sampled 50 papers with 0 public official reviews. Mark excluded until public official reviews become visible."
+      ]
+    },
+    {
+      "venue_id": "CORL",
+      "category": "top_conference",
+      "scope_decision": "exclude_no_public_reviews",
+      "review_policy": "verify_public_review_coverage",
+      "status": "excluded",
+      "paper_count_2025": 0,
+      "review_count_2025": 0,
+      "scored_review_count_2025": 0,
+      "source_notes": [
+        "Recheck on 2026-07-08: robot-learning.org/CoRL/2025/Conference/-/Submission sampled 50 papers and 50 decision replies with 0 public official reviews. Mark excluded until public official reviews become visible."
+      ]
+    },
+    {
+      "venue_id": "MIDL",
+      "category": "top_domain_conference",
+      "scope_decision": "score_public_reviews",
+      "review_policy": "open_public_reviews",
+      "status": "scored",
+      "paper_count_2025": 109,
+      "review_count_2025": 357,
+      "scored_review_count_2025": 357,
+      "source_notes": [
+        "Second-round probe found public reviews on MIDL.io/2025/Conference/-/Post_Submission.",
+        "Sample of 50 submissions returned 163 public reviews with 100% sample coverage."
+      ]
+    },
+    {
+      "venue_id": "JMLR",
+      "category": "top_journal",
+      "scope_decision": "exclude_no_public_reviews",
+      "review_policy": "not_openreview_public_reviews",
+      "status": "excluded",
+      "paper_count_2025": 0,
+      "review_count_2025": 0,
+      "scored_review_count_2025": 0,
+      "source_notes": [
+        "Top ML journal tracked for scope control; no public OpenReview official-review corpus is expected for 2025 scoring."
+      ]
+    },
+    {
+      "venue_id": "JAIR",
+      "category": "top_journal",
+      "scope_decision": "exclude_no_public_reviews",
+      "review_policy": "not_openreview_public_reviews",
+      "status": "excluded",
+      "paper_count_2025": 0,
+      "review_count_2025": 0,
+      "scored_review_count_2025": 0,
+      "source_notes": [
+        "Top AI journal tracked for scope control; no public OpenReview official-review corpus is expected for 2025 scoring."
+      ]
+    },
+    {
+      "venue_id": "MLJ",
+      "category": "top_journal",
+      "scope_decision": "exclude_no_public_reviews",
+      "review_policy": "not_openreview_public_reviews",
+      "status": "excluded",
+      "paper_count_2025": 0,
+      "review_count_2025": 0,
+      "scored_review_count_2025": 0,
+      "source_notes": [
+        "Top ML journal tracked for scope control; no public OpenReview official-review corpus is expected for 2025 scoring."
+      ]
+    }
+  ],
+  "notes": [
+    "Authoritative for current local 2025 OpenReview ingestion status. TMLR is scored via rolling decision/activity extractor, not invitation sample probe. Excluded venues have no public official-review evidence in current probes or are not OpenReview-public journals."
+  ]
+}

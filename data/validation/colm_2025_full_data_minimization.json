@@ -1,0 +1,80 @@
+{
+  "schema_version": "openreview-data-minimization-audit-v0.1",
+  "created_at": "2026-07-08T18:55:35+00:00",
+  "status": "passed",
+  "policy": {
+    "normalized_allowed_core": "title, abstract, decision metadata, official review fields, ratings/confidence, and timestamps only; no PDF pointer/body and no author response/rebuttal text",
+    "ai_scoring_allowed_core": "title, abstract, rating/confidence, and compacted public review text only",
+    "forbidden_normalized_keys": [
+      "body",
+      "body_text",
+      "full_text",
+      "paper_text",
+      "paragraphs",
+      "pdf_text",
+      "pdf_url",
+      "rebuttals",
+      "sections"
+    ],
+    "forbidden_batch_markers": [
+      "pdf_url",
+      "full_text",
+      "paper_text",
+      "pdf_text",
+      "body_text"
+    ],
+    "allowed_review_text_links": [
+      "openreview.net/pdf",
+      "arxiv.org/pdf"
+    ]
+  },
+  "summary": {
+    "normalized_file_count": 1,
+    "batch_file_count": 1,
+    "normalized_failed_count": 0,
+    "batch_failed_count": 0,
+    "total_papers_seen": 418,
+    "total_reviews_seen": 1586,
+    "batch_request_count": 1569,
+    "database_checked": true,
+    "database_status": "ok"
+  },
+  "normalized_files": [
+    {
+      "path": "data\\normalized\\colm_2025_full.json",
+      "paper_count": 418,
+      "review_count": 1586,
+      "paper_extra_keys": [],
+      "review_extra_keys": [],
+      "forbidden_paths": [],
+      "forbidden_path_count": 0,
+      "pdf_url_pointer_count": 0,
+      "status": "ok"
+    }
+  ],
+  "batch_files": [
+    {
+      "path": "data\\batch\\colm_2025_full_batch.jsonl",
+      "request_count": 1569,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    }
+  ],
+  "database": {
+    "paper_count": 26749,
+    "review_count": 128723,
+    "pdf_url_nonempty_count": 0,
+    "paper_source_forbidden_count": 0,
+    "review_source_forbidden_count": 0,
+    "paper_source_keys": {
+      "authors_anonymized": 26749,
+      "decisions": 26749
+    },
+    "review_source_keys": {
+      "raw_invitation": 128723,
+      "snapshot_time": 128723
+    },
+    "status": "ok"
+  },
+  "errors": []
+}

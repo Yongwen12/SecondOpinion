@@ -1,0 +1,298 @@
+{
+  "schema_version": "openreview-probe-results-v0.1",
+  "created_at": "2026-07-08T19:06:20+00:00",
+  "summary": {
+    "probe_result_count": 15,
+    "venue_count": 8,
+    "status_counts": {
+      "no_public_reviews": 5,
+      "selected_public_reviews": 3
+    },
+    "selected_for_scoring": [
+      "ICLR",
+      "ICML",
+      "NEURIPS"
+    ],
+    "blocked_auth": [],
+    "missing_results": [],
+    "no_public_reviews": [
+      "AISTATS",
+      "COLM",
+      "CORL",
+      "TMLR",
+      "UAI"
+    ],
+    "needs_larger_probe": []
+  },
+  "venues": [
+    {
+      "venue_id": "AISTATS",
+      "status": "no_public_reviews",
+      "recommendation": "skip_or_inspect_larger_sample",
+      "selected_invitation": "",
+      "selected_probe_path": "",
+      "min_review_coverage": 0.5,
+      "selected_review_coverage_rate": 0.0,
+      "queued_candidate_count": 2,
+      "probe_result_count": 6,
+      "candidates": [
+        {
+          "path": "data\\validation\\openreview_probe_aistats_recheck_aistatscc_post_submission_50.json",
+          "venue_id": "AISTATS",
+          "invitation": "AISTATS.cc/2025/Conference/-/Post_Submission",
+          "status": "success",
+          "recommendation": "candidate_has_no_public_reviews_in_sample",
+          "paper_count": 0,
+          "review_count": 0,
+          "review_coverage_rate": 0.0,
+          "mean_reviews_per_paper": 0.0
+        },
+        {
+          "path": "data\\validation\\openreview_probe_aistats_c1_50.json",
+          "venue_id": "AISTATS",
+          "invitation": "AISTATS.cc/2025/Conference/-/Submission",
+          "status": "success",
+          "recommendation": "candidate_has_no_public_reviews_in_sample",
+          "paper_count": 0,
+          "review_count": 0,
+          "review_coverage_rate": 0.0,
+          "mean_reviews_per_paper": 0.0
+        },
+        {
+          "path": "data\\validation\\openreview_probe_aistats_recheck_aistatscc_submission_50.json",
+          "venue_id": "AISTATS",
+          "invitation": "AISTATS.cc/2025/Conference/-/Submission",
+          "status": "success",
+          "recommendation": "candidate_has_no_public_reviews_in_sample",
+          "paper_count": 0,
+          "review_count": 0,
+          "review_coverage_rate": 0.0,
+          "mean_reviews_per_paper": 0.0
+        },
+        {
+          "path": "data\\validation\\openreview_probe_aistats_recheck_aistatsorg_post_submission_50.json",
+          "venue_id": "AISTATS",
+          "invitation": "aistats.org/AISTATS/2025/Conference/-/Post_Submission",
+          "status": "success",
+          "recommendation": "candidate_has_no_public_reviews_in_sample",
+          "paper_count": 50,
+          "review_count": 0,
+          "review_coverage_rate": 0.0,
+          "mean_reviews_per_paper": 0.0
+        },
+        {
+          "path": "data\\validation\\openreview_probe_aistats_c2_50.json",
+          "venue_id": "AISTATS",
+          "invitation": "aistats.org/AISTATS/2025/Conference/-/Submission",
+          "status": "success",
+          "recommendation": "candidate_has_no_public_reviews_in_sample",
+          "paper_count": 50,
+          "review_count": 0,
+          "review_coverage_rate": 0.0,
+          "mean_reviews_per_paper": 0.0
+        },
+        {
+          "path": "data\\validation\\openreview_probe_aistats_recheck_aistatsorg_submission_50.json",
+          "venue_id": "AISTATS",
+          "invitation": "aistats.org/AISTATS/2025/Conference/-/Submission",
+          "status": "success",
+          "recommendation": "candidate_has_no_public_reviews_in_sample",
+          "paper_count": 50,
+          "review_count": 0,
+          "review_coverage_rate": 0.0,
+          "mean_reviews_per_paper": 0.0
+        }
+      ]
+    },
+    {
+      "venue_id": "COLM",
+      "status": "no_public_reviews",
+      "recommendation": "skip_or_inspect_larger_sample",
+      "selected_invitation": "",
+      "selected_probe_path": "",
+      "min_review_coverage": 0.5,
+      "selected_review_coverage_rate": 0.0,
+      "queued_candidate_count": 1,
+      "probe_result_count": 1,
+      "candidates": [
+        {
+          "path": "data\\validation\\openreview_probe_colm_c1_50.json",
+          "venue_id": "COLM",
+          "invitation": "colmweb.org/2025/Conference/-/Submission",
+          "status": "success",
+          "recommendation": "candidate_has_no_public_reviews_in_sample",
+          "paper_count": 0,
+          "review_count": 0,
+          "review_coverage_rate": 0.0,
+          "mean_reviews_per_paper": 0.0
+        }
+      ]
+    },
+    {
+      "venue_id": "CORL",
+      "status": "no_public_reviews",
+      "recommendation": "skip_or_inspect_larger_sample",
+      "selected_invitation": "",
+      "selected_probe_path": "",
+      "min_review_coverage": 0.5,
+      "selected_review_coverage_rate": 0.0,
+      "queued_candidate_count": 2,
+      "probe_result_count": 2,
+      "candidates": [
+        {
+          "path": "data\\validation\\openreview_probe_corl_c2_50.json",
+          "venue_id": "CORL",
+          "invitation": "CoRL.cc/2025/Conference/-/Submission",
+          "status": "success",
+          "recommendation": "candidate_has_no_public_reviews_in_sample",
+          "paper_count": 0,
+          "review_count": 0,
+          "review_coverage_rate": 0.0,
+          "mean_reviews_per_paper": 0.0
+        },
+        {
+          "path": "data\\validation\\openreview_probe_corl_c1_50.json",
+          "venue_id": "CORL",
+          "invitation": "robot-learning.org/CoRL/2025/Conference/-/Submission",
+          "status": "success",
+          "recommendation": "candidate_has_no_public_reviews_in_sample",
+          "paper_count": 50,
+          "review_count": 0,
+          "review_coverage_rate": 0.0,
+          "mean_reviews_per_paper": 0.0
+        }
+      ]
+    },
+    {
+      "venue_id": "ICLR",
+      "status": "selected_public_reviews",
+      "recommendation": "use_selected_invitation_for_pull_and_score",
+      "selected_invitation": "ICLR.cc/2025/Conference/-/Submission",
+      "selected_probe_path": "data\\validation\\openreview_probe_iclr_c1_50.json",
+      "min_review_coverage": 0.5,
+      "selected_review_coverage_rate": 0.94,
+      "queued_candidate_count": 1,
+      "probe_result_count": 1,
+      "candidates": [
+        {
+          "path": "data\\validation\\openreview_probe_iclr_c1_50.json",
+          "venue_id": "ICLR",
+          "invitation": "ICLR.cc/2025/Conference/-/Submission",
+          "status": "success",
+          "recommendation": "candidate_has_public_reviews",
+          "paper_count": 50,
+          "review_count": 188,
+          "review_coverage_rate": 0.94,
+          "mean_reviews_per_paper": 3.76
+        }
+      ]
+    },
+    {
+      "venue_id": "ICML",
+      "status": "selected_public_reviews",
+      "recommendation": "use_selected_invitation_for_pull_and_score",
+      "selected_invitation": "ICML.cc/2025/Conference/-/Submission",
+      "selected_probe_path": "data\\validation\\openreview_probe_icml_c1_50.json",
+      "min_review_coverage": 0.5,
+      "selected_review_coverage_rate": 1.0,
+      "queued_candidate_count": 1,
+      "probe_result_count": 1,
+      "candidates": [
+        {
+          "path": "data\\validation\\openreview_probe_icml_c1_50.json",
+          "venue_id": "ICML",
+          "invitation": "ICML.cc/2025/Conference/-/Submission",
+          "status": "success",
+          "recommendation": "candidate_has_public_reviews",
+          "paper_count": 50,
+          "review_count": 540,
+          "review_coverage_rate": 1.0,
+          "mean_reviews_per_paper": 10.8
+        }
+      ]
+    },
+    {
+      "venue_id": "NEURIPS",
+      "status": "selected_public_reviews",
+      "recommendation": "use_selected_invitation_for_pull_and_score",
+      "selected_invitation": "NeurIPS.cc/2025/Conference/-/Submission",
+      "selected_probe_path": "data\\validation\\openreview_probe_neurips_c1_50.json",
+      "min_review_coverage": 0.5,
+      "selected_review_coverage_rate": 1.0,
+      "queued_candidate_count": 1,
+      "probe_result_count": 1,
+      "candidates": [
+        {
+          "path": "data\\validation\\openreview_probe_neurips_c1_50.json",
+          "venue_id": "NEURIPS",
+          "invitation": "NeurIPS.cc/2025/Conference/-/Submission",
+          "status": "success",
+          "recommendation": "candidate_has_public_reviews",
+          "paper_count": 50,
+          "review_count": 584,
+          "review_coverage_rate": 1.0,
+          "mean_reviews_per_paper": 11.68
+        }
+      ]
+    },
+    {
+      "venue_id": "TMLR",
+      "status": "no_public_reviews",
+      "recommendation": "skip_or_inspect_larger_sample",
+      "selected_invitation": "",
+      "selected_probe_path": "",
+      "min_review_coverage": 0.5,
+      "selected_review_coverage_rate": 0.0,
+      "queued_candidate_count": 1,
+      "probe_result_count": 1,
+      "candidates": [
+        {
+          "path": "data\\validation\\openreview_probe_tmlr_c1_50.json",
+          "venue_id": "TMLR",
+          "invitation": "TMLR/-/Submission",
+          "status": "success",
+          "recommendation": "candidate_has_no_public_reviews_in_sample",
+          "paper_count": 50,
+          "review_count": 0,
+          "review_coverage_rate": 0.0,
+          "mean_reviews_per_paper": 0.0
+        }
+      ]
+    },
+    {
+      "venue_id": "UAI",
+      "status": "no_public_reviews",
+      "recommendation": "skip_or_inspect_larger_sample",
+      "selected_invitation": "",
+      "selected_probe_path": "",
+      "min_review_coverage": 0.5,
+      "selected_review_coverage_rate": 0.0,
+      "queued_candidate_count": 2,
+      "probe_result_count": 2,
+      "candidates": [
+        {
+          "path": "data\\validation\\openreview_probe_uai_c2_50.json",
+          "venue_id": "UAI",
+          "invitation": "UAI.cc/2025/Conference/-/Submission",
+          "status": "success",
+          "recommendation": "candidate_has_no_public_reviews_in_sample",
+          "paper_count": 0,
+          "review_count": 0,
+          "review_coverage_rate": 0.0,
+          "mean_reviews_per_paper": 0.0
+        },
+        {
+          "path": "data\\validation\\openreview_probe_uai_c1_50.json",
+          "venue_id": "UAI",
+          "invitation": "auai.org/UAI/2025/Conference/-/Submission",
+          "status": "success",
+          "recommendation": "candidate_has_no_public_reviews_in_sample",
+          "paper_count": 50,
+          "review_count": 0,
+          "review_coverage_rate": 0.0,
+          "mean_reviews_per_paper": 0.0
+        }
+      ]
+    }
+  ]
+}

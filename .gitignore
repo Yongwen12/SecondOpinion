@@ -38,4 +38,22 @@ reports/annotations/
 
 .DS_Store
 Thumbs.db
-
+data/test_tmp/
+data/secrets/
+data/archive/
+# Local OpenReview / scoring run artifacts
+data/batch/
+data/secondopinion.db
+data/validation/openreview_auth*.json
+data/validation/openreview_cookie*.json
+data/validation/openreview_secret_check.json
+data/validation/openreview_inventory_iclr_*_1000.json
+reports/validation/openreview_auth*.md
+reports/validation/openreview_cookie*.md
+.pytest_basetemp_colm/
+pytest_local_tmp_*/
+tmp_pytest/
+tmp_test_direct/
+tmp_test_openreview_data_minimization_audit/
+tmp_verify_minimization/
+tmp_verify_minimization_direct/

@@ -1,0 +1,539 @@
+{
+  "schema_version": "openreview-resolved-inventory-v0.1",
+  "created_at": "2026-07-08T19:06:00+00:00",
+  "source_probe_results_created_at": "2026-07-07T10:34:33+00:00",
+  "summary": {
+    "venue_count": 12,
+    "status_counts": {
+      "excluded_no_public_reviews": 6,
+      "missing_probe_results": 1,
+      "no_public_reviews": 2,
+      "open_reviews_available": 3
+    },
+    "ready_to_pull_and_score": [
+      "ICLR",
+      "ICML",
+      "NEURIPS"
+    ],
+    "needs_probe_results": [
+      "MIDL"
+    ],
+    "needs_larger_probe": [],
+    "blocked_openreview_auth": [],
+    "skipped_not_open_review": [
+      "AISTATS",
+      "UAI",
+      "CORL",
+      "JMLR",
+      "JAIR",
+      "MLJ"
+    ]
+  },
+  "venues": [
+    {
+      "venue_id": "ICLR",
+      "name": "International Conference on Learning Representations",
+      "year": 2025,
+      "category": "top_conference",
+      "priority": 1,
+      "rolling_venue": false,
+      "year_filter": "",
+      "scope": "all_submissions",
+      "review_policy": "fully_open_public_reviews",
+      "source_notes": [
+        "Spec target: full 2025 ICLR public OpenReview corpus.",
+        "ICLR is treated as fully open public review scope; API probe confirms concrete review availability once OpenReview auth/challenge is satisfied."
+      ],
+      "invitation_candidates": [
+        "ICLR.cc/2025/Conference/-/Submission"
+      ],
+      "review_invitation_counts": {},
+      "status": "open_reviews_available",
+      "recommendation": "pull_and_score",
+      "selected_invitation": "ICLR.cc/2025/Conference/-/Submission",
+      "attempts": [
+        {
+          "invitation": "ICLR.cc/2025/Conference/-/Submission",
+          "probe_status": "success",
+          "api_note_count": 50
+        }
+      ],
+      "sample_stats": {
+        "paper_count": 50,
+        "reply_count": 0,
+        "review_count": 188,
+        "papers_with_reviews": 47,
+        "review_coverage_rate": 0.94,
+        "mean_reviews_per_paper": 3.76,
+        "papers_with_decisions": 0,
+        "decision_coverage_rate": 0,
+        "papers_with_ratings": 0,
+        "rating_coverage_rate": 0,
+        "papers_with_confidence": 0,
+        "confidence_coverage_rate": 0
+      },
+      "notes": [
+        "Spec target: full 2025 ICLR public OpenReview corpus.",
+        "ICLR is treated as fully open public review scope; API probe confirms concrete review availability once OpenReview auth/challenge is satisfied.",
+        "Resolved from candidate-level probe results."
+      ]
+    },
+    {
+      "venue_id": "ICML",
+      "name": "International Conference on Machine Learning",
+      "year": 2025,
+      "category": "top_conference",
+      "priority": 1,
+      "rolling_venue": false,
+      "year_filter": "",
+      "scope": "accepted_plus_public_opt_in",
+      "review_policy": "partially_open_public_reviews",
+      "source_notes": [
+        "Spec target: public ICML 2025 reviews, accepted plus public opt-in rejected papers where visible.",
+        "ICML is treated as partial public review scope; API probe determines exact public coverage after OpenReview auth/challenge is satisfied."
+      ],
+      "invitation_candidates": [
+        "ICML.cc/2025/Conference/-/Submission"
+      ],
+      "review_invitation_counts": {},
+      "status": "open_reviews_available",
+      "recommendation": "pull_and_score",
+      "selected_invitation": "ICML.cc/2025/Conference/-/Submission",
+      "attempts": [
+        {
+          "invitation": "ICML.cc/2025/Conference/-/Submission",
+          "probe_status": "success",
+          "api_note_count": 50
+        }
+      ],
+      "sample_stats": {
+        "paper_count": 50,
+        "reply_count": 0,
+        "review_count": 540,
+        "papers_with_reviews": 50,
+        "review_coverage_rate": 1.0,
+        "mean_reviews_per_paper": 10.8,
+        "papers_with_decisions": 0,
+        "decision_coverage_rate": 0,
+        "papers_with_ratings": 0,
+        "rating_coverage_rate": 0,
+        "papers_with_confidence": 0,
+        "confidence_coverage_rate": 0
+      },
+      "notes": [
+        "Spec target: public ICML 2025 reviews, accepted plus public opt-in rejected papers where visible.",
+        "ICML is treated as partial public review scope; API probe determines exact public coverage after OpenReview auth/challenge is satisfied.",
+        "Resolved from candidate-level probe results."
+      ]
+    },
+    {
+      "venue_id": "NEURIPS",
+      "name": "Neural Information Processing Systems",
+      "year": 2025,
+      "category": "top_conference",
+      "priority": 1,
+      "rolling_venue": false,
+      "year_filter": "",
+      "scope": "accepted_plus_public_opt_in",
+      "review_policy": "partially_open_public_reviews",
+      "source_notes": [
+        "Spec target: public NeurIPS 2025 reviews, accepted plus public opt-in rejected papers where visible.",
+        "NeurIPS is treated as partial public review scope; API probe determines exact public coverage after OpenReview auth/challenge is satisfied."
+      ],
+      "invitation_candidates": [
+        "NeurIPS.cc/2025/Conference/-/Submission"
+      ],
+      "review_invitation_counts": {},
+      "status": "open_reviews_available",
+      "recommendation": "pull_and_score",
+      "selected_invitation": "NeurIPS.cc/2025/Conference/-/Submission",
+      "attempts": [
+        {
+          "invitation": "NeurIPS.cc/2025/Conference/-/Submission",
+          "probe_status": "success",
+          "api_note_count": 50
+        }
+      ],
+      "sample_stats": {
+        "paper_count": 50,
+        "reply_count": 0,
+        "review_count": 584,
+        "papers_with_reviews": 50,
+        "review_coverage_rate": 1.0,
+        "mean_reviews_per_paper": 11.68,
+        "papers_with_decisions": 0,
+        "decision_coverage_rate": 0,
+        "papers_with_ratings": 0,
+        "rating_coverage_rate": 0,
+        "papers_with_confidence": 0,
+        "confidence_coverage_rate": 0
+      },
+      "notes": [
+        "Spec target: public NeurIPS 2025 reviews, accepted plus public opt-in rejected papers where visible.",
+        "NeurIPS is treated as partial public review scope; API probe determines exact public coverage after OpenReview auth/challenge is satisfied.",
+        "Resolved from candidate-level probe results."
+      ]
+    },
+    {
+      "venue_id": "TMLR",
+      "name": "Transactions on Machine Learning Research",
+      "year": 2025,
+      "category": "top_journal",
+      "priority": 1,
+      "rolling_venue": true,
+      "year_filter": "decision_or_activity_year",
+      "scope": "rolling_2025_decision_or_activity",
+      "review_policy": "open_public_reviews",
+      "source_notes": [
+        "Rolling OpenReview journal: pull all public submissions, then filter by 2025 decision/activity.",
+        "Second-round probe confirms public replies exist on older/decided submissions, but latest under-review submissions have no public replies.",
+        "TMLR needs a rolling extractor that filters decided/activity-2025 submissions and reads paper-level Official_Comment threads."
+      ],
+      "invitation_candidates": [
+        "TMLR/-/Submission"
+      ],
+      "review_invitation_counts": {},
+      "status": "no_public_reviews",
+      "recommendation": "skip_scoring",
+      "selected_invitation": "",
+      "attempts": [],
+      "sample_stats": {
+        "paper_count": 0,
+        "reply_count": 0,
+        "review_count": 0,
+        "papers_with_reviews": 0,
+        "review_coverage_rate": 0,
+        "mean_reviews_per_paper": 0,
+        "papers_with_decisions": 0,
+        "decision_coverage_rate": 0,
+        "papers_with_ratings": 0,
+        "rating_coverage_rate": 0,
+        "papers_with_confidence": 0,
+        "confidence_coverage_rate": 0
+      },
+      "notes": [
+        "Rolling OpenReview journal: pull all public submissions, then filter by 2025 decision/activity.",
+        "Second-round probe confirms public replies exist on older/decided submissions, but latest under-review submissions have no public replies.",
+        "TMLR needs a rolling extractor that filters decided/activity-2025 submissions and reads paper-level Official_Comment threads."
+      ]
+    },
+    {
+      "venue_id": "COLM",
+      "name": "Conference on Language Modeling",
+      "year": 2025,
+      "category": "top_conference",
+      "priority": 2,
+      "rolling_venue": false,
+      "year_filter": "",
+      "scope": "public_openreview_submissions",
+      "review_policy": "open_public_reviews",
+      "source_notes": [
+        "Probe on 2026-07-08 found public official reviews on colmweb.org/COLM/2025/Conference/-/Submission: 20/20 sampled papers, 75 reviews."
+      ],
+      "invitation_candidates": [
+        "colmweb.org/COLM/2025/Conference/-/Submission",
+        "colmweb.org/2025/Conference/-/Submission"
+      ],
+      "review_invitation_counts": {},
+      "status": "no_public_reviews",
+      "recommendation": "skip_scoring",
+      "selected_invitation": "",
+      "attempts": [],
+      "sample_stats": {
+        "paper_count": 0,
+        "reply_count": 0,
+        "review_count": 0,
+        "papers_with_reviews": 0,
+        "review_coverage_rate": 0,
+        "mean_reviews_per_paper": 0,
+        "papers_with_decisions": 0,
+        "decision_coverage_rate": 0,
+        "papers_with_ratings": 0,
+        "rating_coverage_rate": 0,
+        "papers_with_confidence": 0,
+        "confidence_coverage_rate": 0
+      },
+      "notes": [
+        "Probe on 2026-07-08 found public official reviews on colmweb.org/COLM/2025/Conference/-/Submission: 20/20 sampled papers, 75 reviews."
+      ]
+    },
+    {
+      "venue_id": "AISTATS",
+      "name": "International Conference on Artificial Intelligence and Statistics",
+      "year": 2025,
+      "category": "top_conference",
+      "priority": 2,
+      "rolling_venue": false,
+      "year_filter": "",
+      "scope": "public_openreview_submissions",
+      "review_policy": "verify_public_review_coverage",
+      "source_notes": [
+        "Recheck on 2026-07-08: AISTATS.cc Submission/Post_Submission returned 0 papers; aistats.org/AISTATS Submission/Post_Submission each sampled 50 papers with 0 replies and 0 official reviews. Mark excluded until public official reviews become visible."
+      ],
+      "invitation_candidates": [
+        "AISTATS.cc/2025/Conference/-/Submission",
+        "aistats.org/AISTATS/2025/Conference/-/Submission"
+      ],
+      "review_invitation_counts": {},
+      "status": "excluded_no_public_reviews",
+      "recommendation": "skip_no_public_reviews",
+      "selected_invitation": "",
+      "attempts": [],
+      "sample_stats": {
+        "paper_count": 0,
+        "reply_count": 0,
+        "review_count": 0,
+        "papers_with_reviews": 0,
+        "review_coverage_rate": 0,
+        "mean_reviews_per_paper": 0,
+        "papers_with_decisions": 0,
+        "decision_coverage_rate": 0,
+        "papers_with_ratings": 0,
+        "rating_coverage_rate": 0,
+        "papers_with_confidence": 0,
+        "confidence_coverage_rate": 0
+      },
+      "notes": [
+        "Recheck on 2026-07-08: AISTATS.cc Submission/Post_Submission returned 0 papers; aistats.org/AISTATS Submission/Post_Submission each sampled 50 papers with 0 replies and 0 official reviews. Mark excluded until public official reviews become visible.",
+        "Excluded from scoring queue: no public OpenReview review corpus is expected for this venue."
+      ]
+    },
+    {
+      "venue_id": "UAI",
+      "name": "Conference on Uncertainty in Artificial Intelligence",
+      "year": 2025,
+      "category": "top_conference",
+      "priority": 2,
+      "rolling_venue": false,
+      "year_filter": "",
+      "scope": "public_openreview_submissions",
+      "review_policy": "verify_public_review_coverage",
+      "source_notes": [
+        "Recheck on 2026-07-08: auai.org/UAI/2025/Conference/-/Submission sampled 50 papers with 0 public official reviews. Mark excluded until public official reviews become visible."
+      ],
+      "invitation_candidates": [
+        "auai.org/UAI/2025/Conference/-/Submission",
+        "UAI.cc/2025/Conference/-/Submission"
+      ],
+      "review_invitation_counts": {},
+      "status": "excluded_no_public_reviews",
+      "recommendation": "skip_no_public_reviews",
+      "selected_invitation": "",
+      "attempts": [],
+      "sample_stats": {
+        "paper_count": 0,
+        "reply_count": 0,
+        "review_count": 0,
+        "papers_with_reviews": 0,
+        "review_coverage_rate": 0,
+        "mean_reviews_per_paper": 0,
+        "papers_with_decisions": 0,
+        "decision_coverage_rate": 0,
+        "papers_with_ratings": 0,
+        "rating_coverage_rate": 0,
+        "papers_with_confidence": 0,
+        "confidence_coverage_rate": 0
+      },
+      "notes": [
+        "Recheck on 2026-07-08: auai.org/UAI/2025/Conference/-/Submission sampled 50 papers with 0 public official reviews. Mark excluded until public official reviews become visible.",
+        "Excluded from scoring queue: no public OpenReview review corpus is expected for this venue."
+      ]
+    },
+    {
+      "venue_id": "CORL",
+      "name": "Conference on Robot Learning",
+      "year": 2025,
+      "category": "top_conference",
+      "priority": 2,
+      "rolling_venue": false,
+      "year_filter": "",
+      "scope": "public_openreview_submissions",
+      "review_policy": "verify_public_review_coverage",
+      "source_notes": [
+        "Recheck on 2026-07-08: robot-learning.org/CoRL/2025/Conference/-/Submission sampled 50 papers and 50 decision replies with 0 public official reviews. Mark excluded until public official reviews become visible."
+      ],
+      "invitation_candidates": [
+        "robot-learning.org/CoRL/2025/Conference/-/Submission",
+        "CoRL.cc/2025/Conference/-/Submission"
+      ],
+      "review_invitation_counts": {},
+      "status": "excluded_no_public_reviews",
+      "recommendation": "skip_no_public_reviews",
+      "selected_invitation": "",
+      "attempts": [],
+      "sample_stats": {
+        "paper_count": 0,
+        "reply_count": 0,
+        "review_count": 0,
+        "papers_with_reviews": 0,
+        "review_coverage_rate": 0,
+        "mean_reviews_per_paper": 0,
+        "papers_with_decisions": 0,
+        "decision_coverage_rate": 0,
+        "papers_with_ratings": 0,
+        "rating_coverage_rate": 0,
+        "papers_with_confidence": 0,
+        "confidence_coverage_rate": 0
+      },
+      "notes": [
+        "Recheck on 2026-07-08: robot-learning.org/CoRL/2025/Conference/-/Submission sampled 50 papers and 50 decision replies with 0 public official reviews. Mark excluded until public official reviews become visible.",
+        "Excluded from scoring queue: no public OpenReview review corpus is expected for this venue."
+      ]
+    },
+    {
+      "venue_id": "MIDL",
+      "name": "Medical Imaging with Deep Learning",
+      "year": 2025,
+      "category": "top_domain_conference",
+      "priority": 2,
+      "rolling_venue": false,
+      "year_filter": "",
+      "scope": "public_openreview_submissions",
+      "review_policy": "open_public_reviews",
+      "source_notes": [
+        "Second-round probe found public reviews on MIDL.io/2025/Conference/-/Post_Submission.",
+        "Sample of 50 submissions returned 163 public reviews with 100% sample coverage."
+      ],
+      "invitation_candidates": [
+        "MIDL.io/2025/Conference/-/Post_Submission"
+      ],
+      "review_invitation_counts": {},
+      "status": "missing_probe_results",
+      "recommendation": "run_probe_queue_commands",
+      "selected_invitation": "",
+      "attempts": [],
+      "sample_stats": {
+        "paper_count": 0,
+        "reply_count": 0,
+        "review_count": 0,
+        "papers_with_reviews": 0,
+        "review_coverage_rate": 0,
+        "mean_reviews_per_paper": 0,
+        "papers_with_decisions": 0,
+        "decision_coverage_rate": 0,
+        "papers_with_ratings": 0,
+        "rating_coverage_rate": 0,
+        "papers_with_confidence": 0,
+        "confidence_coverage_rate": 0
+      },
+      "notes": [
+        "Second-round probe found public reviews on MIDL.io/2025/Conference/-/Post_Submission.",
+        "Sample of 50 submissions returned 163 public reviews with 100% sample coverage."
+      ]
+    },
+    {
+      "venue_id": "JMLR",
+      "name": "Journal of Machine Learning Research",
+      "year": 2025,
+      "category": "top_journal",
+      "priority": 3,
+      "rolling_venue": false,
+      "year_filter": "",
+      "scope": "excluded_no_public_openreview_reviews",
+      "review_policy": "not_openreview_public_reviews",
+      "source_notes": [
+        "Top ML journal tracked for scope control; no public OpenReview official-review corpus is expected for 2025 scoring."
+      ],
+      "invitation_candidates": [],
+      "review_invitation_counts": {},
+      "status": "excluded_no_public_reviews",
+      "recommendation": "skip_no_public_reviews",
+      "selected_invitation": "",
+      "attempts": [],
+      "sample_stats": {
+        "paper_count": 0,
+        "reply_count": 0,
+        "review_count": 0,
+        "papers_with_reviews": 0,
+        "review_coverage_rate": 0,
+        "mean_reviews_per_paper": 0,
+        "papers_with_decisions": 0,
+        "decision_coverage_rate": 0,
+        "papers_with_ratings": 0,
+        "rating_coverage_rate": 0,
+        "papers_with_confidence": 0,
+        "confidence_coverage_rate": 0
+      },
+      "notes": [
+        "Top ML journal tracked for scope control; no public OpenReview official-review corpus is expected for 2025 scoring.",
+        "Excluded from scoring queue: no public OpenReview review corpus is expected for this venue."
+      ]
+    },
+    {
+      "venue_id": "JAIR",
+      "name": "Journal of Artificial Intelligence Research",
+      "year": 2025,
+      "category": "top_journal",
+      "priority": 3,
+      "rolling_venue": false,
+      "year_filter": "",
+      "scope": "excluded_no_public_openreview_reviews",
+      "review_policy": "not_openreview_public_reviews",
+      "source_notes": [
+        "Top AI journal tracked for scope control; no public OpenReview official-review corpus is expected for 2025 scoring."
+      ],
+      "invitation_candidates": [],
+      "review_invitation_counts": {},
+      "status": "excluded_no_public_reviews",
+      "recommendation": "skip_no_public_reviews",
+      "selected_invitation": "",
+      "attempts": [],
+      "sample_stats": {
+        "paper_count": 0,
+        "reply_count": 0,
+        "review_count": 0,
+        "papers_with_reviews": 0,
+        "review_coverage_rate": 0,
+        "mean_reviews_per_paper": 0,
+        "papers_with_decisions": 0,
+        "decision_coverage_rate": 0,
+        "papers_with_ratings": 0,
+        "rating_coverage_rate": 0,
+        "papers_with_confidence": 0,
+        "confidence_coverage_rate": 0
+      },
+      "notes": [
+        "Top AI journal tracked for scope control; no public OpenReview official-review corpus is expected for 2025 scoring.",
+        "Excluded from scoring queue: no public OpenReview review corpus is expected for this venue."
+      ]
+    },
+    {
+      "venue_id": "MLJ",
+      "name": "Machine Learning",
+      "year": 2025,
+      "category": "top_journal",
+      "priority": 3,
+      "rolling_venue": false,
+      "year_filter": "",
+      "scope": "excluded_no_public_openreview_reviews",
+      "review_policy": "not_openreview_public_reviews",
+      "source_notes": [
+        "Top ML journal tracked for scope control; no public OpenReview official-review corpus is expected for 2025 scoring."
+      ],
+      "invitation_candidates": [],
+      "review_invitation_counts": {},
+      "status": "excluded_no_public_reviews",
+      "recommendation": "skip_no_public_reviews",
+      "selected_invitation": "",
+      "attempts": [],
+      "sample_stats": {
+        "paper_count": 0,
+        "reply_count": 0,
+        "review_count": 0,
+        "papers_with_reviews": 0,
+        "review_coverage_rate": 0,
+        "mean_reviews_per_paper": 0,
+        "papers_with_decisions": 0,
+        "decision_coverage_rate": 0,
+        "papers_with_ratings": 0,
+        "rating_coverage_rate": 0,
+        "papers_with_confidence": 0,
+        "confidence_coverage_rate": 0
+      },
+      "notes": [
+        "Top ML journal tracked for scope control; no public OpenReview official-review corpus is expected for 2025 scoring.",
+        "Excluded from scoring queue: no public OpenReview review corpus is expected for this venue."
+      ]
+    }
+  ]
+}

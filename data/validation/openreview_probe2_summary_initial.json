@@ -1,0 +1,55 @@
+{
+  "created_at": "2026-07-08T06:33:38.904008+00:00",
+  "items": [
+    {
+      "venue": "ACL",
+      "invitation": "aclweb.org/ACL/2025/Conference/-/ARR_Migrated_Submission",
+      "status": "success",
+      "recommendation": "candidate_has_no_public_reviews_in_sample",
+      "paper_count": 0,
+      "review_count": 0,
+      "coverage": 0,
+      "out": "data\\validation\\openreview_probe2_acl_aclweb_org_acl_2025_conference_arr_migrated_submission_50.json"
+    },
+    {
+      "venue": "ACL",
+      "invitation": "aclweb.org/ACL/2025/Conference/-/Post_Submission",
+      "status": "success",
+      "recommendation": "candidate_has_no_public_reviews_in_sample",
+      "paper_count": 0,
+      "review_count": 0,
+      "coverage": 0,
+      "out": "data\\validation\\openreview_probe2_acl_aclweb_org_acl_2025_conference_post_submission_50.json"
+    },
+    {
+      "venue": "EMNLP",
+      "invitation": "EMNLP/2025/Conference/-/Post_Submission",
+      "status": "success",
+      "recommendation": "candidate_has_no_public_reviews_in_sample",
+      "paper_count": 0,
+      "review_count": 0,
+      "coverage": 0,
+      "out": "data\\validation\\openreview_probe2_emnlp_emnlp_2025_conference_post_submission_50.json"
+    },
+    {
+      "venue": "AISTATS",
+      "invitation": "aistats.org/AISTATS/2025/Conference/-/Post_Submission",
+      "status": "success",
+      "recommendation": "candidate_has_no_public_reviews_in_sample",
+      "paper_count": 50,
+      "review_count": 0,
+      "coverage": 0.0,
+      "out": "data\\validation\\openreview_probe2_aistats_aistats_org_aistats_2025_conference_post_submission_50.json"
+    },
+    {
+      "venue": "AAAI_AI_ALIGNMENT",
+      "invitation": "AAAI.org/2025/AI_Alignment_Track/-/Post_Submission",
+      "status": "success",
+      "recommendation": "candidate_has_no_public_reviews_in_sample",
+      "paper_count": 0,
+      "review_count": 0,
+      "coverage": 0,
+      "out": "data\\validation\\openreview_probe2_aaai_ai_alignment_aaai_org_2025_ai_alignment_track_post_submission_50.json"
+    }
+  ]
+}

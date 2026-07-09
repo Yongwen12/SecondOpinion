@@ -1,0 +1,967 @@
+{
+  "schema_version": "openreview-venue-inventory-v0.1",
+  "created_at": "2026-07-08T19:26:47+00:00",
+  "sample_limit": 20,
+  "details": "replies",
+  "summary": {
+    "venue_count": 12,
+    "status_counts": {
+      "excluded_no_public_reviews": 6,
+      "no_public_reviews": 1,
+      "open_reviews_available": 5
+    },
+    "ready_to_pull_and_score": [
+      "ICLR",
+      "ICML",
+      "NEURIPS",
+      "COLM",
+      "MIDL"
+    ],
+    "needs_openreview_auth": [],
+    "needs_manual_inspection": [],
+    "skipped_not_open_review": [
+      "AISTATS",
+      "UAI",
+      "CORL",
+      "JMLR",
+      "JAIR",
+      "MLJ"
+    ]
+  },
+  "venues": [
+    {
+      "venue_id": "ICLR",
+      "name": "International Conference on Learning Representations",
+      "year": 2025,
+      "category": "top_conference",
+      "priority": 1,
+      "rolling_venue": false,
+      "year_filter": "",
+      "scope": "all_submissions",
+      "review_policy": "fully_open_public_reviews",
+      "source_url": "",
+      "evidence_urls": [
+        "https://iclr.cc/",
+        "https://openreview.net/group?id=ICLR.cc/2025/Conference"
+      ],
+      "source_notes": [
+        "Spec target: full 2025 ICLR public OpenReview corpus.",
+        "ICLR is treated as fully open public review scope; API probe confirms concrete review availability once OpenReview auth/challenge is satisfied."
+      ],
+      "include_in_inventory": true,
+      "invitation_candidates": [
+        "ICLR.cc/2025/Conference/-/Submission"
+      ],
+      "status": "open_reviews_available",
+      "recommendation": "pull_and_score",
+      "public_review_evidence": {
+        "state": "api_confirmed_public_reviews",
+        "review_policy": "fully_open_public_reviews",
+        "scope_decision": "score_public_reviews",
+        "api_status": "open_reviews_available",
+        "evidence_urls": [
+          "https://iclr.cc/",
+          "https://openreview.net/group?id=ICLR.cc/2025/Conference"
+        ],
+        "source_notes": [
+          "Spec target: full 2025 ICLR public OpenReview corpus.",
+          "ICLR is treated as fully open public review scope; API probe confirms concrete review availability once OpenReview auth/challenge is satisfied."
+        ]
+      },
+      "selected_invitation": "ICLR.cc/2025/Conference/-/Submission",
+      "attempts": [
+        {
+          "invitation": "ICLR.cc/2025/Conference/-/Submission",
+          "probe_status": "success",
+          "api_note_count": 20
+        }
+      ],
+      "sample_stats": {
+        "paper_count": 20,
+        "reply_count": 284,
+        "review_count": 76,
+        "papers_with_reviews": 19,
+        "review_coverage_rate": 0.95,
+        "mean_reviews_per_paper": 3.8,
+        "papers_with_decisions": 15,
+        "decision_coverage_rate": 0.75,
+        "papers_with_ratings": 19,
+        "rating_coverage_rate": 0.95,
+        "papers_with_confidence": 19,
+        "confidence_coverage_rate": 0.95
+      },
+      "review_invitation_counts": {
+        "ICLR.cc/2025/Conference/Submission14255/-/Official_Review ICLR.cc/2025/Conference/-/Edit": 5,
+        "ICLR.cc/2025/Conference/Submission14257/-/Official_Review ICLR.cc/2025/Conference/-/Edit": 4,
+        "ICLR.cc/2025/Conference/Submission14258/-/Official_Review ICLR.cc/2025/Conference/-/Edit": 3,
+        "ICLR.cc/2025/Conference/Submission14266/-/Official_Review ICLR.cc/2025/Conference/-/Edit": 4,
+        "ICLR.cc/2025/Conference/Submission14267/-/Official_Review ICLR.cc/2025/Conference/-/Edit": 4,
+        "ICLR.cc/2025/Conference/Submission14268/-/Official_Review ICLR.cc/2025/Conference/-/Edit": 5,
+        "ICLR.cc/2025/Conference/Submission14270/-/Official_Review ICLR.cc/2025/Conference/-/Edit": 4,
+        "ICLR.cc/2025/Conference/Submission14271/-/Official_Review ICLR.cc/2025/Conference/-/Edit": 4,
+        "ICLR.cc/2025/Conference/Submission14278/-/Official_Review ICLR.cc/2025/Conference/-/Edit": 3,
+        "ICLR.cc/2025/Conference/Submission14279/-/Official_Review ICLR.cc/2025/Conference/-/Edit": 4,
+        "ICLR.cc/2025/Conference/Submission14280/-/Official_Review ICLR.cc/2025/Conference/-/Edit": 5,
+        "ICLR.cc/2025/Conference/Submission14282/-/Official_Review ICLR.cc/2025/Conference/-/Edit": 4,
+        "ICLR.cc/2025/Conference/Submission14284/-/Official_Review ICLR.cc/2025/Conference/-/Edit": 4,
+        "ICLR.cc/2025/Conference/Submission14286/-/Official_Review ICLR.cc/2025/Conference/-/Edit": 4,
+        "ICLR.cc/2025/Conference/Submission14287/-/Official_Review ICLR.cc/2025/Conference/-/Edit": 4,
+        "ICLR.cc/2025/Conference/Submission14290/-/Official_Review ICLR.cc/2025/Conference/-/Edit": 3,
+        "ICLR.cc/2025/Conference/Submission14293/-/Official_Review ICLR.cc/2025/Conference/-/Edit": 4,
+        "ICLR.cc/2025/Conference/Submission14294/-/Official_Review ICLR.cc/2025/Conference/-/Edit": 4,
+        "ICLR.cc/2025/Conference/Submission14296/-/Official_Review ICLR.cc/2025/Conference/-/Edit": 4
+      },
+      "notes": [
+        "Spec target: full 2025 ICLR public OpenReview corpus.",
+        "ICLR is treated as fully open public review scope; API probe confirms concrete review availability once OpenReview auth/challenge is satisfied."
+      ]
+    },
+    {
+      "venue_id": "ICML",
+      "name": "International Conference on Machine Learning",
+      "year": 2025,
+      "category": "top_conference",
+      "priority": 1,
+      "rolling_venue": false,
+      "year_filter": "",
+      "scope": "accepted_plus_public_opt_in",
+      "review_policy": "partially_open_public_reviews",
+      "source_url": "",
+      "evidence_urls": [
+        "https://icml.cc/",
+        "https://openreview.net/group?id=ICML.cc/2025/Conference"
+      ],
+      "source_notes": [
+        "Spec target: public ICML 2025 reviews, accepted plus public opt-in rejected papers where visible.",
+        "ICML is treated as partial public review scope; API probe determines exact public coverage after OpenReview auth/challenge is satisfied."
+      ],
+      "include_in_inventory": true,
+      "invitation_candidates": [
+        "ICML.cc/2025/Conference/-/Submission"
+      ],
+      "status": "open_reviews_available",
+      "recommendation": "pull_and_score",
+      "public_review_evidence": {
+        "state": "api_confirmed_public_reviews",
+        "review_policy": "partially_open_public_reviews",
+        "scope_decision": "score_public_reviews",
+        "api_status": "open_reviews_available",
+        "evidence_urls": [
+          "https://icml.cc/",
+          "https://openreview.net/group?id=ICML.cc/2025/Conference"
+        ],
+        "source_notes": [
+          "Spec target: public ICML 2025 reviews, accepted plus public opt-in rejected papers where visible.",
+          "ICML is treated as partial public review scope; API probe determines exact public coverage after OpenReview auth/challenge is satisfied."
+        ]
+      },
+      "selected_invitation": "ICML.cc/2025/Conference/-/Submission",
+      "attempts": [
+        {
+          "invitation": "ICML.cc/2025/Conference/-/Submission",
+          "probe_status": "success",
+          "api_note_count": 20
+        }
+      ],
+      "sample_stats": {
+        "paper_count": 20,
+        "reply_count": 234,
+        "review_count": 76,
+        "papers_with_reviews": 20,
+        "review_coverage_rate": 1.0,
+        "mean_reviews_per_paper": 3.8,
+        "papers_with_decisions": 20,
+        "decision_coverage_rate": 1.0,
+        "papers_with_ratings": 20,
+        "rating_coverage_rate": 1.0,
+        "papers_with_confidence": 0,
+        "confidence_coverage_rate": 0.0
+      },
+      "review_invitation_counts": {
+        "ICML.cc/2025/Conference/Submission16225/-/Official_Review ICML.cc/2025/Conference/-/Edit": 4,
+        "ICML.cc/2025/Conference/Submission16227/-/Official_Review ICML.cc/2025/Conference/-/Edit": 4,
+        "ICML.cc/2025/Conference/Submission16254/-/Official_Review ICML.cc/2025/Conference/-/Edit": 3,
+        "ICML.cc/2025/Conference/Submission16266/-/Official_Review ICML.cc/2025/Conference/-/Edit": 4,
+        "ICML.cc/2025/Conference/Submission16273/-/Official_Review ICML.cc/2025/Conference/-/Edit": 4,
+        "ICML.cc/2025/Conference/Submission16287/-/Official_Review ICML.cc/2025/Conference/-/Edit": 4,
+        "ICML.cc/2025/Conference/Submission16293/-/Official_Review ICML.cc/2025/Conference/-/Edit": 3,
+        "ICML.cc/2025/Conference/Submission16311/-/Official_Review ICML.cc/2025/Conference/-/Edit": 4,
+        "ICML.cc/2025/Conference/Submission16314/-/Official_Review ICML.cc/2025/Conference/-/Edit": 4,
+        "ICML.cc/2025/Conference/Submission16316/-/Official_Review ICML.cc/2025/Conference/-/Edit": 4,
+        "ICML.cc/2025/Conference/Submission16318/-/Official_Review ICML.cc/2025/Conference/-/Edit": 4,
+        "ICML.cc/2025/Conference/Submission16325/-/Official_Review ICML.cc/2025/Conference/-/Edit": 4,
+        "ICML.cc/2025/Conference/Submission16326/-/Official_Review ICML.cc/2025/Conference/-/Edit": 4,
+        "ICML.cc/2025/Conference/Submission16364/-/Official_Review ICML.cc/2025/Conference/-/Edit": 3,
+        "ICML.cc/2025/Conference/Submission16368/-/Official_Review ICML.cc/2025/Conference/-/Edit": 4,
+        "ICML.cc/2025/Conference/Submission16371/-/Official_Review ICML.cc/2025/Conference/-/Edit": 4,
+        "ICML.cc/2025/Conference/Submission16408/-/Official_Review ICML.cc/2025/Conference/-/Edit": 4,
+        "ICML.cc/2025/Conference/Submission16409/-/Official_Review ICML.cc/2025/Conference/-/Edit": 4,
+        "ICML.cc/2025/Conference/Submission16430/-/Official_Review ICML.cc/2025/Conference/-/Edit": 3,
+        "ICML.cc/2025/Conference/Submission16431/-/Official_Review ICML.cc/2025/Conference/-/Edit": 4
+      },
+      "notes": [
+        "Spec target: public ICML 2025 reviews, accepted plus public opt-in rejected papers where visible.",
+        "ICML is treated as partial public review scope; API probe determines exact public coverage after OpenReview auth/challenge is satisfied."
+      ]
+    },
+    {
+      "venue_id": "NEURIPS",
+      "name": "Neural Information Processing Systems",
+      "year": 2025,
+      "category": "top_conference",
+      "priority": 1,
+      "rolling_venue": false,
+      "year_filter": "",
+      "scope": "accepted_plus_public_opt_in",
+      "review_policy": "partially_open_public_reviews",
+      "source_url": "",
+      "evidence_urls": [
+        "https://neurips.cc/",
+        "https://openreview.net/group?id=NeurIPS.cc/2025/Conference"
+      ],
+      "source_notes": [
+        "Spec target: public NeurIPS 2025 reviews, accepted plus public opt-in rejected papers where visible.",
+        "NeurIPS is treated as partial public review scope; API probe determines exact public coverage after OpenReview auth/challenge is satisfied."
+      ],
+      "include_in_inventory": true,
+      "invitation_candidates": [
+        "NeurIPS.cc/2025/Conference/-/Submission"
+      ],
+      "status": "open_reviews_available",
+      "recommendation": "pull_and_score",
+      "public_review_evidence": {
+        "state": "api_confirmed_public_reviews",
+        "review_policy": "partially_open_public_reviews",
+        "scope_decision": "score_public_reviews",
+        "api_status": "open_reviews_available",
+        "evidence_urls": [
+          "https://neurips.cc/",
+          "https://openreview.net/group?id=NeurIPS.cc/2025/Conference"
+        ],
+        "source_notes": [
+          "Spec target: public NeurIPS 2025 reviews, accepted plus public opt-in rejected papers where visible.",
+          "NeurIPS is treated as partial public review scope; API probe determines exact public coverage after OpenReview auth/challenge is satisfied."
+        ]
+      },
+      "selected_invitation": "NeurIPS.cc/2025/Conference/-/Submission",
+      "attempts": [
+        {
+          "invitation": "NeurIPS.cc/2025/Conference/-/Submission",
+          "probe_status": "success",
+          "api_note_count": 20
+        }
+      ],
+      "sample_stats": {
+        "paper_count": 20,
+        "reply_count": 468,
+        "review_count": 80,
+        "papers_with_reviews": 20,
+        "review_coverage_rate": 1.0,
+        "mean_reviews_per_paper": 4.0,
+        "papers_with_decisions": 20,
+        "decision_coverage_rate": 1.0,
+        "papers_with_ratings": 20,
+        "rating_coverage_rate": 1.0,
+        "papers_with_confidence": 20,
+        "confidence_coverage_rate": 1.0
+      },
+      "review_invitation_counts": {
+        "NeurIPS.cc/2025/Conference/Submission29012/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit": 1,
+        "NeurIPS.cc/2025/Conference/Submission29012/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29012/Official_Review1/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29012/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29012/Official_Review2/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29012/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29012/Official_Review4/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29016/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29016/Official_Review1/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29016/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29016/Official_Review2/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29016/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29016/Official_Review3/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29016/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29016/Official_Review4/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29019/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29019/Official_Review1/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29019/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29019/Official_Review2/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29019/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29019/Official_Review3/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29019/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29019/Official_Review4/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29032/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29032/Official_Review1/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29032/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29032/Official_Review2/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29032/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29032/Official_Review3/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29032/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29032/Official_Review4/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29032/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29032/Official_Review5/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29040/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit": 2,
+        "NeurIPS.cc/2025/Conference/Submission29040/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29040/Official_Review1/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29040/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29040/Official_Review4/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29077/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29077/Official_Review1/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29077/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29077/Official_Review2/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29077/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29077/Official_Review3/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29077/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29077/Official_Review4/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29103/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29103/Official_Review1/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29103/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29103/Official_Review2/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29103/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29103/Official_Review3/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29103/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29103/Official_Review4/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29119/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit": 1,
+        "NeurIPS.cc/2025/Conference/Submission29119/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29119/Official_Review1/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29119/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29119/Official_Review2/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29119/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29119/Official_Review3/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29127/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit": 1,
+        "NeurIPS.cc/2025/Conference/Submission29127/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29127/Official_Review2/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29127/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29127/Official_Review3/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29157/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29157/Official_Review1/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29157/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29157/Official_Review2/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29157/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29157/Official_Review3/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29157/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29157/Official_Review4/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29164/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit": 1,
+        "NeurIPS.cc/2025/Conference/Submission29164/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29164/Official_Review1/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29164/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29164/Official_Review2/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29164/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29164/Official_Review3/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29164/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29164/Official_Review5/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29178/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit": 1,
+        "NeurIPS.cc/2025/Conference/Submission29178/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29178/Official_Review1/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29178/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29178/Official_Review2/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29184/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit": 1,
+        "NeurIPS.cc/2025/Conference/Submission29184/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29184/Official_Review1/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29184/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29184/Official_Review2/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29184/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29184/Official_Review4/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29188/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit": 1,
+        "NeurIPS.cc/2025/Conference/Submission29188/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29188/Official_Review1/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29188/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29188/Official_Review3/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29188/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29188/Official_Review4/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29190/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29190/Official_Review1/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29190/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29190/Official_Review2/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29190/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29190/Official_Review3/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29190/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29190/Official_Review4/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29206/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit": 1,
+        "NeurIPS.cc/2025/Conference/Submission29206/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29206/Official_Review2/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29206/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29206/Official_Review3/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29206/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29206/Official_Review4/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29227/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29227/Official_Review1/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29227/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29227/Official_Review2/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29227/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29227/Official_Review3/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29227/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29227/Official_Review4/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29239/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit": 1,
+        "NeurIPS.cc/2025/Conference/Submission29239/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29239/Official_Review1/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29239/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29239/Official_Review2/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29239/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29239/Official_Review3/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29260/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit": 2,
+        "NeurIPS.cc/2025/Conference/Submission29260/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29260/Official_Review1/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29260/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29260/Official_Review4/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29297/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29297/Official_Review1/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29297/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29297/Official_Review2/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29297/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29297/Official_Review3/-/Review_Revision": 1,
+        "NeurIPS.cc/2025/Conference/Submission29297/-/Official_Review NeurIPS.cc/2025/Conference/-/Edit NeurIPS.cc/2025/Conference/Submission29297/Official_Review4/-/Review_Revision": 1
+      },
+      "notes": [
+        "Spec target: public NeurIPS 2025 reviews, accepted plus public opt-in rejected papers where visible.",
+        "NeurIPS is treated as partial public review scope; API probe determines exact public coverage after OpenReview auth/challenge is satisfied."
+      ]
+    },
+    {
+      "venue_id": "TMLR",
+      "name": "Transactions on Machine Learning Research",
+      "year": 2025,
+      "category": "top_journal",
+      "priority": 1,
+      "rolling_venue": true,
+      "year_filter": "decision_or_activity_year",
+      "scope": "rolling_2025_decision_or_activity",
+      "review_policy": "open_public_reviews",
+      "source_url": "",
+      "evidence_urls": [
+        "https://jmlr.org/tmlr/",
+        "https://openreview.net/group?id=TMLR"
+      ],
+      "source_notes": [
+        "Rolling OpenReview journal: pull all public submissions, then filter by 2025 decision/activity.",
+        "Second-round probe confirms public replies exist on older/decided submissions, but latest under-review submissions have no public replies.",
+        "TMLR needs a rolling extractor that filters decided/activity-2025 submissions and reads paper-level Official_Comment threads."
+      ],
+      "include_in_inventory": true,
+      "invitation_candidates": [
+        "TMLR/-/Submission"
+      ],
+      "status": "no_public_reviews",
+      "recommendation": "skip_scoring",
+      "public_review_evidence": {
+        "state": "api_confirmed_no_public_reviews",
+        "review_policy": "open_public_reviews",
+        "scope_decision": "score_public_reviews",
+        "api_status": "no_public_reviews",
+        "evidence_urls": [
+          "https://jmlr.org/tmlr/",
+          "https://openreview.net/group?id=TMLR"
+        ],
+        "source_notes": [
+          "Rolling OpenReview journal: pull all public submissions, then filter by 2025 decision/activity.",
+          "Second-round probe confirms public replies exist on older/decided submissions, but latest under-review submissions have no public replies.",
+          "TMLR needs a rolling extractor that filters decided/activity-2025 submissions and reads paper-level Official_Comment threads."
+        ]
+      },
+      "selected_invitation": "TMLR/-/Submission",
+      "attempts": [
+        {
+          "invitation": "TMLR/-/Submission",
+          "probe_status": "success",
+          "api_note_count": 20
+        }
+      ],
+      "sample_stats": {
+        "paper_count": 20,
+        "reply_count": 0,
+        "review_count": 0,
+        "papers_with_reviews": 0,
+        "review_coverage_rate": 0.0,
+        "mean_reviews_per_paper": 0.0,
+        "papers_with_decisions": 0,
+        "decision_coverage_rate": 0.0,
+        "papers_with_ratings": 0,
+        "rating_coverage_rate": 0.0,
+        "papers_with_confidence": 0,
+        "confidence_coverage_rate": 0.0
+      },
+      "review_invitation_counts": {},
+      "notes": [
+        "Rolling OpenReview journal: pull all public submissions, then filter by 2025 decision/activity.",
+        "Second-round probe confirms public replies exist on older/decided submissions, but latest under-review submissions have no public replies.",
+        "TMLR needs a rolling extractor that filters decided/activity-2025 submissions and reads paper-level Official_Comment threads.",
+        "Rolling venue: full pull must filter by 2025 decision or activity date after download."
+      ]
+    },
+    {
+      "venue_id": "COLM",
+      "name": "Conference on Language Modeling",
+      "year": 2025,
+      "category": "top_conference",
+      "priority": 2,
+      "rolling_venue": false,
+      "year_filter": "",
+      "scope": "public_openreview_submissions",
+      "review_policy": "open_public_reviews",
+      "source_url": "",
+      "evidence_urls": [
+        "https://colmweb.org/",
+        "https://openreview.net/group?id=colmweb.org/2025/Conference"
+      ],
+      "source_notes": [
+        "Probe on 2026-07-08 found public official reviews on colmweb.org/COLM/2025/Conference/-/Submission: 20/20 sampled papers, 75 reviews."
+      ],
+      "include_in_inventory": true,
+      "invitation_candidates": [
+        "colmweb.org/COLM/2025/Conference/-/Submission",
+        "colmweb.org/2025/Conference/-/Submission"
+      ],
+      "status": "open_reviews_available",
+      "recommendation": "pull_and_score",
+      "public_review_evidence": {
+        "state": "api_confirmed_public_reviews",
+        "review_policy": "open_public_reviews",
+        "scope_decision": "score_public_reviews",
+        "api_status": "open_reviews_available",
+        "evidence_urls": [
+          "https://colmweb.org/",
+          "https://openreview.net/group?id=colmweb.org/2025/Conference"
+        ],
+        "source_notes": [
+          "Probe on 2026-07-08 found public official reviews on colmweb.org/COLM/2025/Conference/-/Submission: 20/20 sampled papers, 75 reviews."
+        ]
+      },
+      "selected_invitation": "colmweb.org/COLM/2025/Conference/-/Submission",
+      "attempts": [
+        {
+          "invitation": "colmweb.org/COLM/2025/Conference/-/Submission",
+          "probe_status": "success",
+          "api_note_count": 20
+        }
+      ],
+      "sample_stats": {
+        "paper_count": 20,
+        "reply_count": 344,
+        "review_count": 75,
+        "papers_with_reviews": 20,
+        "review_coverage_rate": 1.0,
+        "mean_reviews_per_paper": 3.75,
+        "papers_with_decisions": 20,
+        "decision_coverage_rate": 1.0,
+        "papers_with_ratings": 20,
+        "rating_coverage_rate": 1.0,
+        "papers_with_confidence": 20,
+        "confidence_coverage_rate": 1.0
+      },
+      "review_invitation_counts": {
+        "colmweb.org/COLM/2025/Conference/Submission1766/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 3,
+        "colmweb.org/COLM/2025/Conference/Submission1770/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 4,
+        "colmweb.org/COLM/2025/Conference/Submission1781/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 4,
+        "colmweb.org/COLM/2025/Conference/Submission1788/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 4,
+        "colmweb.org/COLM/2025/Conference/Submission1790/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 4,
+        "colmweb.org/COLM/2025/Conference/Submission1813/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 3,
+        "colmweb.org/COLM/2025/Conference/Submission1825/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 4,
+        "colmweb.org/COLM/2025/Conference/Submission1833/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 3,
+        "colmweb.org/COLM/2025/Conference/Submission1838/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 3,
+        "colmweb.org/COLM/2025/Conference/Submission1841/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 4,
+        "colmweb.org/COLM/2025/Conference/Submission1847/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 5,
+        "colmweb.org/COLM/2025/Conference/Submission1853/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 3,
+        "colmweb.org/COLM/2025/Conference/Submission1884/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 4,
+        "colmweb.org/COLM/2025/Conference/Submission1888/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 3,
+        "colmweb.org/COLM/2025/Conference/Submission1893/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 4,
+        "colmweb.org/COLM/2025/Conference/Submission1903/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 4,
+        "colmweb.org/COLM/2025/Conference/Submission1912/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 4,
+        "colmweb.org/COLM/2025/Conference/Submission1939/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 4,
+        "colmweb.org/COLM/2025/Conference/Submission1944/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 4,
+        "colmweb.org/COLM/2025/Conference/Submission1951/-/Official_Review colmweb.org/COLM/2025/Conference/-/Edit": 4
+      },
+      "notes": [
+        "Probe on 2026-07-08 found public official reviews on colmweb.org/COLM/2025/Conference/-/Submission: 20/20 sampled papers, 75 reviews."
+      ]
+    },
+    {
+      "venue_id": "AISTATS",
+      "name": "International Conference on Artificial Intelligence and Statistics",
+      "year": 2025,
+      "category": "top_conference",
+      "priority": 2,
+      "rolling_venue": false,
+      "year_filter": "",
+      "scope": "public_openreview_submissions",
+      "review_policy": "verify_public_review_coverage",
+      "source_url": "",
+      "evidence_urls": [
+        "https://aistats.org/",
+        "https://openreview.net/group?id=AISTATS.cc/2025/Conference"
+      ],
+      "source_notes": [
+        "Recheck on 2026-07-08: AISTATS.cc Submission/Post_Submission returned 0 papers; aistats.org/AISTATS Submission/Post_Submission each sampled 50 papers with 0 replies and 0 official reviews. Mark excluded until public official reviews become visible."
+      ],
+      "include_in_inventory": false,
+      "invitation_candidates": [
+        "AISTATS.cc/2025/Conference/-/Submission",
+        "aistats.org/AISTATS/2025/Conference/-/Submission"
+      ],
+      "status": "excluded_no_public_reviews",
+      "recommendation": "skip_no_public_reviews",
+      "public_review_evidence": {
+        "state": "excluded_no_public_openreview_corpus",
+        "review_policy": "verify_public_review_coverage",
+        "scope_decision": "exclude_no_public_reviews",
+        "api_status": "excluded_no_public_reviews",
+        "evidence_urls": [
+          "https://aistats.org/",
+          "https://openreview.net/group?id=AISTATS.cc/2025/Conference"
+        ],
+        "source_notes": [
+          "Recheck on 2026-07-08: AISTATS.cc Submission/Post_Submission returned 0 papers; aistats.org/AISTATS Submission/Post_Submission each sampled 50 papers with 0 replies and 0 official reviews. Mark excluded until public official reviews become visible."
+        ]
+      },
+      "selected_invitation": "",
+      "attempts": [],
+      "sample_stats": {
+        "paper_count": 0,
+        "reply_count": 0,
+        "review_count": 0,
+        "papers_with_reviews": 0,
+        "review_coverage_rate": 0,
+        "mean_reviews_per_paper": 0,
+        "papers_with_decisions": 0,
+        "decision_coverage_rate": 0,
+        "papers_with_ratings": 0,
+        "rating_coverage_rate": 0,
+        "papers_with_confidence": 0,
+        "confidence_coverage_rate": 0
+      },
+      "review_invitation_counts": {},
+      "notes": [
+        "Recheck on 2026-07-08: AISTATS.cc Submission/Post_Submission returned 0 papers; aistats.org/AISTATS Submission/Post_Submission each sampled 50 papers with 0 replies and 0 official reviews. Mark excluded until public official reviews become visible.",
+        "Excluded from scoring queue: no public OpenReview review corpus is expected for this venue."
+      ]
+    },
+    {
+      "venue_id": "UAI",
+      "name": "Conference on Uncertainty in Artificial Intelligence",
+      "year": 2025,
+      "category": "top_conference",
+      "priority": 2,
+      "rolling_venue": false,
+      "year_filter": "",
+      "scope": "public_openreview_submissions",
+      "review_policy": "verify_public_review_coverage",
+      "source_url": "",
+      "evidence_urls": [
+        "https://www.auai.org/",
+        "https://openreview.net/group?id=auai.org/UAI/2025/Conference"
+      ],
+      "source_notes": [
+        "Recheck on 2026-07-08: auai.org/UAI/2025/Conference/-/Submission sampled 50 papers with 0 public official reviews. Mark excluded until public official reviews become visible."
+      ],
+      "include_in_inventory": false,
+      "invitation_candidates": [
+        "auai.org/UAI/2025/Conference/-/Submission",
+        "UAI.cc/2025/Conference/-/Submission"
+      ],
+      "status": "excluded_no_public_reviews",
+      "recommendation": "skip_no_public_reviews",
+      "public_review_evidence": {
+        "state": "excluded_no_public_openreview_corpus",
+        "review_policy": "verify_public_review_coverage",
+        "scope_decision": "exclude_no_public_reviews",
+        "api_status": "excluded_no_public_reviews",
+        "evidence_urls": [
+          "https://www.auai.org/",
+          "https://openreview.net/group?id=auai.org/UAI/2025/Conference"
+        ],
+        "source_notes": [
+          "Recheck on 2026-07-08: auai.org/UAI/2025/Conference/-/Submission sampled 50 papers with 0 public official reviews. Mark excluded until public official reviews become visible."
+        ]
+      },
+      "selected_invitation": "",
+      "attempts": [],
+      "sample_stats": {
+        "paper_count": 0,
+        "reply_count": 0,
+        "review_count": 0,
+        "papers_with_reviews": 0,
+        "review_coverage_rate": 0,
+        "mean_reviews_per_paper": 0,
+        "papers_with_decisions": 0,
+        "decision_coverage_rate": 0,
+        "papers_with_ratings": 0,
+        "rating_coverage_rate": 0,
+        "papers_with_confidence": 0,
+        "confidence_coverage_rate": 0
+      },
+      "review_invitation_counts": {},
+      "notes": [
+        "Recheck on 2026-07-08: auai.org/UAI/2025/Conference/-/Submission sampled 50 papers with 0 public official reviews. Mark excluded until public official reviews become visible.",
+        "Excluded from scoring queue: no public OpenReview review corpus is expected for this venue."
+      ]
+    },
+    {
+      "venue_id": "CORL",
+      "name": "Conference on Robot Learning",
+      "year": 2025,
+      "category": "top_conference",
+      "priority": 2,
+      "rolling_venue": false,
+      "year_filter": "",
+      "scope": "public_openreview_submissions",
+      "review_policy": "verify_public_review_coverage",
+      "source_url": "",
+      "evidence_urls": [
+        "https://www.corl.org/",
+        "https://openreview.net/group?id=robot-learning.org/CoRL/2025/Conference"
+      ],
+      "source_notes": [
+        "Recheck on 2026-07-08: robot-learning.org/CoRL/2025/Conference/-/Submission sampled 50 papers and 50 decision replies with 0 public official reviews. Mark excluded until public official reviews become visible."
+      ],
+      "include_in_inventory": false,
+      "invitation_candidates": [
+        "robot-learning.org/CoRL/2025/Conference/-/Submission",
+        "CoRL.cc/2025/Conference/-/Submission"
+      ],
+      "status": "excluded_no_public_reviews",
+      "recommendation": "skip_no_public_reviews",
+      "public_review_evidence": {
+        "state": "excluded_no_public_openreview_corpus",
+        "review_policy": "verify_public_review_coverage",
+        "scope_decision": "exclude_no_public_reviews",
+        "api_status": "excluded_no_public_reviews",
+        "evidence_urls": [
+          "https://www.corl.org/",
+          "https://openreview.net/group?id=robot-learning.org/CoRL/2025/Conference"
+        ],
+        "source_notes": [
+          "Recheck on 2026-07-08: robot-learning.org/CoRL/2025/Conference/-/Submission sampled 50 papers and 50 decision replies with 0 public official reviews. Mark excluded until public official reviews become visible."
+        ]
+      },
+      "selected_invitation": "",
+      "attempts": [],
+      "sample_stats": {
+        "paper_count": 0,
+        "reply_count": 0,
+        "review_count": 0,
+        "papers_with_reviews": 0,
+        "review_coverage_rate": 0,
+        "mean_reviews_per_paper": 0,
+        "papers_with_decisions": 0,
+        "decision_coverage_rate": 0,
+        "papers_with_ratings": 0,
+        "rating_coverage_rate": 0,
+        "papers_with_confidence": 0,
+        "confidence_coverage_rate": 0
+      },
+      "review_invitation_counts": {},
+      "notes": [
+        "Recheck on 2026-07-08: robot-learning.org/CoRL/2025/Conference/-/Submission sampled 50 papers and 50 decision replies with 0 public official reviews. Mark excluded until public official reviews become visible.",
+        "Excluded from scoring queue: no public OpenReview review corpus is expected for this venue."
+      ]
+    },
+    {
+      "venue_id": "MIDL",
+      "name": "Medical Imaging with Deep Learning",
+      "year": 2025,
+      "category": "top_domain_conference",
+      "priority": 2,
+      "rolling_venue": false,
+      "year_filter": "",
+      "scope": "public_openreview_submissions",
+      "review_policy": "open_public_reviews",
+      "source_url": "",
+      "evidence_urls": [
+        "https://2025.midl.io/",
+        "https://openreview.net/group?id=MIDL.io/2025/Conference"
+      ],
+      "source_notes": [
+        "Second-round probe found public reviews on MIDL.io/2025/Conference/-/Post_Submission.",
+        "Sample of 50 submissions returned 163 public reviews with 100% sample coverage."
+      ],
+      "include_in_inventory": true,
+      "invitation_candidates": [
+        "MIDL.io/2025/Conference/-/Post_Submission"
+      ],
+      "status": "open_reviews_available",
+      "recommendation": "pull_and_score",
+      "public_review_evidence": {
+        "state": "api_confirmed_public_reviews",
+        "review_policy": "open_public_reviews",
+        "scope_decision": "score_public_reviews",
+        "api_status": "open_reviews_available",
+        "evidence_urls": [
+          "https://2025.midl.io/",
+          "https://openreview.net/group?id=MIDL.io/2025/Conference"
+        ],
+        "source_notes": [
+          "Second-round probe found public reviews on MIDL.io/2025/Conference/-/Post_Submission.",
+          "Sample of 50 submissions returned 163 public reviews with 100% sample coverage."
+        ]
+      },
+      "selected_invitation": "MIDL.io/2025/Conference/-/Post_Submission",
+      "attempts": [
+        {
+          "invitation": "MIDL.io/2025/Conference/-/Post_Submission",
+          "probe_status": "success",
+          "api_note_count": 20
+        }
+      ],
+      "sample_stats": {
+        "paper_count": 20,
+        "reply_count": 276,
+        "review_count": 62,
+        "papers_with_reviews": 20,
+        "review_coverage_rate": 1.0,
+        "mean_reviews_per_paper": 3.1,
+        "papers_with_decisions": 0,
+        "decision_coverage_rate": 0.0,
+        "papers_with_ratings": 0,
+        "rating_coverage_rate": 0.0,
+        "papers_with_confidence": 20,
+        "confidence_coverage_rate": 1.0
+      },
+      "review_invitation_counts": {
+        "MIDL.io/2025/Conference/Submission205/-/Official_Review MIDL.io/2025/Conference/-/Edit": 2,
+        "MIDL.io/2025/Conference/Submission205/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission205/Official_Review2/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission207/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission207/Official_Review1/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission207/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission207/Official_Review2/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission207/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission207/Official_Review3/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission211/-/Official_Review MIDL.io/2025/Conference/-/Edit": 1,
+        "MIDL.io/2025/Conference/Submission211/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission211/Official_Review2/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission211/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission211/Official_Review3/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission213/-/Official_Review MIDL.io/2025/Conference/-/Edit": 1,
+        "MIDL.io/2025/Conference/Submission213/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission213/Official_Review1/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission213/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission213/Official_Review2/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission214/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission214/Official_Review1/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission214/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission214/Official_Review2/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission214/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission214/Official_Review3/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission214/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission214/Official_Review4/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission218/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission218/Official_Review1/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission218/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission218/Official_Review2/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission218/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission218/Official_Review3/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission219/-/Official_Review MIDL.io/2025/Conference/-/Edit": 2,
+        "MIDL.io/2025/Conference/Submission219/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission219/Official_Review1/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission220/-/Official_Review MIDL.io/2025/Conference/-/Edit": 2,
+        "MIDL.io/2025/Conference/Submission220/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission220/Official_Review1/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission223/-/Official_Review MIDL.io/2025/Conference/-/Edit": 2,
+        "MIDL.io/2025/Conference/Submission223/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission223/Official_Review3/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission230/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission230/Official_Review1/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission230/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission230/Official_Review2/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission230/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission230/Official_Review3/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission234/-/Official_Review MIDL.io/2025/Conference/-/Edit": 2,
+        "MIDL.io/2025/Conference/Submission234/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission234/Official_Review3/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission237/-/Official_Review MIDL.io/2025/Conference/-/Edit": 2,
+        "MIDL.io/2025/Conference/Submission237/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission237/Official_Review1/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission238/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission238/Official_Review1/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission238/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission238/Official_Review2/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission238/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission238/Official_Review3/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission239/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission239/Official_Review1/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission239/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission239/Official_Review2/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission239/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission239/Official_Review3/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission240/-/Official_Review MIDL.io/2025/Conference/-/Edit": 1,
+        "MIDL.io/2025/Conference/Submission240/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission240/Official_Review1/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission240/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission240/Official_Review3/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission241/-/Official_Review MIDL.io/2025/Conference/-/Edit": 1,
+        "MIDL.io/2025/Conference/Submission241/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission241/Official_Review1/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission241/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission241/Official_Review3/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission253/-/Official_Review MIDL.io/2025/Conference/-/Edit": 1,
+        "MIDL.io/2025/Conference/Submission253/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission253/Official_Review1/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission253/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission253/Official_Review2/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission255/-/Official_Review MIDL.io/2025/Conference/-/Edit": 1,
+        "MIDL.io/2025/Conference/Submission255/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission255/Official_Review1/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission255/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission255/Official_Review2/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission256/-/Official_Review MIDL.io/2025/Conference/-/Edit": 1,
+        "MIDL.io/2025/Conference/Submission256/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission256/Official_Review1/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission256/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission256/Official_Review3/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission261/-/Official_Review MIDL.io/2025/Conference/-/Edit": 2,
+        "MIDL.io/2025/Conference/Submission261/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission261/Official_Review1/-/Review_Revision": 1,
+        "MIDL.io/2025/Conference/Submission261/-/Official_Review MIDL.io/2025/Conference/-/Edit MIDL.io/2025/Conference/Submission261/Official_Review3/-/Review_Revision": 1
+      },
+      "notes": [
+        "Second-round probe found public reviews on MIDL.io/2025/Conference/-/Post_Submission.",
+        "Sample of 50 submissions returned 163 public reviews with 100% sample coverage."
+      ]
+    },
+    {
+      "venue_id": "JMLR",
+      "name": "Journal of Machine Learning Research",
+      "year": 2025,
+      "category": "top_journal",
+      "priority": 3,
+      "rolling_venue": false,
+      "year_filter": "",
+      "scope": "excluded_no_public_openreview_reviews",
+      "review_policy": "not_openreview_public_reviews",
+      "source_url": "",
+      "evidence_urls": [],
+      "source_notes": [
+        "Top ML journal tracked for scope control; no public OpenReview official-review corpus is expected for 2025 scoring."
+      ],
+      "include_in_inventory": false,
+      "invitation_candidates": [],
+      "status": "excluded_no_public_reviews",
+      "recommendation": "skip_no_public_reviews",
+      "public_review_evidence": {
+        "state": "excluded_no_public_openreview_corpus",
+        "review_policy": "not_openreview_public_reviews",
+        "scope_decision": "exclude_no_public_reviews",
+        "api_status": "excluded_no_public_reviews",
+        "evidence_urls": [],
+        "source_notes": [
+          "Top ML journal tracked for scope control; no public OpenReview official-review corpus is expected for 2025 scoring."
+        ]
+      },
+      "selected_invitation": "",
+      "attempts": [],
+      "sample_stats": {
+        "paper_count": 0,
+        "reply_count": 0,
+        "review_count": 0,
+        "papers_with_reviews": 0,
+        "review_coverage_rate": 0,
+        "mean_reviews_per_paper": 0,
+        "papers_with_decisions": 0,
+        "decision_coverage_rate": 0,
+        "papers_with_ratings": 0,
+        "rating_coverage_rate": 0,
+        "papers_with_confidence": 0,
+        "confidence_coverage_rate": 0
+      },
+      "review_invitation_counts": {},
+      "notes": [
+        "Top ML journal tracked for scope control; no public OpenReview official-review corpus is expected for 2025 scoring.",
+        "Excluded from scoring queue: no public OpenReview review corpus is expected for this venue."
+      ]
+    },
+    {
+      "venue_id": "JAIR",
+      "name": "Journal of Artificial Intelligence Research",
+      "year": 2025,
+      "category": "top_journal",
+      "priority": 3,
+      "rolling_venue": false,
+      "year_filter": "",
+      "scope": "excluded_no_public_openreview_reviews",
+      "review_policy": "not_openreview_public_reviews",
+      "source_url": "",
+      "evidence_urls": [],
+      "source_notes": [
+        "Top AI journal tracked for scope control; no public OpenReview official-review corpus is expected for 2025 scoring."
+      ],
+      "include_in_inventory": false,
+      "invitation_candidates": [],
+      "status": "excluded_no_public_reviews",
+      "recommendation": "skip_no_public_reviews",
+      "public_review_evidence": {
+        "state": "excluded_no_public_openreview_corpus",
+        "review_policy": "not_openreview_public_reviews",
+        "scope_decision": "exclude_no_public_reviews",
+        "api_status": "excluded_no_public_reviews",
+        "evidence_urls": [],
+        "source_notes": [
+          "Top AI journal tracked for scope control; no public OpenReview official-review corpus is expected for 2025 scoring."
+        ]
+      },
+      "selected_invitation": "",
+      "attempts": [],
+      "sample_stats": {
+        "paper_count": 0,
+        "reply_count": 0,
+        "review_count": 0,
+        "papers_with_reviews": 0,
+        "review_coverage_rate": 0,
+        "mean_reviews_per_paper": 0,
+        "papers_with_decisions": 0,
+        "decision_coverage_rate": 0,
+        "papers_with_ratings": 0,
+        "rating_coverage_rate": 0,
+        "papers_with_confidence": 0,
+        "confidence_coverage_rate": 0
+      },
+      "review_invitation_counts": {},
+      "notes": [
+        "Top AI journal tracked for scope control; no public OpenReview official-review corpus is expected for 2025 scoring.",
+        "Excluded from scoring queue: no public OpenReview review corpus is expected for this venue."
+      ]
+    },
+    {
+      "venue_id": "MLJ",
+      "name": "Machine Learning",
+      "year": 2025,
+      "category": "top_journal",
+      "priority": 3,
+      "rolling_venue": false,
+      "year_filter": "",
+      "scope": "excluded_no_public_openreview_reviews",
+      "review_policy": "not_openreview_public_reviews",
+      "source_url": "",
+      "evidence_urls": [],
+      "source_notes": [
+        "Top ML journal tracked for scope control; no public OpenReview official-review corpus is expected for 2025 scoring."
+      ],
+      "include_in_inventory": false,
+      "invitation_candidates": [],
+      "status": "excluded_no_public_reviews",
+      "recommendation": "skip_no_public_reviews",
+      "public_review_evidence": {
+        "state": "excluded_no_public_openreview_corpus",
+        "review_policy": "not_openreview_public_reviews",
+        "scope_decision": "exclude_no_public_reviews",
+        "api_status": "excluded_no_public_reviews",
+        "evidence_urls": [],
+        "source_notes": [
+          "Top ML journal tracked for scope control; no public OpenReview official-review corpus is expected for 2025 scoring."
+        ]
+      },
+      "selected_invitation": "",
+      "attempts": [],
+      "sample_stats": {
+        "paper_count": 0,
+        "reply_count": 0,
+        "review_count": 0,
+        "papers_with_reviews": 0,
+        "review_coverage_rate": 0,
+        "mean_reviews_per_paper": 0,
+        "papers_with_decisions": 0,
+        "decision_coverage_rate": 0,
+        "papers_with_ratings": 0,
+        "rating_coverage_rate": 0,
+        "papers_with_confidence": 0,
+        "confidence_coverage_rate": 0
+      },
+      "review_invitation_counts": {},
+      "notes": [
+        "Top ML journal tracked for scope control; no public OpenReview official-review corpus is expected for 2025 scoring.",
+        "Excluded from scoring queue: no public OpenReview review corpus is expected for this venue."
+      ]
+    }
+  ]
+}

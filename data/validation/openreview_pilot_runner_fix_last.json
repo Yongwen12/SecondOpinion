@@ -1,0 +1,159 @@
+{
+  "schema_version": "openreview-plan-runner-v0.1",
+  "execute": true,
+  "skip_existing": false,
+  "check_inputs": false,
+  "max_submit_cost_usd": null,
+  "status_counts": {
+    "completed": 9
+  },
+  "steps": [
+    {
+      "venue_id": "ICLR",
+      "name": "ingest",
+      "status": "completed",
+      "reason": "",
+      "command": "python -m secondopinion.tools.ingest_normalized --input data/normalized/iclr_2025_sample50.json",
+      "writes": [
+        "SECONDOPINION_DATABASE_URL"
+      ],
+      "requires_network": false,
+      "requires_openreview_auth": false,
+      "requires_openai_key": false,
+      "returncode": 0,
+      "stdout": "{\n  \"paper_count\": 50,\n  \"review_count\": 188,\n  \"dataset\": \"iclr_2025\",\n  \"ingest_run_id\": \"ingest_90695fa8a4af4a8e\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "venue_id": "ICLR",
+      "name": "build_batch",
+      "status": "completed",
+      "reason": "",
+      "command": "python -m secondopinion.tools.build_scoring_batch --input data/normalized/iclr_2025_sample50.json --output data/batch/iclr_2025_sample50_batch.jsonl --manifest data/batch/iclr_2025_sample50_batch_manifest.json --model gpt-5.4-nano",
+      "writes": [
+        "data/batch/iclr_2025_sample50_batch.jsonl",
+        "data/batch/iclr_2025_sample50_batch_manifest.json"
+      ],
+      "requires_network": false,
+      "requires_openreview_auth": false,
+      "requires_openai_key": false,
+      "returncode": 0,
+      "stdout": "\"ICLR-2025-yRd4loGAhJ-T5IG3mQC6q\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"yRd4loGAhJ\",\n      \"review_id\": \"T5IG3mQC6q\",\n      \"reviewer_index\": 1\n    },\n    {\n      \"custom_id\": \"ICLR-2025-yRd4loGAhJ-po9pdrLPvt\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"yRd4loGAhJ\",\n      \"review_id\": \"po9pdrLPvt\",\n      \"reviewer_index\": 2\n    },\n    {\n      \"custom_id\": \"ICLR-2025-yRd4loGAhJ-1zlqWB0bV8\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"yRd4loGAhJ\",\n      \"review_id\": \"1zlqWB0bV8\",\n      \"reviewer_index\": 3\n    },\n    {\n      \"custom_id\": \"ICLR-2025-yRd4loGAhJ-BVu3rSmgSB\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"yRd4loGAhJ\",\n      \"review_id\": \"BVu3rSmgSB\",\n      \"reviewer_index\": 4\n    },\n    {\n      \"custom_id\": \"ICLR-2025-6ifeGfWxtX-2pVnJIH4De\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"6ifeGfWxtX\",\n      \"review_id\": \"2pVnJIH4De\",\n      \"reviewer_index\": 1\n    },\n    {\n      \"custom_id\": \"ICLR-2025-6ifeGfWxtX-QHelQo3JvG\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"6ifeGfWxtX\",\n      \"review_id\": \"QHelQo3JvG\",\n      \"reviewer_index\": 2\n    },\n    {\n      \"custom_id\": \"ICLR-2025-6ifeGfWxtX-llAfANWRRi\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"6ifeGfWxtX\",\n      \"review_id\": \"llAfANWRRi\",\n      \"reviewer_index\": 3\n    },\n    {\n      \"custom_id\": \"ICLR-2025-6ifeGfWxtX-qaGkQaMkYt\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"6ifeGfWxtX\",\n      \"review_id\": \"qaGkQaMkYt\",\n      \"reviewer_index\": 4\n    },\n    {\n      \"custom_id\": \"ICLR-2025-STpxO1Siaq-JlTbJ1EV7Z\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"STpxO1Siaq\",\n      \"review_id\": \"JlTbJ1EV7Z\",\n      \"reviewer_index\": 1\n    },\n    {\n      \"custom_id\": \"ICLR-2025-STpxO1Siaq-cyX74nkB6U\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"STpxO1Siaq\",\n      \"review_id\": \"cyX74nkB6U\",\n      \"reviewer_index\": 2\n    },\n    {\n      \"custom_id\": \"ICLR-2025-STpxO1Siaq-pwKp6HhU4l\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"STpxO1Siaq\",\n      \"review_id\": \"pwKp6HhU4l\",\n      \"reviewer_index\": 3\n    },\n    {\n      \"custom_id\": \"ICLR-2025-STpxO1Siaq-1BRC1xbfaF\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"STpxO1Siaq\",\n      \"review_id\": \"1BRC1xbfaF\",\n      \"reviewer_index\": 4\n    },\n    {\n      \"custom_id\": \"ICLR-2025-uOnElfFuey-isamCsehLc\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"uOnElfFuey\",\n      \"review_id\": \"isamCsehLc\",\n      \"reviewer_index\": 1\n    },\n    {\n      \"custom_id\": \"ICLR-2025-uOnElfFuey-7hfio8486k\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"uOnElfFuey\",\n      \"review_id\": \"7hfio8486k\",\n      \"reviewer_index\": 2\n    },\n    {\n      \"custom_id\": \"ICLR-2025-uOnElfFuey-00Qehr5pC2\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"uOnElfFuey\",\n      \"review_id\": \"00Qehr5pC2\",\n      \"reviewer_index\": 3\n    },\n    {\n      \"custom_id\": \"ICLR-2025-uOnElfFuey-n4EVrSoWA0\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"uOnElfFuey\",\n      \"review_id\": \"n4EVrSoWA0\",\n      \"reviewer_index\": 4\n    },\n    {\n      \"custom_id\": \"ICLR-2025-Yd5MHVIKLk-FowTncntue\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"Yd5MHVIKLk\",\n      \"review_id\": \"FowTncntue\",\n      \"reviewer_index\": 1\n    },\n    {\n      \"custom_id\": \"ICLR-2025-Yd5MHVIKLk-BUfbujQhDr\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"Yd5MHVIKLk\",\n      \"review_id\": \"BUfbujQhDr\",\n      \"reviewer_index\": 2\n    },\n    {\n      \"custom_id\": \"ICLR-2025-Yd5MHVIKLk-PpXMjXjaV7\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"Yd5MHVIKLk\",\n      \"review_id\": \"PpXMjXjaV7\",\n      \"reviewer_index\": 3\n    },\n    {\n      \"custom_id\": \"ICLR-2025-Yd5MHVIKLk-woHoLD4zxu\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"Yd5MHVIKLk\",\n      \"review_id\": \"woHoLD4zxu\",\n      \"reviewer_index\": 4\n    }\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "venue_id": "ICLR",
+      "name": "split_batch",
+      "status": "completed",
+      "reason": "",
+      "command": "python -m secondopinion.tools.split_scoring_batch --input data/batch/iclr_2025_sample50_batch.jsonl --manifest data/batch/iclr_2025_sample50_batch_manifest.json --output-dir data/batch/iclr_2025_sample50_parts --prefix iclr_2025 --max-estimated-input-tokens 1600000",
+      "writes": [
+        "data/batch/iclr_2025_sample50_parts"
+      ],
+      "requires_network": false,
+      "requires_openreview_auth": false,
+      "requires_openai_key": false,
+      "returncode": 0,
+      "stdout": "{\n  \"source_jsonl_path\": \"data/batch/iclr_2025_sample50_batch.jsonl\",\n  \"source_manifest_path\": \"data/batch/iclr_2025_sample50_batch_manifest.json\",\n  \"chunk_count\": 1,\n  \"request_count\": 188,\n  \"max_estimated_input_tokens\": 1600000,\n  \"max_requests\": null,\n  \"chunks\": [\n    {\n      \"index\": 1,\n      \"jsonl_path\": \"data\\\\batch\\\\iclr_2025_sample50_parts\\\\iclr_2025_part01_batch.jsonl\",\n      \"manifest_path\": \"data\\\\batch\\\\iclr_2025_sample50_parts\\\\iclr_2025_part01_manifest.json\",\n      \"request_count\": 188,\n      \"estimated_input_tokens\": 329473,\n      \"estimated_batch_cost_usd\": 0.0447\n    }\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "venue_id": "ICML",
+      "name": "ingest",
+      "status": "completed",
+      "reason": "",
+      "command": "python -m secondopinion.tools.ingest_normalized --input data/normalized/icml_2025_sample50.json",
+      "writes": [
+        "SECONDOPINION_DATABASE_URL"
+      ],
+      "requires_network": false,
+      "requires_openreview_auth": false,
+      "requires_openai_key": false,
+      "returncode": 0,
+      "stdout": "{\n  \"paper_count\": 50,\n  \"review_count\": 191,\n  \"dataset\": \"icml_2025\",\n  \"ingest_run_id\": \"ingest_3cff30487f8e4a1b\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "venue_id": "ICML",
+      "name": "build_batch",
+      "status": "completed",
+      "reason": "",
+      "command": "python -m secondopinion.tools.build_scoring_batch --input data/normalized/icml_2025_sample50.json --output data/batch/icml_2025_sample50_batch.jsonl --manifest data/batch/icml_2025_sample50_batch_manifest.json --model gpt-5.4-nano",
+      "writes": [
+        "data/batch/icml_2025_sample50_batch.jsonl",
+        "data/batch/icml_2025_sample50_batch_manifest.json"
+      ],
+      "requires_network": false,
+      "requires_openreview_auth": false,
+      "requires_openai_key": false,
+      "returncode": 0,
+      "stdout": "\"ICML-2025-hrBfufwMzg-7EA9v2BwHi\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"hrBfufwMzg\",\n      \"review_id\": \"7EA9v2BwHi\",\n      \"reviewer_index\": 3\n    },\n    {\n      \"custom_id\": \"ICML-2025-CAPNgWkEEk-PLSMosy628\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"CAPNgWkEEk\",\n      \"review_id\": \"PLSMosy628\",\n      \"reviewer_index\": 1\n    },\n    {\n      \"custom_id\": \"ICML-2025-CAPNgWkEEk-e2VAxOLfu3\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"CAPNgWkEEk\",\n      \"review_id\": \"e2VAxOLfu3\",\n      \"reviewer_index\": 2\n    },\n    {\n      \"custom_id\": \"ICML-2025-CAPNgWkEEk-B9r4CeWr13\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"CAPNgWkEEk\",\n      \"review_id\": \"B9r4CeWr13\",\n      \"reviewer_index\": 3\n    },\n    {\n      \"custom_id\": \"ICML-2025-3go0lhfxd0-ORlRz9vIuY\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"3go0lhfxd0\",\n      \"review_id\": \"ORlRz9vIuY\",\n      \"reviewer_index\": 1\n    },\n    {\n      \"custom_id\": \"ICML-2025-3go0lhfxd0-L90tUxzhto\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"3go0lhfxd0\",\n      \"review_id\": \"L90tUxzhto\",\n      \"reviewer_index\": 2\n    },\n    {\n      \"custom_id\": \"ICML-2025-3go0lhfxd0-qVSe7I6LDa\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"3go0lhfxd0\",\n      \"review_id\": \"qVSe7I6LDa\",\n      \"reviewer_index\": 3\n    },\n    {\n      \"custom_id\": \"ICML-2025-3go0lhfxd0-YQTeFFQdkC\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"3go0lhfxd0\",\n      \"review_id\": \"YQTeFFQdkC\",\n      \"reviewer_index\": 4\n    },\n    {\n      \"custom_id\": \"ICML-2025-7jxa1o8rDW-3x3AHuNVYJ\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"7jxa1o8rDW\",\n      \"review_id\": \"3x3AHuNVYJ\",\n      \"reviewer_index\": 1\n    },\n    {\n      \"custom_id\": \"ICML-2025-7jxa1o8rDW-bMidNJdTQB\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"7jxa1o8rDW\",\n      \"review_id\": \"bMidNJdTQB\",\n      \"reviewer_index\": 2\n    },\n    {\n      \"custom_id\": \"ICML-2025-7jxa1o8rDW-pciI6aBar5\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"7jxa1o8rDW\",\n      \"review_id\": \"pciI6aBar5\",\n      \"reviewer_index\": 3\n    },\n    {\n      \"custom_id\": \"ICML-2025-7jxa1o8rDW-Xf3jnJ7Euk\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"7jxa1o8rDW\",\n      \"review_id\": \"Xf3jnJ7Euk\",\n      \"reviewer_index\": 4\n    },\n    {\n      \"custom_id\": \"ICML-2025-kjtvCSkSsy-vEL5HQfyub\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"kjtvCSkSsy\",\n      \"review_id\": \"vEL5HQfyub\",\n      \"reviewer_index\": 1\n    },\n    {\n      \"custom_id\": \"ICML-2025-kjtvCSkSsy-IrgfHmyAGT\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"kjtvCSkSsy\",\n      \"review_id\": \"IrgfHmyAGT\",\n      \"reviewer_index\": 2\n    },\n    {\n      \"custom_id\": \"ICML-2025-kjtvCSkSsy-D7B3VpbzmB\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"kjtvCSkSsy\",\n      \"review_id\": \"D7B3VpbzmB\",\n      \"reviewer_index\": 3\n    },\n    {\n      \"custom_id\": \"ICML-2025-kjtvCSkSsy-ZXOJOUghst\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"kjtvCSkSsy\",\n      \"review_id\": \"ZXOJOUghst\",\n      \"reviewer_index\": 4\n    },\n    {\n      \"custom_id\": \"ICML-2025-uTv5rOPZr4-nlIpwU29Gm\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"uTv5rOPZr4\",\n      \"review_id\": \"nlIpwU29Gm\",\n      \"reviewer_index\": 1\n    },\n    {\n      \"custom_id\": \"ICML-2025-uTv5rOPZr4-iMkF2Jj1DK\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"uTv5rOPZr4\",\n      \"review_id\": \"iMkF2Jj1DK\",\n      \"reviewer_index\": 2\n    },\n    {\n      \"custom_id\": \"ICML-2025-uTv5rOPZr4-TsEJunkrEZ\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"uTv5rOPZr4\",\n      \"review_id\": \"TsEJunkrEZ\",\n      \"reviewer_index\": 3\n    },\n    {\n      \"custom_id\": \"ICML-2025-uTv5rOPZr4-WQmbCWewqR\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"uTv5rOPZr4\",\n      \"review_id\": \"WQmbCWewqR\",\n      \"reviewer_index\": 4\n    }\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "venue_id": "ICML",
+      "name": "split_batch",
+      "status": "completed",
+      "reason": "",
+      "command": "python -m secondopinion.tools.split_scoring_batch --input data/batch/icml_2025_sample50_batch.jsonl --manifest data/batch/icml_2025_sample50_batch_manifest.json --output-dir data/batch/icml_2025_sample50_parts --prefix icml_2025 --max-estimated-input-tokens 1600000",
+      "writes": [
+        "data/batch/icml_2025_sample50_parts"
+      ],
+      "requires_network": false,
+      "requires_openreview_auth": false,
+      "requires_openai_key": false,
+      "returncode": 0,
+      "stdout": "{\n  \"source_jsonl_path\": \"data/batch/icml_2025_sample50_batch.jsonl\",\n  \"source_manifest_path\": \"data/batch/icml_2025_sample50_batch_manifest.json\",\n  \"chunk_count\": 1,\n  \"request_count\": 191,\n  \"max_estimated_input_tokens\": 1600000,\n  \"max_requests\": null,\n  \"chunks\": [\n    {\n      \"index\": 1,\n      \"jsonl_path\": \"data\\\\batch\\\\icml_2025_sample50_parts\\\\icml_2025_part01_batch.jsonl\",\n      \"manifest_path\": \"data\\\\batch\\\\icml_2025_sample50_parts\\\\icml_2025_part01_manifest.json\",\n      \"request_count\": 191,\n      \"estimated_input_tokens\": 328473,\n      \"estimated_batch_cost_usd\": 0.0448\n    }\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "venue_id": "NEURIPS",
+      "name": "ingest",
+      "status": "completed",
+      "reason": "",
+      "command": "python -m secondopinion.tools.ingest_normalized --input data/normalized/neurips_2025_sample50.json",
+      "writes": [
+        "SECONDOPINION_DATABASE_URL"
+      ],
+      "requires_network": false,
+      "requires_openreview_auth": false,
+      "requires_openai_key": false,
+      "returncode": 0,
+      "stdout": "{\n  \"paper_count\": 50,\n  \"review_count\": 202,\n  \"dataset\": \"neurips_2025\",\n  \"ingest_run_id\": \"ingest_5b8481f224f34cdf\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "venue_id": "NEURIPS",
+      "name": "build_batch",
+      "status": "completed",
+      "reason": "",
+      "command": "python -m secondopinion.tools.build_scoring_batch --input data/normalized/neurips_2025_sample50.json --output data/batch/neurips_2025_sample50_batch.jsonl --manifest data/batch/neurips_2025_sample50_batch_manifest.json --model gpt-5.4-nano",
+      "writes": [
+        "data/batch/neurips_2025_sample50_batch.jsonl",
+        "data/batch/neurips_2025_sample50_batch_manifest.json"
+      ],
+      "requires_network": false,
+      "requires_openreview_auth": false,
+      "requires_openai_key": false,
+      "returncode": 0,
+      "stdout": "  \"review_id\": \"43jFHCd3OT\",\n      \"reviewer_index\": 1\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-rew03VaNUJ-mWXM8rvVoX\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"rew03VaNUJ\",\n      \"review_id\": \"mWXM8rvVoX\",\n      \"reviewer_index\": 2\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-rew03VaNUJ-75C1BU7PUA\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"rew03VaNUJ\",\n      \"review_id\": \"75C1BU7PUA\",\n      \"reviewer_index\": 3\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-rew03VaNUJ-koZUtGoA7J\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"rew03VaNUJ\",\n      \"review_id\": \"koZUtGoA7J\",\n      \"reviewer_index\": 4\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-Bsska2ayiy-QbI8aNYUtl\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"Bsska2ayiy\",\n      \"review_id\": \"QbI8aNYUtl\",\n      \"reviewer_index\": 1\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-Bsska2ayiy-pH2iK3iucw\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"Bsska2ayiy\",\n      \"review_id\": \"pH2iK3iucw\",\n      \"reviewer_index\": 2\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-Bsska2ayiy-TXIbFalvRg\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"Bsska2ayiy\",\n      \"review_id\": \"TXIbFalvRg\",\n      \"reviewer_index\": 3\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-Bsska2ayiy-44YoArDJwr\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"Bsska2ayiy\",\n      \"review_id\": \"44YoArDJwr\",\n      \"reviewer_index\": 4\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-w1TjXJk846-srTUgA7WSq\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"w1TjXJk846\",\n      \"review_id\": \"srTUgA7WSq\",\n      \"reviewer_index\": 1\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-w1TjXJk846-TtlUMbO7HP\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"w1TjXJk846\",\n      \"review_id\": \"TtlUMbO7HP\",\n      \"reviewer_index\": 2\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-w1TjXJk846-MM5AWrk24N\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"w1TjXJk846\",\n      \"review_id\": \"MM5AWrk24N\",\n      \"reviewer_index\": 3\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-w1TjXJk846-68TkCa4GQV\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"w1TjXJk846\",\n      \"review_id\": \"68TkCa4GQV\",\n      \"reviewer_index\": 4\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-9PL1DIIB7e-gI4vBTcNNp\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"9PL1DIIB7e\",\n      \"review_id\": \"gI4vBTcNNp\",\n      \"reviewer_index\": 1\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-9PL1DIIB7e-8u4wmIIpgg\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"9PL1DIIB7e\",\n      \"review_id\": \"8u4wmIIpgg\",\n      \"reviewer_index\": 2\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-9PL1DIIB7e-4ggto1PDRL\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"9PL1DIIB7e\",\n      \"review_id\": \"4ggto1PDRL\",\n      \"reviewer_index\": 3\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-9PL1DIIB7e-OCdJztJflx\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"9PL1DIIB7e\",\n      \"review_id\": \"OCdJztJflx\",\n      \"reviewer_index\": 4\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-B5mEYUJi85-LbrEExHQ5d\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"B5mEYUJi85\",\n      \"review_id\": \"LbrEExHQ5d\",\n      \"reviewer_index\": 1\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-B5mEYUJi85-V3U1OuQyTZ\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"B5mEYUJi85\",\n      \"review_id\": \"V3U1OuQyTZ\",\n      \"reviewer_index\": 2\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-B5mEYUJi85-YYJpz1rGrs\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"B5mEYUJi85\",\n      \"review_id\": \"YYJpz1rGrs\",\n      \"reviewer_index\": 3\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-B5mEYUJi85-8r5GnP7Q1I\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"B5mEYUJi85\",\n      \"review_id\": \"8r5GnP7Q1I\",\n      \"reviewer_index\": 4\n    }\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "venue_id": "NEURIPS",
+      "name": "split_batch",
+      "status": "completed",
+      "reason": "",
+      "command": "python -m secondopinion.tools.split_scoring_batch --input data/batch/neurips_2025_sample50_batch.jsonl --manifest data/batch/neurips_2025_sample50_batch_manifest.json --output-dir data/batch/neurips_2025_sample50_parts --prefix neurips_2025 --max-estimated-input-tokens 1600000",
+      "writes": [
+        "data/batch/neurips_2025_sample50_parts"
+      ],
+      "requires_network": false,
+      "requires_openreview_auth": false,
+      "requires_openai_key": false,
+      "returncode": 0,
+      "stdout": "{\n  \"source_jsonl_path\": \"data/batch/neurips_2025_sample50_batch.jsonl\",\n  \"source_manifest_path\": \"data/batch/neurips_2025_sample50_batch_manifest.json\",\n  \"chunk_count\": 1,\n  \"request_count\": 202,\n  \"max_estimated_input_tokens\": 1600000,\n  \"max_requests\": null,\n  \"chunks\": [\n    {\n      \"index\": 1,\n      \"jsonl_path\": \"data\\\\batch\\\\neurips_2025_sample50_parts\\\\neurips_2025_part01_batch.jsonl\",\n      \"manifest_path\": \"data\\\\batch\\\\neurips_2025_sample50_parts\\\\neurips_2025_part01_manifest.json\",\n      \"request_count\": 202,\n      \"estimated_input_tokens\": 374382,\n      \"estimated_batch_cost_usd\": 0.0501\n    }\n  ]\n}\n",
+      "stderr": ""
+    }
+  ]
+}

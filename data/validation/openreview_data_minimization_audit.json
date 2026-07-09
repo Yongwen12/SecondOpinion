@@ -1,0 +1,972 @@
+{
+  "schema_version": "openreview-data-minimization-audit-v0.1",
+  "created_at": "2026-07-07T10:34:33+00:00",
+  "status": "passed",
+  "policy": {
+    "normalized_allowed_core": "title, abstract, decisions, public review fields, ratings/confidence, timestamps, and optional pdf_url pointer metadata",
+    "ai_scoring_allowed_core": "title, abstract, rating/confidence, and compacted public review text only",
+    "forbidden_normalized_keys": [
+      "body",
+      "body_text",
+      "full_text",
+      "paper_text",
+      "paragraphs",
+      "pdf_text",
+      "sections"
+    ],
+    "forbidden_batch_markers": [
+      "pdf_url",
+      "full_text",
+      "paper_text",
+      "pdf_text",
+      "body_text"
+    ],
+    "allowed_review_text_links": [
+      "openreview.net/pdf",
+      "arxiv.org/pdf"
+    ]
+  },
+  "summary": {
+    "normalized_file_count": 19,
+    "batch_file_count": 120,
+    "normalized_failed_count": 0,
+    "batch_failed_count": 0,
+    "total_papers_seen": 25007,
+    "total_reviews_seen": 98903,
+    "batch_request_count": 182480
+  },
+  "normalized_files": [
+    {
+      "path": "data\\normalized\\iclr_2022_sample_1000.json",
+      "paper_count": 1000,
+      "review_count": 3899,
+      "paper_extra_keys": [],
+      "review_extra_keys": [],
+      "forbidden_paths": [],
+      "forbidden_path_count": 0,
+      "pdf_url_pointer_count": 1000,
+      "status": "ok"
+    },
+    {
+      "path": "data\\normalized\\iclr_2022_smoke_v1_5.json",
+      "paper_count": 5,
+      "review_count": 20,
+      "paper_extra_keys": [],
+      "review_extra_keys": [],
+      "forbidden_paths": [],
+      "forbidden_path_count": 0,
+      "pdf_url_pointer_count": 5,
+      "status": "ok"
+    },
+    {
+      "path": "data\\normalized\\iclr_2023_sample_1000.json",
+      "paper_count": 1000,
+      "review_count": 3786,
+      "paper_extra_keys": [],
+      "review_extra_keys": [],
+      "forbidden_paths": [],
+      "forbidden_path_count": 0,
+      "pdf_url_pointer_count": 1000,
+      "status": "ok"
+    },
+    {
+      "path": "data\\normalized\\iclr_2023_smoke_v1_5.json",
+      "paper_count": 5,
+      "review_count": 19,
+      "paper_extra_keys": [],
+      "review_extra_keys": [],
+      "forbidden_paths": [],
+      "forbidden_path_count": 0,
+      "pdf_url_pointer_count": 5,
+      "status": "ok"
+    },
+    {
+      "path": "data\\normalized\\iclr_2024_10_external_relevant_smoke.json",
+      "paper_count": 10,
+      "review_count": 10,
+      "paper_extra_keys": [],
+      "review_extra_keys": [],
+      "forbidden_paths": [],
+      "forbidden_path_count": 0,
+      "pdf_url_pointer_count": 10,
+      "status": "ok"
+    },
+    {
+      "path": "data\\normalized\\iclr_2024_10_one_review_smoke.json",
+      "paper_count": 10,
+      "review_count": 10,
+      "paper_extra_keys": [],
+      "review_extra_keys": [],
+      "forbidden_paths": [],
+      "forbidden_path_count": 0,
+      "pdf_url_pointer_count": 10,
+      "status": "ok"
+    },
+    {
+      "path": "data\\normalized\\iclr_2024_sample_1000.json",
+      "paper_count": 1000,
+      "review_count": 3729,
+      "paper_extra_keys": [],
+      "review_extra_keys": [],
+      "forbidden_paths": [],
+      "forbidden_path_count": 0,
+      "pdf_url_pointer_count": 967,
+      "status": "ok"
+    },
+    {
+      "path": "data\\normalized\\iclr_2024_sample_3.json",
+      "paper_count": 3,
+      "review_count": 12,
+      "paper_extra_keys": [],
+      "review_extra_keys": [],
+      "forbidden_paths": [],
+      "forbidden_path_count": 0,
+      "pdf_url_pointer_count": 3,
+      "status": "ok"
+    },
+    {
+      "path": "data\\normalized\\iclr_2024_sample_80.json",
+      "paper_count": 80,
+      "review_count": 279,
+      "paper_extra_keys": [],
+      "review_extra_keys": [],
+      "forbidden_paths": [],
+      "forbidden_path_count": 0,
+      "pdf_url_pointer_count": 73,
+      "status": "ok"
+    },
+    {
+      "path": "data\\normalized\\iclr_2024_smoke_5.json",
+      "paper_count": 5,
+      "review_count": 20,
+      "paper_extra_keys": [],
+      "review_extra_keys": [],
+      "forbidden_paths": [],
+      "forbidden_path_count": 0,
+      "pdf_url_pointer_count": 5,
+      "status": "ok"
+    },
+    {
+      "path": "data\\normalized\\iclr_2025_dryrun_100.json",
+      "paper_count": 100,
+      "review_count": 374,
+      "paper_extra_keys": [],
+      "review_extra_keys": [],
+      "forbidden_paths": [],
+      "forbidden_path_count": 0,
+      "pdf_url_pointer_count": 96,
+      "status": "ok"
+    },
+    {
+      "path": "data\\normalized\\iclr_2025_full.json",
+      "paper_count": 11672,
+      "review_count": 46748,
+      "paper_extra_keys": [],
+      "review_extra_keys": [],
+      "forbidden_paths": [],
+      "forbidden_path_count": 0,
+      "pdf_url_pointer_count": 11629,
+      "status": "ok"
+    },
+    {
+      "path": "data\\normalized\\iclr_2025_sample50.json",
+      "paper_count": 50,
+      "review_count": 188,
+      "paper_extra_keys": [],
+      "review_extra_keys": [],
+      "forbidden_paths": [],
+      "forbidden_path_count": 0,
+      "pdf_url_pointer_count": 49,
+      "status": "ok"
+    },
+    {
+      "path": "data\\normalized\\iclr_2025_sample_1000.json",
+      "paper_count": 1000,
+      "review_count": 3926,
+      "paper_extra_keys": [],
+      "review_extra_keys": [],
+      "forbidden_paths": [],
+      "forbidden_path_count": 0,
+      "pdf_url_pointer_count": 988,
+      "status": "ok"
+    },
+    {
+      "path": "data\\normalized\\iclr_2025_smoke_5.json",
+      "paper_count": 5,
+      "review_count": 19,
+      "paper_extra_keys": [],
+      "review_extra_keys": [],
+      "forbidden_paths": [],
+      "forbidden_path_count": 0,
+      "pdf_url_pointer_count": 5,
+      "status": "ok"
+    },
+    {
+      "path": "data\\normalized\\icml_2025_full.json",
+      "paper_count": 3422,
+      "review_count": 13102,
+      "paper_extra_keys": [],
+      "review_extra_keys": [],
+      "forbidden_paths": [],
+      "forbidden_path_count": 0,
+      "pdf_url_pointer_count": 3422,
+      "status": "ok"
+    },
+    {
+      "path": "data\\normalized\\icml_2025_sample50.json",
+      "paper_count": 50,
+      "review_count": 191,
+      "paper_extra_keys": [],
+      "review_extra_keys": [],
+      "forbidden_paths": [],
+      "forbidden_path_count": 0,
+      "pdf_url_pointer_count": 50,
+      "status": "ok"
+    },
+    {
+      "path": "data\\normalized\\neurips_2025_full.json",
+      "paper_count": 5540,
+      "review_count": 22369,
+      "paper_extra_keys": [],
+      "review_extra_keys": [],
+      "forbidden_paths": [],
+      "forbidden_path_count": 0,
+      "pdf_url_pointer_count": 5540,
+      "status": "ok"
+    },
+    {
+      "path": "data\\normalized\\neurips_2025_sample50.json",
+      "paper_count": 50,
+      "review_count": 202,
+      "paper_extra_keys": [],
+      "review_extra_keys": [],
+      "forbidden_paths": [],
+      "forbidden_path_count": 0,
+      "pdf_url_pointer_count": 50,
+      "status": "ok"
+    }
+  ],
+  "batch_files": [
+    {
+      "path": "data\\batch\\chunks\\iclr_2025_cached_1000_remaining3426_part01_batch.jsonl",
+      "request_count": 887,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\chunks\\iclr_2025_cached_1000_remaining3426_part01_output.jsonl",
+      "request_count": 887,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\chunks\\iclr_2025_cached_1000_remaining3426_part02_batch.jsonl",
+      "request_count": 895,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\chunks\\iclr_2025_cached_1000_remaining3426_part02_output.jsonl",
+      "request_count": 895,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\chunks\\iclr_2025_cached_1000_remaining3426_part03_batch.jsonl",
+      "request_count": 892,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\chunks\\iclr_2025_cached_1000_remaining3426_part03_output.jsonl",
+      "request_count": 892,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\chunks\\iclr_2025_cached_1000_remaining3426_part04_batch.jsonl",
+      "request_count": 752,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\chunks\\iclr_2025_cached_1000_remaining3426_part04_output.jsonl",
+      "request_count": 752,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_cached_1000_full3926_output.jsonl",
+      "request_count": 3926,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_cached_1000_remaining3426_batch.jsonl",
+      "request_count": 3426,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_batch.jsonl",
+      "request_count": 46748,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part01_batch.jsonl",
+      "request_count": 901,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part02_batch.jsonl",
+      "request_count": 898,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part03_batch.jsonl",
+      "request_count": 882,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part04_batch.jsonl",
+      "request_count": 895,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part05_batch.jsonl",
+      "request_count": 890,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part06_batch.jsonl",
+      "request_count": 896,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part07_batch.jsonl",
+      "request_count": 903,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part08_batch.jsonl",
+      "request_count": 892,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part09_batch.jsonl",
+      "request_count": 890,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part10_batch.jsonl",
+      "request_count": 896,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part11_batch.jsonl",
+      "request_count": 899,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part12_batch.jsonl",
+      "request_count": 898,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part13_batch.jsonl",
+      "request_count": 907,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part14_batch.jsonl",
+      "request_count": 900,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part15_batch.jsonl",
+      "request_count": 902,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part16_batch.jsonl",
+      "request_count": 900,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part17_batch.jsonl",
+      "request_count": 888,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part18_batch.jsonl",
+      "request_count": 902,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part19_batch.jsonl",
+      "request_count": 899,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part20_batch.jsonl",
+      "request_count": 891,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part21_batch.jsonl",
+      "request_count": 902,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part22_batch.jsonl",
+      "request_count": 899,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part23_batch.jsonl",
+      "request_count": 899,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part24_batch.jsonl",
+      "request_count": 903,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part25_batch.jsonl",
+      "request_count": 899,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part26_batch.jsonl",
+      "request_count": 883,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part27_batch.jsonl",
+      "request_count": 897,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part28_batch.jsonl",
+      "request_count": 895,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part29_batch.jsonl",
+      "request_count": 897,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part30_batch.jsonl",
+      "request_count": 909,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part31_batch.jsonl",
+      "request_count": 896,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part32_batch.jsonl",
+      "request_count": 892,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part33_batch.jsonl",
+      "request_count": 903,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part34_batch.jsonl",
+      "request_count": 904,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part35_batch.jsonl",
+      "request_count": 905,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part36_batch.jsonl",
+      "request_count": 907,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part37_batch.jsonl",
+      "request_count": 902,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part38_batch.jsonl",
+      "request_count": 894,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part39_batch.jsonl",
+      "request_count": 907,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part40_batch.jsonl",
+      "request_count": 905,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part41_batch.jsonl",
+      "request_count": 902,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part42_batch.jsonl",
+      "request_count": 896,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part43_batch.jsonl",
+      "request_count": 907,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part44_batch.jsonl",
+      "request_count": 906,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part45_batch.jsonl",
+      "request_count": 911,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part46_batch.jsonl",
+      "request_count": 899,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part47_batch.jsonl",
+      "request_count": 902,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part48_batch.jsonl",
+      "request_count": 917,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part49_batch.jsonl",
+      "request_count": 904,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part50_batch.jsonl",
+      "request_count": 897,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part51_batch.jsonl",
+      "request_count": 899,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_full_parts\\iclr_2025_part52_batch.jsonl",
+      "request_count": 881,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_reviews_500_batch.jsonl",
+      "request_count": 500,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_reviews_500_errors.jsonl",
+      "request_count": 500,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_reviews_500_v2_batch.jsonl",
+      "request_count": 500,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_reviews_500_v2_combined_output.jsonl",
+      "request_count": 500,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_reviews_500_v2_output.jsonl",
+      "request_count": 500,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_reviews_500_v2_retry83_batch.jsonl",
+      "request_count": 83,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_reviews_500_v2_retry83_output.jsonl",
+      "request_count": 83,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_reviews_smoke5_batch.jsonl",
+      "request_count": 5,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_reviews_smoke5_output.jsonl",
+      "request_count": 5,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_sample50_batch.jsonl",
+      "request_count": 188,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\iclr_2025_sample50_parts\\iclr_2025_part01_batch.jsonl",
+      "request_count": 188,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\icml_2025_full_batch.jsonl",
+      "request_count": 13102,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\icml_2025_full_parts\\icml_2025_part01_batch.jsonl",
+      "request_count": 928,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\icml_2025_full_parts\\icml_2025_part02_batch.jsonl",
+      "request_count": 941,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\icml_2025_full_parts\\icml_2025_part03_batch.jsonl",
+      "request_count": 933,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\icml_2025_full_parts\\icml_2025_part04_batch.jsonl",
+      "request_count": 939,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\icml_2025_full_parts\\icml_2025_part05_batch.jsonl",
+      "request_count": 939,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\icml_2025_full_parts\\icml_2025_part06_batch.jsonl",
+      "request_count": 928,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\icml_2025_full_parts\\icml_2025_part07_batch.jsonl",
+      "request_count": 938,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\icml_2025_full_parts\\icml_2025_part08_batch.jsonl",
+      "request_count": 940,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\icml_2025_full_parts\\icml_2025_part09_batch.jsonl",
+      "request_count": 929,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\icml_2025_full_parts\\icml_2025_part10_batch.jsonl",
+      "request_count": 943,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\icml_2025_full_parts\\icml_2025_part11_batch.jsonl",
+      "request_count": 934,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\icml_2025_full_parts\\icml_2025_part12_batch.jsonl",
+      "request_count": 935,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\icml_2025_full_parts\\icml_2025_part13_batch.jsonl",
+      "request_count": 945,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\icml_2025_full_parts\\icml_2025_part14_batch.jsonl",
+      "request_count": 930,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\icml_2025_sample50_batch.jsonl",
+      "request_count": 191,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\icml_2025_sample50_parts\\icml_2025_part01_batch.jsonl",
+      "request_count": 191,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\neurips_2025_full_batch.jsonl",
+      "request_count": 22369,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part01_batch.jsonl",
+      "request_count": 860,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part02_batch.jsonl",
+      "request_count": 875,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part03_batch.jsonl",
+      "request_count": 861,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part04_batch.jsonl",
+      "request_count": 866,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part05_batch.jsonl",
+      "request_count": 880,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part06_batch.jsonl",
+      "request_count": 869,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part07_batch.jsonl",
+      "request_count": 870,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part08_batch.jsonl",
+      "request_count": 868,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part09_batch.jsonl",
+      "request_count": 869,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part10_batch.jsonl",
+      "request_count": 865,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part11_batch.jsonl",
+      "request_count": 870,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part12_batch.jsonl",
+      "request_count": 872,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part13_batch.jsonl",
+      "request_count": 872,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part14_batch.jsonl",
+      "request_count": 875,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part15_batch.jsonl",
+      "request_count": 874,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part16_batch.jsonl",
+      "request_count": 876,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part17_batch.jsonl",
+      "request_count": 865,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part18_batch.jsonl",
+      "request_count": 874,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part19_batch.jsonl",
+      "request_count": 872,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part20_batch.jsonl",
+      "request_count": 867,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part21_batch.jsonl",
+      "request_count": 874,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part22_batch.jsonl",
+      "request_count": 869,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part23_batch.jsonl",
+      "request_count": 864,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part24_batch.jsonl",
+      "request_count": 854,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part25_batch.jsonl",
+      "request_count": 860,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\neurips_2025_full_parts\\neurips_2025_part26_batch.jsonl",
+      "request_count": 648,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\neurips_2025_sample50_batch.jsonl",
+      "request_count": 202,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    },
+    {
+      "path": "data\\batch\\neurips_2025_sample50_parts\\neurips_2025_part01_batch.jsonl",
+      "request_count": 202,
+      "forbidden_marker_counts": {},
+      "status": "ok"
+    }
+  ],
+  "errors": []
+}

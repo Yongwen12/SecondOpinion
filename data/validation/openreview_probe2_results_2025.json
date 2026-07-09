@@ -1,0 +1,112 @@
+{
+    "created_at":  "2026-07-08T06:38:26.2535681Z",
+    "summary":  {
+                    "already_scored_core_venues":  [
+                                                       "ICLR",
+                                                       "ICML",
+                                                       "NEURIPS"
+                                                   ],
+                    "newly_confirmed_public_review_venues":  [
+                                                                 "MIDL"
+                                                             ],
+                    "needs_custom_extractor":  [
+                                                   "TMLR"
+                                               ],
+                    "no_public_reviews_found_in_second_round_sample":  [
+                                                                           "ACL",
+                                                                           "NAACL",
+                                                                           "EMNLP",
+                                                                           "AISTATS",
+                                                                           "CVPR",
+                                                                           "AAAI_AI_ALIGNMENT"
+                                                                       ]
+                },
+    "findings":  [
+                     {
+                         "venue":  "MIDL",
+                         "invitation":  "MIDL.io/2025/Conference/-/Post_Submission",
+                         "status":  "confirmed_public_reviews",
+                         "sample_papers":  50,
+                         "sample_reviews":  163,
+                         "sample_coverage":  1,
+                         "recommended_next_step":  "full_pull_then_batch_score"
+                     },
+                     {
+                         "venue":  "TMLR",
+                         "invitation":  "TMLR/-/Submission plus TMLR/Paper*/-/Official_Comment",
+                         "status":  "public_replies_exist_but_need_custom_rolling_extractor",
+                         "offset_probe":  [
+                                              {
+                                                  "offset":  0,
+                                                  "papers":  20,
+                                                  "replies":  0
+                                              },
+                                              {
+                                                  "offset":  50,
+                                                  "papers":  20,
+                                                  "replies":  0
+                                              },
+                                              {
+                                                  "offset":  200,
+                                                  "papers":  20,
+                                                  "replies":  0
+                                              },
+                                              {
+                                                  "offset":  500,
+                                                  "papers":  20,
+                                                  "replies":  34
+                                              },
+                                              {
+                                                  "offset":  1000,
+                                                  "papers":  20,
+                                                  "replies":  186
+                                              },
+                                              {
+                                                  "offset":  2000,
+                                                  "papers":  20,
+                                                  "replies":  205
+                                              },
+                                              {
+                                                  "offset":  4000,
+                                                  "papers":  20,
+                                                  "replies":  247
+                                              }
+                                          ],
+                         "paper_level_probe":  [
+                                                   {
+                                                       "invitation":  "TMLR/Paper100/-/Official_Comment",
+                                                       "count":  13,
+                                                       "notes":  5
+                                                   },
+                                                   {
+                                                       "invitation":  "TMLR/Paper1000/-/Official_Comment",
+                                                       "count":  10,
+                                                       "notes":  5
+                                                   },
+                                                   {
+                                                       "invitation":  "TMLR/Paper4000/-/Official_Comment",
+                                                       "count":  4,
+                                                       "notes":  4
+                                                   }
+                                               ],
+                         "recommended_next_step":  "build rolling TMLR extractor with 2025 decision/activity filter"
+                     },
+                     {
+                         "venue":  "AISTATS",
+                         "invitation":  "aistats.org/AISTATS/2025/Conference/-/Post_Submission",
+                         "status":  "submissions_visible_but_no_public_reviews_in_sample",
+                         "sample_papers":  50,
+                         "sample_reviews":  0,
+                         "recommended_next_step":  "skip_for_scoring_unless_review_visibility_changes"
+                     },
+                     {
+                         "venue":  "ACL/NAACL/EMNLP/CVPR/AAAI_AI_ALIGNMENT",
+                         "status":  "no public review corpus found through discovered OpenReview 2025 invitations",
+                         "recommended_next_step":  "skip_for_now_or_reprobe_specific official review invitation if external evidence appears"
+                     }
+                 ],
+    "source_files":  [
+                         "data/validation/openreview_probe2_invitation_prefix_scan.json",
+                         "data/validation/openreview_probe2_summary_post_submission.json"
+                     ]
+}

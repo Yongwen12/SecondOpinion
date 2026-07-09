@@ -1,0 +1,55 @@
+{
+  "completed_outputs": [
+    "data/batch\\iclr_2025_full_parts\\iclr_2025_part01_output.jsonl",
+    "data/batch\\iclr_2025_full_parts\\iclr_2025_part02_output.jsonl",
+    "data/batch\\iclr_2025_full_parts\\iclr_2025_part03_output.jsonl",
+    "data/batch\\iclr_2025_full_parts\\iclr_2025_part04_output.jsonl",
+    "data/batch\\iclr_2025_full_parts\\iclr_2025_part05_output.jsonl",
+    "data/batch\\iclr_2025_full_parts\\iclr_2025_part06_output.jsonl",
+    "data/batch\\iclr_2025_full_parts\\iclr_2025_part07_output.jsonl",
+    "data/batch\\iclr_2025_full_parts\\iclr_2025_part08_output.jsonl",
+    "data/batch\\iclr_2025_full_parts\\iclr_2025_part09_output.jsonl",
+    "data/batch\\iclr_2025_full_parts\\iclr_2025_part10_output.jsonl",
+    "data/batch\\iclr_2025_full_parts\\iclr_2025_part11_output.jsonl",
+    "data/batch\\iclr_2025_full_parts\\iclr_2025_part12_output.jsonl",
+    "data/batch\\iclr_2025_full_parts\\iclr_2025_part13_output.jsonl",
+    "data/batch\\neurips_2025_full_parts\\neurips_2025_part19_output.jsonl"
+  ],
+  "exclude_manifests": [
+    "data/batch\\iclr_2025_full_parts\\iclr_2025_part01_manifest.json",
+    "data/batch\\iclr_2025_full_parts\\iclr_2025_part02_manifest.json",
+    "data/batch\\iclr_2025_full_parts\\iclr_2025_part03_manifest.json",
+    "data/batch\\iclr_2025_full_parts\\iclr_2025_part04_manifest.json",
+    "data/batch\\iclr_2025_full_parts\\iclr_2025_part05_manifest.json",
+    "data/batch\\iclr_2025_full_parts\\iclr_2025_part06_manifest.json",
+    "data/batch\\iclr_2025_full_parts\\iclr_2025_part07_manifest.json",
+    "data/batch\\iclr_2025_full_parts\\iclr_2025_part08_manifest.json",
+    "data/batch\\iclr_2025_full_parts\\iclr_2025_part09_manifest.json",
+    "data/batch\\iclr_2025_full_parts\\iclr_2025_part10_manifest.json",
+    "data/batch\\iclr_2025_full_parts\\iclr_2025_part11_manifest.json",
+    "data/batch\\iclr_2025_full_parts\\iclr_2025_part12_manifest.json",
+    "data/batch\\iclr_2025_full_parts\\iclr_2025_part13_manifest.json",
+    "data/batch\\neurips_2025_full_parts\\neurips_2025_part19_manifest.json"
+  ],
+  "exclude_custom_id_count": 12519,
+  "venues": {
+    "ICLR": {
+      "request_count": 35101,
+      "estimated_batch_cost_usd": 8.4257,
+      "chunk_count": 139,
+      "split_request_count": 35101
+    },
+    "ICML": {
+      "request_count": 13102,
+      "estimated_batch_cost_usd": 3.0577,
+      "chunk_count": 50,
+      "split_request_count": 13102
+    },
+    "NEURIPS": {
+      "request_count": 21497,
+      "estimated_batch_cost_usd": 5.3037,
+      "chunk_count": 89,
+      "split_request_count": 21497
+    }
+  }
+}

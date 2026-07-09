@@ -31,6 +31,13 @@ class NormalizeTests(unittest.TestCase):
                                 "rating": {"value": "3: reject"},
                                 "confidence": {"value": "4: confident"}
                             }
+                        },
+                        {
+                            "id": "rebuttal1",
+                            "invitations": ["ICLR.cc/2024/Conference/Submission1/-/Author_Response"],
+                            "content": {
+                                "comment": {"value": "We thank the reviewers."}
+                            }
                         }
                     ]
                 }
@@ -40,6 +47,8 @@ class NormalizeTests(unittest.TestCase):
         self.assertEqual(dataset["paper_count"], 1)
         self.assertEqual(dataset["review_count"], 1)
         self.assertEqual(dataset["papers"][0]["reviews"][0]["rating_normalized"], 3.0)
+        self.assertNotIn("pdf_url", dataset["papers"][0])
+        self.assertNotIn("rebuttals", dataset["papers"][0])
 
 
 if __name__ == "__main__":

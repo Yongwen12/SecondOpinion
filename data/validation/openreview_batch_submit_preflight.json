@@ -1,0 +1,25 @@
+{
+  "schema_version": "0.1",
+  "created_at": "2026-07-07T10:34:34+00:00",
+  "status": "blocked_explicit_approval_required",
+  "openai_submit_used": false,
+  "checks": {
+    "consistency_status": "ok",
+    "batch_cost_status": "ready_for_cost_review",
+    "estimated_batch_cost_usd": 21.9817,
+    "request_count": 91240,
+    "manifest_count": 104,
+    "max_total_cost_usd": 25.0,
+    "allow_submit": false
+  },
+  "issues": [
+    {
+      "code": "explicit_approval_required"
+    }
+  ],
+  "next_commands": [
+    "python -m secondopinion.tools.openreview_report_consistency",
+    "python -m secondopinion.tools.batch_cost_review --max-total-cost-usd 25",
+    "python -m secondopinion.tools.openreview_batch_submit_preflight --allow-submit --max-total-cost-usd 25"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "batch_id": "batch_6a4e99a12ba481908b4ae422e4ed7247",
+  "status": "completed",
+  "request_counts": {
+    "total": 183,
+    "completed": 183,
+    "failed": 0
+  },
+  "usage": {
+    "input_tokens": 125904,
+    "output_tokens": 14795,
+    "total_tokens": 140699,
+    "input_tokens_details": {
+      "cached_tokens": 0
+    },
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    }
+  },
+  "estimated_cost_usd": 0.0256,
+  "actual_cost_usd_estimate_from_usage": 0.0218
+}

@@ -1,0 +1,145 @@
+{
+  "schema_version": "openreview-ingestion-plan-v0.1",
+  "created_at": "2026-07-09T19:42:43+00:00",
+  "source_inventory_created_at": "2026-07-09T19:42:43+00:00",
+  "model": "gpt-5.4-nano",
+  "pull_limit": 50,
+  "summary": {
+    "venue_count": 1,
+    "readiness_counts": {
+      "ready": 1
+    },
+    "ready": [
+      "ICLR"
+    ],
+    "blocked_openreview_auth": [],
+    "manual_year_filter_required": [],
+    "needs_manual_inspection": [],
+    "excluded_not_scored": []
+  },
+  "venues": [
+    {
+      "venue_id": "ICLR",
+      "name": "ICLR",
+      "year": 2025,
+      "status": "open_reviews_available",
+      "readiness": "ready",
+      "blocked_reason": "",
+      "recommendation": "pull_and_score",
+      "rolling_venue": false,
+      "year_filter": "",
+      "invitation": "ICLR.cc/2025/Conference/-/Submission",
+      "dataset_slug": "iclr_2025_sample50",
+      "paths": {
+        "raw_normalized": "data/normalized/iclr_2025_sample50.json",
+        "normalized": "data/normalized/iclr_2025_sample50.json",
+        "quality_json": "data/validation/iclr_2025_sample50_quality.json",
+        "quality_markdown": "reports/validation/iclr_2025_sample50_quality.md",
+        "batch_jsonl": "data/batch/iclr_2025_sample50_batch.jsonl",
+        "batch_manifest": "data/batch/iclr_2025_sample50_batch_manifest.json",
+        "batch_parts_dir": "data/batch/iclr_2025_sample50_parts",
+        "batch_submission": "data/batch/iclr_2025_sample50_batch_submission.json",
+        "batch_status": "data/batch/iclr_2025_sample50_batch_status.json",
+        "batch_output": "data/batch/iclr_2025_sample50_batch_output.jsonl",
+        "batch_errors": "data/batch/iclr_2025_sample50_batch_errors.jsonl",
+        "snapshot_id": "iclr_2025_sample50"
+      },
+      "sample_stats": {
+        "paper_count": 1,
+        "reply_count": 0,
+        "review_count": 2,
+        "papers_with_reviews": 1,
+        "review_coverage_rate": 1.0,
+        "mean_reviews_per_paper": 2.0,
+        "papers_with_decisions": 0,
+        "decision_coverage_rate": 0,
+        "papers_with_ratings": 0,
+        "rating_coverage_rate": 0,
+        "papers_with_confidence": 0,
+        "confidence_coverage_rate": 0
+      },
+      "pull_limit": 50,
+      "commands_enabled": true,
+      "commands": [
+        {
+          "name": "pull",
+          "command": "python -m secondopinion.tools.openreview_pull --venue ICLR --year 2025 --invitation ICLR.cc/2025/Conference/-/Submission --output data/normalized/iclr_2025_sample50.json --details replies --page-size 100 --polite-delay 0.2 --snapshot iclr_2025_sample50 --limit 50",
+          "writes": [
+            "data/normalized/iclr_2025_sample50.json"
+          ],
+          "requires_network": true,
+          "requires_openreview_auth": false,
+          "limit": 50
+        },
+        {
+          "name": "quality",
+          "command": "python -m secondopinion.tools.data_quality_report --input data/normalized/iclr_2025_sample50.json --json-out data/validation/iclr_2025_sample50_quality.json --markdown-out reports/validation/iclr_2025_sample50_quality.md",
+          "writes": [
+            "data/validation/iclr_2025_sample50_quality.json",
+            "reports/validation/iclr_2025_sample50_quality.md"
+          ]
+        },
+        {
+          "name": "ingest",
+          "command": "python -m secondopinion.tools.ingest_normalized --input data/normalized/iclr_2025_sample50.json",
+          "writes": [
+            "SECONDOPINION_DATABASE_URL"
+          ]
+        },
+        {
+          "name": "build_batch",
+          "command": "python -m secondopinion.tools.build_scoring_batch --input data/normalized/iclr_2025_sample50.json --output data/batch/iclr_2025_sample50_batch.jsonl --manifest data/batch/iclr_2025_sample50_batch_manifest.json --model gpt-5.4-nano",
+          "writes": [
+            "data/batch/iclr_2025_sample50_batch.jsonl",
+            "data/batch/iclr_2025_sample50_batch_manifest.json"
+          ]
+        },
+        {
+          "name": "split_batch",
+          "command": "python -m secondopinion.tools.split_scoring_batch --input data/batch/iclr_2025_sample50_batch.jsonl --manifest data/batch/iclr_2025_sample50_batch_manifest.json --output-dir data/batch/iclr_2025_sample50_parts --prefix iclr_2025 --max-estimated-input-tokens 1600000",
+          "writes": [
+            "data/batch/iclr_2025_sample50_parts"
+          ]
+        },
+        {
+          "name": "submit_batch_dry_run",
+          "command": "python -m secondopinion.tools.submit_scoring_batch --input data/batch/iclr_2025_sample50_batch.jsonl --manifest data/batch/iclr_2025_sample50_batch_manifest.json --output data/batch/iclr_2025_sample50_batch_submission.json --dry-run",
+          "writes": [
+            "data/batch/iclr_2025_sample50_batch_submission.json"
+          ],
+          "requires_openai_key": true
+        },
+        {
+          "name": "submit_batch",
+          "command": "python -m secondopinion.tools.submit_scoring_batch --input data/batch/iclr_2025_sample50_batch.jsonl --manifest data/batch/iclr_2025_sample50_batch_manifest.json --output data/batch/iclr_2025_sample50_batch_submission.json",
+          "writes": [
+            "data/batch/iclr_2025_sample50_batch_submission.json"
+          ],
+          "requires_openai_key": true,
+          "cost_source": "data/batch/iclr_2025_sample50_batch_manifest.json: estimated_batch_cost_usd"
+        },
+        {
+          "name": "retrieve_batch",
+          "command": "python -m secondopinion.tools.retrieve_scoring_batch --batch-id YOUR_BATCH_ID --output data/batch/iclr_2025_sample50_batch_output.jsonl --status-out data/batch/iclr_2025_sample50_batch_status.json --error-output data/batch/iclr_2025_sample50_batch_errors.jsonl",
+          "writes": [
+            "data/batch/iclr_2025_sample50_batch_output.jsonl",
+            "data/batch/iclr_2025_sample50_batch_status.json",
+            "data/batch/iclr_2025_sample50_batch_errors.jsonl"
+          ],
+          "requires_openai_key": true
+        },
+        {
+          "name": "import_results",
+          "command": "python -m secondopinion.tools.import_scoring_batch_results --input data/batch/iclr_2025_sample50_batch_output.jsonl --manifest data/batch/iclr_2025_sample50_batch_manifest.json",
+          "writes": [
+            "SECONDOPINION_DATABASE_URL",
+            "data/server/batch_scoring"
+          ]
+        }
+      ],
+      "notes": [
+        "Resolved from candidate-level probe results."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,367 @@
+{
+  "schema_version": "openreview-snapshot-recovery-v0.1",
+  "created_at": "2026-07-07T10:34:33+00:00",
+  "root": "data/raw/openreview",
+  "summary": {
+    "snapshot_count": 16,
+    "recoverable_count": 0,
+    "status_counts": {
+      "complete": 16
+    },
+    "recoverable_snapshots": []
+  },
+  "snapshots": [
+    {
+      "manifest_path": "data\\raw\\openreview\\iclr\\2022\\20260621T083042Z\\manifest.json",
+      "snapshot_dir": "data\\raw\\openreview\\iclr\\2022\\20260621T083042Z",
+      "venue": "ICLR",
+      "year": 2022,
+      "snapshot_id": "20260621T083042Z",
+      "complete": true,
+      "complete_source": "inferred_limit_reached",
+      "failed": false,
+      "recoverable": false,
+      "paper_count": 5,
+      "reply_count": 76,
+      "raw_file_count": 1,
+      "next_offset": 5,
+      "updated_at": "",
+      "error": {
+        "type": "",
+        "message": "",
+        "offset": null
+      },
+      "resume_command": ""
+    },
+    {
+      "manifest_path": "data\\raw\\openreview\\iclr\\2022\\20260621T083053Z\\manifest.json",
+      "snapshot_dir": "data\\raw\\openreview\\iclr\\2022\\20260621T083053Z",
+      "venue": "ICLR",
+      "year": 2022,
+      "snapshot_id": "20260621T083053Z",
+      "complete": true,
+      "complete_source": "inferred_limit_reached",
+      "failed": false,
+      "recoverable": false,
+      "paper_count": 1000,
+      "reply_count": 14593,
+      "raw_file_count": 10,
+      "next_offset": 1000,
+      "updated_at": "",
+      "error": {
+        "type": "",
+        "message": "",
+        "offset": null
+      },
+      "resume_command": ""
+    },
+    {
+      "manifest_path": "data\\raw\\openreview\\iclr\\2023\\20260621T082806Z\\manifest.json",
+      "snapshot_dir": "data\\raw\\openreview\\iclr\\2023\\20260621T082806Z",
+      "venue": "ICLR",
+      "year": 2023,
+      "snapshot_id": "20260621T082806Z",
+      "complete": true,
+      "complete_source": "inferred_limit_reached",
+      "failed": false,
+      "recoverable": false,
+      "paper_count": 5,
+      "reply_count": 94,
+      "raw_file_count": 1,
+      "next_offset": 5,
+      "updated_at": "",
+      "error": {
+        "type": "",
+        "message": "",
+        "offset": null
+      },
+      "resume_command": ""
+    },
+    {
+      "manifest_path": "data\\raw\\openreview\\iclr\\2023\\20260621T082818Z\\manifest.json",
+      "snapshot_dir": "data\\raw\\openreview\\iclr\\2023\\20260621T082818Z",
+      "venue": "ICLR",
+      "year": 2023,
+      "snapshot_id": "20260621T082818Z",
+      "complete": true,
+      "complete_source": "inferred_limit_reached",
+      "failed": false,
+      "recoverable": false,
+      "paper_count": 1000,
+      "reply_count": 14357,
+      "raw_file_count": 10,
+      "next_offset": 1000,
+      "updated_at": "",
+      "error": {
+        "type": "",
+        "message": "",
+        "offset": null
+      },
+      "resume_command": ""
+    },
+    {
+      "manifest_path": "data\\raw\\openreview\\iclr\\2024\\20260518T145404Z\\manifest.json",
+      "snapshot_dir": "data\\raw\\openreview\\iclr\\2024\\20260518T145404Z",
+      "venue": "ICLR",
+      "year": 2024,
+      "snapshot_id": "20260518T145404Z",
+      "complete": true,
+      "complete_source": "inferred_limit_reached",
+      "failed": false,
+      "recoverable": false,
+      "paper_count": 3,
+      "reply_count": 44,
+      "raw_file_count": 1,
+      "next_offset": 3,
+      "updated_at": "",
+      "error": {
+        "type": "",
+        "message": "",
+        "offset": null
+      },
+      "resume_command": ""
+    },
+    {
+      "manifest_path": "data\\raw\\openreview\\iclr\\2024\\20260522T083133Z\\manifest.json",
+      "snapshot_dir": "data\\raw\\openreview\\iclr\\2024\\20260522T083133Z",
+      "venue": "ICLR",
+      "year": 2024,
+      "snapshot_id": "20260522T083133Z",
+      "complete": true,
+      "complete_source": "inferred_limit_reached",
+      "failed": false,
+      "recoverable": false,
+      "paper_count": 80,
+      "reply_count": 971,
+      "raw_file_count": 1,
+      "next_offset": 80,
+      "updated_at": "",
+      "error": {
+        "type": "",
+        "message": "",
+        "offset": null
+      },
+      "resume_command": ""
+    },
+    {
+      "manifest_path": "data\\raw\\openreview\\iclr\\2024\\20260621T082633Z\\manifest.json",
+      "snapshot_dir": "data\\raw\\openreview\\iclr\\2024\\20260621T082633Z",
+      "venue": "ICLR",
+      "year": 2024,
+      "snapshot_id": "20260621T082633Z",
+      "complete": true,
+      "complete_source": "inferred_limit_reached",
+      "failed": false,
+      "recoverable": false,
+      "paper_count": 5,
+      "reply_count": 95,
+      "raw_file_count": 1,
+      "next_offset": 5,
+      "updated_at": "",
+      "error": {
+        "type": "",
+        "message": "",
+        "offset": null
+      },
+      "resume_command": ""
+    },
+    {
+      "manifest_path": "data\\raw\\openreview\\iclr\\2024\\20260621T082900Z\\manifest.json",
+      "snapshot_dir": "data\\raw\\openreview\\iclr\\2024\\20260621T082900Z",
+      "venue": "ICLR",
+      "year": 2024,
+      "snapshot_id": "20260621T082900Z",
+      "complete": true,
+      "complete_source": "inferred_limit_reached",
+      "failed": false,
+      "recoverable": false,
+      "paper_count": 1000,
+      "reply_count": 14249,
+      "raw_file_count": 10,
+      "next_offset": 1000,
+      "updated_at": "",
+      "error": {
+        "type": "",
+        "message": "",
+        "offset": null
+      },
+      "resume_command": ""
+    },
+    {
+      "manifest_path": "data\\raw\\openreview\\iclr\\2025\\20260621T082714Z\\manifest.json",
+      "snapshot_dir": "data\\raw\\openreview\\iclr\\2025\\20260621T082714Z",
+      "venue": "ICLR",
+      "year": 2025,
+      "snapshot_id": "20260621T082714Z",
+      "complete": true,
+      "complete_source": "inferred_limit_reached",
+      "failed": false,
+      "recoverable": false,
+      "paper_count": 5,
+      "reply_count": 51,
+      "raw_file_count": 1,
+      "next_offset": 5,
+      "updated_at": "",
+      "error": {
+        "type": "",
+        "message": "",
+        "offset": null
+      },
+      "resume_command": ""
+    },
+    {
+      "manifest_path": "data\\raw\\openreview\\iclr\\2025\\20260621T082946Z\\manifest.json",
+      "snapshot_dir": "data\\raw\\openreview\\iclr\\2025\\20260621T082946Z",
+      "venue": "ICLR",
+      "year": 2025,
+      "snapshot_id": "20260621T082946Z",
+      "complete": true,
+      "complete_source": "inferred_limit_reached",
+      "failed": false,
+      "recoverable": false,
+      "paper_count": 1000,
+      "reply_count": 17563,
+      "raw_file_count": 10,
+      "next_offset": 1000,
+      "updated_at": "",
+      "error": {
+        "type": "",
+        "message": "",
+        "offset": null
+      },
+      "resume_command": ""
+    },
+    {
+      "manifest_path": "data\\raw\\openreview\\iclr\\2025\\iclr_2025_full\\manifest.json",
+      "snapshot_dir": "data\\raw\\openreview\\iclr\\2025\\iclr_2025_full",
+      "venue": "ICLR",
+      "year": 2025,
+      "snapshot_id": "iclr_2025_full",
+      "complete": true,
+      "complete_source": "manifest",
+      "failed": false,
+      "recoverable": false,
+      "paper_count": 11672,
+      "reply_count": 217164,
+      "raw_file_count": 117,
+      "next_offset": 11672,
+      "updated_at": "2026-07-07T10:22:17+00:00",
+      "error": {
+        "type": "",
+        "message": "",
+        "offset": null
+      },
+      "resume_command": ""
+    },
+    {
+      "manifest_path": "data\\raw\\openreview\\iclr\\2025\\iclr_2025_sample50\\manifest.json",
+      "snapshot_dir": "data\\raw\\openreview\\iclr\\2025\\iclr_2025_sample50",
+      "venue": "ICLR",
+      "year": 2025,
+      "snapshot_id": "iclr_2025_sample50",
+      "complete": true,
+      "complete_source": "manifest",
+      "failed": false,
+      "recoverable": false,
+      "paper_count": 50,
+      "reply_count": 642,
+      "raw_file_count": 1,
+      "next_offset": 50,
+      "updated_at": "2026-07-07T10:05:22+00:00",
+      "error": {
+        "type": "",
+        "message": "",
+        "offset": null
+      },
+      "resume_command": ""
+    },
+    {
+      "manifest_path": "data\\raw\\openreview\\icml\\2025\\icml_2025_full\\manifest.json",
+      "snapshot_dir": "data\\raw\\openreview\\icml\\2025\\icml_2025_full",
+      "venue": "ICML",
+      "year": 2025,
+      "snapshot_id": "icml_2025_full",
+      "complete": true,
+      "complete_source": "manifest",
+      "failed": false,
+      "recoverable": false,
+      "paper_count": 3422,
+      "reply_count": 38974,
+      "raw_file_count": 35,
+      "next_offset": 3422,
+      "updated_at": "2026-07-07T10:27:21+00:00",
+      "error": {
+        "type": "",
+        "message": "",
+        "offset": null
+      },
+      "resume_command": ""
+    },
+    {
+      "manifest_path": "data\\raw\\openreview\\icml\\2025\\icml_2025_sample50\\manifest.json",
+      "snapshot_dir": "data\\raw\\openreview\\icml\\2025\\icml_2025_sample50",
+      "venue": "ICML",
+      "year": 2025,
+      "snapshot_id": "icml_2025_sample50",
+      "complete": true,
+      "complete_source": "manifest",
+      "failed": false,
+      "recoverable": false,
+      "paper_count": 50,
+      "reply_count": 590,
+      "raw_file_count": 1,
+      "next_offset": 50,
+      "updated_at": "2026-07-07T10:06:13+00:00",
+      "error": {
+        "type": "",
+        "message": "",
+        "offset": null
+      },
+      "resume_command": ""
+    },
+    {
+      "manifest_path": "data\\raw\\openreview\\neurips\\2025\\neurips_2025_full\\manifest.json",
+      "snapshot_dir": "data\\raw\\openreview\\neurips\\2025\\neurips_2025_full",
+      "venue": "NEURIPS",
+      "year": 2025,
+      "snapshot_id": "neurips_2025_full",
+      "complete": true,
+      "complete_source": "manifest",
+      "failed": false,
+      "recoverable": false,
+      "paper_count": 5540,
+      "reply_count": 126058,
+      "raw_file_count": 56,
+      "next_offset": 5540,
+      "updated_at": "2026-07-07T10:31:01+00:00",
+      "error": {
+        "type": "",
+        "message": "",
+        "offset": null
+      },
+      "resume_command": ""
+    },
+    {
+      "manifest_path": "data\\raw\\openreview\\neurips\\2025\\neurips_2025_sample50\\manifest.json",
+      "snapshot_dir": "data\\raw\\openreview\\neurips\\2025\\neurips_2025_sample50",
+      "venue": "NEURIPS",
+      "year": 2025,
+      "snapshot_id": "neurips_2025_sample50",
+      "complete": true,
+      "complete_source": "manifest",
+      "failed": false,
+      "recoverable": false,
+      "paper_count": 50,
+      "reply_count": 1169,
+      "raw_file_count": 1,
+      "next_offset": 50,
+      "updated_at": "2026-07-07T10:06:19+00:00",
+      "error": {
+        "type": "",
+        "message": "",
+        "offset": null
+      },
+      "resume_command": ""
+    }
+  ]
+}

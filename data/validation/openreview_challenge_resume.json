@@ -1,0 +1,195 @@
+{
+  "schema_version": "openreview-challenge-resume-v0.1",
+  "created_at": "2026-07-07T10:03:29+00:00",
+  "status": "ready_for_safe_execute",
+  "recommendation": "inspect_resolved_inventory_then_run_execute_safe",
+  "openai_submit_used": false,
+  "auth_setup": {
+    "schema_version": "openreview-auth-setup-v0.1",
+    "ok": true,
+    "recommendation": "run_openreview_pipeline_gate",
+    "cookie": {
+      "set": true,
+      "source_format": "raw_header",
+      "out_cookie": "data\\secrets\\openreview.cookie",
+      "env_path": ".env",
+      "cookie_count": 6,
+      "cookie_names": [
+        "_ga",
+        "GCILB",
+        "openreview.refreshToken",
+        "openreview.accessToken",
+        "openreview.user",
+        "_ga_GTB25PBMVL"
+      ],
+      "byte_length": 2217,
+      "diagnostics": {
+        "has_openreview_login_cookie": true,
+        "has_clearance_cookie": false,
+        "expected_login_cookie_names": [
+          "openreview.accessToken",
+          "openreview.sid",
+          "openreview_session",
+          "openreview_token"
+        ],
+        "expected_clearance_cookie_names": [
+          "cf_clearance",
+          "openreview.clearanceToken"
+        ],
+        "warnings": [
+          "missing_cf_clearance_cookie"
+        ]
+      }
+    }
+  },
+  "secret_check": {
+    "schema_version": "openreview-secret-check-v0.1",
+    "ok": true,
+    "recommendation": "run_openreview_pipeline_gate",
+    "cookie": {
+      "set": true,
+      "source": "OPENREVIEW_COOKIE_FILE",
+      "format": "raw_header",
+      "path": "data\\secrets\\openreview_cookies.txt",
+      "cookie_count": 6,
+      "cookie_names": [
+        "_ga",
+        "GCILB",
+        "openreview.refreshToken",
+        "openreview.accessToken",
+        "openreview.user",
+        "_ga_GTB25PBMVL"
+      ],
+      "byte_length": 2217,
+      "diagnostics": {
+        "has_openreview_login_cookie": true,
+        "has_clearance_cookie": false,
+        "expected_login_cookie_names": [
+          "openreview.accessToken",
+          "openreview.sid",
+          "openreview_session",
+          "openreview_token"
+        ],
+        "expected_clearance_cookie_names": [
+          "cf_clearance",
+          "openreview.clearanceToken"
+        ],
+        "warnings": [
+          "missing_cf_clearance_cookie"
+        ]
+      }
+    },
+    "token": {
+      "set": false,
+      "source": "",
+      "byte_length": 0
+    }
+  },
+  "auth_diagnosis": {
+    "reason": "auth_ok",
+    "next_command": "continue_probe_queue",
+    "secret_ok": true,
+    "cookie_set": true,
+    "token_set": false,
+    "cookie_names": [
+      "_ga",
+      "GCILB",
+      "openreview.refreshToken",
+      "openreview.accessToken",
+      "openreview.user",
+      "_ga_GTB25PBMVL"
+    ],
+    "cookie_warnings": [
+      "missing_cf_clearance_cookie"
+    ],
+    "auth_status": "ok"
+  },
+  "auth_check": {
+    "schema_version": "openreview-auth-check-v0.1",
+    "checked_at": "2026-07-07T10:03:29+00:00",
+    "ok": true,
+    "status": "ok",
+    "recommendation": "run_inventory",
+    "invitation": "ICLR.cc/2025/Conference/-/Submission",
+    "sample_limit": 1,
+    "environment": {
+      "cookie_set": true,
+      "token_set": false,
+      "user_agent": "SecondOpinion-MVP/0.1",
+      "api_base": "https://api2.openreview.net"
+    },
+    "api_note_count": 1
+  },
+  "probe_runner": {
+    "execute": true,
+    "status_counts": {
+      "success": 11
+    },
+    "probe_count": 11
+  },
+  "probe_results_summary": {
+    "probe_result_count": 11,
+    "venue_count": 8,
+    "status_counts": {
+      "no_public_reviews": 5,
+      "selected_public_reviews": 3
+    },
+    "selected_for_scoring": [
+      "ICLR",
+      "ICML",
+      "NEURIPS"
+    ],
+    "blocked_auth": [],
+    "missing_results": [],
+    "no_public_reviews": [
+      "AISTATS",
+      "COLM",
+      "CORL",
+      "TMLR",
+      "UAI"
+    ],
+    "needs_larger_probe": []
+  },
+  "resolved_inventory_summary": {
+    "venue_count": 11,
+    "status_counts": {
+      "excluded_no_public_reviews": 3,
+      "no_public_reviews": 5,
+      "open_reviews_available": 3
+    },
+    "ready_to_pull_and_score": [
+      "ICLR",
+      "ICML",
+      "NEURIPS"
+    ],
+    "needs_probe_results": [],
+    "needs_larger_probe": [],
+    "blocked_openreview_auth": [],
+    "skipped_not_open_review": [
+      "JMLR",
+      "JAIR",
+      "MLJ"
+    ]
+  },
+  "resolved_pipeline": {
+    "action": "dry_run_safe_stages",
+    "runner_status_counts": {
+      "dry_run": 3,
+      "blocked_missing_input": 12,
+      "skipped": 8
+    }
+  },
+  "paths": {
+    "auth_check": "data/validation/openreview_auth_check.json",
+    "probe_queue": "data/validation/openreview_probe_queue_2025.json",
+    "probe_queue_markdown": "reports/validation/openreview_probe_queue_2025.md",
+    "probe_runner": "data/validation/openreview_probe_queue_runner.json",
+    "probe_runner_markdown": "reports/validation/openreview_probe_queue_runner.md",
+    "probe_results": "data/validation/openreview_probe_results_2025.json",
+    "probe_results_markdown": "reports/validation/openreview_probe_results_2025.md",
+    "resolved_inventory": "data/validation/openreview_resolved_inventory_2025.json",
+    "resolved_inventory_markdown": "reports/validation/openreview_resolved_inventory_2025.md",
+    "summary": "data/validation/openreview_challenge_resume.json",
+    "summary_markdown": "reports/validation/openreview_challenge_resume.md"
+  }
+}

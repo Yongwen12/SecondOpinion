@@ -1,0 +1,44 @@
+{
+  "schema_version": "openreview-pilot-readiness-v0.1",
+  "created_at": "2026-07-07T10:13:38+00:00",
+  "status": "ready_for_full_pull",
+  "venue_id": "NEURIPS",
+  "recommendation": "run_full_pull",
+  "next_commands": [
+    "python -m secondopinion.tools.openreview_safe_pipeline --venues data/config/openreview_venues_2025.json --venue NEURIPS --execute-safe"
+  ],
+  "remediation_commands": [],
+  "dataset_slug": "neurips_2025_sample50",
+  "pull_limit": 50,
+  "files": {
+    "normalized": {
+      "path": "data/normalized/neurips_2025_sample50.json",
+      "exists": true,
+      "bytes": 3355939
+    },
+    "quality": {
+      "path": "data/validation/neurips_2025_sample50_quality.json",
+      "exists": true,
+      "bytes": 22716
+    },
+    "batch_manifest": {
+      "path": "data/batch/neurips_2025_sample50_batch_manifest.json",
+      "exists": true,
+      "bytes": 43926
+    }
+  },
+  "quality_summary": {
+    "paper_count": 50,
+    "review_count": 202,
+    "empty_core_review_rate": 0.0,
+    "rating_coverage_rate": 1.0,
+    "confidence_coverage_rate": 1.0
+  },
+  "batch_summary": {
+    "request_count": 202,
+    "estimated_batch_cost_usd": 0.0501,
+    "model": "gpt-5.4-nano"
+  },
+  "errors": [],
+  "warnings": []
+}

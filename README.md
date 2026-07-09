@@ -302,3 +302,33 @@ PYTHONPATH=src python3 -m secondopinion audit \
 ## 目标
 
 建立一个更透明、可解释、可审计的 review 质量评价机制，帮助作者、会议和社区理解 peer review 的质量问题。
+
+## OpenReview 2025 Safe Pipeline
+
+Use this local-only flow for the 2025 public-review inventory and scoring pipeline.
+It never submits OpenAI batch jobs by default.
+
+```powershell
+python -m secondopinion.tools.openreview_safe_pipeline --venues data/config/openreview_venues_2025.json --venue ICLR --cookie-file path\to\browser-cookies.txt
+```
+
+After the gate reports `ready_for_safe_runner_execute`, run an ICLR-only pilot first:
+
+```powershell
+python -m secondopinion.tools.openreview_safe_pipeline --venues data/config/openreview_venues_2025.json --venue ICLR --pull-limit 50 --execute-safe
+```
+
+Then expand to all ready venues:
+
+```powershell
+python -m secondopinion.tools.openreview_safe_pipeline --venues data/config/openreview_venues_2025.json --execute-safe
+```
+
+The safe stages are: `pull`, `filter_normalized`, `quality`, `ingest`, `build_batch`, and `split_batch`.
+Review `reports/validation/batch_cost_review.md` before any `submit_batch` step.
+
+After the sample run, check whether the pilot is safe to promote to full pull:
+
+```powershell
+python -m secondopinion.tools.openreview_pilot_readiness --plan data/validation/openreview_ingestion_plan_2025.json --venue ICLR
+```

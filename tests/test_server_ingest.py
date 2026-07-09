@@ -6,6 +6,7 @@ sqlalchemy = pytest.importorskip("sqlalchemy")
 
 from secondopinion.server.database import init_db, make_engine, make_session_factory, session_scope
 from secondopinion.server.ingest import import_normalized_dataset
+from secondopinion.server.models import Paper
 from secondopinion.server.repository import search_papers
 
 
@@ -56,7 +57,10 @@ def test_import_normalized_dataset_is_idempotent_and_searchable(tmp_path):
         first = import_normalized_dataset(session, path)
         second = import_normalized_dataset(session, path)
         results = search_papers(session, conference_id="ICLR", query="baseline")
+        paper = session.get(Paper, "paper1")
 
+    assert paper is not None
+    assert paper.pdf_url == ""
     assert first["paper_count"] == 1
     assert second["review_count"] == 1
     assert results["items"][0]["paper_id"] == "paper1"

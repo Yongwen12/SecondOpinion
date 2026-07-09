@@ -1,0 +1,1078 @@
+{
+  "schema_version": "openreview-ingestion-plan-v0.1",
+  "created_at": "2026-07-08T19:26:57+00:00",
+  "source_inventory_created_at": "2026-07-08T19:26:47+00:00",
+  "model": "gpt-5.4-nano",
+  "pull_limit": null,
+  "summary": {
+    "venue_count": 12,
+    "readiness_counts": {
+      "ready": 5,
+      "needs_manual_inspection": 1,
+      "excluded_not_scored": 6
+    },
+    "ready": [
+      "ICLR",
+      "ICML",
+      "NEURIPS",
+      "COLM",
+      "MIDL"
+    ],
+    "blocked_openreview_auth": [],
+    "manual_year_filter_required": [],
+    "needs_manual_inspection": [
+      "TMLR"
+    ],
+    "excluded_not_scored": [
+      "AISTATS",
+      "UAI",
+      "CORL",
+      "JMLR",
+      "JAIR",
+      "MLJ"
+    ]
+  },
+  "venues": [
+    {
+      "venue_id": "ICLR",
+      "name": "International Conference on Learning Representations",
+      "year": 2025,
+      "status": "open_reviews_available",
+      "readiness": "ready",
+      "blocked_reason": "",
+      "recommendation": "pull_and_score",
+      "rolling_venue": false,
+      "year_filter": "",
+      "invitation": "ICLR.cc/2025/Conference/-/Submission",
+      "dataset_slug": "iclr_2025_full",
+      "paths": {
+        "raw_normalized": "data/normalized/iclr_2025_full.json",
+        "normalized": "data/normalized/iclr_2025_full.json",
+        "quality_json": "data/validation/iclr_2025_full_quality.json",
+        "quality_markdown": "reports/validation/iclr_2025_full_quality.md",
+        "batch_jsonl": "data/batch/iclr_2025_full_batch.jsonl",
+        "batch_manifest": "data/batch/iclr_2025_full_batch_manifest.json",
+        "batch_parts_dir": "data/batch/iclr_2025_full_parts",
+        "batch_submission": "data/batch/iclr_2025_full_batch_submission.json",
+        "batch_status": "data/batch/iclr_2025_full_batch_status.json",
+        "batch_output": "data/batch/iclr_2025_full_batch_output.jsonl",
+        "batch_errors": "data/batch/iclr_2025_full_batch_errors.jsonl",
+        "snapshot_id": "iclr_2025_full"
+      },
+      "sample_stats": {
+        "paper_count": 20,
+        "reply_count": 284,
+        "review_count": 76,
+        "papers_with_reviews": 19,
+        "review_coverage_rate": 0.95,
+        "mean_reviews_per_paper": 3.8,
+        "papers_with_decisions": 15,
+        "decision_coverage_rate": 0.75,
+        "papers_with_ratings": 19,
+        "rating_coverage_rate": 0.95,
+        "papers_with_confidence": 19,
+        "confidence_coverage_rate": 0.95
+      },
+      "pull_limit": null,
+      "commands_enabled": true,
+      "commands": [
+        {
+          "name": "pull",
+          "command": "python -m secondopinion.tools.openreview_pull --venue ICLR --year 2025 --invitation ICLR.cc/2025/Conference/-/Submission --output data/normalized/iclr_2025_full.json --details replies --page-size 100 --polite-delay 0.2 --snapshot iclr_2025_full",
+          "writes": [
+            "data/normalized/iclr_2025_full.json"
+          ],
+          "requires_network": true,
+          "requires_openreview_auth": false,
+          "limit": null
+        },
+        {
+          "name": "quality",
+          "command": "python -m secondopinion.tools.data_quality_report --input data/normalized/iclr_2025_full.json --json-out data/validation/iclr_2025_full_quality.json --markdown-out reports/validation/iclr_2025_full_quality.md",
+          "writes": [
+            "data/validation/iclr_2025_full_quality.json",
+            "reports/validation/iclr_2025_full_quality.md"
+          ]
+        },
+        {
+          "name": "ingest",
+          "command": "python -m secondopinion.tools.ingest_normalized --input data/normalized/iclr_2025_full.json",
+          "writes": [
+            "SECONDOPINION_DATABASE_URL"
+          ]
+        },
+        {
+          "name": "build_batch",
+          "command": "python -m secondopinion.tools.build_scoring_batch --input data/normalized/iclr_2025_full.json --output data/batch/iclr_2025_full_batch.jsonl --manifest data/batch/iclr_2025_full_batch_manifest.json --model gpt-5.4-nano",
+          "writes": [
+            "data/batch/iclr_2025_full_batch.jsonl",
+            "data/batch/iclr_2025_full_batch_manifest.json"
+          ]
+        },
+        {
+          "name": "split_batch",
+          "command": "python -m secondopinion.tools.split_scoring_batch --input data/batch/iclr_2025_full_batch.jsonl --manifest data/batch/iclr_2025_full_batch_manifest.json --output-dir data/batch/iclr_2025_full_parts --prefix iclr_2025 --max-estimated-input-tokens 1600000",
+          "writes": [
+            "data/batch/iclr_2025_full_parts"
+          ]
+        },
+        {
+          "name": "submit_batch_dry_run",
+          "command": "python -m secondopinion.tools.submit_scoring_batch --input data/batch/iclr_2025_full_batch.jsonl --manifest data/batch/iclr_2025_full_batch_manifest.json --output data/batch/iclr_2025_full_batch_submission.json --dry-run",
+          "writes": [
+            "data/batch/iclr_2025_full_batch_submission.json"
+          ],
+          "requires_openai_key": true
+        },
+        {
+          "name": "submit_batch",
+          "command": "python -m secondopinion.tools.submit_scoring_batch --input data/batch/iclr_2025_full_batch.jsonl --manifest data/batch/iclr_2025_full_batch_manifest.json --output data/batch/iclr_2025_full_batch_submission.json",
+          "writes": [
+            "data/batch/iclr_2025_full_batch_submission.json"
+          ],
+          "requires_openai_key": true,
+          "cost_source": "data/batch/iclr_2025_full_batch_manifest.json: estimated_batch_cost_usd"
+        },
+        {
+          "name": "retrieve_batch",
+          "command": "python -m secondopinion.tools.retrieve_scoring_batch --batch-id YOUR_BATCH_ID --output data/batch/iclr_2025_full_batch_output.jsonl --status-out data/batch/iclr_2025_full_batch_status.json --error-output data/batch/iclr_2025_full_batch_errors.jsonl",
+          "writes": [
+            "data/batch/iclr_2025_full_batch_output.jsonl",
+            "data/batch/iclr_2025_full_batch_status.json",
+            "data/batch/iclr_2025_full_batch_errors.jsonl"
+          ],
+          "requires_openai_key": true
+        },
+        {
+          "name": "import_results",
+          "command": "python -m secondopinion.tools.import_scoring_batch_results --input data/batch/iclr_2025_full_batch_output.jsonl --manifest data/batch/iclr_2025_full_batch_manifest.json",
+          "writes": [
+            "SECONDOPINION_DATABASE_URL",
+            "data/server/batch_scoring"
+          ]
+        }
+      ],
+      "notes": [
+        "Spec target: full 2025 ICLR public OpenReview corpus.",
+        "ICLR is treated as fully open public review scope; API probe confirms concrete review availability once OpenReview auth/challenge is satisfied."
+      ]
+    },
+    {
+      "venue_id": "ICML",
+      "name": "International Conference on Machine Learning",
+      "year": 2025,
+      "status": "open_reviews_available",
+      "readiness": "ready",
+      "blocked_reason": "",
+      "recommendation": "pull_and_score",
+      "rolling_venue": false,
+      "year_filter": "",
+      "invitation": "ICML.cc/2025/Conference/-/Submission",
+      "dataset_slug": "icml_2025_full",
+      "paths": {
+        "raw_normalized": "data/normalized/icml_2025_full.json",
+        "normalized": "data/normalized/icml_2025_full.json",
+        "quality_json": "data/validation/icml_2025_full_quality.json",
+        "quality_markdown": "reports/validation/icml_2025_full_quality.md",
+        "batch_jsonl": "data/batch/icml_2025_full_batch.jsonl",
+        "batch_manifest": "data/batch/icml_2025_full_batch_manifest.json",
+        "batch_parts_dir": "data/batch/icml_2025_full_parts",
+        "batch_submission": "data/batch/icml_2025_full_batch_submission.json",
+        "batch_status": "data/batch/icml_2025_full_batch_status.json",
+        "batch_output": "data/batch/icml_2025_full_batch_output.jsonl",
+        "batch_errors": "data/batch/icml_2025_full_batch_errors.jsonl",
+        "snapshot_id": "icml_2025_full"
+      },
+      "sample_stats": {
+        "paper_count": 20,
+        "reply_count": 234,
+        "review_count": 76,
+        "papers_with_reviews": 20,
+        "review_coverage_rate": 1.0,
+        "mean_reviews_per_paper": 3.8,
+        "papers_with_decisions": 20,
+        "decision_coverage_rate": 1.0,
+        "papers_with_ratings": 20,
+        "rating_coverage_rate": 1.0,
+        "papers_with_confidence": 0,
+        "confidence_coverage_rate": 0.0
+      },
+      "pull_limit": null,
+      "commands_enabled": true,
+      "commands": [
+        {
+          "name": "pull",
+          "command": "python -m secondopinion.tools.openreview_pull --venue ICML --year 2025 --invitation ICML.cc/2025/Conference/-/Submission --output data/normalized/icml_2025_full.json --details replies --page-size 100 --polite-delay 0.2 --snapshot icml_2025_full",
+          "writes": [
+            "data/normalized/icml_2025_full.json"
+          ],
+          "requires_network": true,
+          "requires_openreview_auth": false,
+          "limit": null
+        },
+        {
+          "name": "quality",
+          "command": "python -m secondopinion.tools.data_quality_report --input data/normalized/icml_2025_full.json --json-out data/validation/icml_2025_full_quality.json --markdown-out reports/validation/icml_2025_full_quality.md",
+          "writes": [
+            "data/validation/icml_2025_full_quality.json",
+            "reports/validation/icml_2025_full_quality.md"
+          ]
+        },
+        {
+          "name": "ingest",
+          "command": "python -m secondopinion.tools.ingest_normalized --input data/normalized/icml_2025_full.json",
+          "writes": [
+            "SECONDOPINION_DATABASE_URL"
+          ]
+        },
+        {
+          "name": "build_batch",
+          "command": "python -m secondopinion.tools.build_scoring_batch --input data/normalized/icml_2025_full.json --output data/batch/icml_2025_full_batch.jsonl --manifest data/batch/icml_2025_full_batch_manifest.json --model gpt-5.4-nano",
+          "writes": [
+            "data/batch/icml_2025_full_batch.jsonl",
+            "data/batch/icml_2025_full_batch_manifest.json"
+          ]
+        },
+        {
+          "name": "split_batch",
+          "command": "python -m secondopinion.tools.split_scoring_batch --input data/batch/icml_2025_full_batch.jsonl --manifest data/batch/icml_2025_full_batch_manifest.json --output-dir data/batch/icml_2025_full_parts --prefix icml_2025 --max-estimated-input-tokens 1600000",
+          "writes": [
+            "data/batch/icml_2025_full_parts"
+          ]
+        },
+        {
+          "name": "submit_batch_dry_run",
+          "command": "python -m secondopinion.tools.submit_scoring_batch --input data/batch/icml_2025_full_batch.jsonl --manifest data/batch/icml_2025_full_batch_manifest.json --output data/batch/icml_2025_full_batch_submission.json --dry-run",
+          "writes": [
+            "data/batch/icml_2025_full_batch_submission.json"
+          ],
+          "requires_openai_key": true
+        },
+        {
+          "name": "submit_batch",
+          "command": "python -m secondopinion.tools.submit_scoring_batch --input data/batch/icml_2025_full_batch.jsonl --manifest data/batch/icml_2025_full_batch_manifest.json --output data/batch/icml_2025_full_batch_submission.json",
+          "writes": [
+            "data/batch/icml_2025_full_batch_submission.json"
+          ],
+          "requires_openai_key": true,
+          "cost_source": "data/batch/icml_2025_full_batch_manifest.json: estimated_batch_cost_usd"
+        },
+        {
+          "name": "retrieve_batch",
+          "command": "python -m secondopinion.tools.retrieve_scoring_batch --batch-id YOUR_BATCH_ID --output data/batch/icml_2025_full_batch_output.jsonl --status-out data/batch/icml_2025_full_batch_status.json --error-output data/batch/icml_2025_full_batch_errors.jsonl",
+          "writes": [
+            "data/batch/icml_2025_full_batch_output.jsonl",
+            "data/batch/icml_2025_full_batch_status.json",
+            "data/batch/icml_2025_full_batch_errors.jsonl"
+          ],
+          "requires_openai_key": true
+        },
+        {
+          "name": "import_results",
+          "command": "python -m secondopinion.tools.import_scoring_batch_results --input data/batch/icml_2025_full_batch_output.jsonl --manifest data/batch/icml_2025_full_batch_manifest.json",
+          "writes": [
+            "SECONDOPINION_DATABASE_URL",
+            "data/server/batch_scoring"
+          ]
+        }
+      ],
+      "notes": [
+        "Spec target: public ICML 2025 reviews, accepted plus public opt-in rejected papers where visible.",
+        "ICML is treated as partial public review scope; API probe determines exact public coverage after OpenReview auth/challenge is satisfied."
+      ]
+    },
+    {
+      "venue_id": "NEURIPS",
+      "name": "Neural Information Processing Systems",
+      "year": 2025,
+      "status": "open_reviews_available",
+      "readiness": "ready",
+      "blocked_reason": "",
+      "recommendation": "pull_and_score",
+      "rolling_venue": false,
+      "year_filter": "",
+      "invitation": "NeurIPS.cc/2025/Conference/-/Submission",
+      "dataset_slug": "neurips_2025_full",
+      "paths": {
+        "raw_normalized": "data/normalized/neurips_2025_full.json",
+        "normalized": "data/normalized/neurips_2025_full.json",
+        "quality_json": "data/validation/neurips_2025_full_quality.json",
+        "quality_markdown": "reports/validation/neurips_2025_full_quality.md",
+        "batch_jsonl": "data/batch/neurips_2025_full_batch.jsonl",
+        "batch_manifest": "data/batch/neurips_2025_full_batch_manifest.json",
+        "batch_parts_dir": "data/batch/neurips_2025_full_parts",
+        "batch_submission": "data/batch/neurips_2025_full_batch_submission.json",
+        "batch_status": "data/batch/neurips_2025_full_batch_status.json",
+        "batch_output": "data/batch/neurips_2025_full_batch_output.jsonl",
+        "batch_errors": "data/batch/neurips_2025_full_batch_errors.jsonl",
+        "snapshot_id": "neurips_2025_full"
+      },
+      "sample_stats": {
+        "paper_count": 20,
+        "reply_count": 468,
+        "review_count": 80,
+        "papers_with_reviews": 20,
+        "review_coverage_rate": 1.0,
+        "mean_reviews_per_paper": 4.0,
+        "papers_with_decisions": 20,
+        "decision_coverage_rate": 1.0,
+        "papers_with_ratings": 20,
+        "rating_coverage_rate": 1.0,
+        "papers_with_confidence": 20,
+        "confidence_coverage_rate": 1.0
+      },
+      "pull_limit": null,
+      "commands_enabled": true,
+      "commands": [
+        {
+          "name": "pull",
+          "command": "python -m secondopinion.tools.openreview_pull --venue NEURIPS --year 2025 --invitation NeurIPS.cc/2025/Conference/-/Submission --output data/normalized/neurips_2025_full.json --details replies --page-size 100 --polite-delay 0.2 --snapshot neurips_2025_full",
+          "writes": [
+            "data/normalized/neurips_2025_full.json"
+          ],
+          "requires_network": true,
+          "requires_openreview_auth": false,
+          "limit": null
+        },
+        {
+          "name": "quality",
+          "command": "python -m secondopinion.tools.data_quality_report --input data/normalized/neurips_2025_full.json --json-out data/validation/neurips_2025_full_quality.json --markdown-out reports/validation/neurips_2025_full_quality.md",
+          "writes": [
+            "data/validation/neurips_2025_full_quality.json",
+            "reports/validation/neurips_2025_full_quality.md"
+          ]
+        },
+        {
+          "name": "ingest",
+          "command": "python -m secondopinion.tools.ingest_normalized --input data/normalized/neurips_2025_full.json",
+          "writes": [
+            "SECONDOPINION_DATABASE_URL"
+          ]
+        },
+        {
+          "name": "build_batch",
+          "command": "python -m secondopinion.tools.build_scoring_batch --input data/normalized/neurips_2025_full.json --output data/batch/neurips_2025_full_batch.jsonl --manifest data/batch/neurips_2025_full_batch_manifest.json --model gpt-5.4-nano",
+          "writes": [
+            "data/batch/neurips_2025_full_batch.jsonl",
+            "data/batch/neurips_2025_full_batch_manifest.json"
+          ]
+        },
+        {
+          "name": "split_batch",
+          "command": "python -m secondopinion.tools.split_scoring_batch --input data/batch/neurips_2025_full_batch.jsonl --manifest data/batch/neurips_2025_full_batch_manifest.json --output-dir data/batch/neurips_2025_full_parts --prefix neurips_2025 --max-estimated-input-tokens 1600000",
+          "writes": [
+            "data/batch/neurips_2025_full_parts"
+          ]
+        },
+        {
+          "name": "submit_batch_dry_run",
+          "command": "python -m secondopinion.tools.submit_scoring_batch --input data/batch/neurips_2025_full_batch.jsonl --manifest data/batch/neurips_2025_full_batch_manifest.json --output data/batch/neurips_2025_full_batch_submission.json --dry-run",
+          "writes": [
+            "data/batch/neurips_2025_full_batch_submission.json"
+          ],
+          "requires_openai_key": true
+        },
+        {
+          "name": "submit_batch",
+          "command": "python -m secondopinion.tools.submit_scoring_batch --input data/batch/neurips_2025_full_batch.jsonl --manifest data/batch/neurips_2025_full_batch_manifest.json --output data/batch/neurips_2025_full_batch_submission.json",
+          "writes": [
+            "data/batch/neurips_2025_full_batch_submission.json"
+          ],
+          "requires_openai_key": true,
+          "cost_source": "data/batch/neurips_2025_full_batch_manifest.json: estimated_batch_cost_usd"
+        },
+        {
+          "name": "retrieve_batch",
+          "command": "python -m secondopinion.tools.retrieve_scoring_batch --batch-id YOUR_BATCH_ID --output data/batch/neurips_2025_full_batch_output.jsonl --status-out data/batch/neurips_2025_full_batch_status.json --error-output data/batch/neurips_2025_full_batch_errors.jsonl",
+          "writes": [
+            "data/batch/neurips_2025_full_batch_output.jsonl",
+            "data/batch/neurips_2025_full_batch_status.json",
+            "data/batch/neurips_2025_full_batch_errors.jsonl"
+          ],
+          "requires_openai_key": true
+        },
+        {
+          "name": "import_results",
+          "command": "python -m secondopinion.tools.import_scoring_batch_results --input data/batch/neurips_2025_full_batch_output.jsonl --manifest data/batch/neurips_2025_full_batch_manifest.json",
+          "writes": [
+            "SECONDOPINION_DATABASE_URL",
+            "data/server/batch_scoring"
+          ]
+        }
+      ],
+      "notes": [
+        "Spec target: public NeurIPS 2025 reviews, accepted plus public opt-in rejected papers where visible.",
+        "NeurIPS is treated as partial public review scope; API probe determines exact public coverage after OpenReview auth/challenge is satisfied."
+      ]
+    },
+    {
+      "venue_id": "TMLR",
+      "name": "Transactions on Machine Learning Research",
+      "year": 2025,
+      "status": "no_public_reviews",
+      "readiness": "needs_manual_inspection",
+      "blocked_reason": "inventory status is no_public_reviews",
+      "recommendation": "skip_scoring",
+      "rolling_venue": true,
+      "year_filter": "decision_or_activity_year",
+      "invitation": "TMLR/-/Submission",
+      "dataset_slug": "tmlr_2025_full",
+      "paths": {
+        "raw_normalized": "data/normalized/tmlr_2025_full_unfiltered.json",
+        "normalized": "data/normalized/tmlr_2025_full.json",
+        "quality_json": "data/validation/tmlr_2025_full_quality.json",
+        "quality_markdown": "reports/validation/tmlr_2025_full_quality.md",
+        "batch_jsonl": "data/batch/tmlr_2025_full_batch.jsonl",
+        "batch_manifest": "data/batch/tmlr_2025_full_batch_manifest.json",
+        "batch_parts_dir": "data/batch/tmlr_2025_full_parts",
+        "batch_submission": "data/batch/tmlr_2025_full_batch_submission.json",
+        "batch_status": "data/batch/tmlr_2025_full_batch_status.json",
+        "batch_output": "data/batch/tmlr_2025_full_batch_output.jsonl",
+        "batch_errors": "data/batch/tmlr_2025_full_batch_errors.jsonl",
+        "snapshot_id": "tmlr_2025_full"
+      },
+      "sample_stats": {
+        "paper_count": 20,
+        "reply_count": 0,
+        "review_count": 0,
+        "papers_with_reviews": 0,
+        "review_coverage_rate": 0.0,
+        "mean_reviews_per_paper": 0.0,
+        "papers_with_decisions": 0,
+        "decision_coverage_rate": 0.0,
+        "papers_with_ratings": 0,
+        "rating_coverage_rate": 0.0,
+        "papers_with_confidence": 0,
+        "confidence_coverage_rate": 0.0
+      },
+      "pull_limit": null,
+      "commands_enabled": false,
+      "commands": [
+        {
+          "name": "pull",
+          "command": "python -m secondopinion.tools.openreview_pull --venue TMLR --year 2025 --invitation TMLR/-/Submission --output data/normalized/tmlr_2025_full_unfiltered.json --details replies --page-size 100 --polite-delay 0.2 --snapshot tmlr_2025_full",
+          "writes": [
+            "data/normalized/tmlr_2025_full_unfiltered.json"
+          ],
+          "requires_network": true,
+          "requires_openreview_auth": false,
+          "limit": null
+        },
+        {
+          "name": "filter_normalized",
+          "command": "python -m secondopinion.tools.filter_normalized --input data/normalized/tmlr_2025_full_unfiltered.json --out data/normalized/tmlr_2025_full.json --year 2025 --mode decision_or_activity_year",
+          "writes": [
+            "data/normalized/tmlr_2025_full.json"
+          ],
+          "mode": "decision_or_activity_year"
+        },
+        {
+          "name": "quality",
+          "command": "python -m secondopinion.tools.data_quality_report --input data/normalized/tmlr_2025_full.json --json-out data/validation/tmlr_2025_full_quality.json --markdown-out reports/validation/tmlr_2025_full_quality.md",
+          "writes": [
+            "data/validation/tmlr_2025_full_quality.json",
+            "reports/validation/tmlr_2025_full_quality.md"
+          ]
+        },
+        {
+          "name": "ingest",
+          "command": "python -m secondopinion.tools.ingest_normalized --input data/normalized/tmlr_2025_full.json",
+          "writes": [
+            "SECONDOPINION_DATABASE_URL"
+          ]
+        },
+        {
+          "name": "build_batch",
+          "command": "python -m secondopinion.tools.build_scoring_batch --input data/normalized/tmlr_2025_full.json --output data/batch/tmlr_2025_full_batch.jsonl --manifest data/batch/tmlr_2025_full_batch_manifest.json --model gpt-5.4-nano",
+          "writes": [
+            "data/batch/tmlr_2025_full_batch.jsonl",
+            "data/batch/tmlr_2025_full_batch_manifest.json"
+          ]
+        },
+        {
+          "name": "split_batch",
+          "command": "python -m secondopinion.tools.split_scoring_batch --input data/batch/tmlr_2025_full_batch.jsonl --manifest data/batch/tmlr_2025_full_batch_manifest.json --output-dir data/batch/tmlr_2025_full_parts --prefix tmlr_2025 --max-estimated-input-tokens 1600000",
+          "writes": [
+            "data/batch/tmlr_2025_full_parts"
+          ]
+        },
+        {
+          "name": "submit_batch_dry_run",
+          "command": "python -m secondopinion.tools.submit_scoring_batch --input data/batch/tmlr_2025_full_batch.jsonl --manifest data/batch/tmlr_2025_full_batch_manifest.json --output data/batch/tmlr_2025_full_batch_submission.json --dry-run",
+          "writes": [
+            "data/batch/tmlr_2025_full_batch_submission.json"
+          ],
+          "requires_openai_key": true
+        },
+        {
+          "name": "submit_batch",
+          "command": "python -m secondopinion.tools.submit_scoring_batch --input data/batch/tmlr_2025_full_batch.jsonl --manifest data/batch/tmlr_2025_full_batch_manifest.json --output data/batch/tmlr_2025_full_batch_submission.json",
+          "writes": [
+            "data/batch/tmlr_2025_full_batch_submission.json"
+          ],
+          "requires_openai_key": true,
+          "cost_source": "data/batch/tmlr_2025_full_batch_manifest.json: estimated_batch_cost_usd"
+        },
+        {
+          "name": "retrieve_batch",
+          "command": "python -m secondopinion.tools.retrieve_scoring_batch --batch-id YOUR_BATCH_ID --output data/batch/tmlr_2025_full_batch_output.jsonl --status-out data/batch/tmlr_2025_full_batch_status.json --error-output data/batch/tmlr_2025_full_batch_errors.jsonl",
+          "writes": [
+            "data/batch/tmlr_2025_full_batch_output.jsonl",
+            "data/batch/tmlr_2025_full_batch_status.json",
+            "data/batch/tmlr_2025_full_batch_errors.jsonl"
+          ],
+          "requires_openai_key": true
+        },
+        {
+          "name": "import_results",
+          "command": "python -m secondopinion.tools.import_scoring_batch_results --input data/batch/tmlr_2025_full_batch_output.jsonl --manifest data/batch/tmlr_2025_full_batch_manifest.json",
+          "writes": [
+            "SECONDOPINION_DATABASE_URL",
+            "data/server/batch_scoring"
+          ]
+        }
+      ],
+      "notes": [
+        "Rolling OpenReview journal: pull all public submissions, then filter by 2025 decision/activity.",
+        "Second-round probe confirms public replies exist on older/decided submissions, but latest under-review submissions have no public replies.",
+        "TMLR needs a rolling extractor that filters decided/activity-2025 submissions and reads paper-level Official_Comment threads.",
+        "Rolling venue: full pull must filter by 2025 decision or activity date after download."
+      ]
+    },
+    {
+      "venue_id": "COLM",
+      "name": "Conference on Language Modeling",
+      "year": 2025,
+      "status": "open_reviews_available",
+      "readiness": "ready",
+      "blocked_reason": "",
+      "recommendation": "pull_and_score",
+      "rolling_venue": false,
+      "year_filter": "",
+      "invitation": "colmweb.org/COLM/2025/Conference/-/Submission",
+      "dataset_slug": "colm_2025_full",
+      "paths": {
+        "raw_normalized": "data/normalized/colm_2025_full.json",
+        "normalized": "data/normalized/colm_2025_full.json",
+        "quality_json": "data/validation/colm_2025_full_quality.json",
+        "quality_markdown": "reports/validation/colm_2025_full_quality.md",
+        "batch_jsonl": "data/batch/colm_2025_full_batch.jsonl",
+        "batch_manifest": "data/batch/colm_2025_full_batch_manifest.json",
+        "batch_parts_dir": "data/batch/colm_2025_full_parts",
+        "batch_submission": "data/batch/colm_2025_full_batch_submission.json",
+        "batch_status": "data/batch/colm_2025_full_batch_status.json",
+        "batch_output": "data/batch/colm_2025_full_batch_output.jsonl",
+        "batch_errors": "data/batch/colm_2025_full_batch_errors.jsonl",
+        "snapshot_id": "colm_2025_full"
+      },
+      "sample_stats": {
+        "paper_count": 20,
+        "reply_count": 344,
+        "review_count": 75,
+        "papers_with_reviews": 20,
+        "review_coverage_rate": 1.0,
+        "mean_reviews_per_paper": 3.75,
+        "papers_with_decisions": 20,
+        "decision_coverage_rate": 1.0,
+        "papers_with_ratings": 20,
+        "rating_coverage_rate": 1.0,
+        "papers_with_confidence": 20,
+        "confidence_coverage_rate": 1.0
+      },
+      "pull_limit": null,
+      "commands_enabled": true,
+      "commands": [
+        {
+          "name": "pull",
+          "command": "python -m secondopinion.tools.openreview_pull --venue COLM --year 2025 --invitation colmweb.org/COLM/2025/Conference/-/Submission --output data/normalized/colm_2025_full.json --details replies --page-size 100 --polite-delay 0.2 --snapshot colm_2025_full",
+          "writes": [
+            "data/normalized/colm_2025_full.json"
+          ],
+          "requires_network": true,
+          "requires_openreview_auth": false,
+          "limit": null
+        },
+        {
+          "name": "quality",
+          "command": "python -m secondopinion.tools.data_quality_report --input data/normalized/colm_2025_full.json --json-out data/validation/colm_2025_full_quality.json --markdown-out reports/validation/colm_2025_full_quality.md",
+          "writes": [
+            "data/validation/colm_2025_full_quality.json",
+            "reports/validation/colm_2025_full_quality.md"
+          ]
+        },
+        {
+          "name": "ingest",
+          "command": "python -m secondopinion.tools.ingest_normalized --input data/normalized/colm_2025_full.json",
+          "writes": [
+            "SECONDOPINION_DATABASE_URL"
+          ]
+        },
+        {
+          "name": "build_batch",
+          "command": "python -m secondopinion.tools.build_scoring_batch --input data/normalized/colm_2025_full.json --output data/batch/colm_2025_full_batch.jsonl --manifest data/batch/colm_2025_full_batch_manifest.json --model gpt-5.4-nano",
+          "writes": [
+            "data/batch/colm_2025_full_batch.jsonl",
+            "data/batch/colm_2025_full_batch_manifest.json"
+          ]
+        },
+        {
+          "name": "split_batch",
+          "command": "python -m secondopinion.tools.split_scoring_batch --input data/batch/colm_2025_full_batch.jsonl --manifest data/batch/colm_2025_full_batch_manifest.json --output-dir data/batch/colm_2025_full_parts --prefix colm_2025 --max-estimated-input-tokens 1600000",
+          "writes": [
+            "data/batch/colm_2025_full_parts"
+          ]
+        },
+        {
+          "name": "submit_batch_dry_run",
+          "command": "python -m secondopinion.tools.submit_scoring_batch --input data/batch/colm_2025_full_batch.jsonl --manifest data/batch/colm_2025_full_batch_manifest.json --output data/batch/colm_2025_full_batch_submission.json --dry-run",
+          "writes": [
+            "data/batch/colm_2025_full_batch_submission.json"
+          ],
+          "requires_openai_key": true
+        },
+        {
+          "name": "submit_batch",
+          "command": "python -m secondopinion.tools.submit_scoring_batch --input data/batch/colm_2025_full_batch.jsonl --manifest data/batch/colm_2025_full_batch_manifest.json --output data/batch/colm_2025_full_batch_submission.json",
+          "writes": [
+            "data/batch/colm_2025_full_batch_submission.json"
+          ],
+          "requires_openai_key": true,
+          "cost_source": "data/batch/colm_2025_full_batch_manifest.json: estimated_batch_cost_usd"
+        },
+        {
+          "name": "retrieve_batch",
+          "command": "python -m secondopinion.tools.retrieve_scoring_batch --batch-id YOUR_BATCH_ID --output data/batch/colm_2025_full_batch_output.jsonl --status-out data/batch/colm_2025_full_batch_status.json --error-output data/batch/colm_2025_full_batch_errors.jsonl",
+          "writes": [
+            "data/batch/colm_2025_full_batch_output.jsonl",
+            "data/batch/colm_2025_full_batch_status.json",
+            "data/batch/colm_2025_full_batch_errors.jsonl"
+          ],
+          "requires_openai_key": true
+        },
+        {
+          "name": "import_results",
+          "command": "python -m secondopinion.tools.import_scoring_batch_results --input data/batch/colm_2025_full_batch_output.jsonl --manifest data/batch/colm_2025_full_batch_manifest.json",
+          "writes": [
+            "SECONDOPINION_DATABASE_URL",
+            "data/server/batch_scoring"
+          ]
+        }
+      ],
+      "notes": [
+        "Probe on 2026-07-08 found public official reviews on colmweb.org/COLM/2025/Conference/-/Submission: 20/20 sampled papers, 75 reviews."
+      ]
+    },
+    {
+      "venue_id": "AISTATS",
+      "name": "International Conference on Artificial Intelligence and Statistics",
+      "year": 2025,
+      "status": "excluded_no_public_reviews",
+      "readiness": "excluded_not_scored",
+      "blocked_reason": "No public OpenReview review corpus expected",
+      "recommendation": "skip_no_public_reviews",
+      "rolling_venue": false,
+      "year_filter": "",
+      "invitation": "AISTATS.cc/2025/Conference/-/Submission",
+      "dataset_slug": "aistats_2025_full",
+      "paths": {
+        "raw_normalized": "data/normalized/aistats_2025_full.json",
+        "normalized": "data/normalized/aistats_2025_full.json",
+        "quality_json": "data/validation/aistats_2025_full_quality.json",
+        "quality_markdown": "reports/validation/aistats_2025_full_quality.md",
+        "batch_jsonl": "data/batch/aistats_2025_full_batch.jsonl",
+        "batch_manifest": "data/batch/aistats_2025_full_batch_manifest.json",
+        "batch_parts_dir": "data/batch/aistats_2025_full_parts",
+        "batch_submission": "data/batch/aistats_2025_full_batch_submission.json",
+        "batch_status": "data/batch/aistats_2025_full_batch_status.json",
+        "batch_output": "data/batch/aistats_2025_full_batch_output.jsonl",
+        "batch_errors": "data/batch/aistats_2025_full_batch_errors.jsonl",
+        "snapshot_id": "aistats_2025_full"
+      },
+      "sample_stats": {
+        "paper_count": 0,
+        "reply_count": 0,
+        "review_count": 0,
+        "papers_with_reviews": 0,
+        "review_coverage_rate": 0,
+        "mean_reviews_per_paper": 0,
+        "papers_with_decisions": 0,
+        "decision_coverage_rate": 0,
+        "papers_with_ratings": 0,
+        "rating_coverage_rate": 0,
+        "papers_with_confidence": 0,
+        "confidence_coverage_rate": 0
+      },
+      "pull_limit": null,
+      "commands_enabled": false,
+      "commands": [],
+      "notes": [
+        "Recheck on 2026-07-08: AISTATS.cc Submission/Post_Submission returned 0 papers; aistats.org/AISTATS Submission/Post_Submission each sampled 50 papers with 0 replies and 0 official reviews. Mark excluded until public official reviews become visible.",
+        "Excluded from scoring queue: no public OpenReview review corpus is expected for this venue."
+      ]
+    },
+    {
+      "venue_id": "UAI",
+      "name": "Conference on Uncertainty in Artificial Intelligence",
+      "year": 2025,
+      "status": "excluded_no_public_reviews",
+      "readiness": "excluded_not_scored",
+      "blocked_reason": "No public OpenReview review corpus expected",
+      "recommendation": "skip_no_public_reviews",
+      "rolling_venue": false,
+      "year_filter": "",
+      "invitation": "auai.org/UAI/2025/Conference/-/Submission",
+      "dataset_slug": "uai_2025_full",
+      "paths": {
+        "raw_normalized": "data/normalized/uai_2025_full.json",
+        "normalized": "data/normalized/uai_2025_full.json",
+        "quality_json": "data/validation/uai_2025_full_quality.json",
+        "quality_markdown": "reports/validation/uai_2025_full_quality.md",
+        "batch_jsonl": "data/batch/uai_2025_full_batch.jsonl",
+        "batch_manifest": "data/batch/uai_2025_full_batch_manifest.json",
+        "batch_parts_dir": "data/batch/uai_2025_full_parts",
+        "batch_submission": "data/batch/uai_2025_full_batch_submission.json",
+        "batch_status": "data/batch/uai_2025_full_batch_status.json",
+        "batch_output": "data/batch/uai_2025_full_batch_output.jsonl",
+        "batch_errors": "data/batch/uai_2025_full_batch_errors.jsonl",
+        "snapshot_id": "uai_2025_full"
+      },
+      "sample_stats": {
+        "paper_count": 0,
+        "reply_count": 0,
+        "review_count": 0,
+        "papers_with_reviews": 0,
+        "review_coverage_rate": 0,
+        "mean_reviews_per_paper": 0,
+        "papers_with_decisions": 0,
+        "decision_coverage_rate": 0,
+        "papers_with_ratings": 0,
+        "rating_coverage_rate": 0,
+        "papers_with_confidence": 0,
+        "confidence_coverage_rate": 0
+      },
+      "pull_limit": null,
+      "commands_enabled": false,
+      "commands": [],
+      "notes": [
+        "Recheck on 2026-07-08: auai.org/UAI/2025/Conference/-/Submission sampled 50 papers with 0 public official reviews. Mark excluded until public official reviews become visible.",
+        "Excluded from scoring queue: no public OpenReview review corpus is expected for this venue."
+      ]
+    },
+    {
+      "venue_id": "CORL",
+      "name": "Conference on Robot Learning",
+      "year": 2025,
+      "status": "excluded_no_public_reviews",
+      "readiness": "excluded_not_scored",
+      "blocked_reason": "No public OpenReview review corpus expected",
+      "recommendation": "skip_no_public_reviews",
+      "rolling_venue": false,
+      "year_filter": "",
+      "invitation": "robot-learning.org/CoRL/2025/Conference/-/Submission",
+      "dataset_slug": "corl_2025_full",
+      "paths": {
+        "raw_normalized": "data/normalized/corl_2025_full.json",
+        "normalized": "data/normalized/corl_2025_full.json",
+        "quality_json": "data/validation/corl_2025_full_quality.json",
+        "quality_markdown": "reports/validation/corl_2025_full_quality.md",
+        "batch_jsonl": "data/batch/corl_2025_full_batch.jsonl",
+        "batch_manifest": "data/batch/corl_2025_full_batch_manifest.json",
+        "batch_parts_dir": "data/batch/corl_2025_full_parts",
+        "batch_submission": "data/batch/corl_2025_full_batch_submission.json",
+        "batch_status": "data/batch/corl_2025_full_batch_status.json",
+        "batch_output": "data/batch/corl_2025_full_batch_output.jsonl",
+        "batch_errors": "data/batch/corl_2025_full_batch_errors.jsonl",
+        "snapshot_id": "corl_2025_full"
+      },
+      "sample_stats": {
+        "paper_count": 0,
+        "reply_count": 0,
+        "review_count": 0,
+        "papers_with_reviews": 0,
+        "review_coverage_rate": 0,
+        "mean_reviews_per_paper": 0,
+        "papers_with_decisions": 0,
+        "decision_coverage_rate": 0,
+        "papers_with_ratings": 0,
+        "rating_coverage_rate": 0,
+        "papers_with_confidence": 0,
+        "confidence_coverage_rate": 0
+      },
+      "pull_limit": null,
+      "commands_enabled": false,
+      "commands": [],
+      "notes": [
+        "Recheck on 2026-07-08: robot-learning.org/CoRL/2025/Conference/-/Submission sampled 50 papers and 50 decision replies with 0 public official reviews. Mark excluded until public official reviews become visible.",
+        "Excluded from scoring queue: no public OpenReview review corpus is expected for this venue."
+      ]
+    },
+    {
+      "venue_id": "MIDL",
+      "name": "Medical Imaging with Deep Learning",
+      "year": 2025,
+      "status": "open_reviews_available",
+      "readiness": "ready",
+      "blocked_reason": "",
+      "recommendation": "pull_and_score",
+      "rolling_venue": false,
+      "year_filter": "",
+      "invitation": "MIDL.io/2025/Conference/-/Post_Submission",
+      "dataset_slug": "midl_2025_full",
+      "paths": {
+        "raw_normalized": "data/normalized/midl_2025_full.json",
+        "normalized": "data/normalized/midl_2025_full.json",
+        "quality_json": "data/validation/midl_2025_full_quality.json",
+        "quality_markdown": "reports/validation/midl_2025_full_quality.md",
+        "batch_jsonl": "data/batch/midl_2025_full_batch.jsonl",
+        "batch_manifest": "data/batch/midl_2025_full_batch_manifest.json",
+        "batch_parts_dir": "data/batch/midl_2025_full_parts",
+        "batch_submission": "data/batch/midl_2025_full_batch_submission.json",
+        "batch_status": "data/batch/midl_2025_full_batch_status.json",
+        "batch_output": "data/batch/midl_2025_full_batch_output.jsonl",
+        "batch_errors": "data/batch/midl_2025_full_batch_errors.jsonl",
+        "snapshot_id": "midl_2025_full"
+      },
+      "sample_stats": {
+        "paper_count": 20,
+        "reply_count": 276,
+        "review_count": 62,
+        "papers_with_reviews": 20,
+        "review_coverage_rate": 1.0,
+        "mean_reviews_per_paper": 3.1,
+        "papers_with_decisions": 0,
+        "decision_coverage_rate": 0.0,
+        "papers_with_ratings": 0,
+        "rating_coverage_rate": 0.0,
+        "papers_with_confidence": 20,
+        "confidence_coverage_rate": 1.0
+      },
+      "pull_limit": null,
+      "commands_enabled": true,
+      "commands": [
+        {
+          "name": "pull",
+          "command": "python -m secondopinion.tools.openreview_pull --venue MIDL --year 2025 --invitation MIDL.io/2025/Conference/-/Post_Submission --output data/normalized/midl_2025_full.json --details replies --page-size 100 --polite-delay 0.2 --snapshot midl_2025_full",
+          "writes": [
+            "data/normalized/midl_2025_full.json"
+          ],
+          "requires_network": true,
+          "requires_openreview_auth": false,
+          "limit": null
+        },
+        {
+          "name": "quality",
+          "command": "python -m secondopinion.tools.data_quality_report --input data/normalized/midl_2025_full.json --json-out data/validation/midl_2025_full_quality.json --markdown-out reports/validation/midl_2025_full_quality.md",
+          "writes": [
+            "data/validation/midl_2025_full_quality.json",
+            "reports/validation/midl_2025_full_quality.md"
+          ]
+        },
+        {
+          "name": "ingest",
+          "command": "python -m secondopinion.tools.ingest_normalized --input data/normalized/midl_2025_full.json",
+          "writes": [
+            "SECONDOPINION_DATABASE_URL"
+          ]
+        },
+        {
+          "name": "build_batch",
+          "command": "python -m secondopinion.tools.build_scoring_batch --input data/normalized/midl_2025_full.json --output data/batch/midl_2025_full_batch.jsonl --manifest data/batch/midl_2025_full_batch_manifest.json --model gpt-5.4-nano",
+          "writes": [
+            "data/batch/midl_2025_full_batch.jsonl",
+            "data/batch/midl_2025_full_batch_manifest.json"
+          ]
+        },
+        {
+          "name": "split_batch",
+          "command": "python -m secondopinion.tools.split_scoring_batch --input data/batch/midl_2025_full_batch.jsonl --manifest data/batch/midl_2025_full_batch_manifest.json --output-dir data/batch/midl_2025_full_parts --prefix midl_2025 --max-estimated-input-tokens 1600000",
+          "writes": [
+            "data/batch/midl_2025_full_parts"
+          ]
+        },
+        {
+          "name": "submit_batch_dry_run",
+          "command": "python -m secondopinion.tools.submit_scoring_batch --input data/batch/midl_2025_full_batch.jsonl --manifest data/batch/midl_2025_full_batch_manifest.json --output data/batch/midl_2025_full_batch_submission.json --dry-run",
+          "writes": [
+            "data/batch/midl_2025_full_batch_submission.json"
+          ],
+          "requires_openai_key": true
+        },
+        {
+          "name": "submit_batch",
+          "command": "python -m secondopinion.tools.submit_scoring_batch --input data/batch/midl_2025_full_batch.jsonl --manifest data/batch/midl_2025_full_batch_manifest.json --output data/batch/midl_2025_full_batch_submission.json",
+          "writes": [
+            "data/batch/midl_2025_full_batch_submission.json"
+          ],
+          "requires_openai_key": true,
+          "cost_source": "data/batch/midl_2025_full_batch_manifest.json: estimated_batch_cost_usd"
+        },
+        {
+          "name": "retrieve_batch",
+          "command": "python -m secondopinion.tools.retrieve_scoring_batch --batch-id YOUR_BATCH_ID --output data/batch/midl_2025_full_batch_output.jsonl --status-out data/batch/midl_2025_full_batch_status.json --error-output data/batch/midl_2025_full_batch_errors.jsonl",
+          "writes": [
+            "data/batch/midl_2025_full_batch_output.jsonl",
+            "data/batch/midl_2025_full_batch_status.json",
+            "data/batch/midl_2025_full_batch_errors.jsonl"
+          ],
+          "requires_openai_key": true
+        },
+        {
+          "name": "import_results",
+          "command": "python -m secondopinion.tools.import_scoring_batch_results --input data/batch/midl_2025_full_batch_output.jsonl --manifest data/batch/midl_2025_full_batch_manifest.json",
+          "writes": [
+            "SECONDOPINION_DATABASE_URL",
+            "data/server/batch_scoring"
+          ]
+        }
+      ],
+      "notes": [
+        "Second-round probe found public reviews on MIDL.io/2025/Conference/-/Post_Submission.",
+        "Sample of 50 submissions returned 163 public reviews with 100% sample coverage."
+      ]
+    },
+    {
+      "venue_id": "JMLR",
+      "name": "Journal of Machine Learning Research",
+      "year": 2025,
+      "status": "excluded_no_public_reviews",
+      "readiness": "excluded_not_scored",
+      "blocked_reason": "No public OpenReview review corpus expected",
+      "recommendation": "skip_no_public_reviews",
+      "rolling_venue": false,
+      "year_filter": "",
+      "invitation": "",
+      "dataset_slug": "jmlr_2025_full",
+      "paths": {
+        "raw_normalized": "data/normalized/jmlr_2025_full.json",
+        "normalized": "data/normalized/jmlr_2025_full.json",
+        "quality_json": "data/validation/jmlr_2025_full_quality.json",
+        "quality_markdown": "reports/validation/jmlr_2025_full_quality.md",
+        "batch_jsonl": "data/batch/jmlr_2025_full_batch.jsonl",
+        "batch_manifest": "data/batch/jmlr_2025_full_batch_manifest.json",
+        "batch_parts_dir": "data/batch/jmlr_2025_full_parts",
+        "batch_submission": "data/batch/jmlr_2025_full_batch_submission.json",
+        "batch_status": "data/batch/jmlr_2025_full_batch_status.json",
+        "batch_output": "data/batch/jmlr_2025_full_batch_output.jsonl",
+        "batch_errors": "data/batch/jmlr_2025_full_batch_errors.jsonl",
+        "snapshot_id": "jmlr_2025_full"
+      },
+      "sample_stats": {
+        "paper_count": 0,
+        "reply_count": 0,
+        "review_count": 0,
+        "papers_with_reviews": 0,
+        "review_coverage_rate": 0,
+        "mean_reviews_per_paper": 0,
+        "papers_with_decisions": 0,
+        "decision_coverage_rate": 0,
+        "papers_with_ratings": 0,
+        "rating_coverage_rate": 0,
+        "papers_with_confidence": 0,
+        "confidence_coverage_rate": 0
+      },
+      "pull_limit": null,
+      "commands_enabled": false,
+      "commands": [],
+      "notes": [
+        "Top ML journal tracked for scope control; no public OpenReview official-review corpus is expected for 2025 scoring.",
+        "Excluded from scoring queue: no public OpenReview review corpus is expected for this venue."
+      ]
+    },
+    {
+      "venue_id": "JAIR",
+      "name": "Journal of Artificial Intelligence Research",
+      "year": 2025,
+      "status": "excluded_no_public_reviews",
+      "readiness": "excluded_not_scored",
+      "blocked_reason": "No public OpenReview review corpus expected",
+      "recommendation": "skip_no_public_reviews",
+      "rolling_venue": false,
+      "year_filter": "",
+      "invitation": "",
+      "dataset_slug": "jair_2025_full",
+      "paths": {
+        "raw_normalized": "data/normalized/jair_2025_full.json",
+        "normalized": "data/normalized/jair_2025_full.json",
+        "quality_json": "data/validation/jair_2025_full_quality.json",
+        "quality_markdown": "reports/validation/jair_2025_full_quality.md",
+        "batch_jsonl": "data/batch/jair_2025_full_batch.jsonl",
+        "batch_manifest": "data/batch/jair_2025_full_batch_manifest.json",
+        "batch_parts_dir": "data/batch/jair_2025_full_parts",
+        "batch_submission": "data/batch/jair_2025_full_batch_submission.json",
+        "batch_status": "data/batch/jair_2025_full_batch_status.json",
+        "batch_output": "data/batch/jair_2025_full_batch_output.jsonl",
+        "batch_errors": "data/batch/jair_2025_full_batch_errors.jsonl",
+        "snapshot_id": "jair_2025_full"
+      },
+      "sample_stats": {
+        "paper_count": 0,
+        "reply_count": 0,
+        "review_count": 0,
+        "papers_with_reviews": 0,
+        "review_coverage_rate": 0,
+        "mean_reviews_per_paper": 0,
+        "papers_with_decisions": 0,
+        "decision_coverage_rate": 0,
+        "papers_with_ratings": 0,
+        "rating_coverage_rate": 0,
+        "papers_with_confidence": 0,
+        "confidence_coverage_rate": 0
+      },
+      "pull_limit": null,
+      "commands_enabled": false,
+      "commands": [],
+      "notes": [
+        "Top AI journal tracked for scope control; no public OpenReview official-review corpus is expected for 2025 scoring.",
+        "Excluded from scoring queue: no public OpenReview review corpus is expected for this venue."
+      ]
+    },
+    {
+      "venue_id": "MLJ",
+      "name": "Machine Learning",
+      "year": 2025,
+      "status": "excluded_no_public_reviews",
+      "readiness": "excluded_not_scored",
+      "blocked_reason": "No public OpenReview review corpus expected",
+      "recommendation": "skip_no_public_reviews",
+      "rolling_venue": false,
+      "year_filter": "",
+      "invitation": "",
+      "dataset_slug": "mlj_2025_full",
+      "paths": {
+        "raw_normalized": "data/normalized/mlj_2025_full.json",
+        "normalized": "data/normalized/mlj_2025_full.json",
+        "quality_json": "data/validation/mlj_2025_full_quality.json",
+        "quality_markdown": "reports/validation/mlj_2025_full_quality.md",
+        "batch_jsonl": "data/batch/mlj_2025_full_batch.jsonl",
+        "batch_manifest": "data/batch/mlj_2025_full_batch_manifest.json",
+        "batch_parts_dir": "data/batch/mlj_2025_full_parts",
+        "batch_submission": "data/batch/mlj_2025_full_batch_submission.json",
+        "batch_status": "data/batch/mlj_2025_full_batch_status.json",
+        "batch_output": "data/batch/mlj_2025_full_batch_output.jsonl",
+        "batch_errors": "data/batch/mlj_2025_full_batch_errors.jsonl",
+        "snapshot_id": "mlj_2025_full"
+      },
+      "sample_stats": {
+        "paper_count": 0,
+        "reply_count": 0,
+        "review_count": 0,
+        "papers_with_reviews": 0,
+        "review_coverage_rate": 0,
+        "mean_reviews_per_paper": 0,
+        "papers_with_decisions": 0,
+        "decision_coverage_rate": 0,
+        "papers_with_ratings": 0,
+        "rating_coverage_rate": 0,
+        "papers_with_confidence": 0,
+        "confidence_coverage_rate": 0
+      },
+      "pull_limit": null,
+      "commands_enabled": false,
+      "commands": [],
+      "notes": [
+        "Top ML journal tracked for scope control; no public OpenReview official-review corpus is expected for 2025 scoring.",
+        "Excluded from scoring queue: no public OpenReview review corpus is expected for this venue."
+      ]
+    }
+  ]
+}

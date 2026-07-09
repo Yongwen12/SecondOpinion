@@ -1,0 +1,264 @@
+{
+  "schema_version": "openreview-plan-runner-v0.1",
+  "execute": true,
+  "skip_existing": true,
+  "check_inputs": false,
+  "max_submit_cost_usd": null,
+  "status_counts": {
+    "skipped_existing": 2,
+    "completed": 13
+  },
+  "steps": [
+    {
+      "venue_id": "ICLR",
+      "name": "pull",
+      "status": "skipped_existing",
+      "reason": "all_path_outputs_exist",
+      "command": "python -m secondopinion.tools.openreview_pull --venue ICLR --year 2025 --invitation ICLR.cc/2025/Conference/-/Submission --output data/normalized/iclr_2025_sample50.json --raw-root data/raw --details replies --page-size 100 --polite-delay 0.2 --snapshot iclr_2025_sample50 --resume --limit 50",
+      "writes": [
+        "data/normalized/iclr_2025_sample50.json",
+        "data/raw"
+      ],
+      "requires_network": true,
+      "requires_openreview_auth": false,
+      "requires_openai_key": false,
+      "existing_outputs": [
+        "data/normalized/iclr_2025_sample50.json",
+        "data/raw"
+      ]
+    },
+    {
+      "venue_id": "ICLR",
+      "name": "quality",
+      "status": "skipped_existing",
+      "reason": "all_path_outputs_exist",
+      "command": "python -m secondopinion.tools.data_quality_report --input data/normalized/iclr_2025_sample50.json --json-out data/validation/iclr_2025_sample50_quality.json --markdown-out reports/validation/iclr_2025_sample50_quality.md",
+      "writes": [
+        "data/validation/iclr_2025_sample50_quality.json",
+        "reports/validation/iclr_2025_sample50_quality.md"
+      ],
+      "requires_network": false,
+      "requires_openreview_auth": false,
+      "requires_openai_key": false,
+      "existing_outputs": [
+        "data/validation/iclr_2025_sample50_quality.json",
+        "reports/validation/iclr_2025_sample50_quality.md"
+      ]
+    },
+    {
+      "venue_id": "ICLR",
+      "name": "ingest",
+      "status": "completed",
+      "reason": "",
+      "command": "python -m secondopinion.tools.ingest_normalized --input data/normalized/iclr_2025_sample50.json",
+      "writes": [
+        "SECONDOPINION_DATABASE_URL"
+      ],
+      "requires_network": false,
+      "requires_openreview_auth": false,
+      "requires_openai_key": false,
+      "returncode": 0,
+      "stdout": "{\n  \"paper_count\": 50,\n  \"review_count\": 188,\n  \"dataset\": \"iclr_2025\",\n  \"ingest_run_id\": \"ingest_49511d2b87f345a3\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "venue_id": "ICLR",
+      "name": "build_batch",
+      "status": "completed",
+      "reason": "",
+      "command": "python -m secondopinion.tools.build_scoring_batch --input data/normalized/iclr_2025_sample50.json --output data/batch/iclr_2025_sample50_batch.jsonl --manifest data/batch/iclr_2025_sample50_batch_manifest.json --model gpt-5.4-nano",
+      "writes": [
+        "data/batch/iclr_2025_sample50_batch.jsonl",
+        "data/batch/iclr_2025_sample50_batch_manifest.json"
+      ],
+      "requires_network": false,
+      "requires_openreview_auth": false,
+      "requires_openai_key": false,
+      "returncode": 0,
+      "stdout": "\"ICLR-2025-yRd4loGAhJ-T5IG3mQC6q\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"yRd4loGAhJ\",\n      \"review_id\": \"T5IG3mQC6q\",\n      \"reviewer_index\": 1\n    },\n    {\n      \"custom_id\": \"ICLR-2025-yRd4loGAhJ-po9pdrLPvt\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"yRd4loGAhJ\",\n      \"review_id\": \"po9pdrLPvt\",\n      \"reviewer_index\": 2\n    },\n    {\n      \"custom_id\": \"ICLR-2025-yRd4loGAhJ-1zlqWB0bV8\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"yRd4loGAhJ\",\n      \"review_id\": \"1zlqWB0bV8\",\n      \"reviewer_index\": 3\n    },\n    {\n      \"custom_id\": \"ICLR-2025-yRd4loGAhJ-BVu3rSmgSB\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"yRd4loGAhJ\",\n      \"review_id\": \"BVu3rSmgSB\",\n      \"reviewer_index\": 4\n    },\n    {\n      \"custom_id\": \"ICLR-2025-6ifeGfWxtX-2pVnJIH4De\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"6ifeGfWxtX\",\n      \"review_id\": \"2pVnJIH4De\",\n      \"reviewer_index\": 1\n    },\n    {\n      \"custom_id\": \"ICLR-2025-6ifeGfWxtX-QHelQo3JvG\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"6ifeGfWxtX\",\n      \"review_id\": \"QHelQo3JvG\",\n      \"reviewer_index\": 2\n    },\n    {\n      \"custom_id\": \"ICLR-2025-6ifeGfWxtX-llAfANWRRi\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"6ifeGfWxtX\",\n      \"review_id\": \"llAfANWRRi\",\n      \"reviewer_index\": 3\n    },\n    {\n      \"custom_id\": \"ICLR-2025-6ifeGfWxtX-qaGkQaMkYt\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"6ifeGfWxtX\",\n      \"review_id\": \"qaGkQaMkYt\",\n      \"reviewer_index\": 4\n    },\n    {\n      \"custom_id\": \"ICLR-2025-STpxO1Siaq-JlTbJ1EV7Z\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"STpxO1Siaq\",\n      \"review_id\": \"JlTbJ1EV7Z\",\n      \"reviewer_index\": 1\n    },\n    {\n      \"custom_id\": \"ICLR-2025-STpxO1Siaq-cyX74nkB6U\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"STpxO1Siaq\",\n      \"review_id\": \"cyX74nkB6U\",\n      \"reviewer_index\": 2\n    },\n    {\n      \"custom_id\": \"ICLR-2025-STpxO1Siaq-pwKp6HhU4l\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"STpxO1Siaq\",\n      \"review_id\": \"pwKp6HhU4l\",\n      \"reviewer_index\": 3\n    },\n    {\n      \"custom_id\": \"ICLR-2025-STpxO1Siaq-1BRC1xbfaF\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"STpxO1Siaq\",\n      \"review_id\": \"1BRC1xbfaF\",\n      \"reviewer_index\": 4\n    },\n    {\n      \"custom_id\": \"ICLR-2025-uOnElfFuey-isamCsehLc\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"uOnElfFuey\",\n      \"review_id\": \"isamCsehLc\",\n      \"reviewer_index\": 1\n    },\n    {\n      \"custom_id\": \"ICLR-2025-uOnElfFuey-7hfio8486k\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"uOnElfFuey\",\n      \"review_id\": \"7hfio8486k\",\n      \"reviewer_index\": 2\n    },\n    {\n      \"custom_id\": \"ICLR-2025-uOnElfFuey-00Qehr5pC2\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"uOnElfFuey\",\n      \"review_id\": \"00Qehr5pC2\",\n      \"reviewer_index\": 3\n    },\n    {\n      \"custom_id\": \"ICLR-2025-uOnElfFuey-n4EVrSoWA0\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"uOnElfFuey\",\n      \"review_id\": \"n4EVrSoWA0\",\n      \"reviewer_index\": 4\n    },\n    {\n      \"custom_id\": \"ICLR-2025-Yd5MHVIKLk-FowTncntue\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"Yd5MHVIKLk\",\n      \"review_id\": \"FowTncntue\",\n      \"reviewer_index\": 1\n    },\n    {\n      \"custom_id\": \"ICLR-2025-Yd5MHVIKLk-BUfbujQhDr\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"Yd5MHVIKLk\",\n      \"review_id\": \"BUfbujQhDr\",\n      \"reviewer_index\": 2\n    },\n    {\n      \"custom_id\": \"ICLR-2025-Yd5MHVIKLk-PpXMjXjaV7\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"Yd5MHVIKLk\",\n      \"review_id\": \"PpXMjXjaV7\",\n      \"reviewer_index\": 3\n    },\n    {\n      \"custom_id\": \"ICLR-2025-Yd5MHVIKLk-woHoLD4zxu\",\n      \"venue\": \"ICLR\",\n      \"year\": 2025,\n      \"paper_id\": \"Yd5MHVIKLk\",\n      \"review_id\": \"woHoLD4zxu\",\n      \"reviewer_index\": 4\n    }\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "venue_id": "ICLR",
+      "name": "split_batch",
+      "status": "completed",
+      "reason": "",
+      "command": "python -m secondopinion.tools.split_scoring_batch --input data/batch/iclr_2025_sample50_batch.jsonl --manifest data/batch/iclr_2025_sample50_batch_manifest.json --output-dir data/batch/iclr_2025_sample50_parts --prefix iclr_2025 --max-estimated-input-tokens 1600000",
+      "writes": [
+        "data/batch/iclr_2025_sample50_parts"
+      ],
+      "requires_network": false,
+      "requires_openreview_auth": false,
+      "requires_openai_key": false,
+      "returncode": 0,
+      "stdout": "{\n  \"source_jsonl_path\": \"data/batch/iclr_2025_sample50_batch.jsonl\",\n  \"source_manifest_path\": \"data/batch/iclr_2025_sample50_batch_manifest.json\",\n  \"chunk_count\": 1,\n  \"request_count\": 188,\n  \"max_estimated_input_tokens\": 1600000,\n  \"max_requests\": null,\n  \"chunks\": [\n    {\n      \"index\": 1,\n      \"jsonl_path\": \"data\\\\batch\\\\iclr_2025_sample50_parts\\\\iclr_2025_part01_batch.jsonl\",\n      \"manifest_path\": \"data\\\\batch\\\\iclr_2025_sample50_parts\\\\iclr_2025_part01_manifest.json\",\n      \"request_count\": 188,\n      \"estimated_input_tokens\": 329473,\n      \"estimated_batch_cost_usd\": 0.0447\n    }\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "venue_id": "ICML",
+      "name": "pull",
+      "status": "completed",
+      "reason": "",
+      "command": "python -m secondopinion.tools.openreview_pull --venue ICML --year 2025 --invitation ICML.cc/2025/Conference/-/Submission --output data/normalized/icml_2025_sample50.json --raw-root data/raw --details replies --page-size 100 --polite-delay 0.2 --snapshot icml_2025_sample50 --resume --limit 50",
+      "writes": [
+        "data/normalized/icml_2025_sample50.json",
+        "data/raw"
+      ],
+      "requires_network": true,
+      "requires_openreview_auth": false,
+      "requires_openai_key": false,
+      "returncode": 0,
+      "stdout": "{\n  \"venue\": \"ICML\",\n  \"year\": 2025,\n  \"limit\": 50,\n  \"invitation\": \"ICML.cc/2025/Conference/-/Submission\",\n  \"snapshot_id\": \"icml_2025_sample50\",\n  \"snapshot_dir\": \"data\\\\raw\\\\openreview\\\\icml\\\\2025\\\\icml_2025_sample50\",\n  \"normalized_path\": \"data\\\\normalized\\\\icml_2025_sample50.json\",\n  \"paper_count\": 50,\n  \"review_count\": 540\n}\n",
+      "stderr": ""
+    },
+    {
+      "venue_id": "ICML",
+      "name": "quality",
+      "status": "completed",
+      "reason": "",
+      "command": "python -m secondopinion.tools.data_quality_report --input data/normalized/icml_2025_sample50.json --json-out data/validation/icml_2025_sample50_quality.json --markdown-out reports/validation/icml_2025_sample50_quality.md",
+      "writes": [
+        "data/validation/icml_2025_sample50_quality.json",
+        "reports/validation/icml_2025_sample50_quality.md"
+      ],
+      "requires_network": false,
+      "requires_openreview_auth": false,
+      "requires_openai_key": false,
+      "returncode": 0,
+      "stdout": "ecific fragments to available building blocks, and then use those to assemble final molecules. After a fruitful rebuttal period that lead to several score increases, all reviewers were voting to accept this paper, although weakly so. On the positive side, reviewers enjoyed the good quantitative performance of CombiMOTS, as well as its solid motivation and practical design. On the negative side, reviewers asked for further ablations, statistical analyses, and discussion of theoretical underpinnings, all of which were subsequently discussed by the authors. Some reviewers also noted somewhat limited novelty, with CombiMOTS mostly being a combination of pre-existing techniques; however, this point is itself of limited importance in the applications track, where practicality is the main concern. After reviewing all available information and reading the paper in detail, I believe this manuscript is a decent contribution to ICML's program. Although not highly innovative, CombiMOTS could be interesting to practitioners. Therefore, I (weakly) recommend acceptance of this paper. My main reason for not going for a stronger recommendation is that CombiMOTS may not be as widely applicable as some other methods, thus perhaps interesting to a slightly narrower audience than an average ICML-accepted paper in the field of AI for Science. Finally, I would encourage the authors to incorporate reviewer feedback into the final version of their paper, and spend some extra time polishing the text and LaTeX notation; having read the work myself I believe it would be nice to make the reading experience a bit smoother.\": 1,\n    \"Accept (poster) The paper proposes a method (MixFlow-MG) to reduce the memory consumption when computing exact meta-gradients of bi-level optimization problems whose inner loop uses a gradient-based optimizer. This is achieved by re-parameterizing the inner loop which allows to replace double-backward differentiation with mixed-mode differentiation (forward-over-reverse) that scales more favourably in terms of memory. Empirical results demonstrate memory reductions by up to 10x as well as small run time improvements on three different setups: - The proposed method is simple and compatible with the parameterizations assumed by many libraries, allowing it to be broadly adopted. The submission contained a JAX implementation, and the authors will add a PyTorch implementation, further broadening applicability. Most reviewers appreciated this contribution and emphasized that bi-level optimization research is often limited by memory. The proposed method's achieved memory reductions allow existing works to scale by a factor of 10; this is a solid contribution. - There were concerns regarding the motivation of improving the **exact** computation of meta-gradients, and the lacking comparison with approximate schemes. I understand this concern, but think that successfully scaling the exact computation in itself is a sustainable contribution that might lead to the development of new approximate schemes that inherit the proposed improvements. The authors somewhat addressed this in their rebuttal and provided related work that suggests improved results by scaling the exact scheme, e.g. using longer inner loops. After reading the paper, I believe that the proposed approach can also benefit some existing approximate schemes, e.g. truncated backpropagation through time. Finally, the experiments presented in the paper focus on improving computational performance and do not show how MixFlow-MG improves performance down-stream. I think this would be good a addition for the paper, but secondary for its acceptance as this should follow from the demonstrated gains. Overall, the paper is in good shape and the authors have offered concrete actions to further improve it; therefore I recommend acceptance.\": 1\n  },\n  \"json_path\": \"data\\\\validation\\\\icml_2025_sample50_quality.json\",\n  \"markdown_path\": \"reports\\\\validation\\\\icml_2025_sample50_quality.md\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "venue_id": "ICML",
+      "name": "ingest",
+      "status": "completed",
+      "reason": "",
+      "command": "python -m secondopinion.tools.ingest_normalized --input data/normalized/icml_2025_sample50.json",
+      "writes": [
+        "SECONDOPINION_DATABASE_URL"
+      ],
+      "requires_network": false,
+      "requires_openreview_auth": false,
+      "requires_openai_key": false,
+      "returncode": 0,
+      "stdout": "{\n  \"paper_count\": 50,\n  \"review_count\": 540,\n  \"dataset\": \"icml_2025\",\n  \"ingest_run_id\": \"ingest_0e7789a0a6614594\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "venue_id": "ICML",
+      "name": "build_batch",
+      "status": "completed",
+      "reason": "",
+      "command": "python -m secondopinion.tools.build_scoring_batch --input data/normalized/icml_2025_sample50.json --output data/batch/icml_2025_sample50_batch.jsonl --manifest data/batch/icml_2025_sample50_batch_manifest.json --model gpt-5.4-nano",
+      "writes": [
+        "data/batch/icml_2025_sample50_batch.jsonl",
+        "data/batch/icml_2025_sample50_batch_manifest.json"
+      ],
+      "requires_network": false,
+      "requires_openreview_auth": false,
+      "requires_openai_key": false,
+      "returncode": 0,
+      "stdout": "ufwMzg-7EA9v2BwHi\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"hrBfufwMzg\",\n      \"review_id\": \"7EA9v2BwHi\",\n      \"reviewer_index\": 12\n    },\n    {\n      \"custom_id\": \"ICML-2025-CAPNgWkEEk-PLSMosy628\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"CAPNgWkEEk\",\n      \"review_id\": \"PLSMosy628\",\n      \"reviewer_index\": 6\n    },\n    {\n      \"custom_id\": \"ICML-2025-CAPNgWkEEk-e2VAxOLfu3\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"CAPNgWkEEk\",\n      \"review_id\": \"e2VAxOLfu3\",\n      \"reviewer_index\": 7\n    },\n    {\n      \"custom_id\": \"ICML-2025-CAPNgWkEEk-B9r4CeWr13\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"CAPNgWkEEk\",\n      \"review_id\": \"B9r4CeWr13\",\n      \"reviewer_index\": 8\n    },\n    {\n      \"custom_id\": \"ICML-2025-3go0lhfxd0-ORlRz9vIuY\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"3go0lhfxd0\",\n      \"review_id\": \"ORlRz9vIuY\",\n      \"reviewer_index\": 10\n    },\n    {\n      \"custom_id\": \"ICML-2025-3go0lhfxd0-L90tUxzhto\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"3go0lhfxd0\",\n      \"review_id\": \"L90tUxzhto\",\n      \"reviewer_index\": 11\n    },\n    {\n      \"custom_id\": \"ICML-2025-3go0lhfxd0-qVSe7I6LDa\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"3go0lhfxd0\",\n      \"review_id\": \"qVSe7I6LDa\",\n      \"reviewer_index\": 12\n    },\n    {\n      \"custom_id\": \"ICML-2025-3go0lhfxd0-YQTeFFQdkC\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"3go0lhfxd0\",\n      \"review_id\": \"YQTeFFQdkC\",\n      \"reviewer_index\": 13\n    },\n    {\n      \"custom_id\": \"ICML-2025-7jxa1o8rDW-3x3AHuNVYJ\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"7jxa1o8rDW\",\n      \"review_id\": \"3x3AHuNVYJ\",\n      \"reviewer_index\": 13\n    },\n    {\n      \"custom_id\": \"ICML-2025-7jxa1o8rDW-bMidNJdTQB\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"7jxa1o8rDW\",\n      \"review_id\": \"bMidNJdTQB\",\n      \"reviewer_index\": 14\n    },\n    {\n      \"custom_id\": \"ICML-2025-7jxa1o8rDW-pciI6aBar5\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"7jxa1o8rDW\",\n      \"review_id\": \"pciI6aBar5\",\n      \"reviewer_index\": 15\n    },\n    {\n      \"custom_id\": \"ICML-2025-7jxa1o8rDW-Xf3jnJ7Euk\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"7jxa1o8rDW\",\n      \"review_id\": \"Xf3jnJ7Euk\",\n      \"reviewer_index\": 16\n    },\n    {\n      \"custom_id\": \"ICML-2025-kjtvCSkSsy-vEL5HQfyub\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"kjtvCSkSsy\",\n      \"review_id\": \"vEL5HQfyub\",\n      \"reviewer_index\": 11\n    },\n    {\n      \"custom_id\": \"ICML-2025-kjtvCSkSsy-IrgfHmyAGT\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"kjtvCSkSsy\",\n      \"review_id\": \"IrgfHmyAGT\",\n      \"reviewer_index\": 12\n    },\n    {\n      \"custom_id\": \"ICML-2025-kjtvCSkSsy-D7B3VpbzmB\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"kjtvCSkSsy\",\n      \"review_id\": \"D7B3VpbzmB\",\n      \"reviewer_index\": 13\n    },\n    {\n      \"custom_id\": \"ICML-2025-kjtvCSkSsy-ZXOJOUghst\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"kjtvCSkSsy\",\n      \"review_id\": \"ZXOJOUghst\",\n      \"reviewer_index\": 14\n    },\n    {\n      \"custom_id\": \"ICML-2025-uTv5rOPZr4-nlIpwU29Gm\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"uTv5rOPZr4\",\n      \"review_id\": \"nlIpwU29Gm\",\n      \"reviewer_index\": 8\n    },\n    {\n      \"custom_id\": \"ICML-2025-uTv5rOPZr4-iMkF2Jj1DK\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"uTv5rOPZr4\",\n      \"review_id\": \"iMkF2Jj1DK\",\n      \"reviewer_index\": 9\n    },\n    {\n      \"custom_id\": \"ICML-2025-uTv5rOPZr4-TsEJunkrEZ\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"uTv5rOPZr4\",\n      \"review_id\": \"TsEJunkrEZ\",\n      \"reviewer_index\": 10\n    },\n    {\n      \"custom_id\": \"ICML-2025-uTv5rOPZr4-WQmbCWewqR\",\n      \"venue\": \"ICML\",\n      \"year\": 2025,\n      \"paper_id\": \"uTv5rOPZr4\",\n      \"review_id\": \"WQmbCWewqR\",\n      \"reviewer_index\": 11\n    }\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "venue_id": "ICML",
+      "name": "split_batch",
+      "status": "completed",
+      "reason": "",
+      "command": "python -m secondopinion.tools.split_scoring_batch --input data/batch/icml_2025_sample50_batch.jsonl --manifest data/batch/icml_2025_sample50_batch_manifest.json --output-dir data/batch/icml_2025_sample50_parts --prefix icml_2025 --max-estimated-input-tokens 1600000",
+      "writes": [
+        "data/batch/icml_2025_sample50_parts"
+      ],
+      "requires_network": false,
+      "requires_openreview_auth": false,
+      "requires_openai_key": false,
+      "returncode": 0,
+      "stdout": "{\n  \"source_jsonl_path\": \"data/batch/icml_2025_sample50_batch.jsonl\",\n  \"source_manifest_path\": \"data/batch/icml_2025_sample50_batch_manifest.json\",\n  \"chunk_count\": 1,\n  \"request_count\": 191,\n  \"max_estimated_input_tokens\": 1600000,\n  \"max_requests\": null,\n  \"chunks\": [\n    {\n      \"index\": 1,\n      \"jsonl_path\": \"data\\\\batch\\\\icml_2025_sample50_parts\\\\icml_2025_part01_batch.jsonl\",\n      \"manifest_path\": \"data\\\\batch\\\\icml_2025_sample50_parts\\\\icml_2025_part01_manifest.json\",\n      \"request_count\": 191,\n      \"estimated_input_tokens\": 136968,\n      \"estimated_batch_cost_usd\": 0.0256\n    }\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "venue_id": "NEURIPS",
+      "name": "pull",
+      "status": "completed",
+      "reason": "",
+      "command": "python -m secondopinion.tools.openreview_pull --venue NEURIPS --year 2025 --invitation NeurIPS.cc/2025/Conference/-/Submission --output data/normalized/neurips_2025_sample50.json --raw-root data/raw --details replies --page-size 100 --polite-delay 0.2 --snapshot neurips_2025_sample50 --resume --limit 50",
+      "writes": [
+        "data/normalized/neurips_2025_sample50.json",
+        "data/raw"
+      ],
+      "requires_network": true,
+      "requires_openreview_auth": false,
+      "requires_openai_key": false,
+      "returncode": 0,
+      "stdout": "{\n  \"venue\": \"NEURIPS\",\n  \"year\": 2025,\n  \"limit\": 50,\n  \"invitation\": \"NeurIPS.cc/2025/Conference/-/Submission\",\n  \"snapshot_id\": \"neurips_2025_sample50\",\n  \"snapshot_dir\": \"data\\\\raw\\\\openreview\\\\neurips\\\\2025\\\\neurips_2025_sample50\",\n  \"normalized_path\": \"data\\\\normalized\\\\neurips_2025_sample50.json\",\n  \"paper_count\": 50,\n  \"review_count\": 584\n}\n",
+      "stderr": ""
+    },
+    {
+      "venue_id": "NEURIPS",
+      "name": "quality",
+      "status": "completed",
+      "reason": "",
+      "command": "python -m secondopinion.tools.data_quality_report --input data/normalized/neurips_2025_sample50.json --json-out data/validation/neurips_2025_sample50_quality.json --markdown-out reports/validation/neurips_2025_sample50_quality.md",
+      "writes": [
+        "data/validation/neurips_2025_sample50_quality.json",
+        "reports/validation/neurips_2025_sample50_quality.md"
+      ],
+      "requires_network": false,
+      "requires_openreview_auth": false,
+      "requires_openai_key": false,
+      "returncode": 0,
+      "stdout": "results. The authors' rebuttals were thorough and responsive, addressing most of the reviewers' concerns with additional experiments and insightful clarifications. The introduction of cost-aware RL for LLM routing is a practical contribution. While some concerns about efficiency and a lack of certain comparisons remain, they are not severe enough to warrant rejection. The potential for this work to inspire future research in multi-round, cost-aware LLM routing makes it a valuable contribution to the NeurIPS community. The work's strengths outweigh its weaknesses.\": 1,\n    \"Accept (poster) The authors present a new algorithm for spectral sparsification based on uniform sampling. While in previous work uniform sampling is used as a step to compute good sparsifiers, it is interesting to obtain good bound to get spectral sparsifier via uniform sampling. The reviewers found the paper interesting and techniques nice although they all felt that the paper would improve significantly by: - adding a more in depth comparison with the worked based on effective resistance - adding a detailed comparison with the work \\\"Uniform Sampling for Matrix Approximation\\\" - the experimental analysis is very limited and it would be nice to have a more comprehensive list of experiments\": 1,\n    \"Accept (poster) This paper develops an information-theoretic framework for discrete diffusion models, extending I-MMSE results to discrete and masked settings and introducing exact equality-based NLL estimators. The time-free estimator achieves clear variance reduction and enables unified likelihood ratio estimation, which reviewers agreed is theoretically novel and practically useful. Although several reviewers noted the empirical evaluation is limited, all reviewers gave positive scores, and the consensus is that the theoretical contributions and supporting evidence justify acceptance as a poster.\": 1,\n    \"Reject The paper studies weak-to-strong generalization, reveals one reason for overfitting to a weak teacher's mistake, and proposes a new method called Weak Teacher Evaluation of Strong Student Demonstrations to regularize the strong student toward its reference policy. After the rebuttal, reviewers are still concerned about the limited evaluation, insufficient baseline comparison, the lack of a precise mathematical formalization of the weak teacher, etc. More efforts are required before the manuscript is ready to publish.\": 1,\n    \"Accept (poster) The paper solves a very interesting and important question: \\\"How are discovered mathematical formulas connected?\\\". The paper relies on LLMs and various mathematical techniques to extract various representations of approximations for, e.g., for $\\\\pi$ and $e$, and convert them into standard forms, after which unification of formulas can be performed. Several relations between different representations are found. For example, for $\\\\pi$, 381 of 407 formulas are proved linked and several well-known representations (e.g., from Euler, Gauss, and Brouncker) are shown to be equivalent. The paper is well motivated, and the studied problem is very novel/original. Most reviewers (and also I myself, after reading the paper and the discussions) think the work is quite impactful for mathematical research. The decision on this paper is especially difficult, as despite its novelty and contributions, its writing and analysis could be further improved, which I believe the authors have done a reasonably good job in the discussions with the reviewers. After discussions between the reviewers/ACs and the ACs/SACs, I think this is a good paper related to using LLMs for mathematical explorations, thus a recommendation for its acceptance. I strongly recommend that the authors consider the comments during rebuttal/discussions to revise the paper accordingly in its final version.\": 1\n  },\n  \"json_path\": \"data\\\\validation\\\\neurips_2025_sample50_quality.json\",\n  \"markdown_path\": \"reports\\\\validation\\\\neurips_2025_sample50_quality.md\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "venue_id": "NEURIPS",
+      "name": "ingest",
+      "status": "completed",
+      "reason": "",
+      "command": "python -m secondopinion.tools.ingest_normalized --input data/normalized/neurips_2025_sample50.json",
+      "writes": [
+        "SECONDOPINION_DATABASE_URL"
+      ],
+      "requires_network": false,
+      "requires_openreview_auth": false,
+      "requires_openai_key": false,
+      "returncode": 0,
+      "stdout": "{\n  \"paper_count\": 50,\n  \"review_count\": 584,\n  \"dataset\": \"neurips_2025\",\n  \"ingest_run_id\": \"ingest_9c92156d28504e99\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "venue_id": "NEURIPS",
+      "name": "build_batch",
+      "status": "completed",
+      "reason": "",
+      "command": "python -m secondopinion.tools.build_scoring_batch --input data/normalized/neurips_2025_sample50.json --output data/batch/neurips_2025_sample50_batch.jsonl --manifest data/batch/neurips_2025_sample50_batch_manifest.json --model gpt-5.4-nano",
+      "writes": [
+        "data/batch/neurips_2025_sample50_batch.jsonl",
+        "data/batch/neurips_2025_sample50_batch_manifest.json"
+      ],
+      "requires_network": false,
+      "requires_openreview_auth": false,
+      "requires_openai_key": false,
+      "returncode": 0,
+      "stdout": "_id\": \"43jFHCd3OT\",\n      \"reviewer_index\": 8\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-rew03VaNUJ-mWXM8rvVoX\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"rew03VaNUJ\",\n      \"review_id\": \"mWXM8rvVoX\",\n      \"reviewer_index\": 9\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-rew03VaNUJ-75C1BU7PUA\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"rew03VaNUJ\",\n      \"review_id\": \"75C1BU7PUA\",\n      \"reviewer_index\": 10\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-rew03VaNUJ-koZUtGoA7J\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"rew03VaNUJ\",\n      \"review_id\": \"koZUtGoA7J\",\n      \"reviewer_index\": 11\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-Bsska2ayiy-QbI8aNYUtl\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"Bsska2ayiy\",\n      \"review_id\": \"QbI8aNYUtl\",\n      \"reviewer_index\": 8\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-Bsska2ayiy-pH2iK3iucw\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"Bsska2ayiy\",\n      \"review_id\": \"pH2iK3iucw\",\n      \"reviewer_index\": 9\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-Bsska2ayiy-TXIbFalvRg\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"Bsska2ayiy\",\n      \"review_id\": \"TXIbFalvRg\",\n      \"reviewer_index\": 10\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-Bsska2ayiy-44YoArDJwr\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"Bsska2ayiy\",\n      \"review_id\": \"44YoArDJwr\",\n      \"reviewer_index\": 11\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-w1TjXJk846-srTUgA7WSq\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"w1TjXJk846\",\n      \"review_id\": \"srTUgA7WSq\",\n      \"reviewer_index\": 9\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-w1TjXJk846-TtlUMbO7HP\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"w1TjXJk846\",\n      \"review_id\": \"TtlUMbO7HP\",\n      \"reviewer_index\": 10\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-w1TjXJk846-MM5AWrk24N\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"w1TjXJk846\",\n      \"review_id\": \"MM5AWrk24N\",\n      \"reviewer_index\": 11\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-w1TjXJk846-68TkCa4GQV\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"w1TjXJk846\",\n      \"review_id\": \"68TkCa4GQV\",\n      \"reviewer_index\": 12\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-9PL1DIIB7e-gI4vBTcNNp\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"9PL1DIIB7e\",\n      \"review_id\": \"gI4vBTcNNp\",\n      \"reviewer_index\": 8\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-9PL1DIIB7e-8u4wmIIpgg\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"9PL1DIIB7e\",\n      \"review_id\": \"8u4wmIIpgg\",\n      \"reviewer_index\": 9\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-9PL1DIIB7e-4ggto1PDRL\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"9PL1DIIB7e\",\n      \"review_id\": \"4ggto1PDRL\",\n      \"reviewer_index\": 10\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-9PL1DIIB7e-OCdJztJflx\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"9PL1DIIB7e\",\n      \"review_id\": \"OCdJztJflx\",\n      \"reviewer_index\": 11\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-B5mEYUJi85-LbrEExHQ5d\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"B5mEYUJi85\",\n      \"review_id\": \"LbrEExHQ5d\",\n      \"reviewer_index\": 1\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-B5mEYUJi85-V3U1OuQyTZ\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"B5mEYUJi85\",\n      \"review_id\": \"V3U1OuQyTZ\",\n      \"reviewer_index\": 2\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-B5mEYUJi85-YYJpz1rGrs\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"B5mEYUJi85\",\n      \"review_id\": \"YYJpz1rGrs\",\n      \"reviewer_index\": 3\n    },\n    {\n      \"custom_id\": \"NEURIPS-2025-B5mEYUJi85-8r5GnP7Q1I\",\n      \"venue\": \"NEURIPS\",\n      \"year\": 2025,\n      \"paper_id\": \"B5mEYUJi85\",\n      \"review_id\": \"8r5GnP7Q1I\",\n      \"reviewer_index\": 4\n    }\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "venue_id": "NEURIPS",
+      "name": "split_batch",
+      "status": "completed",
+      "reason": "",
+      "command": "python -m secondopinion.tools.split_scoring_batch --input data/batch/neurips_2025_sample50_batch.jsonl --manifest data/batch/neurips_2025_sample50_batch_manifest.json --output-dir data/batch/neurips_2025_sample50_parts --prefix neurips_2025 --max-estimated-input-tokens 1600000",
+      "writes": [
+        "data/batch/neurips_2025_sample50_parts"
+      ],
+      "requires_network": false,
+      "requires_openreview_auth": false,
+      "requires_openai_key": false,
+      "returncode": 0,
+      "stdout": "{\n  \"source_jsonl_path\": \"data/batch/neurips_2025_sample50_batch.jsonl\",\n  \"source_manifest_path\": \"data/batch/neurips_2025_sample50_batch_manifest.json\",\n  \"chunk_count\": 1,\n  \"request_count\": 202,\n  \"max_estimated_input_tokens\": 1600000,\n  \"max_requests\": null,\n  \"chunks\": [\n    {\n      \"index\": 1,\n      \"jsonl_path\": \"data\\\\batch\\\\neurips_2025_sample50_parts\\\\neurips_2025_part01_batch.jsonl\",\n      \"manifest_path\": \"data\\\\batch\\\\neurips_2025_sample50_parts\\\\neurips_2025_part01_manifest.json\",\n      \"request_count\": 202,\n      \"estimated_input_tokens\": 249892,\n      \"estimated_batch_cost_usd\": 0.0376\n    }\n  ]\n}\n",
+      "stderr": ""
+    }
+  ]
+}
