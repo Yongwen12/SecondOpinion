@@ -9,8 +9,7 @@ from __future__ import annotations
 
 from alembic import op
 
-from secondopinion.server.database import Base
-from secondopinion.server import models  # noqa: F401
+from secondopinion.server.models import ReviewerComment
 
 revision = "20260707_0002"
 down_revision = "20260621_0001"
@@ -19,9 +18,8 @@ depends_on = None
 
 
 def upgrade() -> None:
-    # create_all is checkfirst by default, so only the new reviewer_comments table is created.
-    Base.metadata.create_all(op.get_bind())
+    ReviewerComment.__table__.create(op.get_bind(), checkfirst=True)
 
 
 def downgrade() -> None:
-    op.drop_table("reviewer_comments")
+    ReviewerComment.__table__.drop(op.get_bind(), checkfirst=True)
