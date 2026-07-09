@@ -1,6 +1,6 @@
 {
   "schema_version": "release-smoke-v0.1",
-  "created_at": "2026-07-09T16:08:53+00:00",
+  "created_at": "2026-07-09T17:19:30+00:00",
   "status": "passed",
   "frontend_url": "https://yongwen12.github.io/SecondOpinion/",
   "api_url": "https://secondopinion.smartselling.work",
@@ -13,7 +13,7 @@
       "name": "frontend_status",
       "ok": true,
       "message": "Frontend returned HTTP 200",
-      "elapsed_ms": 282
+      "elapsed_ms": 372
     },
     {
       "name": "frontend_coverage_copy",
@@ -29,13 +29,13 @@
       "name": "api_health",
       "ok": true,
       "message": "API health returned HTTP 200",
-      "elapsed_ms": 450
+      "elapsed_ms": 435
     },
     {
       "name": "api_home_static",
       "ok": true,
       "message": "Home returned HTTP 200 source=static_home_2025",
-      "elapsed_ms": 508
+      "elapsed_ms": 522
     },
     {
       "name": "api_home_stats",
@@ -64,13 +64,13 @@
       "name": "api_global_search",
       "ok": true,
       "message": "Global search returned 1 items for 'CrossSpectra'",
-      "elapsed_ms": 540
+      "elapsed_ms": 647
     },
     {
       "name": "api_scorecard",
       "ok": true,
       "message": "Scorecard Ni4jNyroJZ returned 4 reviewers and 4 comments",
-      "elapsed_ms": 186
+      "elapsed_ms": 417
     }
   ]
 }
