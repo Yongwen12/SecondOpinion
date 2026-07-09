@@ -15,26 +15,41 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from .config import ServerSettings, settings_from_env
 from .database import init_db, make_engine, make_session_factory
-from .models import Paper, ReviewerComment, ScoringJob, Vote, utcnow
+from .models import Paper, ReviewerComment, ScoringJob, UserAccount, Vote, utcnow
 from .repository import (
     add_reviewer_comment,
     apply_reviewer_comments,
     apply_vote_counts,
+    authenticate_user,
     build_leaderboards,
     create_scoring_job,
+    create_user_account,
+    create_user_session,
     home_stats,
     job_to_public_dict,
     latest_scorecard,
     latest_scored_papers,
     list_conferences,
     list_reviewer_comments,
+    list_saved_papers,
+    list_venue_subscriptions,
     paper_to_public_dict,
+    remove_saved_paper,
+    revoke_user_session,
+    save_paper_for_user,
     search_papers,
+    subscribe_user_to_venue,
+    unsubscribe_user_from_venue,
+    update_reviewer_comment,
+    delete_reviewer_comment,
     upsert_vote,
+    user_from_token,
+    user_to_public_dict,
 )
 
 
 SESSION_COOKIE = "so_session"
+USER_TOKEN_COOKIE = "so_user_token"
 
 
 def create_app(
@@ -55,7 +70,7 @@ def create_app(
         CORSMiddleware,
         allow_origins=origins,
         allow_credentials=bool(settings.cors_origins),
-        allow_methods=["GET", "POST", "OPTIONS"],
+        allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
         allow_headers=["*"],
     )
     app.state.settings = settings
@@ -75,6 +90,77 @@ def create_app(
     @app.get("/health")
     def health() -> dict[str, Any]:
         return {"status": "ok", "service": "secondopinion-api"}
+
+    @app.get("/api/me")
+    def me(request: Request, session: Session = Depends(get_session)) -> dict[str, Any]:
+        user = current_user_from_request(session, request)
+        return me_payload(session, user)
+
+    @app.post("/api/auth/register")
+    async def register(request: Request, session: Session = Depends(get_session)) -> JSONResponse:
+        body = await parse_json_body(request)
+        try:
+            user = create_user_account(
+                session,
+                handle=str(body.get("handle") or ""),
+                email=str(body.get("email") or ""),
+                password=str(body.get("password") or ""),
+            )
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail={"code": str(exc)})
+        token, _ = create_user_session(session, user=user, session_id=session_id_from_request(request))
+        return auth_response(session, user, token)
+
+    @app.post("/api/auth/login")
+    async def login(request: Request, session: Session = Depends(get_session)) -> JSONResponse:
+        body = await parse_json_body(request)
+        user = authenticate_user(
+            session,
+            identity=str(body.get("identity") or body.get("email") or body.get("handle") or ""),
+            password=str(body.get("password") or ""),
+        )
+        if user is None:
+            raise HTTPException(status_code=401, detail={"code": "invalid_credentials"})
+        token, _ = create_user_session(session, user=user, session_id=session_id_from_request(request))
+        return auth_response(session, user, token)
+
+    @app.post("/api/auth/logout")
+    def logout(request: Request, session: Session = Depends(get_session)) -> JSONResponse:
+        revoke_user_session(session, auth_token_from_request(request))
+        response = JSONResponse({"ok": True})
+        response.delete_cookie(USER_TOKEN_COOKIE)
+        return response
+
+    @app.post("/api/me/saved-papers/{paper_id}")
+    def save_paper(paper_id: str, request: Request, session: Session = Depends(get_session)) -> dict[str, Any]:
+        user = require_user(session, request)
+        try:
+            item = save_paper_for_user(session, user_id=user.user_id, paper_id=paper_id)
+        except ValueError:
+            raise HTTPException(status_code=404, detail={"code": "paper_not_found"})
+        return {"item": item, **me_payload(session, user)}
+
+    @app.delete("/api/me/saved-papers/{paper_id}")
+    def unsave_paper(paper_id: str, request: Request, session: Session = Depends(get_session)) -> dict[str, Any]:
+        user = require_user(session, request)
+        remove_saved_paper(session, user_id=user.user_id, paper_id=paper_id)
+        return me_payload(session, user)
+
+    @app.post("/api/me/venue-subscriptions/{venue}")
+    async def subscribe_venue(venue: str, request: Request, session: Session = Depends(get_session)) -> dict[str, Any]:
+        user = require_user(session, request)
+        body = await parse_json_body(request)
+        try:
+            item = subscribe_user_to_venue(session, user_id=user.user_id, venue=venue, year=int(body.get("year") or 2025))
+        except ValueError:
+            raise HTTPException(status_code=400, detail={"code": "invalid_venue"})
+        return {"item": item, **me_payload(session, user)}
+
+    @app.delete("/api/me/venue-subscriptions/{venue}")
+    def unsubscribe_venue(venue: str, request: Request, year: int = 2025, session: Session = Depends(get_session)) -> dict[str, Any]:
+        user = require_user(session, request)
+        unsubscribe_user_from_venue(session, user_id=user.user_id, venue=venue, year=year)
+        return me_payload(session, user)
 
     @app.get("/api/home")
     def home(
@@ -135,14 +221,19 @@ def create_app(
         return paper_to_public_dict(paper)
 
     @app.get("/api/papers/{paper_id}/scorecard")
-    def paper_scorecard(paper_id: str, session: Session = Depends(get_session)) -> dict[str, Any]:
+    def paper_scorecard(paper_id: str, request: Request, session: Session = Depends(get_session)) -> dict[str, Any]:
         if session.get(Paper, paper_id) is None:
             raise HTTPException(status_code=404, detail={"code": "paper_not_found"})
         scorecard = latest_scorecard(session, paper_id)
         if scorecard is None:
             raise HTTPException(status_code=404, detail={"code": "scorecard_not_ready"})
+        user = current_user_from_request(session, request)
         payload = apply_reviewer_comments(
-            session, paper_id, apply_vote_counts(session, paper_id, scorecard.public_json)
+            session,
+            paper_id,
+            apply_vote_counts(session, paper_id, scorecard.public_json),
+            viewer_session_id=session_id_from_request(request),
+            viewer_user_id=user.user_id if user else None,
         )
         payload.setdefault("paper", {})["paper_id"] = paper_id
         return payload
@@ -195,8 +286,15 @@ def create_app(
             vote=selected,
         )
         scorecard = latest_scorecard(session, paper_id)
+        user = current_user_from_request(session, request)
         result["scorecard"] = (
-            apply_reviewer_comments(session, paper_id, apply_vote_counts(session, paper_id, scorecard.public_json))
+            apply_reviewer_comments(
+                session,
+                paper_id,
+                apply_vote_counts(session, paper_id, scorecard.public_json),
+                viewer_session_id=session_id,
+                viewer_user_id=user.user_id if user else None,
+            )
             if scorecard
             else None
         )
@@ -216,9 +314,19 @@ def create_app(
     def reviewer_comments(
         paper_id: str,
         reviewer_key: str,
+        request: Request,
         session: Session = Depends(get_session),
     ) -> dict[str, Any]:
-        return {"items": list_reviewer_comments(session, paper_id, reviewer_key)}
+        user = current_user_from_request(session, request)
+        return {
+            "items": list_reviewer_comments(
+                session,
+                paper_id,
+                reviewer_key,
+                viewer_session_id=session_id_from_request(request),
+                viewer_user_id=user.user_id if user else None,
+            )
+        }
 
     @app.post("/api/papers/{paper_id}/reviewers/{reviewer_key}/comments")
     async def create_reviewer_comment(
@@ -232,6 +340,7 @@ def create_app(
             raise HTTPException(status_code=404, detail={"code": "paper_not_found"})
         body = await parse_json_body(request)
         session_id = session_id_from_request(request)
+        user = current_user_from_request(session, request)
         enforce_comment_rate_limit(session, session_id)
         try:
             comment = add_reviewer_comment(
@@ -239,13 +348,20 @@ def create_app(
                 paper_id=paper_id,
                 reviewer_key=reviewer_key,
                 session_id=session_id,
+                user_id=user.user_id if user else None,
                 body=str(body.get("body") or body.get("text") or ""),
             )
         except ValueError:
             raise HTTPException(status_code=400, detail={"code": "comment_empty"})
         result = {
             "comment": comment,
-            "items": list_reviewer_comments(session, paper_id, reviewer_key),
+            "items": list_reviewer_comments(
+                session,
+                paper_id,
+                reviewer_key,
+                viewer_session_id=session_id,
+                viewer_user_id=user.user_id if user else None,
+            ),
         }
         response = JSONResponse(result)
         response.set_cookie(
@@ -256,6 +372,72 @@ def create_app(
             samesite="lax",
         )
         return response
+
+    @app.patch("/api/papers/{paper_id}/reviewers/{reviewer_key}/comments/{comment_id}")
+    async def edit_reviewer_comment(
+        paper_id: str,
+        reviewer_key: str,
+        comment_id: int,
+        request: Request,
+        session: Session = Depends(get_session),
+    ) -> dict[str, Any]:
+        body = await parse_json_body(request)
+        user = current_user_from_request(session, request)
+        session_id = session_id_from_request(request)
+        try:
+            comment = update_reviewer_comment(
+                session,
+                comment_id=comment_id,
+                session_id=session_id,
+                user_id=user.user_id if user else None,
+                body=str(body.get("body") or body.get("text") or ""),
+            )
+        except PermissionError:
+            raise HTTPException(status_code=403, detail={"code": "comment_forbidden"})
+        except ValueError as exc:
+            code = str(exc)
+            raise HTTPException(status_code=404 if code == "comment_not_found" else 400, detail={"code": code})
+        return {
+            "comment": comment,
+            "items": list_reviewer_comments(
+                session,
+                paper_id,
+                reviewer_key,
+                viewer_session_id=session_id,
+                viewer_user_id=user.user_id if user else None,
+            ),
+        }
+
+    @app.delete("/api/papers/{paper_id}/reviewers/{reviewer_key}/comments/{comment_id}")
+    def remove_reviewer_comment(
+        paper_id: str,
+        reviewer_key: str,
+        comment_id: int,
+        request: Request,
+        session: Session = Depends(get_session),
+    ) -> dict[str, Any]:
+        user = current_user_from_request(session, request)
+        session_id = session_id_from_request(request)
+        try:
+            delete_reviewer_comment(
+                session,
+                comment_id=comment_id,
+                session_id=session_id,
+                user_id=user.user_id if user else None,
+            )
+        except PermissionError:
+            raise HTTPException(status_code=403, detail={"code": "comment_forbidden"})
+        except ValueError:
+            raise HTTPException(status_code=404, detail={"code": "comment_not_found"})
+        return {
+            "items": list_reviewer_comments(
+                session,
+                paper_id,
+                reviewer_key,
+                viewer_session_id=session_id,
+                viewer_user_id=user.user_id if user else None,
+            ),
+        }
 
     @app.get("/api/leaderboards")
     def leaderboards(
@@ -305,8 +487,53 @@ async def parse_json_body(request: Request) -> dict[str, Any]:
 
 
 def session_id_from_request(request: Request) -> str:
+    header_session = (request.headers.get("x-secondopinion-session") or "").strip()
+    if header_session:
+        return header_session[:160]
     existing = request.cookies.get(SESSION_COOKIE)
     return existing or f"session_{uuid.uuid4().hex}"
+
+
+def auth_token_from_request(request: Request) -> str:
+    header = request.headers.get("authorization") or ""
+    if header.lower().startswith("bearer "):
+        return header.split(" ", 1)[1].strip()
+    return request.cookies.get(USER_TOKEN_COOKIE) or ""
+
+
+def current_user_from_request(session: Session, request: Request) -> UserAccount | None:
+    return user_from_token(session, auth_token_from_request(request))
+
+
+def require_user(session: Session, request: Request) -> UserAccount:
+    user = current_user_from_request(session, request)
+    if user is None:
+        raise HTTPException(status_code=401, detail={"code": "login_required"})
+    return user
+
+
+def me_payload(session: Session, user: UserAccount | None) -> dict[str, Any]:
+    if user is None:
+        return {"user": None, "saved_papers": [], "venue_subscriptions": []}
+    return {
+        "user": user_to_public_dict(user),
+        "saved_papers": list_saved_papers(session, user.user_id),
+        "venue_subscriptions": list_venue_subscriptions(session, user.user_id),
+    }
+
+
+def auth_response(session: Session, user: UserAccount, token: str) -> JSONResponse:
+    payload = {"token": token, **me_payload(session, user)}
+    response = JSONResponse(payload)
+    response.set_cookie(
+        USER_TOKEN_COOKIE,
+        token,
+        max_age=60 * 60 * 24 * 365,
+        httponly=True,
+        secure=True,
+        samesite="none",
+    )
+    return response
 
 
 VOTE_RATE_LIMIT = 60

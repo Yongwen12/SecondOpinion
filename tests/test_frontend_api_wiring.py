@@ -136,3 +136,35 @@ def test_frontend_static_home_data_is_real_2025_batch():
     assert "Author?Reviewer discussion phase" not in payload
     assert "We are delighted that our responses" not in payload
 
+
+
+
+def test_frontend_has_optional_account_saved_paper_and_comment_controls():
+    html = Path("frontend/index.html").read_text(encoding="utf-8")
+
+    assert "id=\"accountButton\"" in html
+    assert "id=\"topAccountButton\"" in html
+    assert "id=\"authModal\"" in html
+    assert "data-auth-form" in html
+    assert "data-auth-open" in html
+    assert "data-auth-logout" in html
+    assert "secondOpinion-userToken" in html
+    assert "secondOpinion-sessionId" in html
+    assert "X-SecondOpinion-Session" in html
+    assert "Authorization = `Bearer ${authState.token}`" in html
+    assert "`/api/auth/${authMode}`" in html
+    assert "/api/auth/logout" in html
+    assert "/api/me" in html
+
+    assert "data-save-paper" in html
+    assert "data-follow-venue" in html
+    assert "/api/me/saved-papers/${encodeURIComponent(paperId)}" in html
+    assert "/api/me/venue-subscriptions/${encodeURIComponent(venue)}" in html
+    assert "renderPaperActions();" in html
+
+    assert "can_edit" in html
+    assert "data-comment-edit" in html
+    assert "data-comment-delete" in html
+    assert "mutateCommentFor(context.row, commentId, 'PATCH'" in html
+    assert "mutateCommentFor(context.row, commentId, 'DELETE'" in html
+    assert "/comments/${encodeURIComponent(commentId)}" in html

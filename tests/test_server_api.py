@@ -220,3 +220,169 @@ def test_reviewer_comment_flow(tmp_path):
     assert blank.status_code == 400
     missing = client.post("/api/papers/ghost/reviewers/R1/comments", json={"body": "hi"})
     assert missing.status_code == 404
+
+
+
+def auth_headers(token: str, session_id: str = "test-session") -> dict[str, str]:
+    return {"Authorization": f"Bearer {token}", "X-SecondOpinion-Session": session_id}
+
+
+def register_user(client: TestClient, handle: str, email: str, password: str = "correct horse") -> dict:
+    response = client.post(
+        "/api/auth/register",
+        headers={"X-SecondOpinion-Session": f"session-{handle}"},
+        json={"handle": handle, "email": email, "password": password},
+    )
+    assert response.status_code == 200
+    return response.json()
+
+
+def test_optional_account_saved_papers_and_venue_subscriptions(tmp_path):
+    factory = session_factory_for(tmp_path)
+    seed(factory, tmp_path)
+    settings = ServerSettings(
+        database_url=f"sqlite:///{tmp_path / 'api.db'}",
+        artifact_root=tmp_path / "artifacts",
+        scoring_memory_path=tmp_path / "memory.jsonl",
+    )
+    app = create_app(settings=settings, session_factory=factory)
+    client = TestClient(app)
+
+    anonymous = client.get("/api/me")
+    assert anonymous.status_code == 200
+    assert anonymous.json() == {"user": None, "saved_papers": [], "venue_subscriptions": []}
+
+    registered = register_user(client, "reader1", "reader1@example.com")
+    token = registered["token"]
+    headers = auth_headers(token, "session-reader1")
+    assert registered["user"]["handle"] == "reader1"
+
+    me = client.get("/api/me", headers=headers)
+    assert me.status_code == 200
+    assert me.json()["user"]["email"] == "reader1@example.com"
+
+    saved = client.post("/api/me/saved-papers/paper1", headers=headers)
+    assert saved.status_code == 200
+    assert [item["paper_id"] for item in saved.json()["saved_papers"]] == ["paper1"]
+
+    subscribed = client.post("/api/me/venue-subscriptions/tmlr", headers=headers, json={"year": 2025})
+    assert subscribed.status_code == 200
+    assert subscribed.json()["venue_subscriptions"] == [
+        {"venue": "TMLR", "year": 2025, "subscribed_at": subscribed.json()["venue_subscriptions"][0]["subscribed_at"]}
+    ]
+
+    removed = client.delete("/api/me/saved-papers/paper1", headers=headers)
+    assert removed.status_code == 200
+    assert removed.json()["saved_papers"] == []
+
+    unsubscribed = client.delete("/api/me/venue-subscriptions/TMLR", headers=headers)
+    assert unsubscribed.status_code == 200
+    assert unsubscribed.json()["venue_subscriptions"] == []
+
+    login = client.post("/api/auth/login", json={"identity": "reader1@example.com", "password": "correct horse"})
+    assert login.status_code == 200
+    assert login.json()["user"]["handle"] == "reader1"
+
+    weak = client.post(
+        "/api/auth/register",
+        json={"handle": "reader2", "email": "reader2@example.com", "password": "short"},
+    )
+    assert weak.status_code == 400
+    assert weak.json()["detail"]["code"] == "weak_password"
+
+    forbidden = client.post("/api/me/saved-papers/paper1")
+    assert forbidden.status_code == 401
+    assert forbidden.json()["detail"]["code"] == "login_required"
+
+
+def test_authenticated_comment_edit_delete_permissions(tmp_path):
+    factory = session_factory_for(tmp_path)
+    seed(factory, tmp_path)
+    settings = ServerSettings(
+        database_url=f"sqlite:///{tmp_path / 'api.db'}",
+        artifact_root=tmp_path / "artifacts",
+        scoring_memory_path=tmp_path / "memory.jsonl",
+    )
+    app = create_app(settings=settings, session_factory=factory)
+    client = TestClient(app)
+
+    owner = register_user(client, "owner1", "owner1@example.com")
+    other = register_user(client, "other1", "other1@example.com")
+    owner_headers = auth_headers(owner["token"], "session-owner1")
+    other_headers = auth_headers(other["token"], "session-other1")
+
+    created = client.post(
+        "/api/papers/paper1/reviewers/R1/comments",
+        headers=owner_headers,
+        json={"body": "This review was detailed and actionable."},
+    )
+    assert created.status_code == 200
+    comment = created.json()["comment"]
+    assert comment["author"] == "owner1"
+    assert comment["can_edit"] is True
+
+    listed_for_other = client.get("/api/papers/paper1/reviewers/R1/comments", headers=other_headers)
+    assert listed_for_other.status_code == 200
+    assert listed_for_other.json()["items"][0]["can_edit"] is False
+
+    forbidden = client.patch(
+        f"/api/papers/paper1/reviewers/R1/comments/{comment['id']}",
+        headers=other_headers,
+        json={"body": "Taking over someone else's comment."},
+    )
+    assert forbidden.status_code == 403
+    assert forbidden.json()["detail"]["code"] == "comment_forbidden"
+
+    edited = client.patch(
+        f"/api/papers/paper1/reviewers/R1/comments/{comment['id']}",
+        headers=owner_headers,
+        json={"body": "Edited: this review was detailed and actionable."},
+    )
+    assert edited.status_code == 200
+    assert edited.json()["comment"]["body"].startswith("Edited:")
+    assert edited.json()["items"][0]["can_edit"] is True
+
+    deleted = client.delete(f"/api/papers/paper1/reviewers/R1/comments/{comment['id']}", headers=owner_headers)
+    assert deleted.status_code == 200
+    assert deleted.json()["items"] == []
+
+
+def test_anonymous_comment_edit_is_bound_to_stable_session_header(tmp_path):
+    factory = session_factory_for(tmp_path)
+    seed(factory, tmp_path)
+    settings = ServerSettings(
+        database_url=f"sqlite:///{tmp_path / 'api.db'}",
+        artifact_root=tmp_path / "artifacts",
+        scoring_memory_path=tmp_path / "memory.jsonl",
+    )
+    app = create_app(settings=settings, session_factory=factory)
+    client = TestClient(app)
+
+    owner_headers = {"X-SecondOpinion-Session": "anon-browser-1"}
+    other_headers = {"X-SecondOpinion-Session": "anon-browser-2"}
+    created = client.post(
+        "/api/papers/paper1/reviewers/R1/comments",
+        headers=owner_headers,
+        json={"body": "Anonymous but still editable from this browser."},
+    )
+    assert created.status_code == 200
+    comment = created.json()["comment"]
+    assert comment["author"].startswith("anon-")
+    assert comment["can_edit"] is True
+
+    same_browser = client.get("/api/papers/paper1/reviewers/R1/comments", headers=owner_headers)
+    assert same_browser.json()["items"][0]["can_edit"] is True
+
+    other_browser = client.get("/api/papers/paper1/reviewers/R1/comments", headers=other_headers)
+    assert other_browser.json()["items"][0]["can_edit"] is False
+
+    blocked = client.delete(f"/api/papers/paper1/reviewers/R1/comments/{comment['id']}", headers=other_headers)
+    assert blocked.status_code == 403
+
+    edited = client.patch(
+        f"/api/papers/paper1/reviewers/R1/comments/{comment['id']}",
+        headers=owner_headers,
+        json={"body": "Edited anonymously from the same browser."},
+    )
+    assert edited.status_code == 200
+    assert edited.json()["comment"]["body"] == "Edited anonymously from the same browser."

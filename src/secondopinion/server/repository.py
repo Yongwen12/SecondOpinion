@@ -2,7 +2,10 @@ from __future__ import annotations
 
 import copy
 import hashlib
+import hmac
 import math
+import re
+import secrets
 import uuid
 from collections import defaultdict
 from typing import Any
@@ -17,8 +20,12 @@ from .models import (
     Review,
     ReviewerComment,
     ReviewerScore,
+    SavedPaper,
     Scorecard,
     ScoringJob,
+    UserAccount,
+    UserSession,
+    VenueSubscription,
     Vote,
     utcnow,
 )
@@ -533,6 +540,205 @@ def upsert_vote(session: Session, *, paper_id: str, reviewer_key: str, session_i
     return {"paper_id": paper_id, "reviewer_key": reviewer_key, "selected": vote}
 
 
+HANDLE_RE = re.compile(r"^[a-zA-Z0-9_-]{3,32}$")
+PASSWORD_ITERATIONS = 120_000
+
+
+def normalize_email(email: str) -> str:
+    return (email or "").strip().lower()
+
+
+def normalize_handle(handle: str) -> str:
+    return (handle or "").strip().lower()
+
+
+def make_password_hash(password: str) -> str:
+    salt = secrets.token_hex(16)
+    digest = hashlib.pbkdf2_hmac(
+        "sha256",
+        password.encode("utf-8"),
+        bytes.fromhex(salt),
+        PASSWORD_ITERATIONS,
+    ).hex()
+    return f"pbkdf2_sha256${PASSWORD_ITERATIONS}${salt}${digest}"
+
+
+def verify_password(password: str, stored_hash: str) -> bool:
+    try:
+        algorithm, iterations_text, salt, digest = stored_hash.split("$", 3)
+        iterations = int(iterations_text)
+    except ValueError:
+        return False
+    if algorithm != "pbkdf2_sha256":
+        return False
+    candidate = hashlib.pbkdf2_hmac(
+        "sha256",
+        password.encode("utf-8"),
+        bytes.fromhex(salt),
+        iterations,
+    ).hex()
+    return hmac.compare_digest(candidate, digest)
+
+
+def token_digest(token: str) -> str:
+    return hashlib.sha256(token.encode("utf-8")).hexdigest()
+
+
+def user_to_public_dict(user: UserAccount) -> dict[str, Any]:
+    return {
+        "user_id": user.user_id,
+        "handle": user.handle,
+        "email": user.email,
+        "created_at": user.created_at.isoformat() if user.created_at else "",
+    }
+
+
+def create_user_account(session: Session, *, handle: str, email: str, password: str) -> UserAccount:
+    clean_handle = normalize_handle(handle)
+    clean_email = normalize_email(email)
+    if not HANDLE_RE.match(clean_handle):
+        raise ValueError("invalid_handle")
+    if "@" not in clean_email or len(clean_email) > 240:
+        raise ValueError("invalid_email")
+    if len(password or "") < 8:
+        raise ValueError("weak_password")
+    existing = session.execute(
+        select(UserAccount).where(or_(UserAccount.handle == clean_handle, UserAccount.email == clean_email))
+    ).scalar_one_or_none()
+    if existing is not None:
+        raise ValueError("user_exists")
+    user = UserAccount(
+        user_id=f"user_{uuid.uuid4().hex[:16]}",
+        handle=clean_handle,
+        email=clean_email,
+        password_hash=make_password_hash(password),
+    )
+    session.add(user)
+    session.flush()
+    return user
+
+
+def authenticate_user(session: Session, *, identity: str, password: str) -> UserAccount | None:
+    clean_identity = (identity or "").strip()
+    if not clean_identity or not password:
+        return None
+    lower_identity = clean_identity.lower()
+    user = session.execute(
+        select(UserAccount).where(or_(UserAccount.email == lower_identity, UserAccount.handle == clean_identity))
+    ).scalar_one_or_none()
+    if user is None or not verify_password(password, user.password_hash):
+        return None
+    return user
+
+
+def create_user_session(session: Session, *, user: UserAccount, session_id: str) -> tuple[str, UserSession]:
+    token = secrets.token_urlsafe(32)
+    row = UserSession(
+        token_hash=token_digest(token),
+        user_id=user.user_id,
+        session_id=session_id,
+    )
+    session.add(row)
+    session.flush()
+    return token, row
+
+
+def user_from_token(session: Session, token: str) -> UserAccount | None:
+    if not token:
+        return None
+    row = session.get(UserSession, token_digest(token))
+    if row is None:
+        return None
+    row.last_seen_at = utcnow()
+    return session.get(UserAccount, row.user_id)
+
+
+def revoke_user_session(session: Session, token: str) -> None:
+    if not token:
+        return
+    row = session.get(UserSession, token_digest(token))
+    if row is not None:
+        session.delete(row)
+        session.flush()
+
+
+def list_saved_papers(session: Session, user_id: str) -> list[dict[str, Any]]:
+    rows = session.execute(
+        select(SavedPaper, Paper)
+        .join(Paper, Paper.paper_id == SavedPaper.paper_id)
+        .where(SavedPaper.user_id == user_id)
+        .order_by(SavedPaper.created_at.desc())
+    ).all()
+    return [{**paper_to_public_dict(paper), "saved_at": saved.created_at.isoformat()} for saved, paper in rows]
+
+
+def save_paper_for_user(session: Session, *, user_id: str, paper_id: str) -> dict[str, Any]:
+    paper = session.get(Paper, paper_id)
+    if paper is None:
+        raise ValueError("paper_not_found")
+    existing = session.execute(
+        select(SavedPaper).where(SavedPaper.user_id == user_id, SavedPaper.paper_id == paper_id)
+    ).scalar_one_or_none()
+    if existing is None:
+        existing = SavedPaper(user_id=user_id, paper_id=paper_id)
+        session.add(existing)
+        session.flush()
+    return {**paper_to_public_dict(paper), "saved_at": existing.created_at.isoformat()}
+
+
+def remove_saved_paper(session: Session, *, user_id: str, paper_id: str) -> None:
+    existing = session.execute(
+        select(SavedPaper).where(SavedPaper.user_id == user_id, SavedPaper.paper_id == paper_id)
+    ).scalar_one_or_none()
+    if existing is not None:
+        session.delete(existing)
+        session.flush()
+
+
+def list_venue_subscriptions(session: Session, user_id: str) -> list[dict[str, Any]]:
+    rows = session.execute(
+        select(VenueSubscription)
+        .where(VenueSubscription.user_id == user_id)
+        .order_by(VenueSubscription.year.desc(), VenueSubscription.venue.asc())
+    ).scalars().all()
+    return [
+        {"venue": row.venue, "year": row.year, "subscribed_at": row.created_at.isoformat()}
+        for row in rows
+    ]
+
+
+def subscribe_user_to_venue(session: Session, *, user_id: str, venue: str, year: int = 2025) -> dict[str, Any]:
+    clean_venue = (venue or "").strip().upper()
+    if not clean_venue:
+        raise ValueError("invalid_venue")
+    existing = session.execute(
+        select(VenueSubscription).where(
+            VenueSubscription.user_id == user_id,
+            VenueSubscription.venue == clean_venue,
+            VenueSubscription.year == year,
+        )
+    ).scalar_one_or_none()
+    if existing is None:
+        existing = VenueSubscription(user_id=user_id, venue=clean_venue, year=year)
+        session.add(existing)
+        session.flush()
+    return {"venue": existing.venue, "year": existing.year, "subscribed_at": existing.created_at.isoformat()}
+
+
+def unsubscribe_user_from_venue(session: Session, *, user_id: str, venue: str, year: int = 2025) -> None:
+    clean_venue = (venue or "").strip().upper()
+    existing = session.execute(
+        select(VenueSubscription).where(
+            VenueSubscription.user_id == user_id,
+            VenueSubscription.venue == clean_venue,
+            VenueSubscription.year == year,
+        )
+    ).scalar_one_or_none()
+    if existing is not None:
+        session.delete(existing)
+        session.flush()
+
+
 COMMENT_MAX_LENGTH = 1000
 
 
@@ -541,33 +747,81 @@ def comment_author_handle(session_id: str) -> str:
     return f"anon-{digest}"
 
 
-def comment_to_public_dict(comment: ReviewerComment) -> dict[str, Any]:
+def comment_to_public_dict(
+    comment: ReviewerComment,
+    *,
+    user: UserAccount | None = None,
+    viewer_session_id: str = "",
+    viewer_user_id: str | None = None,
+) -> dict[str, Any]:
     return {
         "id": comment.id,
         "body": comment.body,
-        "author": comment_author_handle(comment.session_id),
+        "author": user.handle if user else comment_author_handle(comment.session_id),
         "created_at": comment.created_at.isoformat() if comment.created_at else None,
+        "can_edit": bool(
+            (viewer_user_id and comment.user_id and viewer_user_id == comment.user_id)
+            or (viewer_session_id and viewer_session_id == comment.session_id)
+        ),
     }
 
 
-def list_reviewer_comments(session: Session, paper_id: str, reviewer_key: str) -> list[dict[str, Any]]:
+def _comment_user_map(session: Session, comments: list[ReviewerComment]) -> dict[str, UserAccount]:
+    user_ids = sorted({str(comment.user_id) for comment in comments if comment.user_id})
+    if not user_ids:
+        return {}
+    rows = session.execute(select(UserAccount).where(UserAccount.user_id.in_(user_ids))).scalars().all()
+    return {user.user_id: user for user in rows}
+
+
+def list_reviewer_comments(
+    session: Session,
+    paper_id: str,
+    reviewer_key: str,
+    *,
+    viewer_session_id: str = "",
+    viewer_user_id: str | None = None,
+) -> list[dict[str, Any]]:
     rows = session.execute(
         select(ReviewerComment)
         .where(ReviewerComment.paper_id == paper_id, ReviewerComment.reviewer_key == reviewer_key)
         .order_by(ReviewerComment.created_at.desc(), ReviewerComment.id.desc())
     ).scalars().all()
-    return [comment_to_public_dict(row) for row in rows]
+    users = _comment_user_map(session, rows)
+    return [
+        comment_to_public_dict(
+            row,
+            user=users.get(str(row.user_id or "")),
+            viewer_session_id=viewer_session_id,
+            viewer_user_id=viewer_user_id,
+        )
+        for row in rows
+    ]
 
 
-def comments_by_reviewer(session: Session, paper_id: str) -> dict[str, list[dict[str, Any]]]:
+def comments_by_reviewer(
+    session: Session,
+    paper_id: str,
+    *,
+    viewer_session_id: str = "",
+    viewer_user_id: str | None = None,
+) -> dict[str, list[dict[str, Any]]]:
     rows = session.execute(
         select(ReviewerComment)
         .where(ReviewerComment.paper_id == paper_id)
         .order_by(ReviewerComment.created_at.desc(), ReviewerComment.id.desc())
     ).scalars().all()
+    users = _comment_user_map(session, rows)
     grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in rows:
-        grouped[str(row.reviewer_key)].append(comment_to_public_dict(row))
+        grouped[str(row.reviewer_key)].append(
+            comment_to_public_dict(
+                row,
+                user=users.get(str(row.user_id or "")),
+                viewer_session_id=viewer_session_id,
+                viewer_user_id=viewer_user_id,
+            )
+        )
     return grouped
 
 
@@ -580,9 +834,21 @@ def comment_counts_by_reviewer(session: Session, paper_id: str) -> dict[str, int
     return {str(reviewer_key): int(count) for reviewer_key, count in rows}
 
 
-def apply_reviewer_comments(session: Session, paper_id: str, public_json: dict[str, Any]) -> dict[str, Any]:
+def apply_reviewer_comments(
+    session: Session,
+    paper_id: str,
+    public_json: dict[str, Any],
+    *,
+    viewer_session_id: str = "",
+    viewer_user_id: str | None = None,
+) -> dict[str, Any]:
     scorecard = copy.deepcopy(public_json)
-    grouped = comments_by_reviewer(session, paper_id)
+    grouped = comments_by_reviewer(
+        session,
+        paper_id,
+        viewer_session_id=viewer_session_id,
+        viewer_user_id=viewer_user_id,
+    )
     for reviewer in scorecard.get("reviewers", []):
         if not isinstance(reviewer, dict):
             continue
@@ -594,21 +860,66 @@ def apply_reviewer_comments(session: Session, paper_id: str, public_json: dict[s
 
 
 def add_reviewer_comment(
-    session: Session, *, paper_id: str, reviewer_key: str, session_id: str, body: str
+    session: Session,
+    *,
+    paper_id: str,
+    reviewer_key: str,
+    session_id: str,
+    body: str,
+    user_id: str | None = None,
 ) -> dict[str, Any]:
     text = (body or "").strip()
     if not text:
-        raise ValueError("comment body must not be empty")
+        raise ValueError("comment_empty")
     comment = ReviewerComment(
         paper_id=paper_id,
         reviewer_key=reviewer_key,
         session_id=session_id,
+        user_id=user_id,
         body=text[:COMMENT_MAX_LENGTH],
     )
     session.add(comment)
     session.flush()
-    return comment_to_public_dict(comment)
+    user = session.get(UserAccount, user_id) if user_id else None
+    return comment_to_public_dict(comment, user=user, viewer_session_id=session_id, viewer_user_id=user_id)
 
+
+def _owns_comment(comment: ReviewerComment, *, session_id: str, user_id: str | None) -> bool:
+    if user_id and comment.user_id and user_id == comment.user_id:
+        return True
+    return bool(session_id and comment.session_id == session_id)
+
+
+def update_reviewer_comment(
+    session: Session,
+    *,
+    comment_id: int,
+    session_id: str,
+    user_id: str | None,
+    body: str,
+) -> dict[str, Any]:
+    comment = session.get(ReviewerComment, comment_id)
+    if comment is None:
+        raise ValueError("comment_not_found")
+    if not _owns_comment(comment, session_id=session_id, user_id=user_id):
+        raise PermissionError("comment_forbidden")
+    text = (body or "").strip()
+    if not text:
+        raise ValueError("comment_empty")
+    comment.body = text[:COMMENT_MAX_LENGTH]
+    session.flush()
+    user = session.get(UserAccount, comment.user_id) if comment.user_id else None
+    return comment_to_public_dict(comment, user=user, viewer_session_id=session_id, viewer_user_id=user_id)
+
+
+def delete_reviewer_comment(session: Session, *, comment_id: int, session_id: str, user_id: str | None) -> None:
+    comment = session.get(ReviewerComment, comment_id)
+    if comment is None:
+        raise ValueError("comment_not_found")
+    if not _owns_comment(comment, session_id=session_id, user_id=user_id):
+        raise PermissionError("comment_forbidden")
+    session.delete(comment)
+    session.flush()
 
 def _venue_balanced(items: list[dict[str, Any]], *, limit: int) -> list[dict[str, Any]]:
     if limit <= 0:

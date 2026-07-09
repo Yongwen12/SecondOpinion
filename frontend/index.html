@@ -810,6 +810,49 @@
       min-width: 0;
     }
 
+    .paper-heading {
+      min-width: 0;
+      display: grid;
+      gap: 6px;
+    }
+
+    .paper-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 8px;
+      flex: 0 0 auto;
+    }
+
+    .paper-actions[hidden] { display: none; }
+
+    .paper-action-button,
+    .account-button {
+      min-height: 34px;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      background: #ffffff;
+      color: var(--ink);
+      cursor: pointer;
+      padding: 0 12px;
+      font-size: 12px;
+      font-weight: 780;
+      white-space: nowrap;
+    }
+
+    .paper-action-button:hover,
+    .account-button:hover {
+      border-color: var(--ink);
+      background: var(--surface-3);
+    }
+
+    .paper-action-button.is-active {
+      border-color: var(--ink);
+      background: var(--lime);
+      box-shadow: 2px 2px 0 var(--ink);
+    }
+
     .paper-title {
       min-width: 0;
       margin: 0;
@@ -1908,6 +1951,60 @@
       background: var(--oh-accent, #e10600);
     }
 
+    .account-button--home {
+      border: 0;
+      border-bottom: 2px solid var(--oh-ink, #111111);
+      border-radius: 0;
+      background: #ffffff;
+      box-shadow: none;
+      color: var(--oh-ink, #111111);
+    }
+
+    .account-button--home:hover {
+      background: #fffbe0;
+    }
+
+    .auth-status {
+      display: grid;
+      gap: 6px;
+      margin: 14px 0 0;
+      padding: 12px 0;
+      border-top: 1px solid #ececec;
+      border-bottom: 1px solid #ececec;
+      color: #111111;
+      font-size: 13px;
+    }
+
+    .rate-auth-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .comment-actions {
+      display: inline-flex;
+      gap: 8px;
+      margin-left: 8px;
+    }
+
+    .comment-action {
+      border: 0;
+      background: transparent;
+      color: #111111;
+      cursor: pointer;
+      padding: 0;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .comment-action:hover {
+      color: var(--oh-accent, #e10600);
+      text-decoration: underline;
+    }
+
     .outrage-eyebrow {
       margin-top: 64px;
       color: var(--oh-muted);
@@ -2496,6 +2593,12 @@
         grid-row: 1;
       }
 
+      .account-button--home {
+        grid-column: 1;
+        grid-row: 1;
+        justify-self: start;
+      }
+
       .outrage-row {
         grid-template-columns: 44px 1fr 84px;
         gap: 8px;
@@ -2740,6 +2843,7 @@
               <button class="outrage-hidden-submit" id="landingSubmit" type="submit" aria-label="Search"></button>
             </form>
             <button class="outrage-submit" id="rateReviewerButton" type="button" data-open-rate>Rate a reviewer</button>
+            <button class="account-button account-button--home" id="accountButton" type="button" data-auth-open>Sign in</button>
           </div>
         </header>
 
@@ -2768,6 +2872,14 @@
           <p class="rate-error" id="rateModalError" role="status" aria-live="polite"></p>
         </section>
       </div>
+      <div class="rate-modal" id="authModal" hidden>
+        <div class="rate-backdrop" data-auth-close></div>
+        <section class="rate-dialog" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+          <button class="rate-close" type="button" data-auth-close aria-label="Close">x</button>
+          <div id="authModalBody"></div>
+          <p class="rate-error" id="authModalError" role="status" aria-live="polite"></p>
+        </section>
+      </div>
     </section>
     <section class="app-view" aria-label="Review results">
       <header class="topbar">
@@ -2785,6 +2897,7 @@
                           <span class="button-label">Search</span><span class="button-arrow" aria-hidden="true">-&gt;</span><span class="spinner" aria-hidden="true"></span>
           </button>
         </form>
+        <button class="account-button" id="topAccountButton" type="button" data-auth-open>Sign in</button>
         <div class="search-results search-results--compact" id="topResults" role="listbox" aria-label="Paper search results" hidden></div>
       </header>
 
@@ -2799,8 +2912,14 @@
 
           <div class="score-main">
             <div class="paper-bar">
-              <h1 class="paper-title" id="paperTitle">Select a paper</h1>
-              <div class="paper-stats" id="paperStats" aria-label="Paper statistics"><span>3 reviewers</span><span>6 comments</span></div>
+              <div class="paper-heading">
+                <h1 class="paper-title" id="paperTitle">Select a paper</h1>
+                <div class="paper-stats" id="paperStats" aria-label="Paper statistics"><span>3 reviewers</span><span>6 comments</span></div>
+              </div>
+              <div class="paper-actions" id="paperActions" hidden>
+                <button class="paper-action-button" id="savePaperButton" type="button" data-save-paper>Save</button>
+                <button class="paper-action-button" id="followVenueButton" type="button" data-follow-venue>Follow venue</button>
+              </div>
             </div>
             <div class="reviewer-grid" id="reviewerGrid" aria-label="Reviewer scores"></div>
             <div class="score-detail" id="scoreDetail" aria-live="polite">
@@ -3013,6 +3132,15 @@
     const DEFAULT_API_BASE = 'https://secondopinion.smartselling.work';
     const configuredApiBase = apiParam || window.SECONDOPINION_API_BASE || localStorage.getItem('secondOpinion-apiBase') || DEFAULT_API_BASE;
     const API_BASE = configuredApiBase.replace(/\/+$/, '');
+    const SESSION_ID_KEY = 'secondOpinion-sessionId';
+    const AUTH_TOKEN_KEY = 'secondOpinion-userToken';
+    let authMode = 'login';
+    let authState = {
+      token: storageGet(AUTH_TOKEN_KEY),
+      user: null,
+      savedPapers: [],
+      venueSubscriptions: []
+    };
 
     const toneMap = {
       green: { color: '#16795a', soft: '#eaf6f0' },
@@ -3065,6 +3193,14 @@
     const rateModal = document.getElementById('rateModal');
     const rateModalBody = document.getElementById('rateModalBody');
     const rateModalError = document.getElementById('rateModalError');
+    const authModal = document.getElementById('authModal');
+    const authModalBody = document.getElementById('authModalBody');
+    const authModalError = document.getElementById('authModalError');
+    const accountButton = document.getElementById('accountButton');
+    const topAccountButton = document.getElementById('topAccountButton');
+    const paperActions = document.getElementById('paperActions');
+    const savePaperButton = document.getElementById('savePaperButton');
+    const followVenueButton = document.getElementById('followVenueButton');
 
     function scoreBand(value) {
       if (value >= 85) return { className: '', label: 'Strong review' };
@@ -3144,15 +3280,239 @@
       catch (_) { return 'omit'; }
     }
 
+    function storageGet(key) {
+      try { return localStorage.getItem(key) || ''; }
+      catch (_) { return ''; }
+    }
+
+    function storageSet(key, value) {
+      try {
+        if (value) localStorage.setItem(key, value);
+        else localStorage.removeItem(key);
+      } catch (_) {}
+    }
+
+    function stableSessionId() {
+      const existing = storageGet(SESSION_ID_KEY);
+      if (existing) return existing;
+      const randomPart = window.crypto?.randomUUID ? window.crypto.randomUUID().replace(/-/g, '') : `${Date.now()}${Math.random()}`.replace(/\D/g, '');
+      const sessionId = `anon_${randomPart.slice(0, 32)}`;
+      storageSet(SESSION_ID_KEY, sessionId);
+      return sessionId;
+    }
+
     async function apiFetch(path, options = {}) {
       if (!API_BASE) throw new Error('API base is not configured');
-      const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
+      const headers = {
+        'Content-Type': 'application/json',
+        'X-SecondOpinion-Session': stableSessionId(),
+        ...(options.headers || {})
+      };
+      if (authState.token && !headers.Authorization) headers.Authorization = `Bearer ${authState.token}`;
       return fetch(apiPath(path), { cache: 'no-store', credentials: apiCredentialsMode(), ...options, headers });
     }
 
     async function safeJson(response) {
       try { return await response.json(); }
       catch (_) { return null; }
+    }
+
+    function setAuthPayload(payload = {}) {
+      if (Object.prototype.hasOwnProperty.call(payload, 'token')) {
+        authState.token = payload.token || '';
+        storageSet(AUTH_TOKEN_KEY, authState.token);
+      }
+      authState.user = payload.user || null;
+      authState.savedPapers = Array.isArray(payload.saved_papers) ? payload.saved_papers : [];
+      authState.venueSubscriptions = Array.isArray(payload.venue_subscriptions) ? payload.venue_subscriptions : [];
+      renderAuthState();
+      renderPaperActions();
+    }
+
+    function clearAuthState() {
+      authState = { token: '', user: null, savedPapers: [], venueSubscriptions: [] };
+      storageSet(AUTH_TOKEN_KEY, '');
+      renderAuthState();
+      renderPaperActions();
+    }
+
+    function renderAuthState() {
+      const label = authState.user ? `@${authState.user.handle}` : 'Sign in';
+      [accountButton, topAccountButton].forEach(button => {
+        if (!button) return;
+        button.textContent = label;
+        button.setAttribute('aria-label', authState.user ? `Account ${authState.user.handle}` : 'Sign in');
+      });
+    }
+
+    function authErrorText(code) {
+      const messages = {
+        invalid_credentials: 'Email, handle, or password is incorrect.',
+        invalid_email: 'Use a valid email address.',
+        invalid_handle: 'Handle can use letters, numbers, underscores, or hyphens.',
+        weak_password: 'Password needs at least 8 characters.',
+        user_exists: 'That handle or email is already registered.',
+        login_required: 'Sign in to use this action.'
+      };
+      return messages[code] || 'Request failed. Please try again.';
+    }
+
+    function openAuthModal(mode = 'login') {
+      authMode = mode;
+      authModal.hidden = false;
+      authModalError.textContent = '';
+      renderAuthModal();
+    }
+
+    function closeAuthModal() {
+      authModal.hidden = true;
+      authModalError.textContent = '';
+    }
+
+    function renderAuthModal() {
+      if (!authModalBody) return;
+      if (authState.user) {
+        authModalBody.innerHTML = `
+          <p class="rate-kicker">Account</p>
+          <h2 id="authTitle">${escapeHtml(authState.user.handle)}</h2>
+          <p>${escapeHtml(authState.user.email || '')}</p>
+          <div class="auth-status">
+            <span>${authState.savedPapers.length} saved papers</span>
+            <span>${authState.venueSubscriptions.length} followed venues</span>
+          </div>
+          <div class="rate-auth-actions">
+            <button class="rate-secondary" type="button" data-auth-close>Done</button>
+            <button class="rate-primary" type="button" data-auth-logout>Log out</button>
+          </div>`;
+        return;
+      }
+      const isRegister = authMode === 'register';
+      authModalBody.innerHTML = `
+        <p class="rate-kicker">${isRegister ? 'Create account' : 'Sign in'}</p>
+        <h2 id="authTitle">${isRegister ? 'Create a reviewer notebook.' : 'Welcome back.'}</h2>
+        <form class="rate-grid" data-auth-form>
+          ${isRegister ? `<label class="rate-control">Handle<input id="authHandle" autocomplete="username" maxlength="40" placeholder="reviewer123" /></label>` : ''}
+          <label class="rate-control">${isRegister ? 'Email' : 'Email or handle'}<input id="authIdentity" autocomplete="username" placeholder="you@example.com" /></label>
+          <label class="rate-control">Password<input id="authPassword" type="password" autocomplete="${isRegister ? 'new-password' : 'current-password'}" /></label>
+          <div class="rate-auth-actions">
+            <button class="rate-primary" type="submit">${isRegister ? 'Create account' : 'Sign in'}</button>
+            <button class="rate-secondary" type="button" data-auth-mode="${isRegister ? 'login' : 'register'}">${isRegister ? 'Use existing account' : 'Create account'}</button>
+          </div>
+        </form>`;
+    }
+
+    async function submitAuthForm() {
+      authModalError.textContent = '';
+      const password = document.getElementById('authPassword')?.value || '';
+      const identity = document.getElementById('authIdentity')?.value || '';
+      const body = authMode === 'register'
+        ? { handle: document.getElementById('authHandle')?.value || '', email: identity, password }
+        : { identity, password };
+      try {
+        const response = await apiFetch(`/api/auth/${authMode}`, { method: 'POST', body: JSON.stringify(body) });
+        const payload = await safeJson(response) || {};
+        if (!response.ok) throw new Error(payload.detail?.code || 'auth_failed');
+        setAuthPayload(payload);
+        closeAuthModal();
+        showToast(authMode === 'register' ? 'Account created' : 'Signed in');
+      } catch (error) {
+        authModalError.textContent = authErrorText(error.message);
+      }
+    }
+
+    async function logoutAuth() {
+      try { await apiFetch('/api/auth/logout', { method: 'POST', body: '{}' }); }
+      catch (_) {}
+      clearAuthState();
+      closeAuthModal();
+      showToast('Signed out');
+    }
+
+    async function loadMe() {
+      renderAuthState();
+      if (!API_BASE) return;
+      try {
+        const response = await apiFetch('/api/me');
+        const payload = await safeJson(response);
+        if (response.ok && payload) setAuthPayload(payload);
+        else if (!response.ok) clearAuthState();
+      } catch (error) {
+        renderAuthState();
+      }
+    }
+
+    function isPaperSaved(paperId) {
+      return authState.savedPapers.some(item => item.paper_id === paperId);
+    }
+
+    function currentPaperVenue() {
+      const paper = publicScorecard?.paper || {};
+      const raw = paper.venue || paper.conference_id || paper.conference || '';
+      return String(raw).replace(/\s+2025$/i, '').trim().toUpperCase();
+    }
+
+    function isVenueSubscribed(venue, year = 2025) {
+      return authState.venueSubscriptions.some(item => String(item.venue || '').toUpperCase() === venue && Number(item.year || 2025) === Number(year));
+    }
+
+    function renderPaperActions() {
+      if (!paperActions || !savePaperButton || !followVenueButton) return;
+      const paperId = state.paperId || publicScorecard?.paper?.paper_id || '';
+      const venue = currentPaperVenue();
+      if (!paperId || String(paperId).startsWith('demo-')) {
+        paperActions.hidden = true;
+        return;
+      }
+      paperActions.hidden = false;
+      const saved = isPaperSaved(paperId);
+      const followed = venue ? isVenueSubscribed(venue, publicScorecard?.paper?.year || 2025) : false;
+      savePaperButton.textContent = saved ? 'Saved' : 'Save';
+      savePaperButton.classList.toggle('is-active', saved);
+      followVenueButton.textContent = followed ? `Following ${venue}` : `Follow ${venue || 'venue'}`;
+      followVenueButton.disabled = !venue;
+      followVenueButton.classList.toggle('is-active', followed);
+    }
+
+    async function toggleSavedPaper() {
+      const paperId = state.paperId || publicScorecard?.paper?.paper_id || '';
+      if (!paperId) return;
+      if (!authState.user) { openAuthModal('login'); authModalError.textContent = 'Sign in to save papers.'; return; }
+      const saved = isPaperSaved(paperId);
+      try {
+        const response = await apiFetch(`/api/me/saved-papers/${encodeURIComponent(paperId)}`, {
+          method: saved ? 'DELETE' : 'POST',
+          body: saved ? undefined : '{}'
+        });
+        const payload = await safeJson(response) || {};
+        if (!response.ok) throw new Error(payload.detail?.code || 'save_failed');
+        setAuthPayload(payload);
+        showToast(saved ? 'Removed from saved papers' : 'Paper saved');
+      } catch (error) {
+        showToast(authErrorText(error.message));
+      }
+    }
+
+    async function toggleVenueSubscription() {
+      const venue = currentPaperVenue();
+      const year = Number(publicScorecard?.paper?.year || 2025);
+      if (!venue) return;
+      if (!authState.user) { openAuthModal('login'); authModalError.textContent = 'Sign in to follow venues.'; return; }
+      const followed = isVenueSubscribed(venue, year);
+      const path = followed
+        ? `/api/me/venue-subscriptions/${encodeURIComponent(venue)}?year=${encodeURIComponent(year)}`
+        : `/api/me/venue-subscriptions/${encodeURIComponent(venue)}`;
+      try {
+        const response = await apiFetch(path, {
+          method: followed ? 'DELETE' : 'POST',
+          body: followed ? undefined : JSON.stringify({ year })
+        });
+        const payload = await safeJson(response) || {};
+        if (!response.ok) throw new Error(payload.detail?.code || 'follow_failed');
+        setAuthPayload(payload);
+        showToast(followed ? `Unfollowed ${venue}` : `Following ${venue}`);
+      } catch (error) {
+        showToast(authErrorText(error.message));
+      }
     }
 
     function paperIdFromValue(value) {
@@ -3669,14 +4029,22 @@
 
     let demoCommentSeq = 0;
 
+    function commentActionsHtml(comment, source, reviewerId = '') {
+      if (!comment?.can_edit || !comment.id) return '';
+      return `<span class="comment-actions">
+        <button class="comment-action" type="button" data-comment-edit="${escapeHtml(comment.id)}" data-comment-source="${escapeHtml(source)}" data-comment-reviewer="${escapeHtml(reviewerId)}">Edit</button>
+        <button class="comment-action" type="button" data-comment-delete="${escapeHtml(comment.id)}" data-comment-source="${escapeHtml(source)}" data-comment-reviewer="${escapeHtml(reviewerId)}">Delete</button>
+      </span>`;
+    }
+
     function renderRateCommentsHtml() {
-      if (rateContext.commentsLoading) return '<p class="rate-comments-empty">Loading comments…</p>';
+      if (rateContext.commentsLoading) return '<p class="rate-comments-empty">Loading comments...</p>';
       const list = rateContext.comments || [];
       if (!list.length) return '<p class="rate-comments-empty">No comments yet. Be the first to weigh in.</p>';
       return list.map(comment => `
         <div class="rate-comment">
           <p class="rate-comment-body">${escapeHtml(comment.body)}</p>
-          <p class="rate-comment-meta">${escapeHtml(comment.author || 'anon')} · ${escapeHtml(relTime(comment.created_at))}</p>
+          <p class="rate-comment-meta">${escapeHtml(comment.author || 'anon')} - ${escapeHtml(relTime(comment.created_at))}${commentActionsHtml(comment, 'rate')}</p>
         </div>`).join('');
     }
 
@@ -3696,7 +4064,7 @@
       const clean = (body || '').trim();
       if (!clean) return { ok: false, reason: 'empty' };
       if (isDemoCommentRow(row)) {
-        const comment = { id: `demo-${demoCommentSeq++}`, body: clean, author: 'you', created_at: new Date().toISOString() };
+        const comment = { id: `demo-${demoCommentSeq++}`, body: clean, author: 'you', created_at: new Date().toISOString(), can_edit: true };
         saveDemoComment(commentScopeKey(row), comment);
         return { ok: true, demo: true, items: loadDemoComments(commentScopeKey(row)) };
       }
@@ -3710,6 +4078,69 @@
       } catch (error) {
         return { ok: false, reason: 'network' };
       }
+    }
+
+    function commentActionContext(button) {
+      const source = button.dataset.commentSource || 'rate';
+      if (source === 'scorecard') {
+        const reviewer = reviewerById(button.dataset.commentReviewer || '');
+        return { source, reviewer, row: reviewer ? scorecardCommentRow(reviewer) : null };
+      }
+      return { source: 'rate', reviewer: null, row: rateContext.row };
+    }
+
+    function commentListForContext(context) {
+      return context.source === 'scorecard' && context.reviewer ? (context.reviewer.comments || []) : (rateContext.comments || []);
+    }
+
+    async function mutateCommentFor(row, commentId, method, body = '') {
+      if (!row || isDemoCommentRow(row)) return { ok: false, reason: 'demo' };
+      try {
+        const options = { method };
+        if (method !== 'DELETE') options.body = JSON.stringify({ body });
+        const response = await apiFetch(`/api/papers/${encodeURIComponent(row.paperId)}/reviewers/${encodeURIComponent(row.reviewerKey)}/comments/${encodeURIComponent(commentId)}`, options);
+        const payload = await safeJson(response) || {};
+        if (!response.ok) throw new Error(payload.detail?.code || `HTTP ${response.status}`);
+        return { ok: true, items: Array.isArray(payload.items) ? payload.items : [] };
+      } catch (error) {
+        return { ok: false, reason: error.message || 'network' };
+      }
+    }
+
+    function applyCommentItems(context, items) {
+      if (context.source === 'scorecard' && context.reviewer) {
+        context.reviewer.comments = items;
+        context.reviewer.commentsLoaded = true;
+        renderScoreDetail();
+      } else {
+        rateContext.comments = items;
+        renderRateModal();
+      }
+    }
+
+    async function editCommentFromButton(button) {
+      const context = commentActionContext(button);
+      const commentId = button.dataset.commentEdit;
+      const current = commentListForContext(context).find(item => String(item.id) === String(commentId));
+      if (!context.row || !current) return;
+      const next = window.prompt('Edit comment', current.body || '');
+      if (next === null) return;
+      const clean = next.trim();
+      if (!clean) { showToast('Comment cannot be empty'); return; }
+      const result = await mutateCommentFor(context.row, commentId, 'PATCH', clean);
+      if (!result.ok) { showToast(result.reason === 'comment_forbidden' ? 'Comment can only be edited by its author' : 'Comment could not be edited'); return; }
+      applyCommentItems(context, result.items);
+      showToast('Comment updated');
+    }
+
+    async function deleteCommentFromButton(button) {
+      const context = commentActionContext(button);
+      const commentId = button.dataset.commentDelete;
+      if (!context.row || !window.confirm('Delete this comment?')) return;
+      const result = await mutateCommentFor(context.row, commentId, 'DELETE');
+      if (!result.ok) { showToast(result.reason === 'comment_forbidden' ? 'Comment can only be deleted by its author' : 'Comment could not be deleted'); return; }
+      applyCommentItems(context, result.items);
+      showToast('Comment deleted');
     }
 
     async function loadReviewerComments(row) {
@@ -3755,7 +4186,7 @@
         listHtml = reviewer.comments.map(comment => `
           <div class="rate-comment">
             <p class="rate-comment-body">${escapeHtml(comment.body)}</p>
-            <p class="rate-comment-meta">${escapeHtml(comment.author || 'anon')} · ${escapeHtml(relTime(comment.created_at))}</p>
+            <p class="rate-comment-meta">${escapeHtml(comment.author || 'anon')} - ${escapeHtml(relTime(comment.created_at))}${commentActionsHtml(comment, 'scorecard', reviewer.id)}</p>
           </div>`).join('');
       }
       return `
@@ -4016,6 +4447,7 @@
         `${splitComments.length} comments`,
         paper.conference || ''
       ].filter(Boolean).map(item => `<span>${escapeHtml(item)}</span>`).join('');
+      renderPaperActions();
     }
 
     function reviewerById(id) {
@@ -4444,6 +4876,56 @@
     document.getElementById('resetCloud').addEventListener('click', resetCloudView);
 
     document.addEventListener('click', event => {
+      const authClose = event.target.closest('[data-auth-close]');
+      if (authClose) {
+        closeAuthModal();
+        return;
+      }
+
+      const authOpen = event.target.closest('[data-auth-open]');
+      if (authOpen) {
+        openAuthModal(authState.user ? 'account' : 'login');
+        return;
+      }
+
+      const authModeButton = event.target.closest('[data-auth-mode]');
+      if (authModeButton) {
+        authMode = authModeButton.dataset.authMode || 'login';
+        authModalError.textContent = '';
+        renderAuthModal();
+        return;
+      }
+
+      const authLogout = event.target.closest('[data-auth-logout]');
+      if (authLogout) {
+        logoutAuth();
+        return;
+      }
+
+      const savePaperAction = event.target.closest('[data-save-paper]');
+      if (savePaperAction) {
+        toggleSavedPaper();
+        return;
+      }
+
+      const followVenueAction = event.target.closest('[data-follow-venue]');
+      if (followVenueAction) {
+        toggleVenueSubscription();
+        return;
+      }
+
+      const commentEdit = event.target.closest('[data-comment-edit]');
+      if (commentEdit) {
+        editCommentFromButton(commentEdit);
+        return;
+      }
+
+      const commentDelete = event.target.closest('[data-comment-delete]');
+      if (commentDelete) {
+        deleteCommentFromButton(commentDelete);
+        return;
+      }
+
       const modalClose = event.target.closest('[data-modal-close]');
       if (modalClose) {
         closeRateModal();
@@ -4584,6 +5066,12 @@
       submitReviewerComment();
     });
 
+    authModal.addEventListener('submit', event => {
+      if (!event.target.closest('[data-auth-form]')) return;
+      event.preventDefault();
+      submitAuthForm();
+    });
+
     scoreDetail.addEventListener('submit', event => {
       const form = event.target.closest('[data-sc-comment-form]');
       if (!form) return;
@@ -4671,6 +5159,10 @@
     });
 
     document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && authModal && !authModal.hidden) {
+        closeAuthModal();
+        return;
+      }
       if (event.key === 'Escape' && rateModal && !rateModal.hidden) {
         closeRateModal();
         return;
@@ -4697,6 +5189,8 @@
       resizeTimer = window.setTimeout(resetCloudView, 120);
     });
 
+    renderAuthState();
+    loadMe();
     syncClearButtons();
 
     const params = new URLSearchParams(location.search);

@@ -156,6 +156,48 @@ class Vote(Base):
     updated_at: Mapped[dt.datetime] = mapped_column(DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False)
 
 
+class UserAccount(Base):
+    __tablename__ = "users"
+
+    user_id: Mapped[str] = mapped_column(String(80), primary_key=True)
+    handle: Mapped[str] = mapped_column(String(40), unique=True, index=True, nullable=False)
+    email: Mapped[str] = mapped_column(String(240), unique=True, index=True, nullable=False)
+    password_hash: Mapped[str] = mapped_column(Text, nullable=False)
+    created_at: Mapped[dt.datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
+    updated_at: Mapped[dt.datetime] = mapped_column(DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False)
+
+
+class UserSession(Base):
+    __tablename__ = "user_sessions"
+
+    token_hash: Mapped[str] = mapped_column(String(80), primary_key=True)
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.user_id"), index=True, nullable=False)
+    session_id: Mapped[str] = mapped_column(String(160), index=True, default="", nullable=False)
+    created_at: Mapped[dt.datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
+    last_seen_at: Mapped[dt.datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
+
+
+class SavedPaper(Base):
+    __tablename__ = "saved_papers"
+    __table_args__ = (UniqueConstraint("user_id", "paper_id", name="uq_saved_paper_user_paper"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.user_id"), index=True, nullable=False)
+    paper_id: Mapped[str] = mapped_column(ForeignKey("papers.paper_id"), index=True, nullable=False)
+    created_at: Mapped[dt.datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
+
+
+class VenueSubscription(Base):
+    __tablename__ = "venue_subscriptions"
+    __table_args__ = (UniqueConstraint("user_id", "venue", "year", name="uq_venue_subscription_user_venue_year"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.user_id"), index=True, nullable=False)
+    venue: Mapped[str] = mapped_column(String(80), index=True, nullable=False)
+    year: Mapped[int] = mapped_column(Integer, index=True, default=2025, nullable=False)
+    created_at: Mapped[dt.datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
+
+
 class ReviewerComment(Base):
     __tablename__ = "reviewer_comments"
 
@@ -163,6 +205,7 @@ class ReviewerComment(Base):
     paper_id: Mapped[str] = mapped_column(ForeignKey("papers.paper_id"), index=True, nullable=False)
     reviewer_key: Mapped[str] = mapped_column(String(40), index=True, nullable=False)
     session_id: Mapped[str] = mapped_column(String(160), index=True, nullable=False)
+    user_id: Mapped[str | None] = mapped_column(ForeignKey("users.user_id"), index=True, nullable=True)
     body: Mapped[str] = mapped_column(Text, nullable=False)
     created_at: Mapped[dt.datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
 
