@@ -1,0 +1,68 @@
+{
+  "schema_version": "release-smoke-v0.1",
+  "created_at": "2026-07-09T15:47:21+00:00",
+  "status": "failed",
+  "frontend_url": "https://yongwen12.github.io/SecondOpinion/",
+  "api_url": "https://secondopinion.smartselling.work",
+  "summary": {
+    "check_count": 9,
+    "failed_count": 6
+  },
+  "checks": [
+    {
+      "name": "frontend_status",
+      "ok": true,
+      "message": "Frontend returned HTTP 200",
+      "elapsed_ms": 347
+    },
+    {
+      "name": "frontend_coverage_copy",
+      "ok": false,
+      "message": "Frontend contains 2025 V1 coverage copy"
+    },
+    {
+      "name": "frontend_api_default",
+      "ok": true,
+      "message": "Frontend default API base is production API"
+    },
+    {
+      "name": "api_health",
+      "ok": true,
+      "message": "API health returned HTTP 200",
+      "elapsed_ms": 512
+    },
+    {
+      "name": "api_home_static",
+      "ok": false,
+      "message": "Home returned HTTP 200 source=None",
+      "elapsed_ms": 484
+    },
+    {
+      "name": "api_home_stats",
+      "ok": false,
+      "message": "Home stats match 2025 V1 release counts",
+      "stats": {}
+    },
+    {
+      "name": "api_home_boards",
+      "ok": false,
+      "message": "Home leaderboards include publishable rows",
+      "board_counts": {
+        "red": 10,
+        "black": 10
+      }
+    },
+    {
+      "name": "api_global_search",
+      "ok": false,
+      "message": "Global search returned 0 items for 'CrossSpectra'",
+      "elapsed_ms": 387
+    },
+    {
+      "name": "api_scorecard",
+      "ok": false,
+      "message": "Scorecard Ni4jNyroJZ returned 0 reviewers and 0 comments",
+      "elapsed_ms": 429
+    }
+  ]
+}

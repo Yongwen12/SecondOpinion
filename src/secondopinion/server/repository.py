@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import hashlib
+import math
 import uuid
 from collections import defaultdict
 from typing import Any
@@ -375,7 +376,25 @@ def latest_scored_papers(
         stmt = stmt.where(Paper.conference_id == conference_id)
     if year is not None:
         stmt = stmt.where(Paper.year == year)
-    rows = session.execute(stmt.order_by(Scorecard.created_at.desc()).limit(limit)).all()
+    if conference_id:
+        rows = session.execute(stmt.order_by(Scorecard.created_at.desc()).limit(limit)).all()
+    else:
+        venue_stmt = select(Paper.venue).join(Scorecard, Scorecard.paper_id == Paper.paper_id)
+        if year is not None:
+            venue_stmt = venue_stmt.where(Paper.year == year)
+        venues = [
+            str(venue)
+            for venue in session.execute(venue_stmt.group_by(Paper.venue).order_by(Paper.venue)).scalars()
+            if venue
+        ]
+        per_venue_limit = max(2, math.ceil(limit / max(1, min(len(venues), limit))))
+        rows = []
+        for venue in venues:
+            rows.extend(
+                session.execute(
+                    stmt.where(Paper.venue == venue).order_by(Scorecard.created_at.desc()).limit(per_venue_limit)
+                ).all()
+            )
     paper_ids = [paper.paper_id for paper, _ in rows]
     votes_by_paper: dict[str, dict[str, int]] = defaultdict(lambda: {"up": 0, "down": 0})
     if paper_ids:
@@ -414,13 +433,13 @@ def latest_scored_papers(
                 "created_at": scorecard.created_at.isoformat() if scorecard.created_at else "",
             }
         )
-    return items
+    return _venue_balanced(items, limit=limit) if not conference_id else items[:limit]
 
 
 def search_papers(
     session: Session,
     *,
-    conference_id: str,
+    conference_id: str | None = None,
     query: str = "",
     year: int | None = None,
     limit: int = 20,
@@ -428,7 +447,9 @@ def search_papers(
 ) -> dict[str, Any]:
     offset = max(0, int(cursor or "0"))
     limit = max(1, min(50, limit))
-    stmt = select(Paper).where(Paper.conference_id == conference_id)
+    stmt = select(Paper)
+    if conference_id:
+        stmt = stmt.where(Paper.conference_id == conference_id)
     if year is not None:
         stmt = stmt.where(Paper.year == year)
     clean_query = query.strip()
@@ -476,11 +497,16 @@ def leaderboard_keys_from_public(public_json: dict[str, Any]) -> dict[str, list[
     reviewers = [item for item in public_json.get("reviewers", []) if isinstance(item, dict)]
     red = sorted(reviewers, key=lambda item: (-int(item.get("score") or 0), str(item.get("reviewer_key") or "")))
     black = sorted(reviewers, key=lambda item: (int(item.get("score") or 0), str(item.get("reviewer_key") or "")))
+    overall = sorted(reviewers, key=lambda item: (-_public_dimension_score(item, "outrage"), str(item.get("reviewer_key") or "")))
+    toxic = sorted(reviewers, key=lambda item: (-_public_dimension_score(item, "toxicity"), str(item.get("reviewer_key") or "")))
+    helpful = sorted(reviewers, key=lambda item: (-_public_dimension_score(item, "helpfulness"), str(item.get("reviewer_key") or "")))
     return {
+        "overall": [str(item.get("reviewer_key", "")) for item in overall[:10]],
+        "toxic": [str(item.get("reviewer_key", "")) for item in toxic[:10]],
+        "helpful": [str(item.get("reviewer_key", "")) for item in helpful[:10]],
         "red": [str(item.get("reviewer_key", "")) for item in red[:10]],
         "black": [str(item.get("reviewer_key", "")) for item in black[:10]],
     }
-
 
 def upsert_vote(session: Session, *, paper_id: str, reviewer_key: str, session_id: str, vote: str) -> dict[str, Any]:
     if vote not in {"up", "down", "none"}:
@@ -584,6 +610,47 @@ def add_reviewer_comment(
     return comment_to_public_dict(comment)
 
 
+def _venue_balanced(items: list[dict[str, Any]], *, limit: int) -> list[dict[str, Any]]:
+    if limit <= 0:
+        return []
+    buckets: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    venues: list[str] = []
+    for item in items:
+        venue = str(item.get("venue") or item.get("conference_id") or "")
+        if venue and venue not in buckets:
+            venues.append(venue)
+        buckets[venue].append(item)
+    if len(venues) <= 1:
+        return items[:limit]
+
+    max_per_venue = max(2, math.ceil(limit / min(len(venues), limit)))
+    selected: list[dict[str, Any]] = []
+    used: set[tuple[str, str]] = set()
+    for index in range(max(len(bucket) for bucket in buckets.values())):
+        for venue in venues:
+            bucket = buckets[venue]
+            if index >= len(bucket):
+                continue
+            item = bucket[index]
+            key = (str(item.get("paper_id") or ""), str(item.get("reviewer_key") or item.get("created_at") or len(used)))
+            if key in used:
+                continue
+            if sum(1 for selected_item in selected if str(selected_item.get("venue") or selected_item.get("conference_id") or "") == venue) >= max_per_venue:
+                continue
+            selected.append(item)
+            used.add(key)
+            if len(selected) >= limit:
+                return selected
+    for item in items:
+        key = (str(item.get("paper_id") or ""), str(item.get("reviewer_key") or item.get("created_at") or len(used)))
+        if key in used:
+            continue
+        selected.append(item)
+        used.add(key)
+        if len(selected) >= limit:
+            break
+    return selected
+
 def build_leaderboards(
     session: Session,
     *,
@@ -592,40 +659,225 @@ def build_leaderboards(
     limit: int = 10,
 ) -> dict[str, list[dict[str, Any]]]:
     limit = max(1, min(50, limit))
-    stmt = select(ReviewerScore, Paper.title).join(Paper, Paper.paper_id == ReviewerScore.paper_id)
+    vote_counts = _vote_counts_for_leaderboard(session, conference_id=conference_id, year=year)
+    comment_counts: dict[str, dict[str, int]] = {}
+    balance = conference_id is None
+
+    def candidates(metric: str, *, ascending: bool = False) -> list[dict[str, Any]]:
+        rows = _leaderboard_candidate_rows(
+            session,
+            conference_id=conference_id,
+            year=year,
+            metric=metric,
+            ascending=ascending,
+            limit=limit,
+            balance=balance,
+        )
+        items = []
+        for paper_id, reviewer_key, nickname, avatar_key, score_value, dimensions_json, title, venue, paper_year in rows:
+            paper_key = str(paper_id)
+            reviewer_key_text = str(reviewer_key)
+            extra = vote_counts[(paper_key, reviewer_key_text)]
+            if paper_key not in comment_counts:
+                comment_counts[paper_key] = comment_counts_by_reviewer(session, paper_key)
+            metrics = _reviewer_score_metrics_from_values(score_value, dimensions_json)
+            item = {
+                "paper_id": paper_id,
+                "paper_title": title,
+                "venue": venue,
+                "year": paper_year,
+                "reviewer_key": reviewer_key,
+                "nickname": nickname,
+                "avatar_key": avatar_key,
+                "score": score_value,
+                "outrage": metrics["outrage"],
+                "toxicity": metrics["toxicity"],
+                "helpfulness": metrics["helpfulness"],
+                "quote": metrics["quote"],
+                "verdict": metrics["verdict"],
+                "up": extra["up"],
+                "down": extra["down"],
+                "comment_count": comment_counts[paper_key].get(reviewer_key_text, 0),
+            }
+            if _leaderboard_display_eligible(item):
+                items.append(item)
+        if balance:
+            return _venue_balanced(items, limit=limit)
+        return items[:limit]
+
+    return {
+        "overall": candidates("outrage"),
+        "toxic": candidates("toxicity"),
+        "helpful": candidates("helpfulness"),
+        "red": candidates("score"),
+        "black": candidates("score", ascending=True),
+    }
+
+
+def _leaderboard_candidate_rows(
+    session: Session,
+    *,
+    conference_id: str | None,
+    year: int | None,
+    metric: str,
+    ascending: bool,
+    limit: int,
+    balance: bool,
+) -> list[Any]:
+    candidate_limit = max(limit * 8, 80)
+    stmt = (
+        select(
+            ReviewerScore.paper_id,
+            ReviewerScore.reviewer_key,
+            ReviewerScore.nickname,
+            ReviewerScore.avatar_key,
+            ReviewerScore.score,
+            ReviewerScore.dimensions_json,
+            Paper.title,
+            Paper.venue,
+            Paper.year,
+        )
+        .join(Paper, Paper.paper_id == ReviewerScore.paper_id)
+    )
     if conference_id:
         stmt = stmt.where(ReviewerScore.conference_id == conference_id)
     if year is not None:
         stmt = stmt.where(ReviewerScore.year == year)
-    rows = session.execute(stmt).all()
-    counts_by_paper: dict[str, dict[str, dict[str, int]]] = {}
-    comment_counts_by_paper: dict[str, dict[str, int]] = {}
-    items = []
-    for score, title in rows:
-        if score.paper_id not in counts_by_paper:
-            counts_by_paper[score.paper_id] = vote_counts_by_reviewer(session, score.paper_id)
-        if score.paper_id not in comment_counts_by_paper:
-            comment_counts_by_paper[score.paper_id] = comment_counts_by_reviewer(session, score.paper_id)
-        extra = counts_by_paper[score.paper_id][score.reviewer_key]
-        up = extra["up"]
-        down = extra["down"]
-        items.append(
-            {
-                "paper_id": score.paper_id,
-                "paper_title": title,
-                "reviewer_key": score.reviewer_key,
-                "nickname": score.nickname,
-                "avatar_key": score.avatar_key,
-                "score": score.score,
-                "up": up,
-                "down": down,
-                "comment_count": comment_counts_by_paper[score.paper_id].get(score.reviewer_key, 0),
-            }
-        )
-    red = sorted(items, key=lambda item: (-item["score"], item["reviewer_key"]))[:limit]
-    black = sorted(items, key=lambda item: (item["score"], item["reviewer_key"]))[:limit]
-    return {"red": red, "black": black}
+    rows = list(session.execute(stmt).all())
 
+    def metric_value(row: Any) -> float:
+        metrics = _reviewer_score_metrics_from_values(row[4], row[5])
+        if metric == "toxicity":
+            return float(metrics["toxicity"])
+        if metric == "helpfulness":
+            return float(metrics["helpfulness"])
+        if metric == "outrage":
+            return float(metrics["outrage"])
+        return float(row[4] or 0)
+
+    sorted_rows = sorted(rows, key=lambda row: (metric_value(row), str(row[1] or "")), reverse=not ascending)
+    if not balance:
+        return sorted_rows[:candidate_limit]
+
+    venue_rows: dict[str, list[Any]] = defaultdict(list)
+    for row in sorted_rows:
+        venue_rows[str(row[7] or "")].append(row)
+    per_venue = max(limit * 4, 40)
+    balanced: list[Any] = []
+    for venue in sorted(venue_rows):
+        balanced.extend(venue_rows[venue][:per_venue])
+    return balanced
+
+_LEADERBOARD_NOISE_PHRASES = (
+    "author-reviewer discussion",
+    "we are currently in the author",
+    "dear authors",
+    "thank you for your helpful",
+    "thank you again for your helpful",
+    "thank you for trying",
+    "we are delighted",
+    "our responses",
+    "updating the manuscript",
+    "we will definitely",
+    "we will update",
+    "final state of the manuscript",
+)
+
+
+def _leaderboard_display_eligible(item: dict[str, Any]) -> bool:
+    text = " ".join(str(item.get(key) or "") for key in ("quote", "verdict")).lower()
+    if not text.strip():
+        return False
+    return not any(phrase in text for phrase in _LEADERBOARD_NOISE_PHRASES)
+
+
+def _vote_counts_for_leaderboard(
+    session: Session,
+    *,
+    conference_id: str | None = None,
+    year: int | None = None,
+) -> dict[tuple[str, str], dict[str, int]]:
+    stmt = select(Vote.paper_id, Vote.reviewer_key, Vote.vote, func.count(Vote.id)).join(Paper, Paper.paper_id == Vote.paper_id)
+    if conference_id:
+        stmt = stmt.where(Paper.venue == conference_id)
+    if year is not None:
+        stmt = stmt.where(Paper.year == year)
+    rows = session.execute(stmt.group_by(Vote.paper_id, Vote.reviewer_key, Vote.vote)).all()
+    counts: dict[tuple[str, str], dict[str, int]] = defaultdict(lambda: {"up": 0, "down": 0})
+    for paper_id, reviewer_key, vote, count in rows:
+        if vote in {"up", "down"}:
+            counts[(str(paper_id), str(reviewer_key))][str(vote)] = int(count)
+    return counts
+
+
+def home_stats(
+    session: Session,
+    *,
+    conference_id: str | None = None,
+    year: int | None = None,
+) -> dict[str, Any]:
+    paper_stmt = select(func.count(Paper.paper_id))
+    review_stmt = select(func.count(Review.review_id)).join(Paper, Paper.paper_id == Review.paper_id)
+    score_stmt = select(func.count(ReviewerScore.reviewer_key))
+    if conference_id:
+        paper_stmt = paper_stmt.where(Paper.venue == conference_id)
+        review_stmt = review_stmt.where(Paper.venue == conference_id)
+        score_stmt = score_stmt.where(ReviewerScore.conference_id == conference_id)
+    if year is not None:
+        paper_stmt = paper_stmt.where(Paper.year == year)
+        review_stmt = review_stmt.where(Paper.year == year)
+        score_stmt = score_stmt.where(ReviewerScore.year == year)
+    paper_count = int(session.execute(paper_stmt).scalar() or 0)
+    review_count = int(session.execute(review_stmt).scalar() or 0)
+    scored_review_count = int(session.execute(score_stmt).scalar() or 0)
+    return {
+        "paper_count": paper_count,
+        "review_count": review_count,
+        "scored_review_count": scored_review_count,
+        "audited_count": scored_review_count or review_count,
+    }
+
+
+def _reviewer_score_metrics(score: ReviewerScore) -> dict[str, Any]:
+    return _reviewer_score_metrics_from_values(score.score, score.dimensions_json)
+
+
+def _reviewer_score_metrics_from_values(score_value: Any, dimensions_json: list[dict[str, Any]] | None) -> dict[str, Any]:
+    metrics: dict[str, Any] = {
+        "outrage": int(score_value or 0),
+        "toxicity": 0,
+        "helpfulness": 0,
+        "quote": "",
+        "verdict": "",
+    }
+    for item in dimensions_json or []:
+        if not isinstance(item, dict):
+            continue
+        key = str(item.get("key") or "")
+        if key in {"outrage", "toxicity", "helpfulness"}:
+            metrics[key] = _clamp_int(item.get("score"))
+        if not metrics["quote"] and item.get("quote"):
+            metrics["quote"] = str(item.get("quote") or "")
+        if not metrics["verdict"] and item.get("verdict"):
+            metrics["verdict"] = str(item.get("verdict") or "")
+    if metrics["helpfulness"] == 0 and metrics["toxicity"] == 0:
+        metrics["helpfulness"] = int(score_value or 0)
+    return metrics
+
+
+def _public_dimension_score(reviewer: dict[str, Any], key: str) -> int:
+    for item in reviewer.get("dimensions") or []:
+        if isinstance(item, dict) and item.get("key") == key:
+            return _clamp_int(item.get("score"))
+    return _clamp_int(reviewer.get("score"))
+
+
+def _clamp_int(value: Any) -> int:
+    try:
+        number = int(round(float(value)))
+    except (TypeError, ValueError):
+        return 0
+    return max(0, min(100, number))
 
 def register_memory_index(
     session: Session,

@@ -14,6 +14,7 @@ class ServerSettings:
     database_url: str
     artifact_root: Path
     scoring_memory_path: Path
+    home_snapshot_path: Path = Path("frontend/data/home_2025.json")
     scorer_version: str = DEFAULT_SCORER_VERSION
     memory_index_version: str = DEFAULT_MEMORY_INDEX_VERSION
     cors_origins: tuple[str, ...] = ()
@@ -37,6 +38,7 @@ def settings_from_env() -> ServerSettings:
                 "data/normalized/scoring_memory_external_full_lite_v0.1.jsonl",
             )
         ),
+        home_snapshot_path=Path(os.environ.get("SECONDOPINION_HOME_SNAPSHOT", "frontend/data/home_2025.json")),
         scorer_version=os.environ.get("SECONDOPINION_SCORER_VERSION", DEFAULT_SCORER_VERSION),
         memory_index_version=os.environ.get("SECONDOPINION_MEMORY_INDEX_VERSION", DEFAULT_MEMORY_INDEX_VERSION),
         cors_origins=origins,

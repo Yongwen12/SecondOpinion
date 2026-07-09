@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import datetime as dt
+import json
 import os
 import uuid
+from pathlib import Path
 from typing import Any
 
 from fastapi import Depends, FastAPI, HTTPException, Request
@@ -20,6 +22,7 @@ from .repository import (
     apply_vote_counts,
     build_leaderboards,
     create_scoring_job,
+    home_stats,
     job_to_public_dict,
     latest_scorecard,
     latest_scored_papers,
@@ -75,14 +78,27 @@ def create_app(
 
     @app.get("/api/home")
     def home(
-        conference: str | None = "ICLR",
+        conference: str | None = None,
         year: int | None = 2025,
         limit: int = 12,
         session: Session = Depends(get_session),
     ) -> dict[str, Any]:
+        static_payload = load_static_home_payload(
+            conference=conference,
+            year=year,
+            limit=limit,
+            home_snapshot_path=settings.home_snapshot_path,
+        )
+        if static_payload is not None:
+            return static_payload
+        stats = home_stats(session, conference_id=conference, year=year)
         return {
             "latest_papers": latest_scored_papers(session, conference_id=conference, year=year, limit=limit),
-            "leaderboards": build_leaderboards(session, conference_id=conference, year=year, limit=10),
+            "leaderboards": build_leaderboards(session, conference_id=conference, year=year, limit=20),
+            "stats": stats,
+            "audited_count": stats["audited_count"],
+            "paper_count": stats["paper_count"],
+            "review_count": stats["review_count"],
         }
 
     @app.get("/api/conferences")
@@ -100,6 +116,16 @@ def create_app(
     ) -> dict[str, Any]:
         return search_papers(session, conference_id=conference_id, query=query, year=year, cursor=cursor, limit=limit)
 
+    @app.get("/api/papers")
+    def papers_global(
+        query: str = "",
+        year: int | None = 2025,
+        cursor: str = "",
+        limit: int = 20,
+        session: Session = Depends(get_session),
+    ) -> dict[str, Any]:
+        return search_papers(session, query=query, year=year, cursor=cursor, limit=limit)
+
     @app.get("/api/papers/{paper_id}")
     def paper_detail(paper_id: str, session: Session = Depends(get_session)) -> dict[str, Any]:
         paper = session.get(Paper, paper_id)
@@ -109,6 +135,8 @@ def create_app(
 
     @app.get("/api/papers/{paper_id}/scorecard")
     def paper_scorecard(paper_id: str, session: Session = Depends(get_session)) -> dict[str, Any]:
+        if session.get(Paper, paper_id) is None:
+            raise HTTPException(status_code=404, detail={"code": "paper_not_found"})
         scorecard = latest_scorecard(session, paper_id)
         if scorecard is None:
             raise HTTPException(status_code=404, detail={"code": "scorecard_not_ready"})
@@ -238,6 +266,33 @@ def create_app(
         return build_leaderboards(session, conference_id=conference, year=year, limit=limit)
 
     return app
+
+
+def load_static_home_payload(
+    *,
+    conference: str | None,
+    year: int | None,
+    limit: int,
+    home_snapshot_path: Path,
+) -> dict[str, Any] | None:
+    if conference or year != 2025:
+        return None
+    path = home_snapshot_path
+    if not path.exists():
+        return None
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    if not isinstance(payload, dict):
+        return None
+    capped_limit = max(1, min(50, int(limit or 12)))
+    latest = payload.get("latest_papers")
+    if isinstance(latest, list):
+        payload = dict(payload)
+        payload["latest_papers"] = latest[:capped_limit]
+    payload.setdefault("source", "static_home_2025")
+    return payload
 
 
 async def parse_json_body(request: Request) -> dict[str, Any]:

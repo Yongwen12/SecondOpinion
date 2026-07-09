@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 import pytest
 
@@ -35,6 +36,14 @@ def seed(factory, tmp_path):
                 "reviews": [{"review_id": "review1", "review_text": "Add a baseline.", "weaknesses": "Missing baseline."}],
             },
             {"paper_id": "paper2", "venue": "ICLR", "year": 2025, "title": "No Scorecard Yet", "reviews": []},
+            {
+                "paper_id": "paper3",
+                "venue": "TMLR",
+                "year": 2025,
+                "title": "Cross Venue Paper",
+                "abstract": "A TMLR paper.",
+                "reviews": [{"review_id": "review3", "review_text": "Good cross venue review."}],
+            },
         ],
     }
     path = tmp_path / "normalized.json"
@@ -53,7 +62,11 @@ def seed(factory, tmp_path):
                 "label": "Solid review",
                 "summary": "Useful review.",
                 "social": {"up": 1, "down": 0},
-                "dimensions": [],
+                "dimensions": [
+                    {"key": "outrage", "score": 80, "quote": "Add a baseline.", "verdict": "Useful but direct"},
+                    {"key": "toxicity", "score": 0},
+                    {"key": "helpfulness", "score": 75},
+                ],
             }
         ],
         "comments": [],
@@ -92,11 +105,46 @@ def test_api_search_scorecard_vote_and_job_flow(tmp_path):
     assert search.status_code == 200
     assert search.json()["items"][0]["paper_id"] == "paper1"
 
+    global_search = client.get("/api/papers", params={"query": "Cross Venue", "year": 2025})
+    assert global_search.status_code == 200
+    assert global_search.json()["items"][0]["paper_id"] == "paper3"
+    assert global_search.json()["items"][0]["venue"] == "TMLR"
+
+    static_home = client.get("/api/home", params={"year": 2025, "limit": 1})
+    assert static_home.status_code == 200
+    assert static_home.json()["source"] == "static_home_2025"
+    assert len(static_home.json()["latest_papers"]) == 1
+
+    custom_home_path = tmp_path / "custom_home.json"
+    custom_home_path.write_text(
+        json.dumps({
+            "latest_papers": [{"paper_id": "custom1"}, {"paper_id": "custom2"}],
+            "leaderboards": {"overall": [], "toxic": [], "helpful": [], "red": [], "black": []},
+            "stats": {"paper_count": 2, "review_count": 2, "scored_review_count": 2, "audited_count": 2},
+            "audited_count": 2,
+            "paper_count": 2,
+            "review_count": 2,
+        }),
+        encoding="utf-8",
+    )
+    custom_settings = ServerSettings(
+        database_url=f"sqlite:///{tmp_path / 'api.db'}",
+        artifact_root=tmp_path / "artifacts",
+        scoring_memory_path=tmp_path / "memory.jsonl",
+        home_snapshot_path=custom_home_path,
+    )
+    custom_client = TestClient(create_app(settings=custom_settings, session_factory=factory))
+    custom_home = custom_client.get("/api/home", params={"year": 2025, "limit": 1})
+    assert custom_home.status_code == 200
+    assert custom_home.json()["latest_papers"] == [{"paper_id": "custom1"}]
+
     home = client.get("/api/home", params={"conference": "ICLR", "year": 2025})
     assert home.status_code == 200
     assert home.json()["latest_papers"][0]["paper_id"] == "paper1"
     assert home.json()["latest_papers"][0]["overall_score"] == 80
     assert home.json()["leaderboards"]["red"][0]["reviewer_key"] == "R1"
+    assert home.json()["audited_count"] == 1
+    assert home.json()["stats"] == {"paper_count": 2, "review_count": 1, "scored_review_count": 1, "audited_count": 1}
     # Home feed exposes only real vote totals, ignoring stored synthetic baselines.
     assert home.json()["latest_papers"][0]["social"] == {"up": 0, "down": 0}
     assert home.json()["latest_papers"][0]["vote_total"] == 0
@@ -113,9 +161,17 @@ def test_api_search_scorecard_vote_and_job_flow(tmp_path):
 
     missing = client.get("/api/papers/paper2/scorecard")
     assert missing.status_code == 404
+    assert missing.json()["detail"]["code"] == "scorecard_not_ready"
     job = client.post("/api/papers/paper2/scoring-jobs")
     assert job.status_code == 200
     assert job.json()["status"] == "queued"
+
+    outside_scorecard = client.get("/api/papers/not-a-real-paper/scorecard")
+    assert outside_scorecard.status_code == 404
+    assert outside_scorecard.json()["detail"]["code"] == "paper_not_found"
+    outside_job = client.post("/api/papers/not-a-real-paper/scoring-jobs")
+    assert outside_job.status_code == 404
+    assert outside_job.json()["detail"]["code"] == "paper_not_found"
 
 
 def test_reviewer_comment_flow(tmp_path):

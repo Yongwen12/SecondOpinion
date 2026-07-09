@@ -693,7 +693,9 @@
 
     .content-stack {
       display: grid;
+      grid-template-columns: minmax(0, 1fr);
       gap: 16px;
+      min-width: 0;
     }
 
     .surface {
@@ -708,11 +710,15 @@
       display: grid;
       grid-template-columns: 188px minmax(0, 1fr);
       gap: 22px;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
       padding: 22px;
     }
 
     .score-overview {
       display: grid;
+      min-width: 0;
       align-content: center;
       justify-items: center;
       gap: 12px;
@@ -1371,6 +1377,25 @@
       pointer-events: none;
     }
 
+    .empty-panel {
+      display: grid;
+      min-height: 140px;
+      place-items: center;
+      padding: 24px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 650;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    .cloud-stage .empty-panel {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background: rgba(252, 251, 247, .72);
+    }
+
     .reviewer-dot {
       width: 7px;
       height: 7px;
@@ -1625,6 +1650,9 @@
       .paper-bar { align-items: flex-start; flex-direction: column; gap: 6px; }
       .reviewer-grid {
         display: grid;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
         grid-auto-flow: column;
         grid-auto-columns: minmax(220px, 76vw);
         grid-template-columns: none;
@@ -1681,6 +1709,42 @@
       .cloud-tooltip { left: 12px !important; right: 12px; bottom: 12px; top: auto !important; width: auto; }
       .filter-group { max-width: 62vw; }
     }
+
+    @media (max-width: 420px) {
+      .search-shell--compact {
+        grid-template-columns: minmax(0, 1fr) auto auto;
+        gap: 5px;
+        padding-left: 9px;
+      }
+
+      .search-shell--compact .search-icon { display: none; }
+      .search-shell--compact .clear-button { width: 30px; height: 30px; }
+      .search-shell--compact .analyze-button { min-width: 38px; padding: 0 8px; }
+
+      .score-overview {
+        grid-template-columns: 1fr;
+        justify-items: center;
+      }
+
+      .score-main,
+      .reviewer-grid {
+        width: 100%;
+      }
+
+      .comment-row {
+        grid-template-columns: 38px minmax(0, 1fr);
+      }
+
+      .comment-row .vote-group {
+        grid-column: 1 / -1;
+        justify-self: stretch;
+        justify-content: flex-end;
+      }
+
+      .filter-group { max-width: 100%; }
+      .score-guide { grid-template-columns: 1fr; }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         scroll-behavior: auto !important;
@@ -1919,6 +1983,37 @@
     .outrage-ticker b {
       color: var(--oh-ink);
       font-weight: 600;
+    }
+
+    .coverage-strip {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+      gap: 18px;
+      margin: 18px 0 20px;
+      padding: 15px 0;
+      border-top: 1px solid var(--oh-line);
+      border-bottom: 1px solid var(--oh-line);
+      color: #767676;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .coverage-strip p {
+      margin: 0;
+    }
+
+    .coverage-strip b {
+      color: var(--oh-ink);
+      font-weight: 800;
+    }
+
+    .coverage-strip span {
+      display: block;
+      color: #a8a8a8;
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
     }
 
     .outrage-error {
@@ -2446,6 +2541,10 @@
         flex-direction: column;
       }
 
+      .coverage-strip {
+        grid-template-columns: 1fr;
+      }
+
       .outrage-cta .outrage-submit {
         width: 100%;
       }
@@ -2589,6 +2688,32 @@
     /* Comments */
     .app-view .filter-button.is-active { border-color: #111111; color: #111111; background: #ffffff; }
     .app-view .comment-row:hover { background: #fafafa; }
+
+    @media (max-width: 420px) {
+      .outrage-home { padding: 0 14px 48px; }
+      .outrage-title { font-size: 38px; }
+      .outrage-tabs { gap: 6px; }
+      .outrage-tab { padding: 8px 10px; font-size: 11px; }
+
+      .outrage-row {
+        grid-template-columns: 36px minmax(0, 1fr);
+        align-items: start;
+      }
+
+      .outrage-scorebox {
+        grid-column: 2;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        align-items: center;
+        gap: 4px 10px;
+        text-align: left;
+      }
+
+      .outrage-num { font-size: 26px; }
+      .outrage-unit { margin-top: 0; }
+      .outrage-rowrate { grid-column: 1 / -1; margin-top: 0; text-align: left; }
+      .outrage-q { overflow-wrap: anywhere; }
+    }
   </style>
 </head>
 <body class="is-idle">
@@ -2617,6 +2742,10 @@
         <div class="outrage-eyebrow" id="outrageEyebrow"></div>
 
         <nav class="outrage-tabs" id="boardTabs" aria-label="Reviewer leaderboards"></nav>
+        <section class="coverage-strip" aria-label="Data coverage and scoring scope">
+          <p><span>2025 public OpenReview coverage</span><b>ICLR, ICML, NeurIPS, TMLR, COLM, and MIDL.</b> The V1 dataset covers 26,749 papers and 99,671 scored official reviews.</p>
+          <p><span>Scoring scope</span>We score title, abstract, decision, and public official reviews only. No PDF full text, author rebuttals, or admin comments are used for reviewer rankings.</p>
+        </section>
         <p class="outrage-ticker" id="communityTicker" hidden></p>
         <div class="input-error outrage-error" id="landingError" role="status" aria-live="polite"></div>
         <div class="search-results outrage-results" id="landingResults" role="listbox" aria-label="Paper search results" hidden></div>
@@ -2812,25 +2941,29 @@
     const BOARD_ORDER = ['overall', 'toxic', 'helpful'];
     const BOARD_COPY = {
       heat: {
-        eyebrow: count => `ICLR 2025 · ALL TOPICS · ${count} REVIEWS AUDITED`,
+        eyebrow: count => `2025 PUBLIC REVIEWS - ${count} REVIEWS AUDITED`,
+        title: 'The <mark>Outrage</mark> Index<span>.</span>',
+        sub: 'Where “needs more experiments” finally gets the review it deserves. Real quotes, real reviews — the worst rise to the top.',
         unit: 'OUTRAGE',
         stamp: 'STRONG REJECT',
         rate: 'PILE ON →',
         hu: n => `${n} human${n === 1 ? '' : 's'} co-signed`,
         ai: 'AI verdict only — be the first to pile on',
         cta: '<p><b>Got receipts?</b>Pick the paper, pick the reviewer, pile on — human ratings outrank the AI here.</p><button class="outrage-submit" type="button" data-open-rate>Pile on →</button>',
-        fine: 'Quotes are real, from public ICLR 2025 reviews. Reviewers stay pseudonymous; their scores are permanent. No reviewers were harmed. <b>And yes — statistically, it’s Reviewer #2.</b>',
+        fine: 'Quotes are real, from public ICLR, ICML, and NeurIPS 2025 reviews. Reviewers stay pseudonymous; their scores are permanent. No reviewers were harmed. <b>And yes — statistically, it’s Reviewer #2.</b>',
         tier: score => score >= 90 ? '💀' : score >= 80 ? '🔥' : '😬'
       },
       praise: {
-        eyebrow: count => `ICLR 2025 · ALL TOPICS · ${count} REVIEWS AUDITED`,
+        eyebrow: count => `2025 PUBLIC REVIEWS - ${count} REVIEWS AUDITED`,
+        title: 'The <mark>Honor</mark> Roll<span>.</span>',
+        sub: 'Proof that good reviews exist. We were as surprised as you.',
         unit: 'RESPECT',
         stamp: 'STRONG ACCEPT',
         rate: 'VOUCH →',
         hu: n => `${n} human${n === 1 ? '' : 's'} vouched`,
         ai: 'AI verdict only — be the first to vouch',
-        cta: '<p><b>Seen reviewing done right?</b>Pick the paper, pick the reviewer, and clear their name.</p><button class="outrage-submit" type="button" data-open-rate>Vouch →</button>',
-        fine: 'Quotes are real, from public ICLR 2025 reviews. The good ones get the spotlight too — <b>peer review deserves better villains and better heroes.</b>',
+        cta: '<p><b>Seen reviewing done right?</b>Pick the paper, pick the reviewer, nominate them for the Honor Roll.</p><button class="outrage-submit" type="button" data-open-rate>Vouch →</button>',
+        fine: 'Quotes are real, from public ICLR, ICML, and NeurIPS 2025 reviews. The good ones get the spotlight too — <b>peer review deserves better villains and better heroes.</b>',
         tier: score => score >= 95 ? '🏆' : '⭐'
       }
     };
@@ -2866,7 +2999,7 @@
     let homePapers = [];
     let homeBoards = cloneHomeBoards(DEMO_HOME_BOARDS);
     let homeYear = 2025;
-    let homeAuditedCount = 128;
+    let homeAuditedCount = 82219;
     let homeBoardKind = initialHomeBoard();
     let homeTickerHtml = '<span class="hl">⚡ 24 human ratings this week</span> · latest: <b>“brutal but fair”</b> on Reviewer #4 — 2 min ago';
     let usingDemoHome = true;
@@ -3002,10 +3135,20 @@
       return `${API_BASE}${path}`;
     }
 
+    function apiCredentialsMode() {
+      try { return new URL(API_BASE, location.href).origin === location.origin ? 'include' : 'omit'; }
+      catch (_) { return 'omit'; }
+    }
+
     async function apiFetch(path, options = {}) {
       if (!API_BASE) throw new Error('API base is not configured');
       const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
-      return fetch(apiPath(path), { cache: 'no-store', credentials: 'include', ...options, headers });
+      return fetch(apiPath(path), { cache: 'no-store', credentials: apiCredentialsMode(), ...options, headers });
+    }
+
+    async function safeJson(response) {
+      try { return await response.json(); }
+      catch (_) { return null; }
     }
 
     function paperIdFromValue(value) {
@@ -3037,7 +3180,7 @@
           <strong>${escapeHtml(item.title || item.paper_id)}</strong>
           <span>${escapeHtml(item.venue || item.conference_id || 'ICLR')} ${escapeHtml(item.year || '')} / ${Number(item.review_count || 0)} reviews</span>
         </button>`).join('');
-      container.innerHTML = rows || '<div class="paper-result-card"><strong>No matching paper found</strong><span>Try an OpenReview id or a shorter title.</span></div>';
+      container.innerHTML = rows || '<div class="paper-result-card"><strong>No matching paper found</strong><span>Search covers 2025 public official reviews from ICLR, ICML, NeurIPS, TMLR, COLM, and MIDL.</span></div>';
       container.hidden = false;
     }
 
@@ -3114,21 +3257,30 @@
       const fb = fallback || {};
       const reviewer = String(source.reviewer || source.r || source.nickname || source.reviewer_name || source.reviewerKey || source.reviewer_key || fb.reviewer || `Reviewer #${index + 1}`);
       const paper = String(source.paper || source.p || source.paper_title || source.title || fb.paper || 'ICLR paper');
-      const scoreSource = source.score ?? source.s ?? source.outrage_final ?? source.toxic_final ?? source.helpful_final ?? fb.score ?? 0;
+      const dimensionScore = key === 'helpful'
+        ? (source.helpfulness ?? source.helpful_final)
+        : key === 'toxic'
+          ? (source.toxicity ?? source.toxic_final)
+          : (source.outrage ?? source.outrage_final);
+      const scoreSource = dimensionScore ?? source.score ?? source.s ?? fb.score ?? 0;
       const paperId = String(source.paperId || source.paper_id || source.paperID || fb.paperId || `demo-${key}-${index + 1}`);
       const reviewerKey = String(source.reviewerKey || source.reviewer_key || fb.reviewerKey || reviewerKeyFromLabel(reviewer, index));
+      const venueName = String(source.venue || source.conference_id || fb.venue || 'ICLR');
+      const venueYear = source.year || fb.year || 2025;
+      const venueLabel = /\b20\d{2}\b/.test(venueName) ? venueName : `${venueName} ${venueYear}`;
       return {
         quote: String(source.quote || source.t || source.best_quote || source.summary || fb.quote || '“Needs more experiments.”'),
         verdict: String(source.verdict || source.w || source.indictment || source.label || fb.verdict || 'Specificity pending real board-row data.'),
         reviewer,
         paper,
-        venue: String(source.venue || fb.venue || 'ICLR 2025'),
+        venue: venueLabel,
         score: clampScore(scoreSource),
         humanCount: Number(source.humanCount ?? source.h ?? source.human_count ?? source.vote_total ?? ((Number(source.up || 0) + Number(source.down || 0)) || fb.humanCount || 0)),
         commentCount: Number(source.commentCount ?? source.comment_count ?? fb.commentCount ?? 0),
         paperId,
         reviewerKey,
-        tone
+        tone,
+        conference: venueName
       };
     }
 
@@ -3166,7 +3318,7 @@
           emoji: boardPayload.emoji || DEMO_HOME_BOARDS[key].emoji,
           count: Number(boardPayload.count || boardPayload.rows.length),
           tone,
-          rows: boardPayload.rows.map((row, index) => normalizeBoardRow(row, index, key, tone, demoRows[index % demoRows.length]))
+          rows: boardPayload.rows.map((row, index) => normalizeBoardRow(row, index, key, tone, demoRows[index % demoRows.length])).slice(0, key === 'overall' ? 8 : 20)
         };
       }
       if (!usedModern && raw && (Array.isArray(raw.red) || Array.isArray(raw.black))) {
@@ -3187,7 +3339,7 @@
       const audited = Number(payload.audited_count || payload.review_count || latest.reduce((sum, item) => sum + Number(item.review_count || 0), 0));
       if (audited > 0) {
         homeAuditedCount = audited;
-        boards.overall.count = audited;
+        for (const key of BOARD_ORDER) boards[key].count = audited;
       }
       return boards;
     }
@@ -3258,15 +3410,28 @@
       homePapers = [];
       homeBoards = cloneHomeBoards(DEMO_HOME_BOARDS);
       usingDemoHome = true;
-      homeAuditedCount = 128;
+      homeAuditedCount = 82219;
       homeTickerHtml = homeBoardKind === 'helpful'
         ? '<span class="hl">⚡ 24 human ratings this week</span> · latest: <b>“I owe this reviewer a beer”</b> on Reviewer #17 — 12 min ago'
         : '<span class="hl">⚡ 24 human ratings this week</span> · latest: <b>“brutal but fair”</b> on Reviewer #4 — 2 min ago';
       setHomeStatus('');
       renderCommunityHome();
+      try {
+        const staticResponse = await fetch(`./data/home_${encodeURIComponent(homeYear)}.json`, { cache: 'no-store' });
+        if (staticResponse.ok) {
+          const staticPayload = await staticResponse.json();
+          homePapers = Array.isArray(staticPayload.latest_papers) ? staticPayload.latest_papers : [];
+          homeBoards = normalizeHomeBoards(staticPayload);
+          usingDemoHome = false;
+          homeTickerHtml = staticPayload.ticker_html || staticPayload.ticker || '';
+          renderCommunityHome();
+        }
+      } catch (error) {
+        console.warn('Static community home load failed; keeping current board.', error);
+      }
       if (!API_BASE) return;
       try {
-        const response = await apiFetch(`/api/home?conference=ICLR&year=${encodeURIComponent(homeYear)}&limit=12`);
+        const response = await apiFetch(`/api/home?year=${encodeURIComponent(homeYear)}&limit=12`);
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const payload = await response.json();
         homePapers = Array.isArray(payload.latest_papers) ? payload.latest_papers : [];
@@ -3275,7 +3440,7 @@
         homeTickerHtml = payload.ticker_html || payload.ticker || '';
         renderCommunityHome();
       } catch (error) {
-        console.warn('Community home load failed; using demo board.', error);
+        console.warn('Community home API refresh failed; using static or demo board.', error);
         renderCommunityHome();
       }
     }
@@ -3297,7 +3462,7 @@
 
     function openRateModal(row = null, source = 'global') {
       const board = homeBoards[homeBoardKind] || homeBoards.overall;
-      rateContext = { row, paperId: row?.paperId || '', reviewerKey: row?.reviewerKey || '', tone: row?.tone || board.tone, source, paperResults: [], reviewerResults: [], selectedPaper: null, conference: 'ICLR', query: '', comments: [], commentsLoading: false };
+      rateContext = { row, paperId: row?.paperId || '', reviewerKey: row?.reviewerKey || '', tone: row?.tone || board.tone, source, paperResults: [], reviewerResults: [], selectedPaper: null, conference: row?.conference || 'ICLR', query: '', comments: [], commentsLoading: false };
       rateModal.hidden = false;
       rateModalError.textContent = '';
       renderRateModal();
@@ -3636,7 +3801,7 @@
           return;
         }
         console.warn('Home paper load failed.', error);
-        showToast('Could not load this paper');
+        showToast('Could not load this paper scorecard');
       } finally {
         setBusy(false, source);
       }
@@ -3680,8 +3845,7 @@
       }
       const paperId = paperIdFromValue(value);
       if (paperId) return loadScorecardFromApi(paperId, source, { title: parsePaperTitle(value) });
-      const conference = (landingConference && landingConference.value) || 'ICLR';
-      const response = await apiFetch(`/api/conferences/${encodeURIComponent(conference)}/papers?query=${encodeURIComponent(value)}&limit=8`);
+      const response = await apiFetch(`/api/papers?query=${encodeURIComponent(value)}&year=${encodeURIComponent(homeYear)}&limit=8`);
       if (!response.ok) return false;
       const payload = await response.json();
       const items = Array.isArray(payload.items) ? payload.items : [];
@@ -3694,6 +3858,11 @@
     async function loadScorecardFromApi(paperId, source = 'landing', paper = {}) {
       const response = await apiFetch(`/api/papers/${encodeURIComponent(paperId)}/scorecard`);
       if (response.status === 404) {
+        const detail = await safeJson(response);
+        if (detail?.detail?.code === 'paper_not_found') {
+          showNotIndexedPaper(paperId, paper, source);
+          return true;
+        }
         const queued = await requestScoringJob(paperId);
         if (queued) showPendingPaper(paperId, paper, source);
         else showNotIndexedPaper(paperId, paper, source);
@@ -3718,16 +3887,16 @@
     }
 
     function showUnavailableSearch(source) {
-      const message = 'Search is temporarily unavailable. Try again in a moment.';
+      const message = 'Search is temporarily unavailable. Static leaderboards are still available; try again in a moment.';
       if (source === 'landing') landingError.textContent = message;
       else showToast(message);
     }
 
     function showNotIndexedPaper(paperId, paper, source) {
       const title = paper.title || parsePaperTitle(paperId);
-      const message = `${title} is not indexed yet. Current coverage is ICLR 2022-2025 sample papers.`;
+      const message = `${title} is not indexed yet. Current 2025 coverage is ICLR, ICML, NeurIPS, TMLR, COLM, and MIDL public official reviews.`;
       if (source === 'landing') landingError.textContent = message;
-      else showToast('Paper is not indexed yet');
+      else showToast('Paper is outside current 2025 public-review coverage');
       hideSearchResults();
     }
     function showPendingPaper(paperId, paper, source) {
@@ -3788,7 +3957,13 @@
         social: reviewer.social || { up: 0, down: 0 },
         comments: Array.isArray(reviewer.comments) ? reviewer.comments : [],
         commentsLoaded: true,
-        dimensions: (reviewer.dimensions || []).map(item => [item.label, Number(item.score || 0), item.criterion || 'Reviewer quality score.'])
+        dimensions: (reviewer.dimensions || []).map(item => ({
+          name: item.label || item.key || 'Metric',
+          value: Number(item.score || 0),
+          criterion: item.criterion || 'Reviewer quality score.',
+          quote: item.quote || '',
+          verdict: item.verdict || ''
+        }))
       }));
 
       splitComments = commentItems.map((comment, index) => ({
@@ -3826,10 +4001,10 @@
       const summary = publicScorecard.summary || {};
       document.getElementById('paperTitle').textContent = paper.title || parsePaperTitle(state.paper || 'Select a paper');
       paperStats.innerHTML = [
-        `${summary.reviewer_count ?? reviewers.length} reviewers`,
-        `${summary.comment_count ?? splitComments.length} comments`,
+        `${reviewers.length} reviewers`,
+        `${splitComments.length} comments`,
         paper.conference || ''
-      ].filter(Boolean).map(item => `<span>${item}</span>`).join('');
+      ].filter(Boolean).map(item => `<span>${escapeHtml(item)}</span>`).join('');
     }
 
     function reviewerById(id) {
@@ -3982,12 +4157,14 @@
             <span class="detail-score ${toneClass(reviewer.tone)}">${reviewer.score}/100</span>
           </div>
           <div class="dimension-grid">
-            ${reviewer.dimensions.map(([name, value, criterion]) => `
+            ${reviewer.dimensions.map(metric => `
               <div class="metric">
-                <div class="metric-head"><span>${name}</span><strong>${value}</strong></div>
-                <div class="metric-track"><i class="metric-fill ${metricTone(value)}" data-width="${value}%"></i></div>
-                <div class="criterion">${criterion}</div>
-              </div>`).join('')}
+                <div class="metric-head"><span>${escapeHtml(metric.name)}</span><strong>${metric.value}</strong></div>
+                <div class="metric-track"><i class="metric-fill ${metricTone(metric.value)}" data-width="${metric.value}%"></i></div>
+                <div class="criterion">${escapeHtml(metric.criterion)}</div>
+                ${metric.quote ? `<div class="criterion"><b>Quote</b> ${escapeHtml(metric.quote)}</div>` : ''}
+                ${metric.verdict ? `<div class="criterion"><b>Verdict</b> ${escapeHtml(metric.verdict)}</div>` : ''}
+              </div>`).join('') || '<div class="empty-panel">No reviewer metrics are available for this scorecard yet.</div>'}
           </div>
           <div class="score-guide" aria-label="Score guide">
             <span class="guide-item"><i class="guide-swatch"></i>0-39 Weak</span>
@@ -4031,8 +4208,11 @@
 
     function renderCloud() {
       layoutCloud(cloudWords);
-      cloudCanvas.innerHTML = cloudWords.filter(word => !word.hidden).map(word => `
-        <button class="cloud-word" type="button" data-word-index="${cloudWords.indexOf(word)}" data-tone="${word.tone}" data-reviewer="${word.reviewer}" style="left:${word.x}px;top:${word.y}px;font-size:${word.size}px;" aria-label="${word.text}, ${word.reviewer}">${word.text}</button>`).join('');
+      const visibleWords = cloudWords.filter(word => !word.hidden);
+      cloudCanvas.innerHTML = visibleWords.map(word => `
+        <button class="cloud-word" type="button" data-word-index="${cloudWords.indexOf(word)}" data-tone="${escapeHtml(word.tone)}" data-reviewer="${escapeHtml(word.reviewer)}" style="left:${word.x}px;top:${word.y}px;font-size:${word.size}px;" aria-label="${escapeHtml(word.text)}, ${escapeHtml(word.reviewer)}">${escapeHtml(word.text)}</button>`).join('');
+      cloudStage.querySelector('.empty-panel')?.remove();
+      if (!visibleWords.length) cloudStage.insertAdjacentHTML('beforeend', '<div class="empty-panel">Themes will appear here when enough distinct review terms are available.</div>');
       requestAnimationFrame(resetCloudView);
     }
 
@@ -4043,7 +4223,7 @@
       }, {});
       const filters = [{ id: 'ALL', label: 'All', count: splitComments.length }, ...reviewers.map(reviewer => ({ id: reviewer.id, label: reviewer.name, count: counts[reviewer.id] || 0 }))];
       commentFilters.innerHTML = filters.map(filter => `
-        <button class="filter-button${state.commentFilter === filter.id ? ' is-active' : ''}" type="button" data-filter="${filter.id}" aria-pressed="${state.commentFilter === filter.id}">${filter.label}<span>${filter.count}</span></button>`).join('');
+        <button class="filter-button${state.commentFilter === filter.id ? ' is-active' : ''}" type="button" data-filter="${escapeHtml(filter.id)}" aria-pressed="${state.commentFilter === filter.id}">${escapeHtml(filter.label)}<span>${filter.count}</span></button>`).join('');
     }
 
     function loadVoteState() {
@@ -4068,26 +4248,31 @@
     }
 
     function renderComments() {
+      if (!splitComments.length) {
+        threadList.innerHTML = '<div class="empty-panel">No public official review comments are available for this paper yet.</div>';
+        syncLinkedReviewer();
+        return;
+      }
       threadList.innerHTML = splitComments.map(comment => {
         const reviewer = reviewers.find(item => item.id === comment.id);
         const counts = voteCounts(comment);
         const hidden = state.commentFilter !== 'ALL' && state.commentFilter !== comment.id;
         const tone = toneMap[comment.tone] || toneMap.gold;
         return `
-          <article class="comment-row${hidden ? ' is-hidden' : ''}" data-comment-id="${comment.id}" data-chunk="${comment.chunk}" style="--reviewer-color:${tone.color};--reviewer-soft:${tone.soft};">
+          <article class="comment-row${hidden ? ' is-hidden' : ''}" data-comment-id="${escapeHtml(comment.id)}" data-chunk="${escapeHtml(comment.chunk)}" style="--reviewer-color:${tone.color};--reviewer-soft:${tone.soft};">
             <div class="pixel-avatar" aria-hidden="true">${avatarSvg[reviewer?.avatar || comment.id] || avatarSvg.R1}</div>
             <div class="comment-main">
               <div class="comment-meta">
-                <span class="comment-id">${reviewer?.name || comment.id}</span>
-                <span class="chunk-id">${comment.chunk}</span>
-                <span class="status-badge ${toneClass(comment.tone)}">${reviewer?.label || 'Review comment'}</span>
+                <span class="comment-id">${escapeHtml(reviewer?.name || comment.id)}</span>
+                <span class="chunk-id">${escapeHtml(comment.chunk)}</span>
+                <span class="status-badge ${toneClass(comment.tone)}">${escapeHtml(reviewer?.label || 'Review comment')}</span>
               </div>
-              <p class="viewpoint">${comment.view}</p>
-              <div class="ai-comment"><span class="ai-mark">SO</span><span>${comment.ai}</span></div>
+              <p class="viewpoint">${escapeHtml(comment.view)}</p>
+              <div class="ai-comment"><span class="ai-mark">SO</span><span>${escapeHtml(comment.ai)}</span></div>
             </div>
-            <div class="vote-group" aria-label="Vote on ${comment.chunk}">
-              <button class="vote-button${counts.selected === 'up' ? ' is-up' : ''}" type="button" data-vote="up" data-chunk="${comment.chunk}" aria-pressed="${counts.selected === 'up'}" aria-label="Like"><span class="vote-icon">${THUMB_UP}</span><span>${counts.up}</span></button>
-              <button class="vote-button${counts.selected === 'down' ? ' is-down' : ''}" type="button" data-vote="down" data-chunk="${comment.chunk}" aria-pressed="${counts.selected === 'down'}" aria-label="Dislike"><span class="vote-icon">${THUMB_DOWN}</span><span>${counts.down}</span></button>
+            <div class="vote-group" aria-label="Vote on ${escapeHtml(comment.chunk)}">
+              <button class="vote-button${counts.selected === 'up' ? ' is-up' : ''}" type="button" data-vote="up" data-chunk="${escapeHtml(comment.chunk)}" aria-pressed="${counts.selected === 'up'}" aria-label="Like"><span class="vote-icon">${THUMB_UP}</span><span>${counts.up}</span></button>
+              <button class="vote-button${counts.selected === 'down' ? ' is-down' : ''}" type="button" data-vote="down" data-chunk="${escapeHtml(comment.chunk)}" aria-pressed="${counts.selected === 'down'}" aria-label="Dislike"><span class="vote-icon">${THUMB_DOWN}</span><span>${counts.down}</span></button>
             </div>
           </article>`;
       }).join('');
@@ -4095,6 +4280,7 @@
     }
 
     function renderAll() {
+      renderPaperInfo();
       renderOverallScore();
       renderReviewerCards();
       renderScoreDetail();
@@ -4313,7 +4499,7 @@
         setBusy(true, source);
         loadScorecardFromApi(item.paper_id, source, item).catch(error => {
           console.warn('Paper result load failed.', error);
-          showToast('Could not load this paper');
+          showToast('Could not load this paper scorecard');
         }).finally(() => setBusy(false, source));
         return;
       }
