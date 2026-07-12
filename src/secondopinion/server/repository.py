@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import copy
+import datetime as dt
 import hashlib
 import hmac
 import math
@@ -541,7 +542,7 @@ def upsert_vote(session: Session, *, paper_id: str, reviewer_key: str, session_i
 
 
 HANDLE_RE = re.compile(r"^[a-zA-Z0-9_-]{3,32}$")
-PASSWORD_ITERATIONS = 120_000
+PASSWORD_ITERATIONS = 600_000
 
 
 def normalize_email(email: str) -> str:
@@ -628,6 +629,12 @@ def authenticate_user(session: Session, *, identity: str, password: str) -> User
     ).scalar_one_or_none()
     if user is None or not verify_password(password, user.password_hash):
         return None
+    try:
+        stored_iterations = int(user.password_hash.split("$", 3)[1])
+    except (IndexError, ValueError):
+        stored_iterations = 0
+    if stored_iterations < PASSWORD_ITERATIONS:
+        user.password_hash = make_password_hash(password)
     return user
 
 
@@ -649,8 +656,34 @@ def user_from_token(session: Session, token: str) -> UserAccount | None:
     row = session.get(UserSession, token_digest(token))
     if row is None:
         return None
-    row.last_seen_at = utcnow()
+    now = utcnow()
+    last_seen = row.last_seen_at
+    if last_seen and last_seen.tzinfo is None:
+        last_seen = last_seen.replace(tzinfo=dt.timezone.utc)
+    if last_seen and last_seen < now - dt.timedelta(days=30):
+        session.delete(row)
+        session.flush()
+        return None
+    row.last_seen_at = now
     return session.get(UserAccount, row.user_id)
+
+
+def delete_user_account(session: Session, *, user_id: str) -> None:
+    user = session.get(UserAccount, user_id)
+    if user is None:
+        return
+    session_ids = list(
+        session.execute(select(UserSession.session_id).where(UserSession.user_id == user_id)).scalars()
+    )
+    session.execute(delete(ReviewerComment).where(ReviewerComment.user_id == user_id))
+    if session_ids:
+        session.execute(delete(Vote).where(Vote.session_id.in_(session_ids)))
+        session.execute(delete(ReviewerComment).where(ReviewerComment.session_id.in_(session_ids)))
+    session.execute(delete(SavedPaper).where(SavedPaper.user_id == user_id))
+    session.execute(delete(VenueSubscription).where(VenueSubscription.user_id == user_id))
+    session.execute(delete(UserSession).where(UserSession.user_id == user_id))
+    session.delete(user)
+    session.flush()
 
 
 def revoke_user_session(session: Session, token: str) -> None:
@@ -1001,6 +1034,7 @@ def build_leaderboards(
                 "nickname": nickname,
                 "avatar_key": avatar_key,
                 "score": score_value,
+                "attention": metrics["attention"],
                 "outrage": metrics["outrage"],
                 "toxicity": metrics["toxicity"],
                 "helpfulness": metrics["helpfulness"],
@@ -1010,14 +1044,14 @@ def build_leaderboards(
                 "down": extra["down"],
                 "comment_count": comment_counts[paper_key].get(reviewer_key_text, 0),
             }
-            if _leaderboard_display_eligible(item):
+            if _leaderboard_display_eligible(item, metric=metric):
                 items.append(item)
         if balance:
             return _venue_balanced(items, limit=limit)
         return items[:limit]
 
     return {
-        "overall": candidates("outrage"),
+        "overall": candidates("attention"),
         "toxic": candidates("toxicity"),
         "helpful": candidates("helpfulness"),
         "red": candidates("score"),
@@ -1064,6 +1098,8 @@ def _leaderboard_candidate_rows(
             return float(metrics["helpfulness"])
         if metric == "outrage":
             return float(metrics["outrage"])
+        if metric == "attention":
+            return float(metrics["attention"])
         return float(row[4] or 0)
 
     sorted_rows = sorted(rows, key=lambda row: (metric_value(row), str(row[1] or "")), reverse=not ascending)
@@ -1092,14 +1128,41 @@ _LEADERBOARD_NOISE_PHRASES = (
     "we will definitely",
     "we will update",
     "final state of the manuscript",
+    "updating updating",
+    "my concern has been addressed",
+    "we sincerely thank",
+    "thank you for the comments",
+    "thank you for your comments",
+)
+
+_HELPFULNESS_CONTRADICTION_PHRASES = (
+    "not informative",
+    "non-informative",
+    "insufficient review",
+    "no substantive",
+    "not a substantive",
+    "no actionable",
+    "unhelpful",
+    "low usefulness",
+    "mostly summary",
+    "uninformative summary",
+    "too summary-like",
+    "too vague",
 )
 
 
-def _leaderboard_display_eligible(item: dict[str, Any]) -> bool:
+def _leaderboard_display_eligible(item: dict[str, Any], *, metric: str = "") -> bool:
     text = " ".join(str(item.get(key) or "") for key in ("quote", "verdict")).lower()
     if not text.strip():
         return False
-    return not any(phrase in text for phrase in _LEADERBOARD_NOISE_PHRASES)
+    if any(phrase in text for phrase in _LEADERBOARD_NOISE_PHRASES):
+        return False
+    if metric == "helpfulness":
+        if int(item.get("helpfulness") or 0) < 55 or int(item.get("toxicity") or 0) > 35:
+            return False
+        if any(phrase in text for phrase in _HELPFULNESS_CONTRADICTION_PHRASES):
+            return False
+    return True
 
 
 def _vote_counts_for_leaderboard(
@@ -1155,9 +1218,9 @@ def _reviewer_score_metrics(score: ReviewerScore) -> dict[str, Any]:
 
 def _reviewer_score_metrics_from_values(score_value: Any, dimensions_json: list[dict[str, Any]] | None) -> dict[str, Any]:
     metrics: dict[str, Any] = {
-        "outrage": int(score_value or 0),
+        "outrage": 0,
         "toxicity": 0,
-        "helpfulness": 0,
+        "helpfulness": int(score_value or 0),
         "quote": "",
         "verdict": "",
     }
@@ -1171,8 +1234,11 @@ def _reviewer_score_metrics_from_values(score_value: Any, dimensions_json: list[
             metrics["quote"] = str(item.get("quote") or "")
         if not metrics["verdict"] and item.get("verdict"):
             metrics["verdict"] = str(item.get("verdict") or "")
-    if metrics["helpfulness"] == 0 and metrics["toxicity"] == 0:
-        metrics["helpfulness"] = int(score_value or 0)
+    metrics["attention"] = _clamp_int(
+        0.75 * metrics["outrage"]
+        + 0.15 * (100 - metrics["helpfulness"])
+        + 0.10 * metrics["toxicity"]
+    )
     return metrics
 
 
@@ -1180,7 +1246,7 @@ def _public_dimension_score(reviewer: dict[str, Any], key: str) -> int:
     for item in reviewer.get("dimensions") or []:
         if isinstance(item, dict) and item.get("key") == key:
             return _clamp_int(item.get("score"))
-    return _clamp_int(reviewer.get("score"))
+    return _clamp_int(reviewer.get("score")) if key == "helpfulness" else 0
 
 
 def _clamp_int(value: Any) -> int:

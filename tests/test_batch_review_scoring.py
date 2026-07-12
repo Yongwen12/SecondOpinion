@@ -5,10 +5,13 @@ import pytest
 pytest.importorskip("sqlalchemy")
 
 from secondopinion.batch_review_scoring import (
+    apply_score_consistency_guardrails,
+    batch_dimensions,
     build_scoring_batch,
     load_custom_ids,
     normalized_quality_report,
     normalize_score_payload,
+    review_quality_score,
     split_scoring_batch,
     truncate_clean_text,
 )
@@ -134,6 +137,7 @@ def test_new_leaderboards_read_batch_dimensions(tmp_path):
     assert boards["toxic"][0]["reviewer_key"] == "R1"
     assert boards["helpful"][0]["reviewer_key"] == "R2"
     assert boards["overall"][0]["quote"] == "too vague"
+    assert boards["overall"][0]["attention"] == 79
 
 
 def test_leaderboards_filter_obvious_author_and_admin_noise(tmp_path):
@@ -198,6 +202,35 @@ def test_normalize_score_payload_rescales_zero_to_ten_outputs():
     assert payload["outrage"] == 70
     assert payload["toxicity"] == 20
     assert payload["helpfulness"] == 60
+
+
+def test_non_actionable_and_low_signal_reviews_cannot_rank_as_most_helpful():
+    payload = apply_score_consistency_guardrails(
+        {
+            "outrage": 20,
+            "toxicity": 0,
+            "helpfulness": 100,
+            "quote": "No more comments.",
+            "verdict": "No actionable critique provided",
+            "actionable": False,
+        }
+    )
+
+    assert payload["helpfulness"] == 35
+    assert review_quality_score(payload) < 50
+
+
+def test_review_quality_rewards_helpfulness_and_penalizes_risk():
+    assert review_quality_score({"helpfulness": 90, "outrage": 10, "toxicity": 0}) == 91
+    assert review_quality_score({"helpfulness": 20, "outrage": 90, "toxicity": 80}) == 18
+
+
+def test_public_quality_does_not_overwrite_raw_risk_dimensions():
+    score = {"helpfulness": 90, "outrage": 12, "toxicity": 3, "quote": "Useful", "verdict": "Clear", "evidence": "Specific", "actionable": True}
+
+    dimensions = {item["key"]: item["score"] for item in batch_dimensions(score)}
+
+    assert dimensions == {"outrage": 12, "toxicity": 3, "helpfulness": 90}
 
 
 def test_truncate_clean_text_keeps_word_boundary():

@@ -1,3 +1,5 @@
+import json
+
 from pathlib import Path
 
 
@@ -39,7 +41,8 @@ def test_frontend_has_community_home_entrypoint():
     assert "data-board-tab" in html
     assert "data-board-row" in html
     assert "data-row-rate" in html
-    assert "Rate a reviewer" in html
+    assert "Rate one review" in html
+    assert "A second opinion on peer review" in html
     assert '<option value="TMLR">TMLR</option>' in html
     assert '<option value="COLM">COLM</option>' in html
     assert '<option value="MIDL">MIDL</option>' in html
@@ -71,8 +74,10 @@ def test_frontend_discloses_2025_public_review_scope():
 
     assert "Data coverage and scoring scope" in html
     assert "ICLR, ICML, NeurIPS, TMLR, COLM, and MIDL" in html
-    assert "26,749 papers" in html
-    assert "99,671 scored official reviews" in html
+    assert "26,749" in html
+    assert "2025 papers" in html
+    assert "99,671" in html
+    assert "official reviews scored" in html
     assert "title, abstract, decision, and public official reviews only" in html
     assert "No PDF full text, author rebuttals, or admin comments" in html
 
@@ -80,7 +85,8 @@ def test_frontend_discloses_2025_public_review_scope():
 def test_frontend_detail_view_handles_empty_and_untrusted_review_content():
     html = Path("frontend/index.html").read_text(encoding="utf-8")
 
-    assert "Themes will appear here when enough distinct review terms are available." in html
+    assert 'id="themesSection"' in html
+    assert "themesSection.hidden = !visibleWords.length" in html
     assert "No public official review comments are available for this paper yet." in html
     assert "escapeHtml(metric.quote)" in html
     assert "escapeHtml(comment.view)" in html
@@ -99,6 +105,7 @@ def test_frontend_error_states_use_current_coverage_language():
     assert "Search covers 2025 public official reviews from ICLR, ICML, NeurIPS, TMLR, COLM, and MIDL." in html
     assert "Static leaderboards are still available; try again in a moment." in html
     assert "Paper is outside current 2025 public-review coverage" in html
+    assert "const queued = await requestScoringJob" not in html
     assert "Could not load this paper scorecard" in html
     assert "Try an OpenReview id or a shorter title." not in html
     assert "Paper is not indexed yet" not in html
@@ -133,6 +140,11 @@ def test_frontend_static_home_data_is_real_2025_batch():
     assert '"paper_id"' in payload
     assert '"reviewer_key"' in payload
     assert "Thank you for your helpful comments" not in payload
+    assert "Updating Updating Updating Updating" not in payload
+    assert '"verdict":"Insufficient review"' not in payload
+    data = json.loads(payload)
+    attention_scores = [row["attention"] for row in data["leaderboards"]["overall"][:5]]
+    assert len(set(attention_scores)) > 1
     assert "Author?Reviewer discussion phase" not in payload
     assert "We are delighted that our responses" not in payload
 
@@ -168,3 +180,45 @@ def test_frontend_has_optional_account_saved_paper_and_comment_controls():
     assert "mutateCommentFor(context.row, commentId, 'PATCH'" in html
     assert "mutateCommentFor(context.row, commentId, 'DELETE'" in html
     assert "/comments/${encodeURIComponent(commentId)}" in html
+    assert "data-account-paper" in html
+    assert "setPaperDeepLink" in html
+    assert "window.addEventListener('popstate'" in html
+    assert "publicReviewerQuality" in html
+    assert "|| fb.humanCount" not in html
+    assert "data-auth-delete" in html
+    assert "/api/auth/account" in html
+
+def test_frontend_exposes_source_attribution_disputes_and_trust_pages():
+    html = Path("frontend/index.html").read_text(encoding="utf-8")
+
+    assert "AI-generated and may be inaccurate" in html
+    assert "not the reviewer as a person" in html
+    assert "Source via OpenReview, CC BY 4.0" in html
+    assert "Excerpt via OpenReview, CC BY 4.0" in html
+    assert "openReviewUrl(reviewer.reviewId)" in html
+    assert "score-dispute.yml" in html
+    assert "./methodology.html" in html
+    assert "./privacy.html" in html
+    assert "./terms.html" in html
+
+    methodology = Path("frontend/methodology.html").read_text(encoding="utf-8")
+    privacy = Path("frontend/privacy.html").read_text(encoding="utf-8")
+    terms = Path("frontend/terms.html").read_text(encoding="utf-8")
+    assert "gpt-5.4-nano" in methodology
+    assert "not yet a representative human gold-standard" in methodology
+    assert "We do not attempt to identify anonymous reviewers" in privacy
+    assert "Scores evaluate review text, not reviewers as people" in terms
+
+
+def test_static_home_does_not_publish_legacy_score_semantics_or_unsafe_rows():
+    data = json.loads(Path("frontend/data/home_2025.json").read_text(encoding="utf-8"))
+    rendered = json.dumps(data)
+
+    assert "Outrage Index" not in rendered
+    assert "Weak Reject" not in rendered
+    assert "red" not in data["leaderboards"]
+    assert "black" not in data["leaderboards"]
+    assert len(data["leaderboards"]["overall"]) >= 8
+    assert "first author suffered" not in rendered.lower()
+    assert "kill a granny" not in rendered.lower()
+    assert "will not be able to perform my reviews" not in rendered.lower()

@@ -120,6 +120,7 @@ def build_internal_scoring_payload(
         "schema_version": SCORER_SCHEMA_VERSION,
         "paper": {
             "paper_id": paper.paper_id,
+            "openreview_forum_id": paper.openreview_forum_id,
             "title": paper.title,
             "venue": paper.venue,
             "year": paper.year,

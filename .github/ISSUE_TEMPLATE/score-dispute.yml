@@ -1,0 +1,50 @@
+name: Report a score
+description: Request review of an AI-generated review score or excerpt
+title: "Score report: "
+labels:
+  - score-dispute
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Scores evaluate public review text, not reviewers as people. Please do not include private information or speculate about reviewer identity.
+  - type: input
+    id: source
+    attributes:
+      label: OpenReview source
+      description: Link to the paper or exact public review.
+      placeholder: https://openreview.net/forum?id=...
+    validations:
+      required: true
+  - type: input
+    id: reviewer
+    attributes:
+      label: Reviewer label
+      description: The anonymous label shown on Judge My Reviewers, such as Reviewer 2.
+  - type: dropdown
+    id: issue
+    attributes:
+      label: What needs review?
+      options:
+        - Incorrect score
+        - Missing context
+        - Wrong excerpt or attribution
+        - Privacy or safety concern
+        - Source was changed or removed
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: explanation
+    attributes:
+      label: Explanation
+      description: Tell us what is wrong and what a better handling would be.
+    validations:
+      required: true
+  - type: checkboxes
+    id: public
+    attributes:
+      label: Public information
+      options:
+        - label: I have not included private information or attempted to identify an anonymous reviewer.
+          required: true

@@ -158,6 +158,8 @@ def test_api_search_scorecard_vote_and_job_flow(tmp_path):
     rendered = json.dumps(scorecard.json())
     assert "hybrid_scores" not in rendered
     assert scorecard.json()["paper"]["paper_id"] == "paper1"
+    assert scorecard.json()["paper"]["openreview_forum_id"] == "paper1"
+    assert scorecard.json()["reviewers"][0]["review_id"] == "review1"
 
     vote = client.post("/api/papers/paper1/reviewers/R1/votes", json={"vote": "up"})
     assert vote.status_code == 200
@@ -386,3 +388,42 @@ def test_anonymous_comment_edit_is_bound_to_stable_session_header(tmp_path):
     )
     assert edited.status_code == 200
     assert edited.json()["comment"]["body"] == "Edited anonymously from the same browser."
+
+def test_account_can_be_deleted_and_auth_is_rate_limited(tmp_path):
+    factory = session_factory_for(tmp_path)
+    seed(factory, tmp_path)
+    settings = ServerSettings(
+        database_url=f"sqlite:///{tmp_path / 'api.db'}",
+        artifact_root=tmp_path / "artifacts",
+        scoring_memory_path=tmp_path / "memory.jsonl",
+    )
+    client = TestClient(create_app(settings=settings, session_factory=factory))
+
+    registered = register_user(client, "deleteme", "delete@example.com")
+    headers = auth_headers(registered["token"], "session-deleteme")
+    assert client.post("/api/me/saved-papers/paper1", headers=headers).status_code == 200
+    assert client.post(
+        "/api/papers/paper1/reviewers/R1/comments",
+        headers=headers,
+        json={"body": "Delete this with my account."},
+    ).status_code == 200
+
+    deleted = client.delete("/api/auth/account", headers=headers)
+    assert deleted.status_code == 200
+    assert deleted.json() == {"ok": True}
+    assert client.get("/api/me", headers=headers).json()["user"] is None
+    assert client.get("/api/papers/paper1/reviewers/R1/comments").json()["items"] == []
+
+    limited_client = TestClient(create_app(settings=settings, session_factory=factory))
+    for _ in range(10):
+        response = limited_client.post(
+            "/api/auth/login",
+            json={"identity": "missing@example.com", "password": "incorrect"},
+        )
+        assert response.status_code == 401
+    limited = limited_client.post(
+        "/api/auth/login",
+        json={"identity": "missing@example.com", "password": "incorrect"},
+    )
+    assert limited.status_code == 429
+    assert limited.json()["detail"]["code"] == "auth_rate_limited"

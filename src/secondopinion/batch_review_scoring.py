@@ -355,7 +355,7 @@ def scoring_messages(paper: dict[str, Any], review: dict[str, Any]) -> list[dict
         {
             "role": "system",
             "content": (
-                "Score one public peer-review comment for Weak Reject / SecondOpinion. "
+                "Score one public peer-review comment for SecondOpinion. "
                 "Score the review comment, not the paper and not the person. "
                 "Use a 0-100 percentage scale, not a 0-10 scale. "
                 "50 means neutral or mixed. 70+ means clearly high. 90+ means extreme. "
@@ -768,7 +768,7 @@ def normalize_score_payload(payload: dict[str, Any]) -> dict[str, Any]:
     }
     if raw_scores and 0 < max(raw_scores.values()) <= 10:
         raw_scores = {key: clamp_int(value * 10) for key, value in raw_scores.items()}
-    return {
+    normalized = {
         "outrage": raw_scores["outrage"],
         "toxicity": raw_scores["toxicity"],
         "helpfulness": raw_scores["helpfulness"],
@@ -777,6 +777,48 @@ def normalize_score_payload(payload: dict[str, Any]) -> dict[str, Any]:
         "evidence": truncate_clean_text(payload.get("evidence"), 180),
         "actionable": bool(payload.get("actionable")),
     }
+    return apply_score_consistency_guardrails(normalized)
+
+
+LOW_SIGNAL_VERDICT_PHRASES = (
+    "not informative",
+    "non-informative",
+    "insufficient review",
+    "no substantive",
+    "not a substantive",
+    "no actionable",
+    "unhelpful",
+    "low usefulness",
+    "mostly summary",
+    "uninformative summary",
+    "too summary-like",
+)
+
+
+def apply_score_consistency_guardrails(score: dict[str, Any]) -> dict[str, Any]:
+    """Keep the public dimensions semantically consistent with the verdict."""
+
+    result = dict(score)
+    verdict = clean_ws(str(result.get("verdict") or "")).lower()
+    quote = clean_ws(str(result.get("quote") or "")).lower()
+    if not result.get("actionable"):
+        result["helpfulness"] = min(int(result.get("helpfulness") or 0), 45)
+    if any(phrase in verdict for phrase in LOW_SIGNAL_VERDICT_PHRASES):
+        result["helpfulness"] = min(int(result.get("helpfulness") or 0), 35)
+    if quote and len(quote.split()) <= 3:
+        result["helpfulness"] = min(int(result.get("helpfulness") or 0), 45)
+    return result
+
+
+def review_quality_score(score: dict[str, Any]) -> int:
+    """Return a user-facing usefulness score; risk dimensions remain separate."""
+
+    value = round(
+        0.75 * int(score.get("helpfulness") or 0)
+        + 0.15 * (100 - int(score.get("outrage") or 0))
+        + 0.10 * (100 - int(score.get("toxicity") or 0))
+    )
+    return clamp_int(value)
 
 
 def truncate_clean_text(value: Any, max_chars: int) -> str:
@@ -877,16 +919,18 @@ def build_public_scorecard_from_review_scores(
         reviewer_key = f"R{int(task.get('reviewer_index') or index)}"
         nickname = nickname_for_batch_score(score, index)
         text = score["quote"] or (review_snippet(review) if review else "")
-        verdict = score["verdict"] or "Scored by the Weak Reject batch scorer."
+        verdict = score["verdict"] or "Scored by the offline review-quality model."
+        quality = review_quality_score(score)
         dimensions = batch_dimensions(score)
         reviewers.append(
             {
                 "reviewer_key": reviewer_key,
+                "review_id": review.review_id if review else "",
                 "nickname": nickname,
                 "avatar_key": f"r{index}",
-                "score": score["outrage"],
-                "tone": "red" if score["outrage"] >= 70 else "gold" if score["helpfulness"] >= 65 else "black",
-                "label": "Outrage" if score["outrage"] >= 70 else "Helpful" if score["helpfulness"] >= 65 else "Mixed",
+                "score": quality,
+                "tone": "green" if quality >= 70 else "gold" if quality >= 40 else "red",
+                "label": "Strong review" if quality >= 85 else "Solid review" if quality >= 70 else "Mixed review" if quality >= 40 else "Weak review",
                 "summary": verdict,
                 "rating": review.rating_normalized if review else None,
                 "confidence": review.confidence_normalized if review else None,
@@ -898,6 +942,7 @@ def build_public_scorecard_from_review_scores(
         comments.append(
             {
                 "reviewer_key": reviewer_key,
+                "review_id": review.review_id if review else "",
                 "nickname": nickname,
                 "chunk_id": f"C{len(comments) + 1}",
                 "text": text,
@@ -913,6 +958,7 @@ def build_public_scorecard_from_review_scores(
         "scoring_schema_version": "weak-reject-review-batch-v0.1",
         "paper": {
             "paper_id": paper.paper_id,
+            "openreview_forum_id": paper.openreview_forum_id,
             "title": paper.title,
             "conference": f"{paper.venue} {paper.year}",
             "venue": paper.venue,
@@ -921,11 +967,11 @@ def build_public_scorecard_from_review_scores(
         },
         "summary": {
             "overall_score": round(mean(item["score"] for item in reviewers)) if reviewers else 0,
-            "signal_label": "Outrage Index",
+            "signal_label": "Review usefulness",
             "reviewer_count": len(reviewers),
             "comment_count": len(comments),
             "topic_count": len({topic for comment in comments for topic in comment.get("topics", [])}),
-            "situation": "Reviewer comments scored by the offline Weak Reject batch scorer.",
+            "situation": "Public official review text scored by the offline review-quality model.",
         },
         "reviewers": reviewers,
         "comments": comments,

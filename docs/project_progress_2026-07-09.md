@@ -108,3 +108,30 @@ V1 ????????????
 3. ????? dashboard?????? venue ? papers/reviews ??????????
 4. ? batch/raw ?????????? release artifact???? git main?
 5. ???? venue ???? probe ???????? official reviews ?????? venue?
+## UI and product refactor (2026-07-09)
+
+Completed locally on `main` (deployment pending):
+
+- Reframed the homepage around paper search, with compact corpus coverage and three explicit boards: Needs Attention, Tone Problems, and Most Helpful.
+- Replaced pile-on language with neutral community assessment actions while keeping the black/white/red/yellow editorial style and restrained humor.
+- Added score consistency guardrails: non-actionable or contradictory reviews cannot rank as highly helpful, and legacy quality scores no longer become outrage scores by fallback.
+- Sanitized the 2025 static homepage snapshot to remove placeholders, author-response noise, and contradictory helpful rows.
+- Recomputed public detail scores as review usefulness while retaining Friction and Tone risk as separate dimensions.
+- Fixed the mobile detail layout, title wrapping, tabs, reviewer cards, and empty Themes behavior.
+- Added paper/reviewer deep links, browser history restoration, and a usable saved-papers/followed-venues account view.
+- Removed automatic public creation of scoring jobs when a scorecard is missing; paid scoring remains controlled by the batch pipeline.
+- Verification: `332 passed`; Python compile, frontend JavaScript parse, JSON parse, desktop/mobile browser review, and horizontal-overflow checks passed.
+## Final trust and safety pass (2026-07-12)
+
+Completed locally on main (deployment pending):
+
+- Added public Methodology & Limitations, Privacy, and Terms pages, linked from both home and detail views.
+- Added an explicit AI fallibility disclaimer: scores assess public review text, not reviewer identity or character.
+- Added OpenReview source links and CC BY 4.0 attribution at paper, reviewer, and excerpt level. Existing scorecards are enriched with forum and review IDs at API response time, so the corpus does not need to be rescored.
+- Added a structured GitHub score-dispute form and contextual report links.
+- Removed legacy Outrage Index fields and legacy leaderboard aliases from the public static snapshot; removed remaining author-response, absence, unsafe, and post-rebuttal noise.
+- Removed the final demo social-count fallback from real leaderboard rows. A real row with zero votes now says AI score - add your take.
+- Added login/register rate limiting (10 attempts per 15 minutes per effective client IP), 30-day idle session expiry, PBKDF2-SHA256 iteration upgrade from 120,000 to 600,000, and automatic hash upgrade after a successful legacy login.
+- Added self-service account deletion, including saved papers, subscriptions, sessions, account-bound votes, and comments.
+- Verification: 332 passed; Python compile, frontend JavaScript/JSON parse, desktop/mobile browser review, methodology page review, and horizontal-overflow checks passed.
+- Still required before a public promotion campaign: representative human calibration, scorer stability/bias audit, production backup restore drill, and production deployment verification.

@@ -4,6 +4,7 @@ import datetime as dt
 import json
 import os
 import uuid
+from collections import defaultdict, deque
 from pathlib import Path
 from typing import Any
 
@@ -42,6 +43,7 @@ from .repository import (
     unsubscribe_user_from_venue,
     update_reviewer_comment,
     delete_reviewer_comment,
+    delete_user_account,
     upsert_vote,
     user_from_token,
     user_to_public_dict,
@@ -75,6 +77,20 @@ def create_app(
     )
     app.state.settings = settings
     app.state.session_factory = session_factory
+    auth_attempts: dict[str, deque[dt.datetime]] = defaultdict(deque)
+
+    def enforce_auth_rate_limit(request: Request) -> None:
+        peer = request.client.host if request.client else "unknown"
+        forwarded = (request.headers.get("x-real-ip") or "").strip()
+        client_ip = forwarded[:80] if forwarded and peer in {"127.0.0.1", "::1", "testclient"} else peer[:80]
+        now = utcnow()
+        cutoff = now - dt.timedelta(minutes=15)
+        bucket = auth_attempts[client_ip]
+        while bucket and bucket[0] < cutoff:
+            bucket.popleft()
+        if len(bucket) >= 10:
+            raise HTTPException(status_code=429, detail={"code": "auth_rate_limited"})
+        bucket.append(now)
 
     def get_session() -> Session:
         session = session_factory()
@@ -98,6 +114,7 @@ def create_app(
 
     @app.post("/api/auth/register")
     async def register(request: Request, session: Session = Depends(get_session)) -> JSONResponse:
+        enforce_auth_rate_limit(request)
         body = await parse_json_body(request)
         try:
             user = create_user_account(
@@ -113,6 +130,7 @@ def create_app(
 
     @app.post("/api/auth/login")
     async def login(request: Request, session: Session = Depends(get_session)) -> JSONResponse:
+        enforce_auth_rate_limit(request)
         body = await parse_json_body(request)
         user = authenticate_user(
             session,
@@ -127,6 +145,14 @@ def create_app(
     @app.post("/api/auth/logout")
     def logout(request: Request, session: Session = Depends(get_session)) -> JSONResponse:
         revoke_user_session(session, auth_token_from_request(request))
+        response = JSONResponse({"ok": True})
+        response.delete_cookie(USER_TOKEN_COOKIE)
+        return response
+
+    @app.delete("/api/auth/account")
+    def delete_account(request: Request, session: Session = Depends(get_session)) -> JSONResponse:
+        user = require_user(session, request)
+        delete_user_account(session, user_id=user.user_id)
         response = JSONResponse({"ok": True})
         response.delete_cookie(USER_TOKEN_COOKIE)
         return response
@@ -222,7 +248,8 @@ def create_app(
 
     @app.get("/api/papers/{paper_id}/scorecard")
     def paper_scorecard(paper_id: str, request: Request, session: Session = Depends(get_session)) -> dict[str, Any]:
-        if session.get(Paper, paper_id) is None:
+        paper = session.get(Paper, paper_id)
+        if paper is None:
             raise HTTPException(status_code=404, detail={"code": "paper_not_found"})
         scorecard = latest_scorecard(session, paper_id)
         if scorecard is None:
@@ -235,7 +262,21 @@ def create_app(
             viewer_session_id=session_id_from_request(request),
             viewer_user_id=user.user_id if user else None,
         )
-        payload.setdefault("paper", {})["paper_id"] = paper_id
+        paper_payload = payload.setdefault("paper", {})
+        paper_payload["paper_id"] = paper_id
+        paper_payload["openreview_forum_id"] = paper.openreview_forum_id
+
+        review_ids_by_key: dict[str, str] = {}
+        source_reviews = sorted(paper.reviews, key=lambda item: item.reviewer_index)
+        for index, reviewer in enumerate(payload.get("reviewers") or []):
+            if not isinstance(reviewer, dict) or index >= len(source_reviews):
+                continue
+            review_id = source_reviews[index].review_id
+            reviewer.setdefault("review_id", review_id)
+            review_ids_by_key[str(reviewer.get("reviewer_key") or f"R{index + 1}")] = review_id
+        for comment in payload.get("comments") or []:
+            if isinstance(comment, dict):
+                comment.setdefault("review_id", review_ids_by_key.get(str(comment.get("reviewer_key") or ""), ""))
         return payload
 
     @app.post("/api/papers/{paper_id}/scoring-jobs")

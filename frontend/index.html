@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -2817,53 +2817,363 @@
       .outrage-rowrate { grid-column: 1 / -1; margin-top: 0; text-align: left; }
       .outrage-q { overflow-wrap: anywhere; }
     }
+
+    /* 2026 product pass: compact editorial shell, clear score semantics, real mobile layout */
+    .is-idle .landing { background: #fff; }
+    .outrage-home { max-width: 1120px; padding: 0 28px 72px; }
+    .outrage-header {
+      min-height: 68px;
+      padding: 0;
+      border-bottom: 1px solid #ececec;
+    }
+    .outrage-brand {
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      padding: 0;
+    }
+    .outrage-header-note {
+      margin-right: auto;
+      color: #9b9b9b;
+      font-size: 12px;
+      font-weight: 650;
+    }
+    .outrage-actions { gap: 16px; }
+    .home-intro {
+      position: relative;
+      max-width: 860px;
+      padding: 64px 0 34px;
+    }
+    .home-kicker {
+      margin: 0 0 12px;
+      color: #9b9b9b;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .17em;
+      text-transform: uppercase;
+    }
+    .home-intro h1 {
+      max-width: 760px;
+      margin: 0;
+      color: #111;
+      font-size: 54px;
+      font-weight: 900;
+      line-height: .98;
+      letter-spacing: 0;
+    }
+    .home-intro h1 span { color: #e10600; }
+    .home-intro-copy {
+      max-width: 680px;
+      margin: 18px 0 26px;
+      color: #555;
+      font-size: 17px;
+      line-height: 1.55;
+    }
+    .outrage-search-form {
+      display: grid;
+      align-items: stretch;
+      grid-template-columns: 138px minmax(0, 1fr) auto;
+      gap: 0;
+      width: min(820px, 100%);
+      min-height: 56px;
+      border: 2px solid #111;
+      background: #fff;
+    }
+    .outrage-search-form:focus-within { box-shadow: 4px 4px 0 #ffe600; }
+    .outrage-search-conf {
+      padding: 0 14px;
+      border-right: 1px solid #d8d8d8;
+      font-size: 13px;
+    }
+    .outrage-search-input { padding: 0 16px; font-size: 15px; }
+    .outrage-search-clear {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      border: 0;
+      background: #fff;
+      color: #777;
+      cursor: pointer;
+      font-size: 18px;
+    }
+    .outrage-search-clear[hidden] { display: none; }
+    .outrage-search-submit {
+      min-width: 126px;
+      border: 0;
+      background: #111;
+      color: #fff;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 850;
+    }
+    .outrage-search-submit:hover { background: #e10600; }
+    .outrage-search-submit:disabled { cursor: progress; opacity: .58; }
+    .home-intro-actions {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .home-intro-actions small { color: #888; font-size: 12px; }
+    .home-intro-actions .outrage-submit {
+      padding: 0;
+      border-bottom: 1px solid #111;
+      background: transparent;
+      color: #111;
+    }
+    .home-intro-actions .outrage-submit:hover { color: #e10600; background: transparent; }
+    .coverage-strip {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0;
+      margin: 0 0 34px;
+      padding: 0;
+      border: 1px solid #ececec;
+    }
+    .coverage-stat {
+      min-height: 74px;
+      padding: 14px 16px;
+      border-right: 1px solid #ececec;
+    }
+    .coverage-stat:last-child { border-right: 0; }
+    .coverage-stat b {
+      display: block;
+      font-size: 20px;
+      font-variant-numeric: tabular-nums;
+    }
+    .coverage-stat span { margin-top: 5px; letter-spacing: .1em; }
+    .coverage-footnote { margin: -22px 0 34px; color: #888; font-size: 11px; }
+    .board-intro {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 12px;
+    }
+    .board-intro h2 {
+      margin: 5px 0 0;
+      font-size: 24px;
+      line-height: 1.1;
+    }
+    .board-intro-copy {
+      max-width: 410px;
+      margin: 0;
+      color: #777;
+      font-size: 13px;
+      line-height: 1.45;
+      text-align: right;
+    }
+    .outrage-eyebrow { margin: 0; }
+    .outrage-tabs { margin-top: 0; gap: 8px; }
+    .outrage-tab { min-height: 38px; letter-spacing: .03em; }
+    .outrage-tab-count { display: none; }
+    .outrage-row { grid-template-columns: 64px minmax(0, 1fr) 132px; padding: 28px 0; }
+    .outrage-row:hover { background: #fffdf0; }
+    .outrage-q { max-width: 760px; font-size: 20px; }
+    .outrage-why { color: #555; font-weight: 650; }
+    .outrage-meta { margin-top: 9px; }
+    .outrage-scorebox { align-self: center; }
+    .outrage-num { font-size: 42px; }
+    .outrage-unit { color: #777; }
+    .outrage-rowrate { opacity: 1; color: #555; }
+    .outrage-cta { margin-top: 34px; }
+    .outrage-fine { max-width: 780px; }
+    .rate-account-list {
+      display: grid;
+      gap: 0;
+      margin: 14px 0 0;
+      border-top: 1px solid #ececec;
+    }
+    .rate-account-list button {
+      display: grid;
+      gap: 3px;
+      width: 100%;
+      padding: 12px 0;
+      border: 0;
+      border-bottom: 1px solid #ececec;
+      background: #fff;
+      color: #111;
+      cursor: pointer;
+      text-align: left;
+    }
+    .rate-account-list button:hover { background: #fffbe0; }
+    .rate-account-list span { color: #888; font-size: 12px; }
+    .venue-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+    .venue-tags span { padding: 5px 8px; border: 1px solid #ddd; font-size: 12px; font-weight: 750; }
+    .app-view .score-value span { letter-spacing: .08em; }
+    .app-view .score-value strong { font-size: 76px; }
+    .surface[hidden] { display: none; }
+    body:has(.rate-modal:not([hidden])) { overflow: hidden; }
+    .trust-note {
+      margin: 18px 0 0;
+      padding: 12px 0;
+      border-top: 1px solid #dedede;
+      border-bottom: 1px solid #dedede;
+      color: #555;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    .trust-note strong { color: #111; }
+    .source-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
+    .source-link {
+      color: #111;
+      font-size: 11px;
+      font-weight: 800;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .site-footer {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 28px 0 36px;
+      border-top: 2px solid #111;
+      color: #666;
+      font-size: 11px;
+      line-height: 1.55;
+    }
+    .site-footer p { margin: 0; max-width: 620px; }
+    .site-footer nav { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px 16px; }
+    .site-footer a { color: #111; font-weight: 800; text-decoration: none; }
+    .site-footer a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+    @media (max-width: 768px) {
+      .outrage-home { padding: 0 14px 48px; }
+      .outrage-header { min-height: 58px; flex-wrap: nowrap; gap: 10px; }
+      .outrage-header-note { display: none; }
+      .home-intro { padding: 42px 0 26px; }
+      .home-intro h1 { font-size: 39px; line-height: 1.02; }
+      .home-intro-copy { margin: 14px 0 20px; font-size: 15px; }
+      .outrage-search-form {
+        grid-template-columns: 106px minmax(0, 1fr) 42px;
+        min-height: 52px;
+      }
+      .outrage-search-conf { padding: 0 8px; }
+      .outrage-search-input { padding: 0 10px; }
+      .outrage-search-submit { grid-column: 1 / -1; min-height: 44px; }
+      .coverage-strip { grid-template-columns: 1fr 1fr; }
+      .coverage-stat { min-height: 68px; }
+      .coverage-stat:nth-child(2) { border-right: 0; }
+      .coverage-stat:last-child { grid-column: 1 / -1; border-top: 1px solid #ececec; }
+      .board-intro { display: grid; gap: 8px; }
+      .board-intro-copy { text-align: left; }
+      .outrage-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; overflow: visible; }
+      .outrage-tab { min-height: 44px; padding: 6px 4px; white-space: normal; font-size: 10px; line-height: 1.15; }
+      .outrage-row {
+        grid-template-columns: 34px minmax(0, 1fr);
+        gap: 8px;
+        padding: 22px 0;
+      }
+      .outrage-scorebox {
+        grid-column: 2;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        align-items: baseline;
+        gap: 0 9px;
+        justify-items: start;
+        margin-top: 8px;
+      }
+      .outrage-num { font-size: 28px; }
+      .outrage-rowrate { grid-column: 1 / -1; margin-top: 4px; }
+      .outrage-q { font-size: 17px; }
+      .outrage-stamp { display: inline-block; margin: 7px 0 0; }
+      .outrage-meta { white-space: normal; }
+      .app-view .score-section {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 20px;
+        padding: 18px;
+      }
+      .app-view .score-overview {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-width: 0;
+      }
+      .app-view .score-value strong { font-size: 58px; }
+      .app-view .score-main,
+      .app-view .paper-heading,
+      .app-view .paper-title { min-width: 0; max-width: 100%; }
+      .app-view .paper-title { overflow: visible; text-overflow: clip; white-space: normal; overflow-wrap: anywhere; line-height: 1.15; }
+      .app-view .paper-actions { width: 100%; justify-content: flex-start; }
+      .app-view .reviewer-grid {
+        grid-auto-columns: minmax(230px, 86vw);
+        max-width: 100%;
+      }
+      .app-view .topbar { display: grid; grid-template-columns: 1fr auto; }
+      .app-view .search-shell--compact { grid-column: 1 / -1; grid-row: 2; }
+      .app-view .account-button { grid-column: 2; grid-row: 1; }
+      .site-footer { display: grid; gap: 14px; }
+      .site-footer nav { justify-content: flex-start; }
+    }
   </style>
 </head>
 <body class="is-idle">
   <main class="shell">
-    <section class="landing" aria-label="Reviewer outrage leaderboard">
+    <section class="landing" aria-label="Public review quality explorer">
       <div class="outrage-home" id="outrageHome">
         <header class="outrage-header">
-          <div class="outrage-brand" id="homeBrand"></div>
+          <button class="outrage-brand" id="homeBrand" type="button" data-home-reset>Judge My Reviewers</button>
+          <span class="outrage-header-note">Public reviews, scored for usefulness.</span>
           <div class="outrage-actions">
-            <form class="outrage-search-form" id="landingSearch" novalidate>
-              <label class="sr-only" for="landingConference">Conference</label>
-              <select class="outrage-search-conf" id="landingConference" aria-label="Venue">
-                <option value="all">All 2025</option>
-                <option value="ICLR">ICLR</option>
-                <option value="ICML">ICML</option>
-                <option value="NeurIPS">NeurIPS</option>
-                <option value="TMLR">TMLR</option>
-                <option value="COLM">COLM</option>
-                <option value="MIDL">MIDL</option>
-              </select>
-              <label class="sr-only" for="landingInput">Search paper, venue, or topic</label>
-              <input class="outrage-search-input" id="landingInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Search paper" />
-              <button class="outrage-search-clear" id="landingClear" type="button" aria-label="Clear input" hidden>x</button>
-              <button class="outrage-hidden-submit" id="landingSubmit" type="submit" aria-label="Search"></button>
-            </form>
-            <button class="outrage-submit" id="rateReviewerButton" type="button" data-open-rate>Rate a reviewer</button>
             <button class="account-button account-button--home" id="accountButton" type="button" data-auth-open>Sign in</button>
           </div>
         </header>
 
-        <div class="outrage-eyebrow" id="outrageEyebrow"></div>
-
-        <nav class="outrage-tabs" id="boardTabs" aria-label="Reviewer leaderboards"></nav>
-        <section class="coverage-strip" aria-label="Data coverage and scoring scope">
-          <p><span>2025 public OpenReview coverage</span><b>ICLR, ICML, NeurIPS, TMLR, COLM, and MIDL.</b> The V1 dataset covers 26,749 papers and 99,671 scored official reviews.</p>
-          <p><span>Scoring scope</span>We score title, abstract, decision, and public official reviews only. No PDF full text, author rebuttals, or admin comments are used for reviewer rankings.</p>
+        <section class="home-intro" aria-labelledby="homeTitle">
+          <p class="home-kicker">2025 public review audit</p>
+          <h1 id="homeTitle">A second opinion on peer review<span>.</span></h1>
+          <p class="home-intro-copy">Find the feedback worth answering, the comments worth questioning, and the occasional Reviewer 2 who understood the assignment.</p>
+          <form class="outrage-search-form" id="landingSearch" novalidate>
+            <label class="sr-only" for="landingConference">Conference</label>
+            <select class="outrage-search-conf" id="landingConference" aria-label="Venue">
+              <option value="all">All 2025</option>
+              <option value="ICLR">ICLR</option>
+              <option value="ICML">ICML</option>
+              <option value="NeurIPS">NeurIPS</option>
+              <option value="TMLR">TMLR</option>
+              <option value="COLM">COLM</option>
+              <option value="MIDL">MIDL</option>
+            </select>
+            <label class="sr-only" for="landingInput">Search paper title or OpenReview ID</label>
+            <input class="outrage-search-input" id="landingInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Paper title or OpenReview ID" />
+            <button class="outrage-search-clear" id="landingClear" type="button" aria-label="Clear input" hidden>x</button>
+            <button class="outrage-search-submit" id="landingSubmit" type="submit">Find paper</button>
+          </form>
+          <div class="home-intro-actions">
+            <button class="outrage-submit" id="rateReviewerButton" type="button" data-open-rate>Rate one review</button>
+            <small>Browsing is open. Sign in only when you want to save, follow, or comment.</small>
+          </div>
+          <div class="input-error outrage-error" id="landingError" role="status" aria-live="polite"></div>
+          <div class="search-results outrage-results" id="landingResults" role="listbox" aria-label="Paper search results" hidden></div>
         </section>
-        <p class="outrage-ticker" id="communityTicker" hidden></p>
-        <div class="input-error outrage-error" id="landingError" role="status" aria-live="polite"></div>
-        <div class="search-results outrage-results" id="landingResults" role="listbox" aria-label="Paper search results" hidden></div>
-        <div class="home-status" id="homeStatus" role="status" aria-live="polite" hidden></div>
 
+        <section class="coverage-strip" aria-label="Data coverage and scoring scope">
+          <div class="coverage-stat"><b>26,749</b><span>2025 papers</span></div>
+          <div class="coverage-stat"><b>99,671</b><span>official reviews scored</span></div>
+          <div class="coverage-stat"><b>6 venues</b><span>title, abstract, decision, and public official reviews only</span></div>
+        </section>
+        <p class="coverage-footnote">No PDF full text, author rebuttals, or admin comments enter these rankings.</p>
+
+        <div class="board-intro">
+          <div>
+            <p class="outrage-eyebrow" id="outrageEyebrow"></p>
+            <h2 id="boardHeading">Reviews that need a clearer point.</h2>
+          </div>
+          <p class="board-intro-copy" id="boardDescription">High scores here mean more friction, not better reviewing.</p>
+        </div>
+        <nav class="outrage-tabs" id="boardTabs" aria-label="Reviewer leaderboards"></nav>
+        <p class="outrage-ticker" id="communityTicker" hidden></p>
+        <div class="home-status" id="homeStatus" role="status" aria-live="polite" hidden></div>
         <section class="outrage-board" id="outrageBoard" aria-live="polite"></section>
         <div class="outrage-cta" id="boardCta"></div>
         <p class="outrage-fine" id="finePrint"></p>
+        <p class="trust-note"><strong>Machine judgment, not a verdict.</strong> Scores are AI-generated and may be inaccurate. They evaluate the published text of a review, not the reviewer as a person.</p>
+        <footer class="site-footer">
+          <p>Public official review excerpts via OpenReview under CC BY 4.0. No anonymous identity inference. No drama added; peer review brought enough.</p>
+          <nav aria-label="Trust and legal"><a href="./methodology.html">Methodology &amp; limitations</a><a href="./privacy.html">Privacy</a><a href="./terms.html">Terms</a><a href="https://github.com/Yongwen12/SecondOpinion/issues/new?template=score-dispute.yml">Report a score</a></nav>
+        </footer>
       </div>
-
       <div class="rate-modal" id="rateModal" hidden>
         <div class="rate-backdrop" data-modal-close></div>
         <section class="rate-dialog" role="dialog" aria-modal="true" aria-labelledby="rateTitle">
@@ -2905,7 +3215,7 @@
         <section class="surface score-section" aria-labelledby="paperTitle">
           <div class="score-overview">
             <div class="score-ring" id="scoreRing" aria-label="Review quality score 73 of 100">
-              <div class="score-value"><strong id="overallScore">73</strong><span>review quality</span></div>
+              <div class="score-value"><strong id="overallScore">73</strong><span>review usefulness</span></div>
             </div>
             <div class="signal-chip"><span class="signal-dot" aria-hidden="true"></span><span id="signalLabel">Solid review</span></div>
           </div>
@@ -2917,6 +3227,7 @@
                 <div class="paper-stats" id="paperStats" aria-label="Paper statistics"><span>3 reviewers</span><span>6 comments</span></div>
               </div>
               <div class="paper-actions" id="paperActions" hidden>
+                <a class="paper-action-button" id="openReviewButton" href="https://openreview.net" target="_blank" rel="noopener noreferrer">OpenReview</a>
                 <button class="paper-action-button" id="savePaperButton" type="button" data-save-paper>Save</button>
                 <button class="paper-action-button" id="followVenueButton" type="button" data-follow-venue>Follow venue</button>
               </div>
@@ -2930,7 +3241,7 @@
 
         <!-- Per-paper reviewer leaderboards removed: redundant with the reviewer cards above (now sorted by score). Reviewer leaderboards live on the homepage rail. -->
 
-        <section class="surface cloud-section" aria-labelledby="themesTitle">
+        <section class="surface cloud-section" id="themesSection" aria-labelledby="themesTitle">
           <div class="section-head">
             <h2 id="themesTitle">Themes</h2>
             <div class="section-tools">
@@ -2951,6 +3262,11 @@
           </div>
           <div class="thread-list" id="threadList"></div>
         </section>
+        <p class="trust-note"><strong>Read the source before raising the pitchfork.</strong> Scores are AI-generated, may be inaccurate, and assess review text rather than reviewer identity or character.</p>
+        <footer class="site-footer">
+          <p>Public official review excerpts via OpenReview, CC BY 4.0. Use the source links to verify context or report a score for human review.</p>
+          <nav aria-label="Trust and legal"><a href="./methodology.html">Methodology &amp; limitations</a><a href="./privacy.html">Privacy</a><a href="./terms.html">Terms</a><a id="detailReportLink" href="https://github.com/Yongwen12/SecondOpinion/issues/new?template=score-dispute.yml">Report this score</a></nav>
+        </footer>
       </div>
     </section>
   </main>
@@ -3063,34 +3379,52 @@
     const BRAND = 'Judge My Reviewers';
     const BOARD_ORDER = ['overall', 'toxic', 'helpful'];
     const BOARD_COPY = {
-      heat: {
-        eyebrow: count => `2025 PUBLIC REVIEWS - ${count} REVIEWS AUDITED`,
-        title: 'The <mark>Outrage</mark> Index<span>.</span>',
-        sub: 'Where “needs more experiments” finally gets the review it deserves. Real quotes, real reviews — the worst rise to the top.',
-        unit: 'OUTRAGE',
-        stamp: 'STRONG REJECT',
-        rate: 'PILE ON →',
-        hu: n => `${n} human${n === 1 ? '' : 's'} co-signed`,
-        ai: 'AI verdict only — be the first to pile on',
-        cta: '<p><b>Got receipts?</b>Pick the paper, pick the reviewer, pile on — human ratings outrank the AI here.</p><button class="outrage-submit" type="button" data-open-rate>Pile on →</button>',
-        fine: 'Quotes are real, from public ICLR, ICML, NeurIPS, TMLR, COLM, and MIDL 2025 reviews. Reviewers stay pseudonymous; their scores are permanent. No reviewers were harmed. <b>And yes — statistically, it’s Reviewer #2.</b>',
-        tier: score => score >= 90 ? '💀' : score >= 80 ? '🔥' : '😬'
+      overall: {
+        label: 'Needs Attention',
+        tone: 'heat',
+        eyebrow: count => `${Number(count || 0).toLocaleString()} PUBLIC REVIEWS AUDITED`,
+        heading: 'Reviews that need a clearer point.',
+        description: 'High scores mean more friction, not better reviewing.',
+        unit: 'NEEDS WORK',
+        stamp: 'PLEASE CLARIFY',
+        rate: 'RATE THIS ->',
+        hu: n => `${n} community vote${n === 1 ? '' : 's'}`,
+        ai: 'AI score - add your take',
+        cta: '<p><b>Disagree with the machine?</b>Good. Pick a review and leave a human second opinion.</p><button class="outrage-submit" type="button" data-open-rate>Rate a review</button>',
+        fine: 'Scores describe the usefulness of public review comments, not reviewers as people. Reviewer names stay paper-scoped and pseudonymous.',
+        tier: score => score >= 85 ? 'HIGH' : score >= 65 ? 'WATCH' : 'MIXED'
       },
-      praise: {
-        eyebrow: count => `2025 PUBLIC REVIEWS - ${count} REVIEWS AUDITED`,
-        title: 'The <mark>Honor</mark> Roll<span>.</span>',
-        sub: 'Proof that good reviews exist. We were as surprised as you.',
-        unit: 'RESPECT',
-        stamp: 'STRONG ACCEPT',
-        rate: 'VOUCH →',
-        hu: n => `${n} human${n === 1 ? '' : 's'} vouched`,
-        ai: 'AI verdict only — be the first to vouch',
-        cta: '<p><b>Seen reviewing done right?</b>Pick the paper, pick the reviewer, nominate them for the Honor Roll.</p><button class="outrage-submit" type="button" data-open-rate>Vouch →</button>',
-        fine: 'Quotes are real, from public ICLR, ICML, NeurIPS, TMLR, COLM, and MIDL 2025 reviews. The good ones get the spotlight too — <b>peer review deserves better villains and better heroes.</b>',
-        tier: score => score >= 95 ? '🏆' : '⭐'
+      toxic: {
+        label: 'Tone Problems',
+        tone: 'heat',
+        eyebrow: count => `${Number(count || 0).toLocaleString()} PUBLIC REVIEWS AUDITED`,
+        heading: 'Technically feedback. Socially, a choice.',
+        description: 'Tone risk tracks contempt and personal attacks separately from technical criticism.',
+        unit: 'TONE RISK',
+        stamp: 'TOO PERSONAL',
+        rate: 'RATE THIS ->',
+        hu: n => `${n} community vote${n === 1 ? '' : 's'}`,
+        ai: 'AI score - add your take',
+        cta: '<p><b>Harsh is not the same as useful.</b>Agree or disagree with the assessment.</p><button class="outrage-submit" type="button" data-open-rate>Rate a review</button>',
+        fine: 'A high tone-risk score does not decide whether a technical concern is correct. It only says the wording got in the way.',
+        tier: score => score >= 80 ? 'HIGH' : score >= 55 ? 'WATCH' : 'MIXED'
+      },
+      helpful: {
+        label: 'Most Helpful',
+        tone: 'praise',
+        eyebrow: count => `${Number(count || 0).toLocaleString()} PUBLIC REVIEWS AUDITED`,
+        heading: 'Proof that Reviewer 2 can be useful.',
+        description: 'Specific, evidence-linked comments that an author can actually act on.',
+        unit: 'HELPFUL',
+        stamp: 'WORTH READING',
+        rate: 'RATE THIS ->',
+        hu: n => `${n} community vote${n === 1 ? '' : 's'}`,
+        ai: 'AI score - add your take',
+        cta: '<p><b>Good feedback deserves receipts too.</b>Vouch for a review that made the paper better.</p><button class="outrage-submit" type="button" data-open-rate>Rate a review</button>',
+        fine: 'Helpful means specific and actionable. Polite praise without substance does not qualify.',
+        tier: score => score >= 85 ? 'STRONG' : score >= 70 ? 'SOLID' : 'USEFUL'
       }
     };
-
     const DEMO_HOME_BOARDS = {
       overall: { key: 'overall', label: 'Overall', emoji: '🔥', count: 128, tone: 'heat', rows: [
         { quote: '“This is not convincing.”', verdict: 'No experiment named. No evidence cited. Full confidence.', reviewer: 'Reviewer #2', paper: 'Evidence-Grounded Review Auditing', score: 94, humanCount: 2 },
@@ -3190,6 +3524,9 @@
     const outrageBoard = document.getElementById('outrageBoard');
     const boardCta = document.getElementById('boardCta');
     const finePrint = document.getElementById('finePrint');
+    const boardHeading = document.getElementById('boardHeading');
+    const boardDescription = document.getElementById('boardDescription');
+    const themesSection = document.getElementById('themesSection');
     const rateModal = document.getElementById('rateModal');
     const rateModalBody = document.getElementById('rateModalBody');
     const rateModalError = document.getElementById('rateModalError');
@@ -3199,6 +3536,8 @@
     const accountButton = document.getElementById('accountButton');
     const topAccountButton = document.getElementById('topAccountButton');
     const paperActions = document.getElementById('paperActions');
+    const openReviewButton = document.getElementById('openReviewButton');
+    const detailReportLink = document.getElementById('detailReportLink');
     const savePaperButton = document.getElementById('savePaperButton');
     const followVenueButton = document.getElementById('followVenueButton');
 
@@ -3327,6 +3666,8 @@
       authState.venueSubscriptions = Array.isArray(payload.venue_subscriptions) ? payload.venue_subscriptions : [];
       renderAuthState();
       renderPaperActions();
+      if (openReviewButton) openReviewButton.href = openReviewUrl();
+      if (detailReportLink) detailReportLink.href = reportScoreUrl();
     }
 
     function clearAuthState() {
@@ -3334,6 +3675,8 @@
       storageSet(AUTH_TOKEN_KEY, '');
       renderAuthState();
       renderPaperActions();
+      if (openReviewButton) openReviewButton.href = openReviewUrl();
+      if (detailReportLink) detailReportLink.href = reportScoreUrl();
     }
 
     function renderAuthState() {
@@ -3352,7 +3695,8 @@
         invalid_handle: 'Handle can use letters, numbers, underscores, or hyphens.',
         weak_password: 'Password needs at least 8 characters.',
         user_exists: 'That handle or email is already registered.',
-        login_required: 'Sign in to use this action.'
+        login_required: 'Sign in to use this action.',
+        auth_rate_limited: 'Too many attempts. Try again in 15 minutes.'
       };
       return messages[code] || 'Request failed. Please try again.';
     }
@@ -3372,21 +3716,31 @@
     function renderAuthModal() {
       if (!authModalBody) return;
       if (authState.user) {
+        const savedHtml = authState.savedPapers.slice(0, 6).map(item => `
+          <button type="button" data-account-paper="${escapeHtml(item.paper_id)}">
+            <strong>${escapeHtml(item.title || item.paper_id)}</strong>
+            <span>${escapeHtml(item.venue || item.conference_id || '')} ${escapeHtml(item.year || '')}</span>
+          </button>`).join('');
+        const venueHtml = authState.venueSubscriptions.map(item => `<span>${escapeHtml(item.venue)} ${escapeHtml(item.year || 2025)}</span>`).join('');
         authModalBody.innerHTML = `
-          <p class="rate-kicker">Account</p>
-          <h2 id="authTitle">${escapeHtml(authState.user.handle)}</h2>
-          <p>${escapeHtml(authState.user.email || '')}</p>
+          <p class="rate-kicker">Your notebook</p>
+          <h2 id="authTitle">@${escapeHtml(authState.user.handle)}</h2>
+          <p>Saved papers and followed venues, without making browsing a members-only club.</p>
           <div class="auth-status">
             <span>${authState.savedPapers.length} saved papers</span>
             <span>${authState.venueSubscriptions.length} followed venues</span>
           </div>
+          <p class="rate-comments-head">Saved papers</p>
+          <div class="rate-account-list">${savedHtml || '<p class="rate-comments-empty">Nothing saved yet.</p>'}</div>
+          <p class="rate-comments-head">Followed venues</p>
+          <div class="venue-tags">${venueHtml || '<span>None yet</span>'}</div>
           <div class="rate-auth-actions">
+            <button class="rate-secondary" type="button" data-auth-delete>Delete account</button>
             <button class="rate-secondary" type="button" data-auth-close>Done</button>
             <button class="rate-primary" type="button" data-auth-logout>Log out</button>
           </div>`;
         return;
-      }
-      const isRegister = authMode === 'register';
+      }      const isRegister = authMode === 'register';
       authModalBody.innerHTML = `
         <p class="rate-kicker">${isRegister ? 'Create account' : 'Sign in'}</p>
         <h2 id="authTitle">${isRegister ? 'Create a reviewer notebook.' : 'Welcome back.'}</h2>
@@ -3415,6 +3769,21 @@
         setAuthPayload(payload);
         closeAuthModal();
         showToast(authMode === 'register' ? 'Account created' : 'Signed in');
+      } catch (error) {
+        authModalError.textContent = authErrorText(error.message);
+      }
+    }
+
+    async function deleteAuthAccount() {
+      if (!authState.user || !window.confirm('Delete this account, saved papers, follows, votes, and comments? This cannot be undone.')) return;
+      authModalError.textContent = '';
+      try {
+        const response = await apiFetch('/api/auth/account', { method: 'DELETE' });
+        const payload = await safeJson(response) || {};
+        if (!response.ok) throw new Error(payload.detail?.code || 'delete_failed');
+        clearAuthState();
+        closeAuthModal();
+        showToast('Account deleted');
       } catch (error) {
         authModalError.textContent = authErrorText(error.message);
       }
@@ -3621,11 +3990,16 @@
       const fb = fallback || {};
       const reviewer = String(source.reviewer || source.r || source.nickname || source.reviewer_name || source.reviewerKey || source.reviewer_key || fb.reviewer || `Reviewer #${index + 1}`);
       const paper = String(source.paper || source.p || source.paper_title || source.title || fb.paper || 'ICLR paper');
+      const attentionScore = source.attention ?? (
+        source.outrage != null
+          ? Math.round(0.75 * Number(source.outrage || 0) + 0.15 * (100 - Number(source.helpfulness || 0)) + 0.10 * Number(source.toxicity || 0))
+          : source.score
+      );
       const dimensionScore = key === 'helpful'
         ? (source.helpfulness ?? source.helpful_final)
         : key === 'toxic'
           ? (source.toxicity ?? source.toxic_final)
-          : (source.outrage ?? source.outrage_final);
+          : attentionScore;
       const scoreSource = dimensionScore ?? source.score ?? source.s ?? fb.score ?? 0;
       const paperId = String(source.paperId || source.paper_id || source.paperID || fb.paperId || `demo-${key}-${index + 1}`);
       const reviewerKey = String(source.reviewerKey || source.reviewer_key || fb.reviewerKey || reviewerKeyFromLabel(reviewer, index));
@@ -3639,13 +4013,29 @@
         paper,
         venue: venueLabel,
         score: clampScore(scoreSource),
-        humanCount: Number(source.humanCount ?? source.h ?? source.human_count ?? source.vote_total ?? ((Number(source.up || 0) + Number(source.down || 0)) || fb.humanCount || 0)),
+        humanCount: Number(source.humanCount ?? source.h ?? source.human_count ?? source.vote_total ?? (Number(source.up || 0) + Number(source.down || 0))),
         commentCount: Number(source.commentCount ?? source.comment_count ?? fb.commentCount ?? 0),
         paperId,
         reviewerKey,
         tone,
         conference: venueName
       };
+    }
+
+    function homePayloadRowEligible(row, key) {
+      const source = row || {};
+      const text = String(source.quote || '') + ' ' + String(source.verdict || '');
+      const normalized = text.toLowerCase();
+      const noise = /updating updating|my concern has been addressed|we sincerely thank|thank you for (the|your) comments|uploaded the revised|author.review|we are currently incorporating/;
+      if (!normalized.trim() || noise.test(normalized)) return false;
+      if (key === 'toxic') return Number(source.toxicity ?? source.toxic_final ?? 0) >= 25;
+      if (key === 'helpful') {
+        const contradiction = /not informative|non-informative|insufficient|non-substantive|no substantive|not a substantive|no actionable|unhelpful|low usefulness|summary|too vague|no critique|repetitive/;
+        return Number(source.helpfulness ?? source.helpful_final ?? 0) >= 55
+          && Number(source.toxicity ?? source.toxic_final ?? 0) <= 35
+          && !contradiction.test(normalized);
+      }
+      return true;
     }
 
     function rowsFromBoardPayload(value, key) {
@@ -3682,7 +4072,7 @@
           emoji: boardPayload.emoji || DEMO_HOME_BOARDS[key].emoji,
           count: Number(boardPayload.count || boardPayload.rows.length),
           tone,
-          rows: boardPayload.rows.map((row, index) => normalizeBoardRow(row, index, key, tone, demoRows[index % demoRows.length])).slice(0, key === 'overall' ? 8 : 20)
+          rows: boardPayload.rows.filter(row => homePayloadRowEligible(row, key)).map((row, index) => normalizeBoardRow(row, index, key, tone, demoRows[index % demoRows.length])).sort((left, right) => right.score - left.score).slice(0, key === 'overall' ? 8 : 20)
         };
       }
       if (!usedModern && raw && (Array.isArray(raw.red) || Array.isArray(raw.black))) {
@@ -3701,10 +4091,8 @@
       }
       const latest = Array.isArray(payload.latest_papers) ? payload.latest_papers : [];
       const audited = Number(payload.audited_count || payload.review_count || latest.reduce((sum, item) => sum + Number(item.review_count || 0), 0));
-      if (audited > 0) {
-        homeAuditedCount = audited;
-        for (const key of BOARD_ORDER) boards[key].count = audited;
-      }
+      if (audited > 0) homeAuditedCount = audited;
+
       return boards;
     }
 
@@ -3714,18 +4102,41 @@
       window.history.replaceState({}, '', url);
     }
 
+    function setPaperDeepLink(reviewerId = '', mode = 'push') {
+      const paperId = state.paperId || publicScorecard?.paper?.paper_id || '';
+      if (!paperId) return;
+      const url = new URL(window.location.href);
+      url.searchParams.delete('b');
+      url.searchParams.set('paper', paperId);
+      if (reviewerId) url.searchParams.set('reviewer', reviewerId);
+      else url.searchParams.delete('reviewer');
+      if (url.href === window.location.href) return;
+      window.history[mode === 'replace' ? 'replaceState' : 'pushState']({}, '', url);
+    }
+
+    function clearPaperDeepLink(mode = 'push') {
+      const url = new URL(window.location.href);
+      url.searchParams.delete('paper');
+      url.searchParams.delete('id');
+      url.searchParams.delete('reviewer');
+      if (url.href === window.location.href) return;
+      window.history[mode === 'replace' ? 'replaceState' : 'pushState']({}, '', url);
+    }
+
     function renderCommunityBoard() {
       const board = homeBoards[homeBoardKind] || homeBoards.overall;
-      const copy = BOARD_COPY[board.tone];
+      const copy = BOARD_COPY[homeBoardKind] || BOARD_COPY.overall;
       document.title = BRAND;
-      body.classList.toggle('praise', board.tone === 'praise');
+      body.classList.toggle('praise', copy.tone === 'praise');
       if (homeBrand) homeBrand.textContent = BRAND;
-      if (outrageEyebrow) outrageEyebrow.textContent = copy.eyebrow(homeAuditedCount || board.count || 128);
+      if (outrageEyebrow) outrageEyebrow.textContent = copy.eyebrow(homeAuditedCount || board.count || 0);
+      if (boardHeading) boardHeading.textContent = copy.heading;
+      if (boardDescription) boardDescription.textContent = copy.description;
       if (boardTabs) {
         boardTabs.innerHTML = BOARD_ORDER.map(key => {
           const tabBoard = homeBoards[key] || DEMO_HOME_BOARDS[key];
           const selected = key === homeBoardKind;
-          return `<button class="outrage-tab${selected ? ' is-active' : ''}" type="button" role="tab" aria-selected="${selected}" data-board-tab="${key}">${tabBoard.emoji} ${escapeHtml(tabBoard.label)}<span class="outrage-tab-count">${Number(tabBoard.count || 0)}</span></button>`;
+          return `<button class="outrage-tab${selected ? ' is-active' : ''}" type="button" role="tab" aria-selected="${selected}" data-board-tab="${key}">${escapeHtml((BOARD_COPY[key] || {}).label || tabBoard.label)}</button>`;
         }).join('');
       }
       if (communityTicker) {
@@ -3750,7 +4161,7 @@
         ? `<b>${escapeHtml(copy.hu(human))}</b>`
         : `<button class="outrage-meta-action" type="button" data-row-rate="${index}">${escapeHtml(copy.ai)}</button>`;
       return `
-        <article class="outrage-row" role="link" tabindex="0" data-board-row="${index}">
+        <article class="outrage-row" role="button" tabindex="0" data-board-row="${index}" aria-label="Open review assessment">
           <div class="outrage-rank">${rank}</div>
           <div class="outrage-main">
             <h3 class="outrage-q">${escapeHtml(row.quote)}${index === 0 ? `<span class="outrage-stamp">${copy.stamp}</span>` : ''}</h3>
@@ -3845,16 +4256,16 @@
       if (row) {
         const praise = rateContext.tone === 'praise';
         rateModalBody.innerHTML = `
-          <p class="rate-kicker">${praise ? 'Acquittal vote' : 'Outrage vote'}</p>
+          <p class="rate-kicker">Community check</p>
           <h2 id="rateTitle">${escapeHtml(row.reviewer)}</h2>
           <p>${escapeHtml(row.paper)} · ${escapeHtml(row.venue || 'ICLR 2025')}</p>
           <div class="rate-review-card"><strong>${escapeHtml(row.quote)}</strong><span>${escapeHtml(row.verdict)} Current score: ${clampScore(row.score)}</span></div>
           <div class="rate-actions">
-            <button class="rate-primary" type="button" data-rate-choice="${praise ? 'up' : 'down'}">${praise ? 'Vouch' : 'Pile on'}</button>
-            <button class="rate-secondary" type="button" data-rate-choice="${praise ? 'down' : 'up'}">${praise ? 'Dispute' : 'Defend'}</button>
+            <button class="rate-primary" type="button" data-rate-choice="${praise ? 'up' : 'down'}">${praise ? 'Helpful' : 'Agree'}</button>
+            <button class="rate-secondary" type="button" data-rate-choice="${praise ? 'down' : 'up'}">${praise ? 'Not quite' : 'Disagree'}</button>
           </div>
           <form class="rate-comment-form" data-comment-form>
-            <textarea class="rate-comment-input" id="rateCommentInput" rows="2" maxlength="1000" placeholder="${praise ? 'Say something nice about this review…' : 'Add your own take on this review…'}"></textarea>
+            <textarea class="rate-comment-input" id="rateCommentInput" rows="2" maxlength="1000" placeholder="Add context to your vote…"></textarea>
             <button class="rate-primary rate-comment-submit" type="submit">Post comment</button>
           </form>
           <p class="rate-comments-head">Comments</p>
@@ -3862,9 +4273,9 @@
         return;
       }
       rateModalBody.innerHTML = `
-        <p class="rate-kicker">Rate a reviewer</p>
-        <h2 id="rateTitle">Pick the paper, then the reviewer.</h2>
-        <p>Search across the 2025 public review corpus. Row links skip this step.</p>
+        <p class="rate-kicker">Rate a review</p>
+        <h2 id="rateTitle">Pick the paper, then the review.</h2>
+        <p>Search the 2025 public-review corpus. No account needed to browse.</p>
         <div class="rate-grid">
           <label class="rate-control">Venue / year
             <select id="rateVenue">
@@ -4305,15 +4716,15 @@
           showNotIndexedPaper(paperId, paper, source);
           return true;
         }
-        const queued = await requestScoringJob(paperId);
-        if (queued) showPendingPaper(paperId, paper, source);
-        else showNotIndexedPaper(paperId, paper, source);
+        showPendingPaper(paperId, paper, source);
         return true;
       }
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const scorecard = await response.json();
       state.paperId = paperId;
       applyPublicScorecard(scorecard);
+      const linkedReviewer = new URLSearchParams(location.search).get('reviewer') || '';
+      state.selectedReviewer = reviewers.some(reviewer => reviewer.id === linkedReviewer) ? linkedReviewer : null;
       hideSearchResults();
       enterResolvedView(source);
       if (source === 'top') showToast('Scorecard updated');
@@ -4351,7 +4762,7 @@
       applyPublicScorecard({
         schema_version: 'reviewer-public-scorecard-v0.1',
         paper: { paper_id: paperId, title, conference: `${paper.venue || paper.conference_id || 'ICLR'} ${paper.year || ''}`.trim(), venue: paper.venue || paper.conference_id || 'ICLR', year: paper.year || '' },
-        summary: { overall_score: 0, signal_label: 'Scoring queued', reviewer_count: 0, comment_count: 0, topic_count: 0 },
+        summary: { overall_score: 0, signal_label: 'Score pending', reviewer_count: 0, comment_count: 0, topic_count: 0 },
         reviewers: [],
         comments: [],
         topics: [],
@@ -4363,6 +4774,7 @@
     function enterResolvedView(source) {
       body.classList.remove('is-idle', 'praise');
       body.classList.add('is-resolved');
+      setPaperDeepLink(state.selectedReviewer || '');
       renderAll();
       window.scrollTo({ top: 0, behavior: reducedMotion.matches ? 'auto' : 'smooth' });
       if (source === 'top') showToast('Scorecard updated');
@@ -4378,6 +4790,46 @@
         showUnavailableSearch('landing');
       }
     }
+    function publicDimensionScore(reviewer, key) {
+      const item = (reviewer.dimensions || []).find(dimension => dimension && dimension.key === key);
+      return item ? clampScore(item.score) : null;
+    }
+
+    function publicMetricLabel(key, fallback) {
+      const labels = {
+        helpfulness: 'Helpfulness',
+        outrage: 'Friction',
+        toxicity: 'Tone risk',
+        specificity: 'Specificity',
+        evidence: 'Evidence',
+        actionability: 'Actionability',
+        agreement: 'Reviewer agreement',
+        rebuttal_robustness: 'Still relevant after rebuttal',
+        tone: 'Professionalism'
+      };
+      return labels[key] || fallback || key || 'Metric';
+    }
+
+    function publicReviewerQuality(reviewer) {
+      const helpfulness = publicDimensionScore(reviewer, 'helpfulness');
+      const outrage = publicDimensionScore(reviewer, 'outrage');
+      const toxicity = publicDimensionScore(reviewer, 'toxicity');
+      if (helpfulness === null && outrage === null && toxicity === null) return clampScore(reviewer.score);
+      let score = Math.round(
+        0.75 * Number(helpfulness ?? reviewer.score ?? 0)
+        + 0.15 * (100 - Number(outrage ?? 0))
+        + 0.10 * (100 - Number(toxicity ?? 0))
+      );
+      const evidenceText = [
+        reviewer.summary,
+        ...(reviewer.dimensions || []).map(item => item?.verdict || '')
+      ].join(' ').toLowerCase();
+      if (/not informative|non-informative|insufficient review|no substantive|not a substantive|no actionable|unhelpful|low usefulness|mostly summary|uninformative summary|too summary-like/.test(evidenceText)) {
+        score = Math.min(score, 40);
+      }
+      return clampScore(score);
+    }
+
     function applyPublicScorecard(scorecard) {
       publicScorecard = scorecard;
       const paper = scorecard.paper || {};
@@ -4388,28 +4840,44 @@
       const topicItems = Array.isArray(scorecard.topics) ? scorecard.topics : [];
       leaderboards = scorecard.leaderboards || { red: [], black: [] };
 
-      reviewers = reviewerItems.map((reviewer, index) => ({
-        id: reviewer.reviewer_key || `R${index + 1}`,
-        avatar: mascotKey(reviewer.nickname),
-        name: reviewer.nickname || `Reviewer ${index + 1}`,
-        score: Number(reviewer.score || 0),
-        tone: reviewer.tone || scoreBand(Number(reviewer.score || 0)).className || 'green',
-        label: plainBand(reviewer.label || scoreBand(Number(reviewer.score || 0)).label),
-        summary: reviewer.summary || 'Reviewer comments scored by Judge My Reviewers.',
-        social: reviewer.social || { up: 0, down: 0 },
-        comments: Array.isArray(reviewer.comments) ? reviewer.comments : [],
-        commentsLoaded: true,
-        dimensions: (reviewer.dimensions || []).map(item => ({
-          name: item.label || item.key || 'Metric',
+      reviewers = reviewerItems.map((reviewer, index) => {
+        const quality = publicReviewerQuality(reviewer);
+        const band = scoreBand(quality);
+        const dimensions = (reviewer.dimensions || []).map(item => ({
+          key: item.key || '',
+          name: publicMetricLabel(item.key, item.label),
           value: Number(item.score || 0),
-          criterion: item.criterion || 'Reviewer quality score.',
+          criterion: item.criterion || 'How much this review helps an author respond or revise.',
           quote: item.quote || '',
           verdict: item.verdict || ''
-        }))
-      }));
-
+        })).sort((left, right) => {
+          const order = ['helpfulness', 'specificity', 'evidence', 'actionability', 'outrage', 'toxicity'];
+          return (order.indexOf(left.key) < 0 ? 99 : order.indexOf(left.key))
+            - (order.indexOf(right.key) < 0 ? 99 : order.indexOf(right.key));
+        });
+        return {
+          id: reviewer.reviewer_key || `R${index + 1}`,
+          reviewId: reviewer.review_id || "",
+          avatar: mascotKey(reviewer.nickname),
+          name: reviewer.nickname || `Reviewer ${index + 1}`,
+          score: quality,
+          tone: band.className || 'green',
+          label: plainBand(band.label),
+          summary: reviewer.summary || 'Reviewer comments scored by Judge My Reviewers.',
+          social: reviewer.social || { up: 0, down: 0 },
+          comments: Array.isArray(reviewer.comments) ? reviewer.comments : [],
+          commentsLoaded: true,
+          dimensions
+        };
+      });
+      summary.overall_score = reviewers.length
+        ? Math.round(reviewers.reduce((total, reviewer) => total + reviewer.score, 0) / reviewers.length)
+        : 0;
+      summary.signal_label = 'Review usefulness';
+      publicScorecard.summary = summary;
       splitComments = commentItems.map((comment, index) => ({
         id: comment.reviewer_key,
+        reviewId: comment.review_id || "",
         chunk: comment.chunk_id || `C${index + 1}`,
         tone: comment.tone || 'gold',
         view: comment.text || '',
@@ -4437,6 +4905,28 @@
       if (summary.signal_label) document.getElementById('signalLabel').textContent = plainBand(summary.signal_label);
     }
 
+    function openReviewUrl(reviewId = '') {
+      const paper = publicScorecard?.paper || {};
+      const forumId = paper.openreview_forum_id || paper.paper_id || state.paperId || '';
+      if (!forumId) return 'https://openreview.net';
+      const params = new URLSearchParams({ id: forumId });
+      if (reviewId) params.set('noteId', reviewId);
+      return `https://openreview.net/forum?${params.toString()}`;
+    }
+
+    function reportScoreUrl(reviewerId = '') {
+      const paper = publicScorecard?.paper || {};
+      const subject = `SecondOpinion score report: ${paper.title || paper.paper_id || 'paper'}`;
+      const body = [
+        `Paper: ${paper.title || ''}`,
+        `OpenReview: ${openReviewUrl()}`,
+        reviewerId ? `Reviewer: ${reviewerId}` : '',
+        '',
+        'What looks wrong, and why:'
+      ].filter(Boolean).join('\n');
+      return `https://github.com/Yongwen12/SecondOpinion/issues/new?template=score-dispute.yml&title=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    }
+
     function renderPaperInfo() {
       if (!publicScorecard) return;
       const paper = publicScorecard.paper || {};
@@ -4448,6 +4938,8 @@
         paper.conference || ''
       ].filter(Boolean).map(item => `<span>${escapeHtml(item)}</span>`).join('');
       renderPaperActions();
+      if (openReviewButton) openReviewButton.href = openReviewUrl();
+      if (detailReportLink) detailReportLink.href = reportScoreUrl();
     }
 
     function reviewerById(id) {
@@ -4595,7 +5087,7 @@
           <div class="detail-head">
             <div class="detail-copy">
               <h3 class="detail-name">${reviewer.name}</h3>
-              <p class="detail-summary">${reviewer.summary}</p>
+              <p class="detail-summary">${escapeHtml(reviewer.summary)}</p>
             </div>
             <span class="detail-score ${toneClass(reviewer.tone)}">${reviewer.score}/100</span>
           </div>
@@ -4614,6 +5106,10 @@
             <span class="guide-item"><i class="guide-swatch"></i>40-69 Mixed</span>
             <span class="guide-item"><i class="guide-swatch"></i>70-84 Solid</span>
             <span class="guide-item"><i class="guide-swatch"></i>85-100 Strong</span>
+          </div>
+          <div class="source-actions">
+            <a class="source-link" href="${openReviewUrl(reviewer.reviewId)}" target="_blank" rel="noopener noreferrer">Source via OpenReview, CC BY 4.0</a>
+            <a class="source-link" href="${reportScoreUrl(reviewer.id)}">Report this score</a>
           </div>
           ${renderScorecardCommentsHtml(reviewer)}
         </div>`;
@@ -4652,11 +5148,10 @@
     function renderCloud() {
       layoutCloud(cloudWords);
       const visibleWords = cloudWords.filter(word => !word.hidden);
+      if (themesSection) themesSection.hidden = !visibleWords.length;
       cloudCanvas.innerHTML = visibleWords.map(word => `
         <button class="cloud-word" type="button" data-word-index="${cloudWords.indexOf(word)}" data-tone="${escapeHtml(word.tone)}" data-reviewer="${escapeHtml(word.reviewer)}" style="left:${word.x}px;top:${word.y}px;font-size:${word.size}px;" aria-label="${escapeHtml(word.text)}, ${escapeHtml(word.reviewer)}">${escapeHtml(word.text)}</button>`).join('');
-      cloudStage.querySelector('.empty-panel')?.remove();
-      if (!visibleWords.length) cloudStage.insertAdjacentHTML('beforeend', '<div class="empty-panel">Themes will appear here when enough distinct review terms are available.</div>');
-      requestAnimationFrame(resetCloudView);
+      if (visibleWords.length) requestAnimationFrame(resetCloudView);
     }
 
     function renderFilters() {
@@ -4711,6 +5206,7 @@
                 <span class="status-badge ${toneClass(comment.tone)}">${escapeHtml(reviewer?.label || 'Review comment')}</span>
               </div>
               <p class="viewpoint">${escapeHtml(comment.view)}</p>
+              <a class="source-link" href="${openReviewUrl(comment.reviewId)}" target="_blank" rel="noopener noreferrer">Excerpt via OpenReview, CC BY 4.0</a>
               <div class="ai-comment"><span class="ai-mark">SO</span><span>${escapeHtml(comment.ai)}</span></div>
             </div>
             <div class="vote-group" aria-label="Vote on ${escapeHtml(comment.chunk)}">
@@ -4734,6 +5230,7 @@
 
     function selectReviewer(id) {
       state.selectedReviewer = state.selectedReviewer === id ? null : id;
+      setPaperDeepLink(state.selectedReviewer || '', 'replace');
       renderReviewerCards();
       renderScoreDetail();
       if (state.selectedReviewer && window.innerWidth < 680) {
@@ -4841,6 +5338,7 @@
       body.classList.remove('is-resolved');
       body.classList.add('is-idle');
       hideCloudTooltip(true);
+      clearPaperDeepLink();
       renderCommunityHome();
       window.setTimeout(() => {
         landingInput.focus();
@@ -4876,6 +5374,19 @@
     document.getElementById('resetCloud').addEventListener('click', resetCloudView);
 
     document.addEventListener('click', event => {
+      const homeReset = event.target.closest('[data-home-reset]');
+      if (homeReset) {
+        resetToSearch();
+        return;
+      }
+
+      const accountPaper = event.target.closest('[data-account-paper]');
+      if (accountPaper) {
+        closeAuthModal();
+        openHomePaper(accountPaper.dataset.accountPaper, 'landing');
+        return;
+      }
+
       const authClose = event.target.closest('[data-auth-close]');
       if (authClose) {
         closeAuthModal();
@@ -4896,9 +5407,15 @@
         return;
       }
 
-      const authLogout = event.target.closest('[data-auth-logout]');
+            const authLogout = event.target.closest('[data-auth-logout]');
       if (authLogout) {
         logoutAuth();
+        return;
+      }
+
+      const authDelete = event.target.closest('[data-auth-delete]');
+      if (authDelete) {
+        deleteAuthAccount();
         return;
       }
 
@@ -5080,7 +5597,7 @@
     });
 
     outrageBoard.addEventListener('keydown', event => {
-      if (event.key !== 'Enter') return;
+      if (!['Enter', ' '].includes(event.key)) return;
       const row = event.target.closest('[data-board-row]');
       if (!row) return;
       event.preventDefault();
@@ -5187,6 +5704,22 @@
     window.addEventListener('resize', () => {
       window.clearTimeout(resizeTimer);
       resizeTimer = window.setTimeout(resetCloudView, 120);
+    });
+
+    window.addEventListener('popstate', () => {
+      const urlState = new URLSearchParams(location.search);
+      const paperId = urlState.get('paper') || urlState.get('id') || '';
+      const boardKey = urlState.get('b') || 'overall';
+      if (!paperId) {
+        homeBoardKind = BOARD_ORDER.includes(boardKey) ? boardKey : 'overall';
+        body.classList.remove('is-resolved');
+        body.classList.add('is-idle');
+        renderCommunityHome();
+        return;
+      }
+      if (paperId !== state.paperId || !body.classList.contains('is-resolved')) {
+        loadScorecardFromApi(paperId, 'history').catch(() => showToast('Could not restore this scorecard'));
+      }
     });
 
     renderAuthState();
