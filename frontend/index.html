@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#ffffff" />
   <title>Judge My Reviewers</title>
+  <meta name="description" content="Public peer reviews from six 2025 ML venues, scored for usefulness. Find the feedback worth answering — and the occasional Reviewer 2 who understood the assignment." />
+  <meta property="og:title" content="Judge My Reviewers" />
+  <meta property="og:description" content="A second opinion on peer review. 99,671 public official reviews from ICLR, ICML, NeurIPS, TMLR, COLM, and MIDL, scored for usefulness." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23ffffff'/%3E%3Crect x='6' y='10' width='36' height='36' fill='%23111111'/%3E%3Crect x='44' y='38' width='14' height='14' fill='%23e10600'/%3E%3C/svg%3E" />
   <style>
     :root {
       color-scheme: light;
@@ -1643,14 +1648,14 @@
       bottom: max(20px, env(safe-area-inset-bottom));
       z-index: 50;
       max-width: calc(100vw - 32px);
-      padding: 10px 13px;
-      border: 1px solid var(--ink);
-      border-radius: 12px;
-      background: var(--ink);
+      padding: 11px 16px;
+      border: 0;
+      border-radius: 0;
+      background: #111111;
       color: #fff;
-      box-shadow: 3px 3px 0 var(--lime);
-      font-size: 12px;
-      font-weight: 680;
+      box-shadow: none;
+      font-size: 12.5px;
+      font-weight: 700;
       opacity: 0;
       pointer-events: none;
       transform: translate(-50%, 12px);
@@ -1696,17 +1701,8 @@
         width: 100%;
         max-width: 100%;
         min-width: 0;
-        grid-auto-flow: column;
-        grid-auto-columns: minmax(220px, 76vw);
-        grid-template-columns: none;
-        overflow-x: auto;
-        overscroll-behavior-inline: contain;
-        scroll-snap-type: x mandatory;
-        scrollbar-width: none;
-        padding: 1px 3px 5px 1px;
+        grid-template-columns: 1fr;
       }
-      .reviewer-grid::-webkit-scrollbar { display: none; }
-      .reviewer-card { scroll-snap-align: start; }
       .dimension-grid { grid-template-columns: 1fr; }
       .score-guide { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .leaderboard-section { grid-template-columns: 1fr; }
@@ -1812,7 +1808,6 @@
       --oh-faint: #dcdcdc;
       --oh-line: #ececec;
       --oh-accent: #e10600;
-      --oh-yellow: #ffe600;
       max-width: 1020px;
       margin: 0 auto;
       padding: 0 32px 72px;
@@ -1822,8 +1817,15 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    body.praise .outrage-home {
-      --oh-accent: #0b8a3e;
+    /* Helpful board: scores stop shouting red, but red stays the interaction color. */
+    body.praise .outrage-home .outrage-num,
+    body.praise .outrage-home .outrage-row:first-child .outrage-rank {
+      color: var(--oh-ink);
+    }
+
+    body.praise .outrage-home .outrage-stamp {
+      border-color: var(--oh-ink);
+      color: var(--oh-ink);
     }
 
     .outrage-home *,
@@ -1961,7 +1963,8 @@
     }
 
     .account-button--home:hover {
-      background: #fffbe0;
+      border-color: var(--oh-accent, #e10600);
+      color: var(--oh-accent, #e10600);
     }
 
     .auth-status {
@@ -2044,8 +2047,8 @@
     }
 
     .outrage-tab.is-active {
-      background: var(--oh-yellow);
-      color: var(--oh-ink);
+      background: var(--oh-ink);
+      color: #ffffff;
     }
 
     .outrage-tab-count {
@@ -2057,7 +2060,7 @@
     }
 
     .outrage-tab.is-active .outrage-tab-count {
-      color: #85751a;
+      color: #bdbdbd;
     }
 
     .outrage-ticker {
@@ -2071,10 +2074,8 @@
     }
 
     .outrage-ticker .hl {
-      padding: 2px 7px 3px;
-      background: var(--oh-yellow);
-      color: var(--oh-ink);
-      font-weight: 700;
+      color: var(--oh-accent);
+      font-weight: 800;
     }
 
     .outrage-ticker b {
@@ -2147,7 +2148,11 @@
     }
 
     .outrage-row:hover {
-      background: #fffbe0;
+      background: #fafafa;
+    }
+
+    .outrage-row:hover .outrage-rank {
+      color: var(--oh-ink);
     }
 
     .outrage-rank {
@@ -2272,22 +2277,31 @@
       justify-content: space-between;
       gap: 24px;
       margin-top: 40px;
-      border: 2px solid var(--oh-ink);
-      background: var(--oh-yellow);
+      background: var(--oh-ink);
       padding: 22px 26px;
     }
 
     .outrage-cta p {
       margin: 0;
-      color: #4d4405;
+      color: #b3b3b3;
       font-size: 15px;
       line-height: 1.5;
     }
 
     .outrage-cta p b {
       margin-right: 8px;
-      color: var(--oh-ink);
+      color: #ffffff;
       font-size: 16px;
+    }
+
+    .outrage-cta .outrage-submit {
+      background: #ffffff;
+      color: var(--oh-ink);
+    }
+
+    .outrage-cta .outrage-submit:hover {
+      background: var(--oh-accent, #e10600);
+      color: #ffffff;
     }
 
     .outrage-fine {
@@ -2418,7 +2432,7 @@
     }
 
     .rate-list button:hover {
-      background: #fffbe0;
+      background: #f5f5f5;
     }
 
     .rate-list strong {
@@ -2472,8 +2486,8 @@
     .rate-primary {
       border: 2px solid #111111;
       padding: 12px 16px;
-      background: #ffe600;
-      color: #111111;
+      background: #111111;
+      color: #ffffff;
       font-size: 13px;
       font-weight: 800;
     }
@@ -2666,8 +2680,8 @@
       --surface: #ffffff;
       --surface-2: #ffffff;
       --surface-3: #f5f5f5;
-      --lime: #ffe600;
-      --lime-soft: #fff7cc;
+      --lime: #f2f2f2;
+      --lime-soft: #f7f7f7;
       --shadow-1: none;
       --shadow-2: none;
     }
@@ -2681,7 +2695,7 @@
       margin: -18px -10px 24px;
       padding: 12px 10px;
       background: #ffffff;
-      border-bottom: 1px solid #ececec;
+      border-bottom: 2px solid #111111;
       backdrop-filter: none;
       -webkit-backdrop-filter: none;
     }
@@ -2721,12 +2735,28 @@
     .app-view .analyze-button:active { box-shadow: none; transform: none; }
     .app-view .search-results--compact { border: 1px solid #dcdcdc; box-shadow: none; }
 
-    .app-view .surface { border: 1px solid #ececec; background: #ffffff; }
-    .app-view .section-head { min-height: 56px; border-bottom: 1px solid #ececec; }
-    .app-view .section-head h2 { font-weight: 800; letter-spacing: -.01em; }
+    /* Sections are rule-separated bands, not cards: 2px ink rule per section, no boxes. */
+    .app-view .content-stack { gap: 0; }
+    .app-view .surface {
+      border: 0;
+      border-top: 2px solid #111111;
+      background: transparent;
+      overflow: visible;
+    }
+    .app-view .content-stack > .surface:first-child { border-top: 0; }
+    .app-view .section-head { min-height: 0; padding: 18px 0 12px; border-bottom: 1px solid #ececec; }
+    .app-view .section-head h2 {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    .app-view .cloud-stage { margin: 16px 0; }
+    .app-view .comment-row { padding: 16px 0; }
+    .app-view .empty-state { border: 1px dashed #dcdcdc; background: #ffffff; color: #777; }
 
     /* Score overview: drop the ring, show a big ink number */
-    .app-view .score-section { grid-template-columns: 200px minmax(0, 1fr); gap: 28px; padding: 28px; }
+    .app-view .score-section { grid-template-columns: 200px minmax(0, 1fr); gap: 28px; padding: 8px 0 36px; }
     .app-view .score-overview {
       align-content: start;
       justify-items: start;
@@ -2741,28 +2771,50 @@
     .app-view .score-value strong { font-size: 88px; line-height: .86; font-weight: 800; letter-spacing: -.06em; color: #111111; }
     .app-view .score-value span { margin-top: 10px; color: #9b9b9b; }
     .app-view .signal-chip {
-      min-height: 26px;
-      padding: 3px 10px;
-      border: 1px solid #ececec;
-      background: #f5f5f5;
+      min-height: 24px;
+      padding: 3px 9px;
+      border: 1px solid #111111;
+      background: #ffffff;
       color: #111111;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
     }
     .app-view .signal-dot { background: #e10600; box-shadow: none; }
 
-    .app-view .paper-title { font-weight: 800; letter-spacing: -.035em; }
+    .app-view .paper-title {
+      overflow: visible;
+      text-overflow: clip;
+      white-space: normal;
+      font-size: clamp(24px, 2.6vw, 32px);
+      font-weight: 900;
+      letter-spacing: -.02em;
+      line-height: 1.08;
+    }
     .app-view .paper-stats { font-weight: 700; }
 
-    /* Reviewer cards */
-    .app-view .reviewer-card { border: 1px solid #ececec; background: #ffffff; box-shadow: none; }
-    .app-view .reviewer-card:hover { border-color: #111111; background: #ffffff; box-shadow: none; transform: none; }
-    .app-view .reviewer-card.is-active { border: 2px solid #111111; background: #ffffff; box-shadow: none; }
-    .app-view .mini-avatar { border: 1px solid #111111; box-shadow: none; }
+    /* Reviewer cards -> flat editorial rows; selection is a red inset bar */
+    .app-view .reviewer-grid { grid-template-columns: minmax(0, 1fr); gap: 0; border-top: 1px solid #ececec; }
+    .app-view .reviewer-card {
+      min-height: 62px;
+      padding: 12px 4px;
+      border: 0;
+      border-bottom: 1px solid #ececec;
+      background: transparent;
+      box-shadow: none;
+    }
+    .app-view .reviewer-card:hover { border-color: #ececec; background: #fafafa; box-shadow: none; transform: none; }
+    .app-view .reviewer-card.is-active { border: 0; border-bottom: 1px solid #ececec; background: #fafafa; box-shadow: inset 3px 0 0 #e10600; }
+    .app-view .reviewer-name { color: #111111; font-size: 13px; font-weight: 750; }
+    .app-view .mini-avatar,
+    .app-view .pixel-avatar { border: 1px solid #111111; box-shadow: none; filter: grayscale(1) contrast(1.05); }
     .app-view .reviewer-score-line strong { color: #111111; }
     .app-view .chevron { color: #9b9b9b; }
 
-    /* Detail card + metrics -> monochrome bars */
-    .app-view .score-detail-card { border: 1px solid #ececec; background: #ffffff; }
-    .app-view .metric { border: 1px solid #ececec; background: #ffffff; }
+    /* Detail panel: a flat gray dossier, metrics as table cells */
+    .app-view .score-detail-card { border: 0; background: #fafafa; }
+    .app-view .metric { border: 0; background: #ffffff; }
     .app-view .metric-track { background: #ececec; }
     .app-view .metric-fill,
     .app-view .metric-fill.blue,
@@ -2789,8 +2841,17 @@
     .app-view .cloud-word[data-tone="red"] { color: #e10600; }
 
     /* Comments */
-    .app-view .filter-button.is-active { border-color: #111111; color: #111111; background: #ffffff; }
+    .app-view .filter-button.is-active { border-color: #111111; color: #ffffff; background: #111111; }
     .app-view .comment-row:hover { background: #fafafa; }
+    .app-view .comment-row.is-linked { background: #fafafa; }
+    .app-view .comment-row.is-linked::before { background: #e10600; border-radius: 0; }
+    .app-view .ai-comment { border: 1px solid #ececec; background: #ffffff; color: #555555; }
+    .app-view .ai-mark { border: 1px solid #111111; background: #111111; color: #ffffff; box-shadow: none; }
+    .app-view .vote-group { padding: 2px; border: 1px solid #ececec; background: #ffffff; }
+    .app-view .vote-button.is-up { color: #ffffff; background: #111111; border-color: #111111; }
+    .app-view .vote-button.is-down { color: #e10600; background: #ffffff; border-color: #e10600; }
+    .app-view .status-badge { opacity: 1; color: #777777; }
+    .app-view .paper-action-button.is-active { border-color: #111111; background: #111111; color: #ffffff; box-shadow: none; }
 
     @media (max-width: 420px) {
       .outrage-home { padding: 0 14px 48px; }
@@ -2818,12 +2879,12 @@
       .outrage-q { overflow-wrap: anywhere; }
     }
 
-    /* 2026 product pass: compact editorial shell, clear score semantics, real mobile layout */
+    /* 2026 masthead pass: the brand IS the headline. One red, zero radius, zero cards. */
     .is-idle .landing { background: #fff; }
     .outrage-home { max-width: 1120px; padding: 0 28px 72px; }
     .outrage-header {
-      min-height: 68px;
-      padding: 0;
+      min-height: 44px;
+      padding: 14px 0 12px;
       border-bottom: 1px solid #ececec;
     }
     .outrage-brand {
@@ -2835,51 +2896,72 @@
     .outrage-header-note {
       margin-right: auto;
       color: #9b9b9b;
-      font-size: 12px;
-      font-weight: 650;
-    }
-    .outrage-actions { gap: 16px; }
-    .home-intro {
-      position: relative;
-      max-width: 860px;
-      padding: 64px 0 34px;
-    }
-    .home-kicker {
-      margin: 0 0 12px;
-      color: #9b9b9b;
       font-size: 11px;
       font-weight: 800;
-      letter-spacing: .17em;
+      letter-spacing: .14em;
       text-transform: uppercase;
     }
-    .home-intro h1 {
-      max-width: 760px;
-      margin: 0;
+    .outrage-actions { gap: 20px; }
+    .outrage-header-link {
       color: #111;
-      font-size: 54px;
-      font-weight: 900;
-      line-height: .98;
-      letter-spacing: 0;
+      font-size: 12px;
+      font-weight: 800;
+      text-decoration: none;
     }
-    .home-intro h1 span { color: #e10600; }
+    .outrage-header-link:hover { color: #e10600; }
+    .home-intro {
+      position: relative;
+      max-width: none;
+      padding: 44px 0 36px;
+    }
+    .home-kicker {
+      margin: 0 0 16px;
+      color: #e10600;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+    .home-masthead { margin: 0; line-height: 1; }
+    .outrage-brand--masthead {
+      display: inline-flex;
+      align-items: baseline;
+      padding: 0;
+      color: #111;
+      font-family: inherit;
+      font-size: clamp(48px, 7.6vw, 92px);
+      font-weight: 900;
+      line-height: .95;
+      letter-spacing: -.035em;
+      white-space: nowrap;
+      text-align: left;
+    }
+    .outrage-brand--masthead::after {
+      width: .13em;
+      height: .13em;
+      margin-left: .1em;
+      background: #e10600; /* brand mark stays red even when praise mode swaps the accent */
+    }
+    .outrage-brand--masthead:hover::after { background: #111; }
     .home-intro-copy {
-      max-width: 680px;
-      margin: 18px 0 26px;
+      max-width: 640px;
+      margin: 24px 0 30px;
       color: #555;
       font-size: 17px;
       line-height: 1.55;
     }
+    .home-intro-copy strong { color: #111; font-weight: 800; }
     .outrage-search-form {
       display: grid;
       align-items: stretch;
-      grid-template-columns: 138px minmax(0, 1fr) auto;
+      grid-template-columns: 138px minmax(0, 1fr) auto auto;
       gap: 0;
       width: min(820px, 100%);
       min-height: 56px;
       border: 2px solid #111;
       background: #fff;
     }
-    .outrage-search-form:focus-within { box-shadow: 4px 4px 0 #ffe600; }
+    .outrage-search-form:focus-within { box-shadow: 4px 4px 0 #e10600; }
     .outrage-search-conf {
       padding: 0 14px;
       border-right: 1px solid #d8d8d8;
@@ -2898,13 +2980,15 @@
     }
     .outrage-search-clear[hidden] { display: none; }
     .outrage-search-submit {
-      min-width: 126px;
+      min-width: 132px;
       border: 0;
       background: #111;
       color: #fff;
       cursor: pointer;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 850;
+      letter-spacing: .09em;
+      text-transform: uppercase;
     }
     .outrage-search-submit:hover { background: #e10600; }
     .outrage-search-submit:disabled { cursor: progress; opacity: .58; }
@@ -2925,50 +3009,48 @@
     .home-intro-actions .outrage-submit:hover { color: #e10600; background: transparent; }
     .coverage-strip {
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 0;
-      margin: 0 0 34px;
-      padding: 0;
-      border: 1px solid #ececec;
+      gap: 28px;
+      margin: 0;
+      padding: 22px 0 0;
+      border: 0;
+      border-top: 2px solid #111;
     }
-    .coverage-stat {
-      min-height: 74px;
-      padding: 14px 16px;
-      border-right: 1px solid #ececec;
-    }
-    .coverage-stat:last-child { border-right: 0; }
+    .coverage-stat { padding: 0; border: 0; }
     .coverage-stat b {
       display: block;
-      font-size: 20px;
+      font-size: 36px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -.02em;
       font-variant-numeric: tabular-nums;
     }
-    .coverage-stat span { margin-top: 5px; letter-spacing: .1em; }
-    .coverage-footnote { margin: -22px 0 34px; color: #888; font-size: 11px; }
+    .coverage-stat span { margin-top: 8px; letter-spacing: .12em; }
+    .coverage-footnote { margin: 16px 0 52px; color: #999; font-size: 11px; }
     .board-intro {
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 24px;
-      margin-bottom: 12px;
+      display: block;
+      margin-bottom: 16px;
     }
     .board-intro h2 {
-      margin: 5px 0 0;
-      font-size: 24px;
-      line-height: 1.1;
+      margin: 6px 0 0;
+      font-size: 30px;
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -.02em;
     }
     .board-intro-copy {
-      max-width: 410px;
-      margin: 0;
+      max-width: 640px;
+      margin: 8px 0 0;
       color: #777;
-      font-size: 13px;
-      line-height: 1.45;
-      text-align: right;
+      font-size: 14px;
+      line-height: 1.5;
+      text-align: left;
     }
     .outrage-eyebrow { margin: 0; }
     .outrage-tabs { margin-top: 0; gap: 8px; }
     .outrage-tab { min-height: 38px; letter-spacing: .03em; }
     .outrage-tab-count { display: none; }
-    .outrage-row { grid-template-columns: 64px minmax(0, 1fr) 132px; padding: 28px 0; }
-    .outrage-row:hover { background: #fffdf0; }
+    .outrage-row { grid-template-columns: 64px minmax(0, 1fr) 132px; padding: 24px 0; transition: background .12s ease; }
+    .outrage-row:hover { background: #fafafa; }
     .outrage-q { max-width: 760px; font-size: 20px; }
     .outrage-why { color: #555; font-weight: 650; }
     .outrage-meta { margin-top: 9px; }
@@ -2996,7 +3078,7 @@
       cursor: pointer;
       text-align: left;
     }
-    .rate-account-list button:hover { background: #fffbe0; }
+    .rate-account-list button:hover { background: #f5f5f5; }
     .rate-account-list span { color: #888; font-size: 12px; }
     .venue-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
     .venue-tags span { padding: 5px 8px; border: 1px solid #ddd; font-size: 12px; font-weight: 750; }
@@ -3038,24 +3120,129 @@
     .site-footer a { color: #111; font-weight: 800; text-decoration: none; }
     .site-footer a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
+    /* Interaction pass: tactile states, keyboard affordances, motion with restraint. */
+    .outrage-home ::selection, .rate-modal ::selection { background: #111; color: #fff; }
+    .outrage-home { accent-color: #e10600; }
+
+    .outrage-search-form { position: relative; }
+    .outrage-search-form.is-invalid {
+      border-color: #e10600;
+      animation: nudge .24s ease-in-out 2;
+    }
+    .outrage-key {
+      display: inline-grid;
+      place-items: center;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 5px;
+      border: 1px solid #d8d8d8;
+      border-bottom-width: 2px;
+      color: #9b9b9b;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .outrage-search-key {
+      position: absolute;
+      top: 50%;
+      right: 148px;
+      transform: translateY(-50%);
+      transition: opacity .12s ease;
+      pointer-events: none;
+    }
+    .outrage-search-form:focus-within .outrage-search-key,
+    .outrage-search-form.has-value .outrage-search-key { opacity: 0; }
+
+    .search-results--compact .paper-result-card:focus-visible {
+      outline: 2px solid #e10600;
+      outline-offset: -2px;
+      box-shadow: none;
+    }
+
+    .outrage-stamp { transition: transform .16s ease; }
+    .outrage-row:hover .outrage-stamp { transform: rotate(-1deg); }
+
+    @keyframes rowIn {
+      from { opacity: 0; transform: translateY(9px); }
+      to { opacity: 1; transform: none; }
+    }
+    .outrage-board.is-entering .outrage-row {
+      animation: rowIn .26s cubic-bezier(.2, .75, .25, 1) both;
+      animation-delay: calc(var(--i, 0) * 26ms);
+    }
+
+    .sticky-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 40;
+      display: flex;
+      justify-content: center;
+      padding: 0 28px;
+      background: #fff;
+      border-bottom: 2px solid #111;
+      visibility: hidden;
+      transform: translateY(-102%);
+      transition: transform .18s ease, visibility .18s;
+    }
+    .sticky-bar.is-visible { visibility: visible; transform: translateY(0); }
+    .sticky-bar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      width: min(1064px, 100%);
+      min-height: 46px;
+    }
+    .sticky-brand { font-size: 14px; }
+    .sticky-actions { display: flex; align-items: center; gap: 14px; }
+    .sticky-search {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 0;
+      background: transparent;
+      color: #111;
+      cursor: pointer;
+      padding: 6px 0;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .sticky-search:hover { color: #e10600; }
+    .sticky-search:hover .outrage-key { border-color: #e10600; color: #e10600; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .outrage-board.is-entering .outrage-row { animation: none; }
+      .outrage-search-form.is-invalid { animation: none; }
+      .sticky-bar { transition: none; }
+      .outrage-stamp { transition: none; }
+    }
+
     @media (max-width: 768px) {
       .outrage-home { padding: 0 14px 48px; }
-      .outrage-header { min-height: 58px; flex-wrap: nowrap; gap: 10px; }
+      .outrage-header { min-height: 44px; flex-wrap: nowrap; gap: 10px; }
       .outrage-header-note { display: none; }
-      .home-intro { padding: 42px 0 26px; }
-      .home-intro h1 { font-size: 39px; line-height: 1.02; }
-      .home-intro-copy { margin: 14px 0 20px; font-size: 15px; }
+      .outrage-actions { margin-left: auto; }
+      .home-intro { padding: 30px 0 24px; }
+      .outrage-brand--masthead { font-size: clamp(38px, 11.5vw, 56px); white-space: normal; }
+      .home-intro-copy { margin: 16px 0 20px; font-size: 15px; }
       .outrage-search-form {
-        grid-template-columns: 106px minmax(0, 1fr) 42px;
+        grid-template-columns: 106px minmax(0, 1fr) auto;
         min-height: 52px;
       }
+      .outrage-search-key { display: none; }
+      .sticky-bar { padding: 0 14px; }
+      .sticky-search { display: none; }
       .outrage-search-conf { padding: 0 8px; }
       .outrage-search-input { padding: 0 10px; }
       .outrage-search-submit { grid-column: 1 / -1; min-height: 44px; }
-      .coverage-strip { grid-template-columns: 1fr 1fr; }
-      .coverage-stat { min-height: 68px; }
-      .coverage-stat:nth-child(2) { border-right: 0; }
-      .coverage-stat:last-child { grid-column: 1 / -1; border-top: 1px solid #ececec; }
+      .coverage-strip { grid-template-columns: 1fr 1fr; gap: 18px 20px; padding-top: 18px; }
+      .coverage-stat b { font-size: 27px; }
+      .coverage-stat:last-child { grid-column: 1 / -1; }
+      .coverage-footnote { margin-bottom: 40px; }
       .board-intro { display: grid; gap: 8px; }
       .board-intro-copy { text-align: left; }
       .outrage-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; overflow: visible; }
@@ -3096,10 +3283,7 @@
       .app-view .paper-title { min-width: 0; max-width: 100%; }
       .app-view .paper-title { overflow: visible; text-overflow: clip; white-space: normal; overflow-wrap: anywhere; line-height: 1.15; }
       .app-view .paper-actions { width: 100%; justify-content: flex-start; }
-      .app-view .reviewer-grid {
-        grid-auto-columns: minmax(230px, 86vw);
-        max-width: 100%;
-      }
+      .app-view .reviewer-grid { max-width: 100%; }
       .app-view .topbar { display: grid; grid-template-columns: 1fr auto; }
       .app-view .search-shell--compact { grid-column: 1 / -1; grid-row: 2; }
       .app-view .account-button { grid-column: 2; grid-row: 1; }
@@ -3113,17 +3297,27 @@
     <section class="landing" aria-label="Public review quality explorer">
       <div class="outrage-home" id="outrageHome">
         <header class="outrage-header">
-          <button class="outrage-brand" id="homeBrand" type="button" data-home-reset>Judge My Reviewers</button>
           <span class="outrage-header-note">Public reviews, scored for usefulness.</span>
           <div class="outrage-actions">
+            <a class="outrage-header-link" href="./methodology.html">Methodology</a>
             <button class="account-button account-button--home" id="accountButton" type="button" data-auth-open>Sign in</button>
           </div>
         </header>
 
+        <div class="sticky-bar" id="stickyBar" aria-hidden="true">
+          <div class="sticky-bar-inner">
+            <button class="outrage-brand sticky-brand" type="button" data-home-reset>Judge My Reviewers</button>
+            <div class="sticky-actions">
+              <button class="sticky-search" type="button" data-focus-search>Find paper <kbd class="outrage-key">/</kbd></button>
+              <button class="account-button account-button--home" id="stickyAccountButton" type="button" data-auth-open>Sign in</button>
+            </div>
+          </div>
+        </div>
+
         <section class="home-intro" aria-labelledby="homeTitle">
-          <p class="home-kicker">2025 public review audit</p>
-          <h1 id="homeTitle">A second opinion on peer review<span>.</span></h1>
-          <p class="home-intro-copy">Find the feedback worth answering, the comments worth questioning, and the occasional Reviewer 2 who understood the assignment.</p>
+          <p class="home-kicker">2025 public review audit &middot; 6 venues</p>
+          <h1 class="home-masthead" id="homeTitle"><button class="outrage-brand outrage-brand--masthead" id="homeBrand" type="button" data-home-reset>Judge My Reviewers</button></h1>
+          <p class="home-intro-copy"><strong>A second opinion on peer review.</strong> Find the feedback worth answering, the comments worth questioning, and the occasional Reviewer 2 who understood the assignment.</p>
           <form class="outrage-search-form" id="landingSearch" novalidate>
             <label class="sr-only" for="landingConference">Conference</label>
             <select class="outrage-search-conf" id="landingConference" aria-label="Venue">
@@ -3136,9 +3330,10 @@
               <option value="MIDL">MIDL</option>
             </select>
             <label class="sr-only" for="landingInput">Search paper title or OpenReview ID</label>
-            <input class="outrage-search-input" id="landingInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Paper title or OpenReview ID" />
+            <input class="outrage-search-input" id="landingInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Paper title or OpenReview ID" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="landingResults" />
             <button class="outrage-search-clear" id="landingClear" type="button" aria-label="Clear input" hidden>x</button>
             <button class="outrage-search-submit" id="landingSubmit" type="submit">Find paper</button>
+            <kbd class="outrage-key outrage-search-key" aria-hidden="true" title="Press / to search">/</kbd>
           </form>
           <div class="home-intro-actions">
             <button class="outrage-submit" id="rateReviewerButton" type="button" data-open-rate>Rate one review</button>
@@ -3174,22 +3369,6 @@
           <nav aria-label="Trust and legal"><a href="./methodology.html">Methodology &amp; limitations</a><a href="./privacy.html">Privacy</a><a href="./terms.html">Terms</a><a href="https://github.com/Yongwen12/SecondOpinion/issues/new?template=score-dispute.yml">Report a score</a></nav>
         </footer>
       </div>
-      <div class="rate-modal" id="rateModal" hidden>
-        <div class="rate-backdrop" data-modal-close></div>
-        <section class="rate-dialog" role="dialog" aria-modal="true" aria-labelledby="rateTitle">
-          <button class="rate-close" type="button" data-modal-close aria-label="Close">x</button>
-          <div id="rateModalBody"></div>
-          <p class="rate-error" id="rateModalError" role="status" aria-live="polite"></p>
-        </section>
-      </div>
-      <div class="rate-modal" id="authModal" hidden>
-        <div class="rate-backdrop" data-auth-close></div>
-        <section class="rate-dialog" role="dialog" aria-modal="true" aria-labelledby="authTitle">
-          <button class="rate-close" type="button" data-auth-close aria-label="Close">x</button>
-          <div id="authModalBody"></div>
-          <p class="rate-error" id="authModalError" role="status" aria-live="polite"></p>
-        </section>
-      </div>
     </section>
     <section class="app-view" aria-label="Review results">
       <header class="topbar">
@@ -3201,7 +3380,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.7-3.7"></path></svg>
           </span>
                     <label class="sr-only" for="topInput">Paper title or OpenReview ID</label>
-          <input class="search-input" id="topInput" autocomplete="off" autocapitalize="off" spellcheck="false" />
+          <input class="search-input" id="topInput" autocomplete="off" autocapitalize="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="topResults" />
                     <button class="clear-button" id="topClear" type="button" aria-label="Clear input">x</button>
                     <button class="analyze-button" id="topSubmit" type="submit" aria-label="Search paper">
                           <span class="button-label">Search</span><span class="button-arrow" aria-hidden="true">-&gt;</span><span class="spinner" aria-hidden="true"></span>
@@ -3270,6 +3449,24 @@
       </div>
     </section>
   </main>
+
+  <!-- Modals live outside .landing so `.is-resolved .landing { display:none }` cannot swallow them. -->
+  <div class="rate-modal" id="rateModal" hidden>
+    <div class="rate-backdrop" data-modal-close></div>
+    <section class="rate-dialog" role="dialog" aria-modal="true" aria-labelledby="rateTitle">
+      <button class="rate-close" type="button" data-modal-close aria-label="Close">x</button>
+      <div id="rateModalBody"></div>
+      <p class="rate-error" id="rateModalError" role="status" aria-live="polite"></p>
+    </section>
+  </div>
+  <div class="rate-modal" id="authModal" hidden>
+    <div class="rate-backdrop" data-auth-close></div>
+    <section class="rate-dialog" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+      <button class="rate-close" type="button" data-auth-close aria-label="Close">x</button>
+      <div id="authModalBody"></div>
+      <p class="rate-error" id="authModalError" role="status" aria-live="polite"></p>
+    </section>
+  </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -3458,6 +3655,9 @@
     let homeYear = 2025;
     let homeAuditedCount = 82219;
     let homeBoardKind = initialHomeBoard();
+    // Seed the stagger guard so the initial render (and its fast static/API re-renders) does
+    // not start an entrance animation that the next same-kind render would cancel mid-flight.
+    renderCommunityBoard.lastKind = homeBoardKind;
     let homeTickerHtml = '<span class="hl">⚡ 24 human ratings this week</span> · latest: <b>“brutal but fair”</b> on Reviewer #4 — 2 min ago';
     let usingDemoHome = true;
     let rateContext = { row: null, paperId: '', reviewerKey: '', tone: 'heat', source: 'global', paperResults: [], reviewerResults: [], selectedPaper: null, comments: [], commentsLoading: false };
@@ -3588,6 +3788,7 @@
     function syncClearButtons() {
       landingClear.hidden = !landingInput.value;
       topClear.hidden = !topInput.value;
+      document.getElementById('landingSearch').classList.toggle('has-value', !!landingInput.value);
     }
 
     function setBusy(isBusy, source) {
@@ -3681,7 +3882,7 @@
 
     function renderAuthState() {
       const label = authState.user ? `@${authState.user.handle}` : 'Sign in';
-      [accountButton, topAccountButton].forEach(button => {
+      [accountButton, topAccountButton, document.getElementById('stickyAccountButton')].forEach(button => {
         if (!button) return;
         button.textContent = label;
         button.setAttribute('aria-label', authState.user ? `Account ${authState.user.handle}` : 'Sign in');
@@ -3903,18 +4104,21 @@
       topResults.hidden = true;
       landingResults.innerHTML = '';
       topResults.innerHTML = '';
+      landingInput.setAttribute('aria-expanded', 'false');
+      topInput.setAttribute('aria-expanded', 'false');
     }
 
     function showSearchResults(items, source) {
       const container = resultContainer(source);
       paperSearchResults = items.slice(0, 8);
       const rows = paperSearchResults.map((item, index) => `
-        <button class="paper-result-card" type="button" data-paper-result-index="${index}">
+        <button class="paper-result-card" type="button" role="option" aria-selected="false" data-paper-result-index="${index}">
           <strong>${escapeHtml(item.title || item.paper_id)}</strong>
           <span>${escapeHtml(item.venue || item.conference_id || 'ICLR')} ${escapeHtml(item.year || '')} / ${Number(item.review_count || 0)} reviews</span>
         </button>`).join('');
-      container.innerHTML = rows || '<div class="paper-result-card"><strong>No matching paper found</strong><span>Search covers 2025 public official reviews from ICLR, ICML, NeurIPS, TMLR, COLM, and MIDL.</span></div>';
+      container.innerHTML = rows || '<div class="paper-result-card" role="presentation"><strong>No matching paper found</strong><span>Search covers 2025 public official reviews from ICLR, ICML, NeurIPS, TMLR, COLM, and MIDL.</span></div>';
       container.hidden = false;
+      (source === 'top' ? topInput : landingInput).setAttribute('aria-expanded', 'true');
     }
 
 
@@ -4145,6 +4349,9 @@
         communityTicker.innerHTML = ticker;
       }
       if (outrageBoard) {
+        // Stagger rows in only when the visible board actually changes, not on silent data refreshes.
+        outrageBoard.classList.toggle('is-entering', homeBoardKind !== renderCommunityBoard.lastKind);
+        renderCommunityBoard.lastKind = homeBoardKind;
         outrageBoard.innerHTML = (board.rows || []).map((row, index) => boardRowHtml(row, index, board, copy)).join('') || '<p class="outrage-fine"><b>No ranking yet.</b> The demo board stays available while live data loads.</p>';
       }
       if (boardCta) boardCta.innerHTML = copy.cta;
@@ -4161,17 +4368,17 @@
         ? `<b>${escapeHtml(copy.hu(human))}</b>`
         : `<button class="outrage-meta-action" type="button" data-row-rate="${index}">${escapeHtml(copy.ai)}</button>`;
       return `
-        <article class="outrage-row" role="button" tabindex="0" data-board-row="${index}" aria-label="Open review assessment">
+        <article class="outrage-row" role="button" tabindex="0" data-board-row="${index}" aria-label="Open review assessment" style="--i:${Math.min(index, 11)}">
           <div class="outrage-rank">${rank}</div>
           <div class="outrage-main">
             <h3 class="outrage-q">${escapeHtml(row.quote)}${index === 0 ? `<span class="outrage-stamp">${copy.stamp}</span>` : ''}</h3>
             <p class="outrage-why">${escapeHtml(row.verdict)}</p>
             <p class="outrage-meta">${escapeHtml(row.reviewer)} · ${escapeHtml(row.paper)} · ${escapeHtml(row.venue || 'ICLR 2025')} · ${metaTail}${commentTail}</p>
           </div>
-          <div class="outrage-scorebox">
+          <div class="outrage-scorebox" title="AI ${escapeHtml(String(copy.unit || '').toLowerCase())} score, 0-100. Open the row for the full assessment.">
             <div class="outrage-num">${clampScore(row.score)}</div>
             <div class="outrage-unit">${copy.unit} · ${copy.tier(clampScore(row.score))}</div>
-            <button class="outrage-rowrate" type="button" data-row-rate="${index}">${copy.rate}</button>
+            <button class="outrage-rowrate" type="button" data-row-rate="${index}" title="Add your own rating of this review">${copy.rate}</button>
           </div>
         </article>`;
     }
@@ -5337,6 +5544,7 @@
     function resetToSearch() {
       body.classList.remove('is-resolved');
       body.classList.add('is-idle');
+      syncStickyBar();
       hideCloudTooltip(true);
       clearPaperDeepLink();
       renderCommunityHome();
@@ -5374,6 +5582,17 @@
     document.getElementById('resetCloud').addEventListener('click', resetCloudView);
 
     document.addEventListener('click', event => {
+      if (!event.target.closest('.search-results') && !event.target.closest('#landingSearch') && !event.target.closest('#topSearch')) {
+        hideSearchResults();
+      }
+
+      const focusSearch = event.target.closest('[data-focus-search]');
+      if (focusSearch) {
+        landingInput.focus();
+        landingInput.select();
+        return;
+      }
+
       const homeReset = event.target.closest('[data-home-reset]');
       if (homeReset) {
         resetToSearch();
@@ -5693,7 +5912,7 @@
         event.preventDefault();
         (body.classList.contains('is-idle') ? landingInput : topInput).focus();
       }
-      if (event.key === 'Escape' && state.selectedReviewer) {
+      if (event.key === 'Escape' && state.selectedReviewer && landingResults.hidden && topResults.hidden) {
         state.selectedReviewer = null;
         renderReviewerCards();
         renderScoreDetail();
@@ -5714,6 +5933,7 @@
         homeBoardKind = BOARD_ORDER.includes(boardKey) ? boardKey : 'overall';
         body.classList.remove('is-resolved');
         body.classList.add('is-idle');
+        syncStickyBar();
         renderCommunityHome();
         return;
       }
@@ -5721,6 +5941,67 @@
         loadScorecardFromApi(paperId, 'history').catch(() => showToast('Could not restore this scorecard'));
       }
     });
+
+    document.addEventListener('keydown', event => {
+      const container = !landingResults.hidden ? landingResults : (!topResults.hidden ? topResults : null);
+      if (!container) return;
+      if ((authModal && !authModal.hidden) || (rateModal && !rateModal.hidden)) return;
+      const input = container === topResults ? topInput : landingInput;
+      if (event.key === 'Escape') {
+        const form = container === topResults ? document.getElementById('topSearch') : document.getElementById('landingSearch');
+        const withinSearch = form.contains(document.activeElement) || container.contains(document.activeElement);
+        hideSearchResults();
+        if (withinSearch) input.focus();
+        return;
+      }
+      const cards = [...container.querySelectorAll('button.paper-result-card')];
+      if (!cards.length) return;
+      const activeIndex = cards.indexOf(document.activeElement);
+      if (event.key === 'ArrowDown' && (document.activeElement === input || activeIndex >= 0)) {
+        event.preventDefault();
+        cards[Math.min(cards.length - 1, activeIndex + 1)].focus();
+      } else if (event.key === 'ArrowUp' && activeIndex >= 0) {
+        event.preventDefault();
+        if (activeIndex === 0) input.focus();
+        else cards[activeIndex - 1].focus();
+      }
+    });
+
+    (function animateCoverageStats() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      document.querySelectorAll('.coverage-stat b').forEach(el => {
+        const match = (el.textContent || '').trim().match(/^([\d,]+)(.*)$/);
+        if (!match) return;
+        const target = Number(match[1].replace(/,/g, ''));
+        if (!Number.isFinite(target) || target <= 0) return;
+        const suffix = match[2] || '';
+        const started = performance.now();
+        const duration = 850;
+        const tick = now => {
+          const progress = Math.min(1, (now - started) / duration);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          el.textContent = `${Math.round(target * eased).toLocaleString('en-US')}${suffix}`;
+          if (progress < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      });
+    })();
+
+    const stickyBar = document.getElementById('stickyBar');
+    const homeIntroSection = document.querySelector('.home-intro');
+    function syncStickyBar() {
+      if (!stickyBar || !homeIntroSection) return;
+      // Read geometry directly: IO entries can be stale across display:none view switches.
+      const show = body.classList.contains('is-idle') && homeIntroSection.getBoundingClientRect().bottom <= 0;
+      if (!show && stickyBar.classList.contains('is-visible') && stickyBar.contains(document.activeElement)) {
+        landingInput.focus();
+      }
+      stickyBar.classList.toggle('is-visible', show);
+      stickyBar.setAttribute('aria-hidden', String(!show));
+    }
+    if (stickyBar && homeIntroSection && 'IntersectionObserver' in window) {
+      new IntersectionObserver(syncStickyBar).observe(homeIntroSection);
+    }
 
     renderAuthState();
     loadMe();
