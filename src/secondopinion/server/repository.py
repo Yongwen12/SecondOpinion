@@ -1151,11 +1151,23 @@ _HELPFULNESS_CONTRADICTION_PHRASES = (
 )
 
 
+_REVIEWER_RECUSAL_PHRASES = (
+    "find another reviewer and disregard",
+    "disregard my comments",
+    "disregard my review",
+    "unable to provide a meaningful review",
+    "cannot provide a meaningful review",
+    "outside my expertise",
+    "out of my expertise",
+)
+
 def _leaderboard_display_eligible(item: dict[str, Any], *, metric: str = "") -> bool:
     text = " ".join(str(item.get(key) or "") for key in ("quote", "verdict")).lower()
     if not text.strip():
         return False
     if any(phrase in text for phrase in _LEADERBOARD_NOISE_PHRASES):
+        return False
+    if any(phrase in text for phrase in _REVIEWER_RECUSAL_PHRASES):
         return False
     if metric == "helpfulness":
         if int(item.get("helpfulness") or 0) < 55 or int(item.get("toxicity") or 0) > 35:

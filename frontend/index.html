@@ -4343,6 +4343,8 @@
       const normalized = text.toLowerCase();
       const noise = /updating updating|my concern has been addressed|we sincerely thank|thank you for (the|your) comments|uploaded the revised|author.review|we are currently incorporating/;
       if (!normalized.trim() || noise.test(normalized)) return false;
+      const recusal = /find another reviewer.*disregard|disregard (my )?(comments|review)|unable to provide a meaningful review|cannot provide a meaningful review|outside of? my expertise|out of my expertise/;
+      if (recusal.test(normalized)) return false;
       if (key === 'toxic') return Number(source.toxicity ?? source.toxic_final ?? 0) >= 25;
       if (key === 'helpful') {
         const contradiction = /not informative|non-informative|insufficient|non-substantive|no substantive|not a substantive|no actionable|unhelpful|low usefulness|summary|too vague|no critique|repetitive/;
