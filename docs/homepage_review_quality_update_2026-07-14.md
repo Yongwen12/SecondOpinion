@@ -24,6 +24,13 @@ Make the public review rankings easier to interpret and make community ratings b
 - The scorecard endpoint now returns the paper abstract plus the selected reviewer's complete official review and review chunks.
 - Venue-scoped home requests honor a caller limit up to 50 leaderboard entries.
 
+## Follow-up pass (same day): venue hook + board legibility
+
+- Replaced the six-row venue risk table with a compact strip: a headline hook ("The meanest reviewers are at TMLR.") generated from the top-ranked venue, plus six ranked venue cells (№1 inverted in ink, score shown as `20/100` with a relative bar). Roughly one third of the previous height; stays resident on the page instead of moving to a one-time popup.
+- Board tabs became a full-width three-cell segmented control with a glyph identity per board (✖ failures, ☠ toxic, ★ worth keeping) and per-board counts, so the three boards read at a glance.
+- Row ranks for the top three use stacked glyphs (✖✖✖ / ✖✖ / ✖, ★ on the praise board) with a small №; scores render as `95/100` with a micro meter, expressing the 0–100 scale without explanatory copy.
+- Venue data uses canonical casing (NeurIPS) so venue-strip clicks match the search select options.
+
 ## Verification
 
 - Inline homepage JavaScript syntax check passed.

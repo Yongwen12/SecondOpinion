@@ -3224,27 +3224,27 @@
     .outrage-rowrate { padding: 5px 8px; border: 1px solid var(--oh-accent); background: #fff; color: var(--oh-accent); }
     .outrage-row:hover .outrage-rowrate, .outrage-rowrate:hover { background: #fff5f4; color: var(--oh-accent); }
     .home-intro-actions .outrage-submit { padding: 7px 10px; border: 1px solid var(--oh-accent); background: #fff; color: var(--oh-accent); }
-    .venue-ranking { margin: 0 0 34px; border-top: 1px solid #e7e7e7; border-bottom: 1px solid #e7e7e7; }
-    .venue-ranking-head { display: flex; justify-content: space-between; gap: 18px; padding: 15px 0 11px; }
-    .venue-ranking-head h2 { margin: 4px 0 0; font-size: 19px; }
-    .venue-ranking-head p { max-width: 410px; margin: 0; color: #777; font-size: 12px; line-height: 1.45; text-align: right; }
-    .venue-ranking-list { display: grid; }
-    .venue-ranking-item { display: grid; grid-template-columns: 36px minmax(130px, .4fr) minmax(80px, 1fr) auto; gap: 10px; align-items: center; min-height: 47px; padding: 7px 0; border: 0; border-top: 1px solid #f0f0f0; background: transparent; color: #111; cursor: pointer; text-align: left; }
-    .venue-ranking-item:hover { background: #fffbe8; }
-    .venue-ranking-rank { position: relative; display: grid; place-items: center; width: 26px; height: 26px; color: #888; font-size: 12px; font-weight: 900; }
-    .venue-ranking-copy { display: grid; gap: 2px; }
-    .venue-ranking-copy strong { font-size: 13px; }
-    .venue-ranking-copy span { color: #888; font-size: 11px; }
-    .venue-ranking-bar { display: block; height: 9px; background: #ececec; }
-    .venue-ranking-bar::after { content: ''; display: block; width: calc(var(--score) * 1%); height: 100%; background: #c9463d; }
-    .venue-ranking-score { color: #c9463d; font-size: 16px; font-weight: 900; }
-    .venue-ranking-item:nth-child(1) .venue-ranking-rank { border: 1px solid #c9463d; color: #c9463d; }
-    .venue-ranking-item:nth-child(1) .venue-ranking-rank::after { content: ''; position: absolute; width: 36px; height: 1px; background: #c9463d; transform: rotate(-38deg); }
-    .venue-ranking-item:nth-child(1) .venue-ranking-bar::after { background: #b52c25; }
-    .venue-ranking-item:nth-child(2) .venue-ranking-rank { border: 1px solid #777; color: #555; transform: rotate(45deg); }
-    .venue-ranking-item:nth-child(2) .venue-ranking-bar::after { background: #777; }
-    .venue-ranking-item:nth-child(3) .venue-ranking-rank { border-radius: 50%; border: 1px dashed #a8734f; color: #8e5b3a; }
-    .venue-ranking-item:nth-child(3) .venue-ranking-bar::after { background: #9d6744; }
+    .venue-ranking { margin: 0 0 34px; }
+    .venue-ranking-head { display: flex; align-items: baseline; justify-content: space-between; gap: 18px; margin: 0 0 10px; }
+    .venue-ranking-title { margin: 2px 0 0; font-size: 26px; font-weight: 900; letter-spacing: -0.01em; }
+    .venue-ranking-title em { color: var(--oh-accent); font-style: normal; }
+    .venue-ranking-list { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); border: 2px solid var(--oh-ink); }
+    .venue-strip-item { display: grid; gap: 1px; align-content: start; justify-items: start; min-width: 0; padding: 10px 12px 12px; border: 0; border-left: 1px solid var(--oh-ink); background: #fff; color: var(--oh-ink); cursor: pointer; text-align: left; }
+    .venue-strip-item:first-child { border-left: 0; background: var(--oh-ink); color: #fff; }
+    .venue-strip-item:hover { background: #f4f4f4; }
+    .venue-strip-item:first-child:hover { background: #000; }
+    .venue-strip-rank { color: #999; font-size: 10px; font-weight: 900; letter-spacing: 0.14em; }
+    .venue-strip-item:first-child .venue-strip-rank { color: #ff6f66; }
+    .venue-strip-name { font-size: 15px; font-weight: 900; letter-spacing: 0.02em; text-transform: uppercase; }
+    .venue-strip-score { margin-top: 3px; font-size: 30px; font-weight: 900; line-height: 1; }
+    .venue-strip-score span { margin-left: 1px; color: #b5b5b5; font-size: 12px; font-weight: 800; }
+    .venue-strip-item:first-child .venue-strip-score { color: #ff4d42; }
+    .venue-strip-item:first-child .venue-strip-score span { color: #8a8a8a; }
+    .venue-strip-bar { display: block; width: 100%; height: 4px; margin-top: 7px; background: #ececec; }
+    .venue-strip-item:first-child .venue-strip-bar { background: #3a3a3a; }
+    .venue-strip-bar::after { content: ''; display: block; width: calc(var(--v) * 1%); height: 100%; background: var(--oh-accent); }
+    .venue-strip-count { margin-top: 6px; overflow: hidden; max-width: 100%; color: #999; font-size: 10.5px; text-overflow: ellipsis; white-space: nowrap; }
+    .venue-strip-item:first-child .venue-strip-count { color: #8a8a8a; }
     @media (max-width: 768px) {
       .outrage-home { padding: 0 14px 48px; }
       .outrage-header { min-height: 44px; flex-wrap: nowrap; gap: 10px; }
@@ -3314,6 +3314,46 @@
       .site-footer { display: grid; gap: 14px; }
       .site-footer nav { justify-content: flex-start; }
     }
+    /* Board identity: three-cell segmented masthead tabs */
+    .outrage-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; margin-top: 0; overflow: visible; border: 2px solid var(--oh-ink); }
+    .outrage-tab { display: grid; gap: 3px; align-content: start; justify-items: start; min-height: 62px; padding: 9px 13px 11px; border-left: 1px solid var(--oh-ink); color: var(--oh-ink); text-align: left; white-space: normal; letter-spacing: .03em; }
+    .outrage-tab:first-child { border-left: 0; }
+    .outrage-tab:hover { background: #f4f4f4; color: var(--oh-ink); }
+    .outrage-tab.is-active { background: var(--oh-ink); color: #fff; }
+    .outrage-tab.is-active:hover { background: var(--oh-ink); }
+    .outrage-tab-top { display: flex; align-items: baseline; gap: 7px; width: 100%; }
+    .outrage-tab-glyph { color: var(--oh-accent); font-family: 'Segoe UI Symbol', 'Noto Sans Symbols 2', sans-serif; font-size: 17px; font-weight: 900; line-height: 1; }
+    .outrage-tab.is-active .outrage-tab-glyph { color: #ff4d42; }
+    .outrage-tab-count { display: inline; margin-left: auto; color: #a5a5a5; font-size: 11px; font-weight: 800; vertical-align: baseline; }
+    .outrage-tab.is-active .outrage-tab-count { color: #8a8a8a; }
+    .outrage-tab-label { font-size: 12.5px; font-weight: 900; line-height: 1.2; }
+    /* Rank glyph stacks: №1 gets three, №2 two, №3 one */
+    .outrage-rank--top { display: grid; gap: 3px; align-content: center; justify-items: start; }
+    .outrage-rank-glyphs { color: var(--oh-accent); font-family: 'Segoe UI Symbol', 'Noto Sans Symbols 2', sans-serif; font-size: 19px; font-weight: 900; letter-spacing: 3px; line-height: 1; }
+    body.praise .outrage-rank-glyphs { color: var(--oh-ink); }
+    .outrage-rank-no { color: #b5b5b5; font-size: 11px; font-weight: 900; letter-spacing: 0.12em; }
+    .outrage-row:first-child .outrage-rank-no,
+    .outrage-row:hover .outrage-rank-no { color: var(--oh-ink); }
+    /* Scorebox: X/100 with a micro meter */
+    .outrage-num-max { margin-left: 2px; color: #b5b5b5; font-size: 14px; font-weight: 800; letter-spacing: 0; }
+    .outrage-meter { display: block; width: 104px; height: 5px; margin: 8px 0 0 auto; background: #ececec; }
+    .outrage-meter::after { content: ''; display: block; width: calc(var(--v) * 1%); height: 100%; background: var(--oh-accent); }
+    body.praise .outrage-meter::after { background: var(--oh-ink); }
+    .outrage-unit { margin-top: 5px; }
+    @media (max-width: 860px) {
+      .venue-ranking-head { display: grid; gap: 4px; }
+      .venue-ranking-title { font-size: 21px; }
+      .venue-ranking-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .venue-strip-item { border-top: 1px solid var(--oh-ink); }
+      .venue-strip-item:nth-child(-n+3) { border-top: 0; }
+      .venue-strip-item:nth-child(3n+1) { border-left: 0; }
+      .outrage-tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; }
+      .outrage-tab { min-height: 56px; padding: 8px 9px 10px; font-size: 10px; }
+      .outrage-tab-label { font-size: 10.5px; }
+      .outrage-row { grid-template-columns: 52px minmax(0, 1fr); }
+      .outrage-rank-glyphs { font-size: 14px; letter-spacing: 2px; }
+      .outrage-meter { margin-left: 0; }
+    }
   </style>
 </head>
 <body class="is-idle">
@@ -3343,8 +3383,8 @@
           <p class="home-intro-copy"><strong>A second opinion on peer review.</strong> Find the feedback worth answering, the comments worth questioning, and the occasional Reviewer 2 who understood the assignment.</p>
         <section class="venue-ranking" aria-labelledby="venueRankingTitle">
           <div class="venue-ranking-head">
-            <div><p class="home-kicker">All scored public reviews / 2025</p><h2 id="venueRankingTitle">Venue review-quality risk</h2></div>
-            <p>Higher risk means more vague, unsupported, or needlessly hostile review comments across the venue. Choose a venue to open its ranked reviews.</p>
+            <h2 class="venue-ranking-title" id="venueRankingTitle">Where are the meanest reviewers?</h2>
+            <p class="home-kicker" id="venueRankingKicker">Venue risk index / 2025</p>
           </div>
           <div class="venue-ranking-list" id="venueRankingList" aria-live="polite"></div>
         </section>
@@ -3601,13 +3641,14 @@
       { venue: 'TMLR', score: 20, reviewCount: 15526 },
       { venue: 'ICLR', score: 18, reviewCount: 46748 },
       { venue: 'ICML', score: 18, reviewCount: 13102 },
-      { venue: 'NEURIPS', score: 18, reviewCount: 22369 },
+      { venue: 'NeurIPS', score: 18, reviewCount: 22369 },
       { venue: 'MIDL', score: 16, reviewCount: 357 },
       { venue: 'COLM', score: 13, reviewCount: 1569 }
     ];
     const BOARD_COPY = {
       overall: {
         label: 'Worst Review Failures',
+        glyph: '✖',
         tone: 'heat',
         eyebrow: count => `${Number(count || 0).toLocaleString()} PUBLIC REVIEWS AUDITED`,
         heading: 'The reviews doing the most damage.',
@@ -3623,6 +3664,7 @@
       },
       toxic: {
         label: 'Personal / Toxic',
+        glyph: '☠',
         tone: 'heat',
         eyebrow: count => `${Number(count || 0).toLocaleString()} PUBLIC REVIEWS AUDITED`,
         heading: 'Technically empty. Socially, unnecessary.',
@@ -3638,6 +3680,7 @@
       },
       helpful: {
         label: 'Reviews Worth Keeping',
+        glyph: '★',
         tone: 'praise',
         eyebrow: count => `${Number(count || 0).toLocaleString()} PUBLIC REVIEWS AUDITED`,
         heading: 'Proof that Reviewer 2 can be useful.',
@@ -4359,7 +4402,14 @@
 
     function renderVenueRanking() {
       if (!venueRankingList) return;
-      venueRankingList.innerHTML = VENUE_RISK_2025.map((item, index) => `<button class="venue-ranking-item" type="button" data-venue-filter="${item.venue}"><span class="venue-ranking-rank">#${index + 1}</span><span class="venue-ranking-copy"><strong>${item.venue}</strong><span>${item.reviewCount.toLocaleString()} scored reviews</span></span><i class="venue-ranking-bar" style="--score:${item.score * 4}"></i><b class="venue-ranking-score">${item.score}</b></button>`).join('');
+      const leader = VENUE_RISK_2025[0];
+      const maxScore = Math.max(...VENUE_RISK_2025.map(item => item.score), 1);
+      const totalReviews = VENUE_RISK_2025.reduce((sum, item) => sum + item.reviewCount, 0);
+      const title = document.getElementById('venueRankingTitle');
+      if (title && leader) title.innerHTML = `The meanest reviewers are at <em>${escapeHtml(leader.venue)}</em>.`;
+      const kicker = document.getElementById('venueRankingKicker');
+      if (kicker) kicker.textContent = `Venue risk index / 2025 / ${totalReviews.toLocaleString()} reviews scored`;
+      venueRankingList.innerHTML = VENUE_RISK_2025.map((item, index) => `<button class="venue-strip-item" type="button" data-venue-filter="${item.venue}" aria-label="${escapeHtml(item.venue)}, rank ${index + 1}, risk ${item.score} of 100. Search this venue."><span class="venue-strip-rank">№${index + 1}</span><strong class="venue-strip-name">${escapeHtml(item.venue)}</strong><b class="venue-strip-score">${item.score}<span>/100</span></b><i class="venue-strip-bar" style="--v:${Math.round((item.score / maxScore) * 100)}" aria-hidden="true"></i><span class="venue-strip-count">${item.reviewCount.toLocaleString()} reviews</span></button>`).join('');
     }
 
     function renderCommunityBoard() {
@@ -4375,7 +4425,9 @@
         boardTabs.innerHTML = BOARD_ORDER.map(key => {
           const tabBoard = homeBoards[key] || DEMO_HOME_BOARDS[key];
           const selected = key === homeBoardKind;
-          return `<button class="outrage-tab${selected ? ' is-active' : ''}" type="button" role="tab" aria-selected="${selected}" data-board-tab="${key}">${escapeHtml((BOARD_COPY[key] || {}).label || tabBoard.label)}</button>`;
+          const tabCopy = BOARD_COPY[key] || {};
+          const count = Number(tabBoard.count || (tabBoard.rows || []).length || 0);
+          return `<button class="outrage-tab${selected ? ' is-active' : ''}" type="button" role="tab" aria-selected="${selected}" aria-label="${escapeHtml(tabCopy.label || tabBoard.label)}" data-board-tab="${key}"><span class="outrage-tab-top"><b class="outrage-tab-glyph" aria-hidden="true">${tabCopy.glyph || ''}</b><span class="outrage-tab-count">${count.toLocaleString()}</span></span><span class="outrage-tab-label">${escapeHtml(tabCopy.label || tabBoard.label)}</span></button>`;
         }).join('');
       }
       if (communityTicker) {
@@ -4403,17 +4455,23 @@
       const metaTail = human > 0
         ? `<b>${escapeHtml(copy.hu(human))}</b>`
         : `<button class="outrage-meta-action" type="button" data-row-rate="${index}">${escapeHtml(copy.ai)}</button>`;
+      const score = clampScore(row.score);
+      const glyph = copy.glyph || (copy.tone === 'praise' ? '★' : '☠');
+      const rankHtml = index < 3
+        ? `<span class="outrage-rank-glyphs" aria-hidden="true">${glyph.repeat(3 - index)}</span><span class="outrage-rank-no">№${index + 1}</span>`
+        : rank;
       return `
-        <article class="outrage-row" role="button" tabindex="0" data-board-row="${index}" aria-label="Open review assessment" style="--i:${Math.min(index, 11)}">
-          <div class="outrage-rank">${rank}</div>
+        <article class="outrage-row" role="button" tabindex="0" data-board-row="${index}" aria-label="Rank ${index + 1}. Open review assessment" style="--i:${Math.min(index, 11)}">
+          <div class="outrage-rank${index < 3 ? ' outrage-rank--top' : ''}">${rankHtml}</div>
           <div class="outrage-main">
             <h3 class="outrage-q">${escapeHtml(row.quote)}${index === 0 ? `<span class="outrage-stamp">${copy.stamp}</span>` : ''}</h3>
             <p class="outrage-why">${escapeHtml(row.verdict)}</p>
             <p class="outrage-meta">${escapeHtml(row.reviewer)} · ${escapeHtml(row.paper)} · ${escapeHtml(row.venue || 'ICLR 2025')} · ${metaTail}${commentTail}</p>
           </div>
           <div class="outrage-scorebox" title="AI ${escapeHtml(String(copy.unit || '').toLowerCase())} score, 0-100. Open the row for the full assessment.">
-            <div class="outrage-num">${clampScore(row.score)}</div>
-            <div class="outrage-unit">${copy.unit} · ${copy.tier(clampScore(row.score))}</div>
+            <div class="outrage-num">${score}<span class="outrage-num-max">/100</span></div>
+            <i class="outrage-meter" style="--v:${score}" aria-hidden="true"></i>
+            <div class="outrage-unit">${copy.unit} · ${copy.tier(score)}</div>
             <button class="outrage-rowrate" type="button" data-row-rate="${index}" title="Add your own rating of this review">${copy.rate}</button>
           </div>
         </article>`;
