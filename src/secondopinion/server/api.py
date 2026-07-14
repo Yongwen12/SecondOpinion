@@ -206,7 +206,7 @@ def create_app(
         stats = home_stats(session, conference_id=conference, year=year)
         return {
             "latest_papers": latest_scored_papers(session, conference_id=conference, year=year, limit=limit),
-            "leaderboards": build_leaderboards(session, conference_id=conference, year=year, limit=20),
+            "leaderboards": build_leaderboards(session, conference_id=conference, year=year, limit=min(50, max(1, limit))),
             "stats": stats,
             "audited_count": stats["audited_count"],
             "paper_count": stats["paper_count"],
@@ -264,6 +264,7 @@ def create_app(
         )
         paper_payload = payload.setdefault("paper", {})
         paper_payload["paper_id"] = paper_id
+        paper_payload["abstract"] = paper.abstract
         paper_payload["openreview_forum_id"] = paper.openreview_forum_id
 
         review_ids_by_key: dict[str, str] = {}
@@ -271,6 +272,8 @@ def create_app(
         for index, reviewer in enumerate(payload.get("reviewers") or []):
             if not isinstance(reviewer, dict) or index >= len(source_reviews):
                 continue
+            reviewer.setdefault("official_review", source_reviews[index].review_text)
+            reviewer.setdefault("review_chunks", [item for item in payload.get("comments") or [] if isinstance(item, dict) and item.get("reviewer_key") == reviewer.get("reviewer_key")])
             review_id = source_reviews[index].review_id
             reviewer.setdefault("review_id", review_id)
             review_ids_by_key[str(reviewer.get("reviewer_key") or f"R{index + 1}")] = review_id

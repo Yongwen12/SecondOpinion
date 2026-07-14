@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#ffffff" />
   <title>Judge My Reviewers</title>
-  <meta name="description" content="Public peer reviews from six 2025 ML venues, scored for usefulness. Find the feedback worth answering — and the occasional Reviewer 2 who understood the assignment." />
+  <meta name="description" content="Public peer reviews from six 2025 ML venues, scored for usefulness. Find the feedback worth answering and the occasional Reviewer 2 who understood the assignment." />
   <meta property="og:title" content="Judge My Reviewers" />
   <meta property="og:description" content="A second opinion on peer review. 99,671 public official reviews from ICLR, ICML, NeurIPS, TMLR, COLM, and MIDL, scored for usefulness." />
   <meta property="og:type" content="website" />
@@ -2667,9 +2667,8 @@
       }
     }
 
-    /* ============================================================
-       Detail view (.app-view): unify with the Judge My Reviewers
-       homepage — white, sharp, zero-radius, ink + red + yellow.
+    /* =====================================================       Detail view (.app-view): unify with the Judge My Reviewers
+       homepage - white, sharp, zero-radius, ink + red + yellow.
        ============================================================ */
     .app-view {
       --ink: #111111;
@@ -3221,6 +3220,31 @@
       .outrage-stamp { transition: none; }
     }
 
+    /* Small homepage refinements only. */
+    .outrage-rowrate { padding: 5px 8px; border: 1px solid var(--oh-accent); background: #fff; color: var(--oh-accent); }
+    .outrage-row:hover .outrage-rowrate, .outrage-rowrate:hover { background: #fff5f4; color: var(--oh-accent); }
+    .home-intro-actions .outrage-submit { padding: 7px 10px; border: 1px solid var(--oh-accent); background: #fff; color: var(--oh-accent); }
+    .venue-ranking { margin: 0 0 34px; border-top: 1px solid #e7e7e7; border-bottom: 1px solid #e7e7e7; }
+    .venue-ranking-head { display: flex; justify-content: space-between; gap: 18px; padding: 15px 0 11px; }
+    .venue-ranking-head h2 { margin: 4px 0 0; font-size: 19px; }
+    .venue-ranking-head p { max-width: 410px; margin: 0; color: #777; font-size: 12px; line-height: 1.45; text-align: right; }
+    .venue-ranking-list { display: grid; }
+    .venue-ranking-item { display: grid; grid-template-columns: 36px minmax(130px, .4fr) minmax(80px, 1fr) auto; gap: 10px; align-items: center; min-height: 47px; padding: 7px 0; border: 0; border-top: 1px solid #f0f0f0; background: transparent; color: #111; cursor: pointer; text-align: left; }
+    .venue-ranking-item:hover { background: #fffbe8; }
+    .venue-ranking-rank { position: relative; display: grid; place-items: center; width: 26px; height: 26px; color: #888; font-size: 12px; font-weight: 900; }
+    .venue-ranking-copy { display: grid; gap: 2px; }
+    .venue-ranking-copy strong { font-size: 13px; }
+    .venue-ranking-copy span { color: #888; font-size: 11px; }
+    .venue-ranking-bar { display: block; height: 9px; background: #ececec; }
+    .venue-ranking-bar::after { content: ''; display: block; width: calc(var(--score) * 1%); height: 100%; background: #c9463d; }
+    .venue-ranking-score { color: #c9463d; font-size: 16px; font-weight: 900; }
+    .venue-ranking-item:nth-child(1) .venue-ranking-rank { border: 1px solid #c9463d; color: #c9463d; }
+    .venue-ranking-item:nth-child(1) .venue-ranking-rank::after { content: ''; position: absolute; width: 36px; height: 1px; background: #c9463d; transform: rotate(-38deg); }
+    .venue-ranking-item:nth-child(1) .venue-ranking-bar::after { background: #b52c25; }
+    .venue-ranking-item:nth-child(2) .venue-ranking-rank { border: 1px solid #777; color: #555; transform: rotate(45deg); }
+    .venue-ranking-item:nth-child(2) .venue-ranking-bar::after { background: #777; }
+    .venue-ranking-item:nth-child(3) .venue-ranking-rank { border-radius: 50%; border: 1px dashed #a8734f; color: #8e5b3a; }
+    .venue-ranking-item:nth-child(3) .venue-ranking-bar::after { background: #9d6744; }
     @media (max-width: 768px) {
       .outrage-home { padding: 0 14px 48px; }
       .outrage-header { min-height: 44px; flex-wrap: nowrap; gap: 10px; }
@@ -3315,9 +3339,16 @@
         </div>
 
         <section class="home-intro" aria-labelledby="homeTitle">
-          <p class="home-kicker">2025 public review audit &middot; 6 venues</p>
           <h1 class="home-masthead" id="homeTitle"><button class="outrage-brand outrage-brand--masthead" id="homeBrand" type="button" data-home-reset>Judge My Reviewers</button></h1>
           <p class="home-intro-copy"><strong>A second opinion on peer review.</strong> Find the feedback worth answering, the comments worth questioning, and the occasional Reviewer 2 who understood the assignment.</p>
+        <section class="venue-ranking" aria-labelledby="venueRankingTitle">
+          <div class="venue-ranking-head">
+            <div><p class="home-kicker">All scored public reviews / 2025</p><h2 id="venueRankingTitle">Venue review-quality risk</h2></div>
+            <p>Higher risk means more vague, unsupported, or needlessly hostile review comments across the venue. Choose a venue to open its ranked reviews.</p>
+          </div>
+          <div class="venue-ranking-list" id="venueRankingList" aria-live="polite"></div>
+        </section>
+
           <form class="outrage-search-form" id="landingSearch" novalidate>
             <label class="sr-only" for="landingConference">Conference</label>
             <select class="outrage-search-conf" id="landingConference" aria-label="Venue">
@@ -3343,19 +3374,10 @@
           <div class="search-results outrage-results" id="landingResults" role="listbox" aria-label="Paper search results" hidden></div>
         </section>
 
-        <section class="coverage-strip" aria-label="Data coverage and scoring scope">
-          <div class="coverage-stat"><b>26,749</b><span>2025 papers</span></div>
-          <div class="coverage-stat"><b>99,671</b><span>official reviews scored</span></div>
-          <div class="coverage-stat"><b>6 venues</b><span>title, abstract, decision, and public official reviews only</span></div>
-        </section>
-        <p class="coverage-footnote">No PDF full text, author rebuttals, or admin comments enter these rankings.</p>
-
         <div class="board-intro">
           <div>
-            <p class="outrage-eyebrow" id="outrageEyebrow"></p>
             <h2 id="boardHeading">Reviews that need a clearer point.</h2>
           </div>
-          <p class="board-intro-copy" id="boardDescription">High scores here mean more friction, not better reviewing.</p>
         </div>
         <nav class="outrage-tabs" id="boardTabs" aria-label="Reviewer leaderboards"></nav>
         <p class="outrage-ticker" id="communityTicker" hidden></p>
@@ -3575,27 +3597,35 @@
 
     const BRAND = 'Judge My Reviewers';
     const BOARD_ORDER = ['overall', 'toxic', 'helpful'];
+    const VENUE_RISK_2025 = [
+      { venue: 'TMLR', score: 20, reviewCount: 15526 },
+      { venue: 'ICLR', score: 18, reviewCount: 46748 },
+      { venue: 'ICML', score: 18, reviewCount: 13102 },
+      { venue: 'NEURIPS', score: 18, reviewCount: 22369 },
+      { venue: 'MIDL', score: 16, reviewCount: 357 },
+      { venue: 'COLM', score: 13, reviewCount: 1569 }
+    ];
     const BOARD_COPY = {
       overall: {
-        label: 'Needs Attention',
+        label: 'Worst Review Failures',
         tone: 'heat',
         eyebrow: count => `${Number(count || 0).toLocaleString()} PUBLIC REVIEWS AUDITED`,
-        heading: 'Reviews that need a clearer point.',
-        description: 'High scores mean more friction, not better reviewing.',
-        unit: 'NEEDS WORK',
-        stamp: 'PLEASE CLARIFY',
+        heading: 'The reviews doing the most damage.',
+        description: 'Ranked by review-quality risk: vague claims, no evidence, no actionable point, or empty hostility. #1 is the worst in this list.',
+        unit: 'RISK SCORE',
+        stamp: 'HIGHEST RISK',
         rate: 'RATE THIS ->',
         hu: n => `${n} community vote${n === 1 ? '' : 's'}`,
         ai: 'AI score - add your take',
-        cta: '<p><b>Disagree with the machine?</b>Good. Pick a review and leave a human second opinion.</p><button class="outrage-submit" type="button" data-open-rate>Rate a review</button>',
+        cta: '<p><b>Disagree with us?</b> Good, pick a review and leave your opinions here.</p><button class="outrage-submit" type="button" data-open-rate>Rate a review</button>',
         fine: 'Scores describe the usefulness of public review comments, not reviewers as people. Reviewer names stay paper-scoped and pseudonymous.',
         tier: score => score >= 85 ? 'HIGH' : score >= 65 ? 'WATCH' : 'MIXED'
       },
       toxic: {
-        label: 'Tone Problems',
+        label: 'Personal / Toxic',
         tone: 'heat',
         eyebrow: count => `${Number(count || 0).toLocaleString()} PUBLIC REVIEWS AUDITED`,
-        heading: 'Technically feedback. Socially, a choice.',
+        heading: 'Technically empty. Socially, unnecessary.',
         description: 'Tone risk tracks contempt and personal attacks separately from technical criticism.',
         unit: 'TONE RISK',
         stamp: 'TOO PERSONAL',
@@ -3607,7 +3637,7 @@
         tier: score => score >= 80 ? 'HIGH' : score >= 55 ? 'WATCH' : 'MIXED'
       },
       helpful: {
-        label: 'Most Helpful',
+        label: 'Reviews Worth Keeping',
         tone: 'praise',
         eyebrow: count => `${Number(count || 0).toLocaleString()} PUBLIC REVIEWS AUDITED`,
         heading: 'Proof that Reviewer 2 can be useful.',
@@ -3623,31 +3653,30 @@
       }
     };
     const DEMO_HOME_BOARDS = {
-      overall: { key: 'overall', label: 'Overall', emoji: '🔥', count: 128, tone: 'heat', rows: [
-        { quote: '“This is not convincing.”', verdict: 'No experiment named. No evidence cited. Full confidence.', reviewer: 'Reviewer #2', paper: 'Evidence-Grounded Review Auditing', score: 94, humanCount: 2 },
-        { quote: '“The authors clearly don’t understand their own method.”', verdict: 'An insult where a technical objection should be.', reviewer: 'Reviewer #4', paper: 'Retrieval Benchmarks', score: 91, humanCount: 5 },
-        { quote: '“Needs more experiments.”', verdict: 'Which ones? The review never says.', reviewer: 'Reviewer #1', paper: 'Multimodal Agents', score: 88, humanCount: 0 },
-        { quote: '“Not novel. See prior work.”', verdict: 'Cites zero prior work.', reviewer: 'Reviewer #3', paper: 'Scalable RAG', score: 84, humanCount: 1 },
-        { quote: '“I did not read the appendix.”', verdict: 'The proofs are in the appendix.', reviewer: 'Reviewer #7', paper: 'Sparse Attention Proofs', score: 82, humanCount: 3 },
-        { quote: '“Reject.”', verdict: 'The full review. Two lines, for a 14-page paper.', reviewer: 'Reviewer #5', paper: 'Diffusion Policy Transfer', score: 79, humanCount: 0 },
-        { quote: '“The writing should be improved.”', verdict: 'No section, no sentence, no example given.', reviewer: 'Reviewer #9', paper: 'Graph Pretraining', score: 76, humanCount: 0 },
-        { quote: 'Score raised 3 → 8 after rebuttal.', verdict: 'Zero words of the review changed.', reviewer: 'Reviewer #6', paper: 'Contrastive Decoding', score: 73, humanCount: 2 }
+      overall: { key: 'overall', label: 'Overall', emoji: '!', count: 128, tone: 'heat', rows: [
+        { quote: 'This is not convincing.', verdict: 'No experiment named. No evidence cited. Full confidence.', reviewer: 'Reviewer #2', paper: 'Evidence-Grounded Review Auditing', score: 94, humanCount: 2 },
+        { quote: 'The authors clearly do not understand their own method.', verdict: 'An insult where a technical objection should be.', reviewer: 'Reviewer #4', paper: 'Retrieval Benchmarks', score: 91, humanCount: 5 },
+        { quote: 'Needs more experiments.', verdict: 'Which ones? The review never says.', reviewer: 'Reviewer #1', paper: 'Multimodal Agents', score: 88, humanCount: 0 },
+        { quote: 'Not novel. See prior work.', verdict: 'Cites zero prior work.', reviewer: 'Reviewer #3', paper: 'Scalable RAG', score: 84, humanCount: 1 },
+        { quote: 'I did not read the appendix.', verdict: 'The proofs are in the appendix.', reviewer: 'Reviewer #7', paper: 'Sparse Attention Proofs', score: 82, humanCount: 3 },
+        { quote: 'Reject.', verdict: 'The full review. Two lines, for a 14-page paper.', reviewer: 'Reviewer #5', paper: 'Diffusion Policy Transfer', score: 79, humanCount: 0 },
+        { quote: 'The writing should be improved.', verdict: 'No section, no sentence, no example given.', reviewer: 'Reviewer #9', paper: 'Graph Pretraining', score: 76, humanCount: 0 },
+        { quote: 'Score raised from 3 to 8 after rebuttal.', verdict: 'Zero words of the review changed.', reviewer: 'Reviewer #6', paper: 'Contrastive Decoding', score: 73, humanCount: 2 }
       ]},
-      toxic: { key: 'toxic', label: 'Toxic', emoji: '☠️', count: 24, tone: 'heat', rows: [
-        { quote: '“The authors clearly don’t understand their own method.”', verdict: 'Personal, dismissive, technically empty.', reviewer: 'Reviewer #4', paper: 'Retrieval Benchmarks', score: 96, humanCount: 5 },
-        { quote: '“This reads like a first-year course project.”', verdict: 'Condescension is not a weakness section.', reviewer: 'Reviewer #8', paper: 'Federated Distillation', score: 92, humanCount: 3 },
-        { quote: '“Why was this even submitted?”', verdict: 'A question, not a review.', reviewer: 'Reviewer #11', paper: 'Video World Models', score: 89, humanCount: 2 },
-        { quote: '“I stopped reading at page 3.”', verdict: 'The method starts on page 4.', reviewer: 'Reviewer #4', paper: 'Reward Hacking Audits', score: 85, humanCount: 1 },
-        { quote: '“The related work section is an insult to the field.”', verdict: 'Names none of the insulted work.', reviewer: 'Reviewer #13', paper: 'Neural Theorem Proving', score: 81, humanCount: 0 }
+      toxic: { key: 'toxic', label: 'Toxic', emoji: '!', count: 24, tone: 'heat', rows: [
+        { quote: 'The authors clearly do not understand their own method.', verdict: 'Personal, dismissive, technically empty.', reviewer: 'Reviewer #4', paper: 'Retrieval Benchmarks', score: 96, humanCount: 5 },
+        { quote: 'This reads like a first-year course project.', verdict: 'Condescension is not a weakness section.', reviewer: 'Reviewer #8', paper: 'Federated Distillation', score: 92, humanCount: 3 },
+        { quote: 'Why was this even submitted?', verdict: 'A question, not a review.', reviewer: 'Reviewer #11', paper: 'Video World Models', score: 89, humanCount: 2 },
+        { quote: 'I stopped reading at page 3.', verdict: 'The method starts on page 4.', reviewer: 'Reviewer #4', paper: 'Reward Hacking Audits', score: 85, humanCount: 1 },
+        { quote: 'The related work section is an insult to the field.', verdict: 'Names none of the insulted work.', reviewer: 'Reviewer #13', paper: 'Neural Theorem Proving', score: 81, humanCount: 0 }
       ]},
-      helpful: { key: 'helpful', label: 'Most Helpful', emoji: '⭐', count: 53, tone: 'praise', rows: [
+      helpful: { key: 'helpful', label: 'Most Helpful', emoji: '+', count: 53, tone: 'praise', rows: [
         { quote: 'Found the bug in Eq. 7. Authors confirmed.', verdict: 'One comment saved the camera-ready.', reviewer: 'Reviewer #17', paper: 'Stochastic Interpolants', score: 98, humanCount: 7 },
-        { quote: 'Suggested the ablation that became Table 4.', verdict: 'The paper’s strongest table came from a review.', reviewer: 'Reviewer #22', paper: 'Tool-Use Agents', score: 96, humanCount: 4 },
+        { quote: 'Suggested the ablation that became Table 4.', verdict: 'The paper\'s strongest table came from a review.', reviewer: 'Reviewer #22', paper: 'Tool-Use Agents', score: 96, humanCount: 4 },
         { quote: 'Linked three missing baselines, with numbers.', verdict: 'Did the related-work the paper needed.', reviewer: 'Reviewer #16', paper: 'Open-Vocab Segmentation', score: 94, humanCount: 2 },
         { quote: 'Asked the one question that reframed the paper.', verdict: 'The authors thanked them by name.', reviewer: 'Reviewer #20', paper: 'Latent Reasoning', score: 91, humanCount: 3 }
       ]}
-    };
-    let publicScorecard = null;
+    };    let publicScorecard = null;
     let leaderboards = { red: [], black: [] };
     let paperSearchResults = [];
     let homePapers = [];
@@ -3658,7 +3687,7 @@
     // Seed the stagger guard so the initial render (and its fast static/API re-renders) does
     // not start an entrance animation that the next same-kind render would cancel mid-flight.
     renderCommunityBoard.lastKind = homeBoardKind;
-    let homeTickerHtml = '<span class="hl">⚡ 24 human ratings this week</span> · latest: <b>“brutal but fair”</b> on Reviewer #4 — 2 min ago';
+    let homeTickerHtml = '<span class="hl">24 human ratings this week</span> · latest: <b>brutal but fair/b> on Reviewer #4 - 2 min ago';
     let usingDemoHome = true;
     let rateContext = { row: null, paperId: '', reviewerKey: '', tone: 'heat', source: 'global', paperResults: [], reviewerResults: [], selectedPaper: null, comments: [], commentsLoading: false };
 
@@ -3723,6 +3752,7 @@
     const communityTicker = document.getElementById('communityTicker');
     const outrageBoard = document.getElementById('outrageBoard');
     const boardCta = document.getElementById('boardCta');
+    const venueRankingList = document.getElementById('venueRankingList');
     const finePrint = document.getElementById('finePrint');
     const boardHeading = document.getElementById('boardHeading');
     const boardDescription = document.getElementById('boardDescription');
@@ -4211,7 +4241,7 @@
       const venueYear = source.year || fb.year || 2025;
       const venueLabel = /\b20\d{2}\b/.test(venueName) ? venueName : `${venueName} ${venueYear}`;
       return {
-        quote: String(source.quote || source.t || source.best_quote || source.summary || fb.quote || '“Needs more experiments.”'),
+        quote: String(source.quote || source.t || source.best_quote || source.summary || fb.quote || 'Needs more experiments.'),
         verdict: String(source.verdict || source.w || source.indictment || source.label || fb.verdict || 'Specificity pending real board-row data.'),
         reviewer,
         paper,
@@ -4327,6 +4357,11 @@
       window.history[mode === 'replace' ? 'replaceState' : 'pushState']({}, '', url);
     }
 
+    function renderVenueRanking() {
+      if (!venueRankingList) return;
+      venueRankingList.innerHTML = VENUE_RISK_2025.map((item, index) => `<button class="venue-ranking-item" type="button" data-venue-filter="${item.venue}"><span class="venue-ranking-rank">#${index + 1}</span><span class="venue-ranking-copy"><strong>${item.venue}</strong><span>${item.reviewCount.toLocaleString()} scored reviews</span></span><i class="venue-ranking-bar" style="--score:${item.score * 4}"></i><b class="venue-ranking-score">${item.score}</b></button>`).join('');
+    }
+
     function renderCommunityBoard() {
       const board = homeBoards[homeBoardKind] || homeBoards.overall;
       const copy = BOARD_COPY[homeBoardKind] || BOARD_COPY.overall;
@@ -4356,6 +4391,7 @@
       }
       if (boardCta) boardCta.innerHTML = copy.cta;
       if (finePrint) finePrint.innerHTML = copy.fine;
+      renderVenueRanking();
     }
 
     function boardRowHtml(row, index, board, copy) {
@@ -4394,8 +4430,8 @@
       usingDemoHome = true;
       homeAuditedCount = 82219;
       homeTickerHtml = homeBoardKind === 'helpful'
-        ? '<span class="hl">⚡ 24 human ratings this week</span> · latest: <b>“I owe this reviewer a beer”</b> on Reviewer #17 — 12 min ago'
-        : '<span class="hl">⚡ 24 human ratings this week</span> · latest: <b>“brutal but fair”</b> on Reviewer #4 — 2 min ago';
+        ? '<span class="hl">24 human ratings this week</span> · latest: <b>I owe this reviewer a beer/b> on Reviewer #17 - 12 min ago'
+        : '<span class="hl">24 human ratings this week</span> · latest: <b>brutal but fair/b> on Reviewer #4 - 2 min ago';
       setHomeStatus('');
       renderCommunityHome();
       try {
@@ -4449,7 +4485,7 @@
       rateModalError.textContent = '';
       renderRateModal();
       if (!row) loadRatePapers('');
-      else loadReviewerComments(row);
+      else { loadReviewerComments(row); loadRateContext(row); }
     }
 
     function closeRateModal() {
@@ -4462,17 +4498,20 @@
       const row = rateContext.row;
       if (row) {
         const praise = rateContext.tone === 'praise';
+        const detail = rateContext.detail || {};
+        const paperContext = detail.paper || {};
+        const reviewerContext = detail.reviewer || {};
         rateModalBody.innerHTML = `
           <p class="rate-kicker">Community check</p>
           <h2 id="rateTitle">${escapeHtml(row.reviewer)}</h2>
           <p>${escapeHtml(row.paper)} · ${escapeHtml(row.venue || 'ICLR 2025')}</p>
-          <div class="rate-review-card"><strong>${escapeHtml(row.quote)}</strong><span>${escapeHtml(row.verdict)} Current score: ${clampScore(row.score)}</span></div>
+          <p class="rate-context-note">You are rating this public review, not the paper or the reviewer as a person.</p><div class="rate-review-card"><strong>${escapeHtml(row.quote)}</strong></div>${paperContext.abstract ? `<details class="rate-evidence"><summary>Paper context</summary><p><strong>Decision:</strong> ${escapeHtml(paperContext.decision || '')}</p><p>${escapeHtml(paperContext.abstract)}</p></details>` : ''}${reviewerContext.official_review ? `<details class="rate-evidence"><summary>Read the full official review</summary><p>${escapeHtml(reviewerContext.official_review)}</p></details>` : ''}${(reviewerContext.review_chunks || []).length ? `<details class="rate-evidence"><summary>Related review chunks (${reviewerContext.review_chunks.length})</summary>${reviewerContext.review_chunks.map(chunk => `<p><strong>${escapeHtml(chunk.chunk_id || 'Excerpt')}</strong> ${escapeHtml(chunk.text || '')}</p>`).join('')}</details>` : ''}
           <div class="rate-actions">
             <button class="rate-primary" type="button" data-rate-choice="${praise ? 'up' : 'down'}">${praise ? 'Helpful' : 'Agree'}</button>
             <button class="rate-secondary" type="button" data-rate-choice="${praise ? 'down' : 'up'}">${praise ? 'Not quite' : 'Disagree'}</button>
           </div>
           <form class="rate-comment-form" data-comment-form>
-            <textarea class="rate-comment-input" id="rateCommentInput" rows="2" maxlength="1000" placeholder="Add context to your vote…"></textarea>
+            <textarea class="rate-comment-input" id="rateCommentInput" rows="2" maxlength="1000" placeholder="Add context to your vote...</textarea>
             <button class="rate-primary rate-comment-submit" type="submit">Post comment</button>
           </form>
           <p class="rate-comments-head">Comments</p>
@@ -4503,9 +4542,14 @@
         ${rateContext.reviewerResults.length ? `<div class="rate-list" id="rateReviewerResults">${rateReviewerResultsHtml()}</div>` : ''}`;
     }
 
+    function readablePaperTitle(value) {
+      const greek = { alpha: 'alpha', beta: 'beta', gamma: 'gamma', delta: 'delta', Delta: 'Delta', theta: 'theta', lambda: 'lambda', mu: 'mu', sigma: 'sigma' };
+      return String(value || '').replace(/\$+/g, '').replace(/\\([A-Za-z]+)/g, (_, name) => greek[name] || name).replace(/[{}]/g, '').replace(/\^\s*(\d+)/g, '^$1').replace(/\s+/g, ' ').trim();
+    }
+
     function ratePaperResultsHtml() {
       if (!rateContext.paperResults.length) return '<button type="button" disabled><strong>No papers loaded yet</strong><span>Type a title or wait for the API.</span></button>';
-      return rateContext.paperResults.map((paper, index) => `<button type="button" data-paper-pick="${index}"><strong>${escapeHtml(paper.title || paper.paper_id)}</strong><span>${escapeHtml(paper.venue || paper.conference_id || rateContext.conference)} ${escapeHtml(paper.year || 2025)} · ${Number(paper.review_count || 0)} reviews</span></button>`).join('');
+      return rateContext.paperResults.map((paper, index) => `<button type="button" data-paper-pick="${index}"><strong>${escapeHtml(readablePaperTitle(paper.title || paper.paper_id))}</strong><span>${escapeHtml(paper.venue || paper.conference_id || rateContext.conference)} ${escapeHtml(paper.year || 2025)} · ${Number(paper.review_count || 0)} reviews</span></button>`).join('');
     }
 
     function rateReviewerResultsHtml() {
@@ -4782,7 +4826,7 @@
       if (!result.ok) { rateModalError.textContent = result.reason === 'empty' ? 'Write something first.' : 'Comment could not be posted.'; return; }
       rateContext.comments = result.items;
       renderRateModal();
-      if (result.demo) { rateModalError.textContent = 'Comment added (demo — saved on this device).'; renderCommunityBoard(); }
+      if (result.demo) { rateModalError.textContent = 'Comment added (demo - saved on this device).'; renderCommunityBoard(); }
     }
 
     function scorecardCommentRow(reviewer) {
@@ -4797,7 +4841,7 @@
     function renderScorecardCommentsHtml(reviewer) {
       let listHtml;
       if (reviewer.commentsLoading) {
-        listHtml = '<p class="rate-comments-empty">Loading comments…</p>';
+        listHtml = '<p class="rate-comments-empty">Loading comments.../p>';
       } else if (!(reviewer.comments || []).length) {
         listHtml = '<p class="rate-comments-empty">No comments yet. Be the first to weigh in.</p>';
       } else {
@@ -4811,7 +4855,7 @@
         <div class="detail-comments">
           <p class="rate-comments-head">Comments</p>
           <form class="rate-comment-form" data-sc-comment-form="${escapeHtml(reviewer.id)}">
-            <textarea class="rate-comment-input" id="scCommentInput" rows="2" maxlength="1000" placeholder="Add your own take on this review…"></textarea>
+            <textarea class="rate-comment-input" id="scCommentInput" rows="2" maxlength="1000" placeholder="Add your own take on this review...</textarea>
             <button class="rate-primary rate-comment-submit" type="submit">Post comment</button>
           </form>
           <div class="rate-comments">${listHtml}</div>
@@ -4865,10 +4909,32 @@
       }
     }
     async function submitPaper(value, source = 'landing') {
+    async function openVenueLeaderboard() {
+      const venue = landingConference?.value || '';
+      if (!venue || venue === 'all' || !API_BASE) { showInputError(); return; }
+      const response = await apiFetch(`/api/home?conference=${encodeURIComponent(venue)}&year=${encodeURIComponent(homeYear)}&limit=50`);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const payload = await response.json();
+      homeBoards = normalizeHomeBoards(payload);
+      homeAuditedCount = payload.stats?.audited_count || payload.audited_count || 0;
+      homeBoardKind = 'overall';
+      setBoardDeepLink(homeBoardKind);
+      renderCommunityHome();
+      document.getElementById('boardHeading')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      showToast(`${venue}: ranked review-quality risks`);
+    }
       if (state.busy) return;
       const clean = (value || '').trim();
       if (!clean) {
         if (source === 'landing') showInputError();
+        if (source === 'landing' && landingConference?.value && landingConference.value !== 'all') {
+          setBusy(true, source);
+          try { await openVenueLeaderboard(); }
+          catch (error) { console.warn('Venue leaderboard load failed.', error); showToast('Could not load this venue yet'); }
+          finally { setBusy(false, source); }
+          return;
+        }
+
         else {
           document.getElementById('topSearch').classList.add('is-invalid');
           window.setTimeout(() => document.getElementById('topSearch').classList.remove('is-invalid'), 520);
@@ -5599,6 +5665,13 @@
         return;
       }
 
+      const venueFilter = event.target.closest('[data-venue-filter]');
+      if (venueFilter) {
+        landingConference.value = venueFilter.dataset.venueFilter;
+        landingInput.focus();
+        showToast(`${venueFilter.dataset.venueFilter} selected`);
+        return;
+      }
       const accountPaper = event.target.closest('[data-account-paper]');
       if (accountPaper) {
         closeAuthModal();
@@ -5692,8 +5765,8 @@
         setBoardDeepLink(homeBoardKind);
         if (usingDemoHome) {
           homeTickerHtml = homeBoardKind === 'helpful'
-            ? '<span class="hl">⚡ 24 human ratings this week</span> · latest: <b>“I owe this reviewer a beer”</b> on Reviewer #17 — 12 min ago'
-            : '<span class="hl">⚡ 24 human ratings this week</span> · latest: <b>“brutal but fair”</b> on Reviewer #4 — 2 min ago';
+            ? '<span class="hl">24 human ratings this week</span> · latest: <b>I owe this reviewer a beer/b> on Reviewer #17 - 12 min ago'
+            : '<span class="hl">24 human ratings this week</span> · latest: <b>brutal but fair/b> on Reviewer #4 - 2 min ago';
         }
         renderCommunityBoard();
         return;
@@ -6015,3 +6088,16 @@
   </script>
 </body>
 </html>
+    async function loadRateContext(row) {
+      if (!row?.paperId || !row?.reviewerKey || !API_BASE) return;
+      try {
+        const response = await apiFetch(`/api/papers/${encodeURIComponent(row.paperId)}/scorecard`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const scorecard = await response.json();
+        const reviewer = (scorecard.reviewers || []).find(item => item.reviewer_key === row.reviewerKey);
+        rateContext.detail = reviewer ? { paper: scorecard.paper || {}, reviewer } : null;
+        renderRateModal();
+      } catch (error) {
+        console.warn('Rating context load failed.', error);
+      }
+    }
