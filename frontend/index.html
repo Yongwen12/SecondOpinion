@@ -3502,6 +3502,15 @@
     .outrage-social .outrage-vote--agree b { color: #00a878; }
     .outrage-social .outrage-vote--disagree b { color: #ff3b30; }
     .outrage-social .outrage-vote span { margin-left: 0; color: inherit; font-size: 9px; }
+    /* Evidence / dimension foldouts: collapsed by default, expand on demand */
+    .rate-evidence { margin-top: 12px; border-top: 1px solid #ececec; padding-top: 10px; }
+    .rate-evidence summary { color: #555; cursor: pointer; font-size: 12px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; }
+    .rate-evidence summary:hover { color: var(--oh-accent, #e10600); }
+    .rate-evidence > p { color: #555; font-size: 13.5px; line-height: 1.55; }
+    .detail-dimensions { margin-top: 16px; }
+    .detail-dimensions .dimension-grid { margin-top: 12px; }
+    /* Unified vote row on the paper detail card */
+    .detail-vote { max-width: 560px; margin: 14px 0 2px; }
     @media (max-width: 860px) {
       .venue-ranking-head { display: grid; gap: 4px; }
       .venue-ranking-title { font-size: 21px; }
@@ -4451,7 +4460,13 @@
     function normalizeBoardRow(raw, index, key, tone, fallback = {}) {
       const source = raw || {};
       const fb = fallback || {};
-      const reviewer = String(source.reviewer || source.r || source.nickname || source.reviewer_name || source.reviewerKey || source.reviewer_key || fb.reviewer || `Reviewer #${index + 1}`);
+      // Positional labels from the reviewer key (R4 -> "Reviewer 4"); the generated
+      // nicknames confused readers, so they are never displayed.
+      const rawReviewerKey = String(source.reviewerKey || source.reviewer_key || '');
+      const keyDigits = rawReviewerKey.match(/(\d+)\s*$/);
+      const reviewer = keyDigits
+        ? `Reviewer ${keyDigits[1]}`
+        : (rawReviewerKey || String(source.reviewer || source.r || fb.reviewer || `Reviewer ${index + 1}`));
       const paper = String(source.paper || source.p || source.paper_title || source.title || fb.paper || 'ICLR paper');
       const attentionScore = source.attention ?? (
         source.outrage != null
@@ -5108,6 +5123,7 @@
       if (context.source === 'scorecard' && context.reviewer) {
         context.reviewer.comments = items;
         context.reviewer.commentsLoaded = true;
+        if (context.row) boardCommentCache.set(commentScopeKey(context.row), items);
         renderScoreDetail();
       } else {
         rateContext.comments = items;
@@ -5208,6 +5224,7 @@
       reviewer.commentsLoading = true;
       renderScoreDetail();
       reviewer.comments = await fetchCommentsFor(scorecardCommentRow(reviewer));
+      boardCommentCache.set(commentScopeKey(scorecardCommentRow(reviewer)), reviewer.comments);
       reviewer.commentsLoading = false;
       reviewer.commentsLoaded = true;
       renderScoreDetail();
@@ -5224,6 +5241,7 @@
       if (!result.ok) { if (status) status.textContent = result.reason === 'empty' ? 'Write something first.' : 'Comment could not be posted.'; return; }
       reviewer.comments = result.items;
       reviewer.commentsLoaded = true;
+      boardCommentCache.set(commentScopeKey(scorecardCommentRow(reviewer)), result.items);
       renderScoreDetail();
     }
 
@@ -5479,7 +5497,8 @@
           id: reviewer.reviewer_key || `R${index + 1}`,
           reviewId: reviewer.review_id || "",
           avatar: mascotKey(reviewer.nickname),
-          name: reviewer.nickname || `Reviewer ${index + 1}`,
+          // Plain positional names: the generated nicknames confused readers.
+          name: `Reviewer ${index + 1}`,
           score: quality,
           tone: band.className || 'green',
           label: plainBand(band.label),
@@ -5516,7 +5535,7 @@
           y: 0,
           tone: topic.tone || 'gold',
           reviewer: topic.reviewer_key || '',
-          reviewerName: topic.nickname || '',
+          reviewerName: (reviewers.find(item => item.id === topic.reviewer_key) || {}).name || '',
           chunk: topic.chunk || ''
         }));
 
@@ -5616,11 +5635,13 @@
       else delete voteState[key];
       saveVoteState(voteState);
       renderLeaderboards();
+      renderScoreDetail();
       if (!API_BASE) {
         if (previous) voteState[key] = previous;
         else delete voteState[key];
         saveVoteState(voteState);
         renderLeaderboards();
+        renderScoreDetail();
         showToast('Vote requires the production API');
         return;
       }
@@ -5642,6 +5663,7 @@
         else delete voteState[key];
         saveVoteState(voteState);
         renderLeaderboards();
+        renderScoreDetail();
         showToast('Vote could not be saved');
       }
     }
@@ -5684,11 +5706,11 @@
           : '<p class="reviewer-excerpt">No public review text is available for this reviewer yet.</p>';
         return `
           <article class="reviewer-entry">
-            <button class="reviewer-card${active ? ' is-active' : ''}" type="button" data-reviewer="${reviewer.id}" aria-expanded="${active}" aria-label="${escapeHtml(reviewer.name)}: show scoring dimensions">
+            <button class="reviewer-card${active ? ' is-active' : ''}" type="button" data-reviewer="${reviewer.id}" aria-expanded="${active}" aria-label="${escapeHtml(reviewer.name)}: vote and comment on this review">
               <span class="mini-avatar" aria-hidden="true">${avatarSvg[reviewer.avatar || reviewer.id] || avatarSvg.R1}</span>
               <span class="reviewer-card-copy">
                 <span class="reviewer-name">${escapeHtml(reviewer.name)}</span>
-                <span class="reviewer-score-line"><strong>${reviewer.score}</strong><span class="tone-label">${escapeHtml(reviewer.label)} &middot; View score dimensions</span></span>
+                <span class="reviewer-score-line"><strong>${reviewer.score}</strong><span class="tone-label">${escapeHtml(reviewer.label)} &middot; Agree, disagree, comment</span></span>
               </span>
               <span class="chevron" aria-hidden="true">v</span>
             </button>
@@ -5712,6 +5734,15 @@
         return;
       }
 
+      // Same interaction contract as the board rows and rate modal: vote on the
+      // review, then discuss. AI dimensions collapse behind a one-line digest.
+      const praise = reviewer.score >= 70;
+      const counts = reviewerSocialCounts(reviewer);
+      const positiveVote = praise ? 'up' : 'down';
+      const negativeVote = praise ? 'down' : 'up';
+      const positiveCount = praise ? counts.up : counts.down;
+      const negativeCount = praise ? counts.down : counts.up;
+      const dimensionDigest = reviewer.dimensions.map(metric => `${metric.name} ${metric.value}`).join(' · ');
       scoreDetailClip.innerHTML = `
         <div class="score-detail-card">
           <div class="detail-head">
@@ -5721,32 +5752,45 @@
             </div>
             <span class="detail-score ${toneClass(reviewer.tone)}">${reviewer.score}/100</span>
           </div>
+          <div class="rate-actions detail-vote" aria-label="Vote on this review">
+            <button class="rate-primary${counts.selected === positiveVote ? ' is-selected' : ''}" type="button" data-reviewer-vote="${positiveVote}" data-reviewer-id="${reviewer.id}" aria-pressed="${counts.selected === positiveVote}">${praise ? 'Helpful' : 'Not helpful'} &middot; ${positiveCount}${counts.selected === positiveVote ? ' &#10003;' : ''}</button>
+            <button class="rate-secondary${counts.selected === negativeVote ? ' is-selected' : ''}" type="button" data-reviewer-vote="${negativeVote}" data-reviewer-id="${reviewer.id}" aria-pressed="${counts.selected === negativeVote}">${praise ? 'Not helpful' : 'Helpful'} &middot; ${negativeCount}${counts.selected === negativeVote ? ' &#10003;' : ''}</button>
+          </div>
           ${renderScorecardCommentsHtml(reviewer)}
-          <div class="dimension-grid">
-            ${reviewer.dimensions.map(metric => `
-              <div class="metric">
-                <div class="metric-head"><span>${escapeHtml(metric.name)}</span><strong>${metric.value}</strong></div>
-                <div class="metric-track"><i class="metric-fill ${metricTone(metric.value)}" data-width="${metric.value}%"></i></div>
-                <div class="criterion">${escapeHtml(metric.criterion)}</div>
-                ${metric.quote ? `<div class="criterion"><b>Quote</b> ${escapeHtml(metric.quote)}</div>` : ''}
-                ${metric.verdict ? `<div class="criterion"><b>Verdict</b> ${escapeHtml(metric.verdict)}</div>` : ''}
-              </div>`).join('') || '<div class="empty-panel">No reviewer metrics are available for this scorecard yet.</div>'}
-          </div>
-          <div class="score-guide" aria-label="Score guide">
-            <span class="guide-item"><i class="guide-swatch"></i>0-39 Weak</span>
-            <span class="guide-item"><i class="guide-swatch"></i>40-69 Mixed</span>
-            <span class="guide-item"><i class="guide-swatch"></i>70-84 Solid</span>
-            <span class="guide-item"><i class="guide-swatch"></i>85-100 Strong</span>
-          </div>
+          <details class="rate-evidence detail-dimensions">
+            <summary>AI score dimensions${dimensionDigest ? ` — ${escapeHtml(dimensionDigest)}` : ''}</summary>
+            <div class="dimension-grid">
+              ${reviewer.dimensions.map(metric => `
+                <div class="metric">
+                  <div class="metric-head"><span>${escapeHtml(metric.name)}</span><strong>${metric.value}</strong></div>
+                  <div class="metric-track"><i class="metric-fill ${metricTone(metric.value)}" data-width="${metric.value}%"></i></div>
+                  <div class="criterion">${escapeHtml(metric.criterion)}</div>
+                  ${metric.quote ? `<div class="criterion"><b>Quote</b> ${escapeHtml(metric.quote)}</div>` : ''}
+                  ${metric.verdict ? `<div class="criterion"><b>Verdict</b> ${escapeHtml(metric.verdict)}</div>` : ''}
+                </div>`).join('') || '<div class="empty-panel">No reviewer metrics are available for this scorecard yet.</div>'}
+            </div>
+            <div class="score-guide" aria-label="Score guide">
+              <span class="guide-item"><i class="guide-swatch"></i>0-39 Weak</span>
+              <span class="guide-item"><i class="guide-swatch"></i>40-69 Mixed</span>
+              <span class="guide-item"><i class="guide-swatch"></i>70-84 Solid</span>
+              <span class="guide-item"><i class="guide-swatch"></i>85-100 Strong</span>
+            </div>
+          </details>
           <div class="source-actions">
             <a class="source-link" href="${openReviewUrl(reviewer.reviewId)}" target="_blank" rel="noopener noreferrer">Source via OpenReview, CC BY 4.0</a>
             <a class="source-link" href="${reportScoreUrl(reviewer.id)}">Report this score</a>
           </div>
         </div>`;
 
-      requestAnimationFrame(() => {
-        scoreDetailClip.querySelectorAll('.metric-fill').forEach(fill => { fill.style.width = fill.dataset.width; });
-      });
+      const dimensionsPanel = scoreDetailClip.querySelector('.detail-dimensions');
+      if (dimensionsPanel) {
+        dimensionsPanel.addEventListener('toggle', () => {
+          if (!dimensionsPanel.open) return;
+          requestAnimationFrame(() => {
+            dimensionsPanel.querySelectorAll('.metric-fill').forEach(fill => { fill.style.width = fill.dataset.width; });
+          });
+        });
+      }
       if (!reviewer.commentsLoaded && !reviewer.commentsLoading) loadScorecardComments(reviewer);
       syncLinkedReviewer();
     }

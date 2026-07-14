@@ -45,6 +45,14 @@ Make the public review rankings easier to interpret and make community ratings b
 - Frontend seeds `boardCommentCache` from each row's embedded `latest_comments` and only fetches rows that lack an embed, eliminating the per-row `/comments` round trips on first paint. Opening a review still fetches the full comment list.
 - Votes on the static-home path are unchanged (still snapshot values); only comments are overlaid. Refreshing vote tallies live is a possible follow-up.
 
+## Fifth pass (same day): unify voting and comments on the paper page
+
+- The paper scorecard's reviewer detail panel now uses the same interaction contract as the board rows and rate modal: an Agree/Disagree (or Helpful/Not quite for strong reviews, score >= 70) vote row with live counts, followed by the Community takes form and thread. Votes go through the existing per-reviewer vote endpoint with optimistic select-and-rollback.
+- The AI multi-dimension scoring collapses into a one-line digest ("AI score dimensions — Helpfulness 15 · Friction 10 · Tone risk 5") that expands on click, with the score guide inside; metric bars animate on expand.
+- Reviewer nicknames ("Vague Thunder", "Outrage Beacon") are replaced by plain positional names: Reviewer 1, Reviewer 2, ... in payload order, across cards, the detail panel, comment filters, and topic tooltips. Nicknames stay in the payload (avatars still derive from them) but are no longer displayed.
+- Paper-page comment loads/posts/edits/deletes now write through to the homepage board comment cache, so takes stay consistent when navigating back.
+- Merged with the concurrent "Refine community voting UI" pass: vote labels unify on Helpful / Not helpful everywhere (board modal and paper detail), board rows keep their inline agree/disagree vote strip, and board-row reviewer aliases derive from the reviewer key (R4 -> "Reviewer 4") instead of nicknames.
+
 ## Verification
 
 - Inline homepage JavaScript syntax check passed.
