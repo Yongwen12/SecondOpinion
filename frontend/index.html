@@ -4984,7 +4984,6 @@
       if (state.busy) return;
       const clean = (value || '').trim();
       if (!clean) {
-        if (source === 'landing') showInputError();
         if (source === 'landing' && landingConference?.value && landingConference.value !== 'all') {
           setBusy(true, source);
           try { await openVenueLeaderboard(); }
@@ -4993,7 +4992,9 @@
           return;
         }
 
-        else {
+        if (source === 'landing') {
+          showInputError();
+        } else {
           document.getElementById('topSearch').classList.add('is-invalid');
           window.setTimeout(() => document.getElementById('topSearch').classList.remove('is-invalid'), 520);
           topInput.focus();
