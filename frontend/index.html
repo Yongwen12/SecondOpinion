@@ -2499,6 +2499,15 @@
       background: #ffffff;
     }
 
+    .rate-primary.is-selected,
+    .rate-secondary.is-selected,
+    .rate-primary.is-selected:hover,
+    .rate-secondary.is-selected:hover {
+      border-color: var(--oh-accent, #e10600);
+      background: var(--oh-accent, #e10600);
+      color: #ffffff;
+    }
+
     .rate-comment-form {
       display: grid;
       gap: 10px;
@@ -4561,14 +4570,18 @@
         const detail = rateContext.detail || {};
         const paperContext = detail.paper || {};
         const reviewerContext = detail.reviewer || {};
+        const selectionKey = `reviewer:${row.paperId}:${row.reviewerKey}`;
+        const selectedVote = voteState[selectionKey] || null;
+        const positiveVote = praise ? 'up' : 'down';
+        const negativeVote = praise ? 'down' : 'up';
         rateModalBody.innerHTML = `
           <p class="rate-kicker">Community check</p>
           <h2 id="rateTitle">${escapeHtml(row.reviewer)}</h2>
           <p>${escapeHtml(row.paper)} · ${escapeHtml(row.venue || 'ICLR 2025')}</p>
           <p class="rate-context-note">You are rating this public review, not the paper or the reviewer as a person.</p><div class="rate-review-card"><strong>${escapeHtml(row.quote)}</strong></div>${paperContext.abstract ? `<details class="rate-evidence"><summary>Paper context</summary><p><strong>Decision:</strong> ${escapeHtml(paperContext.decision || '')}</p><p>${escapeHtml(paperContext.abstract)}</p></details>` : ''}${reviewerContext.official_review ? `<details class="rate-evidence"><summary>Read the full official review</summary><p>${escapeHtml(reviewerContext.official_review)}</p></details>` : ''}${(reviewerContext.review_chunks || []).length ? `<details class="rate-evidence"><summary>Related review chunks (${reviewerContext.review_chunks.length})</summary>${reviewerContext.review_chunks.map(chunk => `<p><strong>${escapeHtml(chunk.chunk_id || 'Excerpt')}</strong> ${escapeHtml(chunk.text || '')}</p>`).join('')}</details>` : ''}
           <div class="rate-actions">
-            <button class="rate-primary" type="button" data-rate-choice="${praise ? 'up' : 'down'}">${praise ? 'Helpful' : 'Agree'}</button>
-            <button class="rate-secondary" type="button" data-rate-choice="${praise ? 'down' : 'up'}">${praise ? 'Not quite' : 'Disagree'}</button>
+            <button class="rate-primary${selectedVote === positiveVote ? ' is-selected' : ''}" type="button" data-rate-choice="${positiveVote}" aria-pressed="${selectedVote === positiveVote}">${praise ? 'Helpful' : 'Agree'}${selectedVote === positiveVote ? ' ✓' : ''}</button>
+            <button class="rate-secondary${selectedVote === negativeVote ? ' is-selected' : ''}" type="button" data-rate-choice="${negativeVote}" aria-pressed="${selectedVote === negativeVote}">${praise ? 'Not quite' : 'Disagree'}${selectedVote === negativeVote ? ' ✓' : ''}</button>
           </div>
           <form class="rate-comment-form" data-comment-form>
             <textarea class="rate-comment-input" id="rateCommentInput" rows="2" maxlength="1000" placeholder="Add context to your vote..."></textarea>
@@ -4915,7 +4928,7 @@
         <div class="detail-comments">
           <p class="rate-comments-head">Comments</p>
           <form class="rate-comment-form" data-sc-comment-form="${escapeHtml(reviewer.id)}">
-            <textarea class="rate-comment-input" id="scCommentInput" rows="2" maxlength="1000" placeholder="Add your own take on this review...</textarea>
+            <textarea class="rate-comment-input" id="scCommentInput" rows="2" maxlength="1000" placeholder="Add your own take on this review..."></textarea>
             <button class="rate-primary rate-comment-submit" type="submit">Post comment</button>
           </form>
           <div class="rate-comments">${listHtml}</div>
