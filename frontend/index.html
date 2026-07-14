@@ -3727,6 +3727,7 @@
     let homeYear = 2025;
     let homeAuditedCount = 82219;
     let homeBoardKind = initialHomeBoard();
+    let venueLeaderboardExpanded = false;
     // Seed the stagger guard so the initial render (and its fast static/API re-renders) does
     // not start an entrance animation that the next same-kind render would cancel mid-flight.
     renderCommunityBoard.lastKind = homeBoardKind;
@@ -4349,7 +4350,7 @@
           emoji: boardPayload.emoji || DEMO_HOME_BOARDS[key].emoji,
           count: Number(boardPayload.count || boardPayload.rows.length),
           tone,
-          rows: boardPayload.rows.filter(row => homePayloadRowEligible(row, key)).map((row, index) => normalizeBoardRow(row, index, key, tone, demoRows[index % demoRows.length])).sort((left, right) => right.score - left.score).slice(0, key === 'overall' ? 8 : 20)
+          rows: boardPayload.rows.filter(row => homePayloadRowEligible(row, key)).map((row, index) => normalizeBoardRow(row, index, key, tone, demoRows[index % demoRows.length])).sort((left, right) => right.score - left.score).slice(0, venueLeaderboardExpanded ? 50 : (key === 'overall' ? 8 : 20))
         };
       }
       if (!usedModern && raw && (Array.isArray(raw.red) || Array.isArray(raw.black))) {
@@ -4482,6 +4483,7 @@
     }
 
     async function loadCommunityHome(year = homeYear) {
+      venueLeaderboardExpanded = false;
       homeYear = Number(year || 2025);
       homePapers = [];
       homeBoards = cloneHomeBoards(DEMO_HOME_BOARDS);
@@ -4569,7 +4571,7 @@
             <button class="rate-secondary" type="button" data-rate-choice="${praise ? 'down' : 'up'}">${praise ? 'Not quite' : 'Disagree'}</button>
           </div>
           <form class="rate-comment-form" data-comment-form>
-            <textarea class="rate-comment-input" id="rateCommentInput" rows="2" maxlength="1000" placeholder="Add context to your vote...</textarea>
+            <textarea class="rate-comment-input" id="rateCommentInput" rows="2" maxlength="1000" placeholder="Add context to your vote..."></textarea>
             <button class="rate-primary rate-comment-submit" type="submit">Post comment</button>
           </form>
           <p class="rate-comments-head">Comments</p>
@@ -4973,6 +4975,7 @@
       const response = await apiFetch(`/api/home?conference=${encodeURIComponent(venue)}&year=${encodeURIComponent(homeYear)}&limit=50`);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const payload = await response.json();
+      venueLeaderboardExpanded = true;
       homeBoards = normalizeHomeBoards(payload);
       homeAuditedCount = payload.stats?.audited_count || payload.audited_count || 0;
       homeBoardKind = 'overall';
@@ -6144,10 +6147,7 @@
       renderAll();
       loadCommunityHome();
     });
-  </script>
-</body>
-</html>
-    async function loadRateContext(row) {
+      async function loadRateContext(row) {
       if (!row?.paperId || !row?.reviewerKey || !API_BASE) return;
       try {
         const response = await apiFetch(`/api/papers/${encodeURIComponent(row.paperId)}/scorecard`);
@@ -6160,3 +6160,7 @@
         console.warn('Rating context load failed.', error);
       }
     }
+
+  </script>
+</body>
+</html>
