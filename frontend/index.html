@@ -992,6 +992,44 @@
 
     .reviewer-card:hover .chevron { background: var(--surface-3); color: var(--ink); }
     .reviewer-card.is-active .chevron { transform: rotate(180deg); }
+    .reviewer-entry {
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--surface-2);
+      overflow: hidden;
+    }
+
+    .reviewer-entry .reviewer-card {
+      width: 100%;
+      border: 0;
+      border-radius: 0;
+    }
+
+    .reviewer-excerpts {
+      display: grid;
+      gap: 9px;
+      padding: 0 12px 13px 60px;
+      border-top: 1px solid var(--line);
+    }
+
+    .reviewer-excerpt {
+      margin: 0;
+      color: var(--ink-2);
+      font-size: 12px;
+      font-weight: 560;
+      line-height: 1.52;
+    }
+
+    .reviewer-excerpt-label {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 780;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
 
     .score-detail {
       display: grid;
@@ -2804,16 +2842,18 @@
 
     /* Reviewer cards -> flat editorial rows; selection is a red inset bar */
     .app-view .reviewer-grid { grid-template-columns: minmax(0, 1fr); gap: 0; border-top: 1px solid #ececec; }
+    .app-view .reviewer-entry { border: 0; border-bottom: 1px solid #ececec; border-radius: 0; background: transparent; }
     .app-view .reviewer-card {
       min-height: 62px;
       padding: 12px 4px;
       border: 0;
-      border-bottom: 1px solid #ececec;
       background: transparent;
       box-shadow: none;
     }
     .app-view .reviewer-card:hover { border-color: #ececec; background: #fafafa; box-shadow: none; transform: none; }
-    .app-view .reviewer-card.is-active { border: 0; border-bottom: 1px solid #ececec; background: #fafafa; box-shadow: inset 3px 0 0 #e10600; }
+    .app-view .reviewer-card.is-active { border: 0; background: #fafafa; box-shadow: inset 3px 0 0 #e10600; }
+    .app-view .reviewer-excerpts { padding: 0 4px 14px 52px; border-top: 0; }
+    .app-view .reviewer-excerpt { color: #282724; }
     .app-view .reviewer-name { color: #111111; font-size: 13px; font-weight: 750; }
     .app-view .mini-avatar,
     .app-view .pixel-avatar { border: 1px solid #111111; box-shadow: none; filter: grayscale(1) contrast(1.05); }
@@ -3509,14 +3549,6 @@
             <div class="cloud-corner" aria-hidden="true"><span class="reviewer-dot"></span><span class="reviewer-dot"></span><span class="reviewer-dot"></span></div>
           </div>
         </section>
-
-        <section class="surface comments-section" aria-labelledby="commentsTitle">
-          <div class="section-head">
-            <h2 id="commentsTitle">Comments</h2>
-                        <div class="filter-group" id="commentFilters" aria-label="Filter comments"></div>
-          </div>
-          <div class="thread-list" id="threadList"></div>
-        </section>
         <p class="trust-note"><strong>Read the source before raising the pitchfork.</strong> Scores are AI-generated, may be inaccurate, and assess review text rather than reviewer identity or character.</p>
         <footer class="site-footer">
           <p>Public official review excerpts via OpenReview, CC BY 4.0. Use the source links to verify context or report a score for human review.</p>
@@ -3669,7 +3701,7 @@
         description: 'Ranked by review-quality risk: vague claims, no evidence, no actionable point, or empty hostility. #1 is the worst in this list.',
         unit: 'RISK SCORE',
         stamp: 'HIGHEST RISK',
-        rate: 'RATE THIS ->',
+        rate: 'MORE ABOUT THIS PAPER ->',
         hu: n => `${n} community vote${n === 1 ? '' : 's'}`,
         ai: 'AI score - add your take',
         cta: '<p><b>Disagree with us?</b> Good, pick a review and leave your opinions here.</p><button class="outrage-submit" type="button" data-open-rate>Rate a review</button>',
@@ -3685,7 +3717,7 @@
         description: 'Tone risk tracks contempt and personal attacks separately from technical criticism.',
         unit: 'TONE RISK',
         stamp: 'TOO PERSONAL',
-        rate: 'RATE THIS ->',
+        rate: 'MORE ABOUT THIS PAPER ->',
         hu: n => `${n} community vote${n === 1 ? '' : 's'}`,
         ai: 'AI score - add your take',
         cta: '<p><b>Harsh is not the same as useful.</b>Agree or disagree with the assessment.</p><button class="outrage-submit" type="button" data-open-rate>Rate a review</button>',
@@ -3701,7 +3733,7 @@
         description: 'Specific, evidence-linked comments that an author can actually act on.',
         unit: 'HELPFUL',
         stamp: 'WORTH READING',
-        rate: 'RATE THIS ->',
+        rate: 'MORE ABOUT THIS PAPER ->',
         hu: n => `${n} community vote${n === 1 ? '' : 's'}`,
         ai: 'AI score - add your take',
         cta: '<p><b>Good feedback deserves receipts too.</b>Vouch for a review that made the paper better.</p><button class="outrage-submit" type="button" data-open-rate>Rate a review</button>',
@@ -4512,7 +4544,7 @@
             <div class="outrage-num">${score}<span class="outrage-num-max">/100</span></div>
             <i class="outrage-meter" style="--v:${score}" aria-hidden="true"></i>
             <div class="outrage-unit">${copy.unit} · ${copy.tier(score)}</div>
-            <button class="outrage-rowrate" type="button" data-row-rate="${index}" title="Add your own rating of this review">${copy.rate}</button>
+            <button class="outrage-rowrate" type="button" data-row-paper="${index}" title="Read more reviews and the paper scorecard">${copy.rate}</button>
           </div>
         </article>`;
     }
@@ -4569,14 +4601,18 @@
 
     function openBoardRow(index) {
       const row = currentBoardRow(index);
+      if (row) openRateModal(row, 'row');
+    }
+
+    function openBoardPaper(index) {
+      const row = currentBoardRow(index);
       if (!row) return;
       if (!row.paperId || row.paperId.startsWith('demo-')) {
-        showToast('Demo row - live scorecard will open when data is imported');
+        showToast('This demo review does not have a paper page yet.');
         return;
       }
       openHomePaper(row.paperId, 'landing');
     }
-
     function openRateModal(row = null, source = 'global') {
       const board = homeBoards[homeBoardKind] || homeBoards.overall;
       rateContext = { row, paperId: row?.paperId || '', reviewerKey: row?.reviewerKey || '', tone: row?.tone || board.tone, source, paperResults: [], reviewerResults: [], selectedPaper: null, conference: row?.conference || 'ICLR', query: '', comments: [], commentsLoading: false };
@@ -5436,18 +5472,28 @@
     function renderReviewerCards() {
       reviewerGrid.innerHTML = [...reviewers].sort((a, b) => b.score - a.score).map(reviewer => {
         const active = state.selectedReviewer === reviewer.id;
+        const excerpts = splitComments.filter(comment => comment.id === reviewer.id);
+        const reviewText = excerpts.length
+          ? excerpts.map(comment => `
+              <p class="reviewer-excerpt">
+                <span class="reviewer-excerpt-label">Review ${escapeHtml(comment.chunk)}</span>
+                ${escapeHtml(comment.view)}
+              </p>`).join('')
+          : '<p class="reviewer-excerpt">No public review text is available for this reviewer yet.</p>';
         return `
-          <button class="reviewer-card${active ? ' is-active' : ''}" type="button" data-reviewer="${reviewer.id}" aria-expanded="${active}">
-            <span class="mini-avatar" aria-hidden="true">${avatarSvg[reviewer.avatar || reviewer.id] || avatarSvg.R1}</span>
-            <span class="reviewer-card-copy">
-              <span class="reviewer-name">${reviewer.name}</span>
-              <span class="reviewer-score-line"><strong>${reviewer.score}</strong><span class="tone-label">${reviewer.label}</span></span>
-            </span>
-            <span class="chevron" aria-hidden="true">v</span>
-          </button>`;
+          <article class="reviewer-entry">
+            <button class="reviewer-card${active ? ' is-active' : ''}" type="button" data-reviewer="${reviewer.id}" aria-expanded="${active}" aria-label="${escapeHtml(reviewer.name)}: show scoring dimensions">
+              <span class="mini-avatar" aria-hidden="true">${avatarSvg[reviewer.avatar || reviewer.id] || avatarSvg.R1}</span>
+              <span class="reviewer-card-copy">
+                <span class="reviewer-name">${escapeHtml(reviewer.name)}</span>
+                <span class="reviewer-score-line"><strong>${reviewer.score}</strong><span class="tone-label">${escapeHtml(reviewer.label)} · View score dimensions</span></span>
+              </span>
+              <span class="chevron" aria-hidden="true">v</span>
+            </button>
+            <div class="reviewer-excerpts">${reviewText}</div>
+          </article>`;
       }).join('');
     }
-
     function metricTone(value) {
       if (value < 40) return 'red';
       if (value < 70) return 'gold';
@@ -5606,8 +5652,6 @@
       renderReviewerCards();
       renderScoreDetail();
       renderCloud();
-      renderFilters();
-      renderComments();
     }
 
     function selectReviewer(id) {
@@ -5901,6 +5945,13 @@
         return;
       }
 
+      const rowPaperButton = event.target.closest('[data-row-paper]');
+      if (rowPaperButton) {
+        event.preventDefault();
+        event.stopPropagation();
+        openBoardPaper(rowPaperButton.dataset.rowPaper);
+        return;
+      }
       const boardRow = event.target.closest('[data-board-row]');
       if (boardRow) {
         openBoardRow(boardRow.dataset.boardRow);
