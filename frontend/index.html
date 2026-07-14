@@ -2962,7 +2962,7 @@
     .outrage-search-form {
       display: grid;
       align-items: stretch;
-      grid-template-columns: 138px minmax(0, 1fr) auto auto;
+      grid-template-columns: 82px 138px minmax(0, 1fr) auto auto;
       gap: 0;
       width: min(820px, 100%);
       min-height: 56px;
@@ -3263,7 +3263,7 @@
       .outrage-brand--masthead { font-size: clamp(38px, 11.5vw, 56px); white-space: normal; }
       .home-intro-copy { margin: 16px 0 20px; font-size: 15px; }
       .outrage-search-form {
-        grid-template-columns: 106px minmax(0, 1fr) auto;
+        grid-template-columns: 68px 102px minmax(0, 1fr) auto;
         min-height: 52px;
       }
       .outrage-search-key { display: none; }
@@ -3399,6 +3399,11 @@
         </section>
 
           <form class="outrage-search-form" id="landingSearch" novalidate>
+            <label class="sr-only" for="landingYear">Year</label>
+            <select class="outrage-search-conf outrage-search-year" id="landingYear" aria-label="Year">
+              <option value="2025">2025</option>
+              <option value="2026">2026</option>
+            </select>
             <label class="sr-only" for="landingConference">Conference</label>
             <select class="outrage-search-conf" id="landingConference" aria-label="Venue">
               <option value="all">All 2025</option>
@@ -3776,6 +3781,7 @@
 
     const body = document.body;
     const landingInput = document.getElementById('landingInput');
+    const landingYear = document.getElementById('landingYear');
     const landingConference = document.getElementById('landingConference');
     const topInput = document.getElementById('topInput');
     const landingClear = document.getElementById('landingClear');
@@ -3890,6 +3896,28 @@
       landingInput.focus();
     }
 
+    const SEARCH_VENUES = ['ICLR', 'ICML', 'NeurIPS', 'TMLR', 'COLM', 'MIDL'];
+
+    function selectedLandingYear() {
+      return Number(landingYear?.value || 2025);
+    }
+
+    function renderLandingVenueOptions() {
+      const year = selectedLandingYear();
+      const comingSoon = year === 2026;
+      landingConference.innerHTML = [
+        `<option value="all">${comingSoon ? 'All 2026 - Coming soon' : 'All 2025'}</option>`,
+        ...SEARCH_VENUES.map(venue => `<option value="${venue}"${comingSoon ? ' disabled' : ''}>${venue}${comingSoon ? ' - Coming soon' : ''}</option>`)
+      ].join('');
+      landingConference.value = 'all';
+      landingInput.placeholder = comingSoon ? '2026 coverage is coming soon' : 'Paper title or OpenReview ID';
+    }
+
+    function showComingSoon() {
+      const venue = landingConference?.value && landingConference.value !== 'all' ? `${landingConference.value} 2026` : '2026 conference coverage';
+      landingError.textContent = `${venue} is coming soon. We have not published 2026 papers or reviews yet.`;
+      hideSearchResults();
+    }
     function escapeHtml(value) {
       return String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
     }
@@ -4982,10 +5010,13 @@
       }
     }
     async function submitPaper(value, source = 'landing') {
+      if (source === 'landing' && selectedLandingYear() === 2026) { showComingSoon(); return; }
     async function openVenueLeaderboard() {
+      const year = selectedLandingYear();
+      if (year === 2026) { showComingSoon(); return; }
       const venue = landingConference?.value || '';
       if (!venue || venue === 'all' || !API_BASE) { showInputError(); return; }
-      const response = await apiFetch(`/api/home?conference=${encodeURIComponent(venue)}&year=${encodeURIComponent(homeYear)}&limit=50`);
+      const response = await apiFetch(`/api/home?conference=${encodeURIComponent(venue)}&year=${encodeURIComponent(year)}&limit=50`);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const payload = await response.json();
       venueLeaderboardExpanded = true;
@@ -5044,9 +5075,10 @@
       }
       const paperId = paperIdFromValue(value);
       if (paperId) return loadScorecardFromApi(paperId, source, { title: parsePaperTitle(value) });
+      const searchYear = source === 'landing' ? selectedLandingYear() : homeYear;
       const selectedVenue = landingConference && landingConference.value && landingConference.value !== 'all' ? landingConference.value : '';
       const venueParam = selectedVenue ? `&conference=${encodeURIComponent(selectedVenue)}` : '';
-      const response = await apiFetch(`/api/papers?query=${encodeURIComponent(value)}&year=${encodeURIComponent(homeYear)}&limit=8${venueParam}`);
+      const response = await apiFetch(`/api/papers?query=${encodeURIComponent(value)}&year=${encodeURIComponent(searchYear)}&limit=8${venueParam}`);
       if (!response.ok) return false;
       const payload = await response.json();
       const items = Array.isArray(payload.items) ? payload.items : [];
@@ -5705,6 +5737,11 @@
       submitPaper(topInput.value, 'top');
     });
 
+    landingYear.addEventListener('change', () => {
+      renderLandingVenueOptions();
+      landingError.textContent = selectedLandingYear() === 2026 ? 'Select a 2026 conference to see its availability.' : '';
+      hideSearchResults();
+    });
     landingInput.addEventListener('input', () => {
       landingError.textContent = '';
       document.getElementById('landingSearch').classList.remove('is-invalid');
@@ -6151,6 +6188,7 @@
       new IntersectionObserver(syncStickyBar).observe(homeIntroSection);
     }
 
+    renderLandingVenueOptions();
     renderAuthState();
     loadMe();
     syncClearButtons();
