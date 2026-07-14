@@ -213,15 +213,70 @@ def test_reviewer_comment_flow(tmp_path):
     assert reviewer["comment_count"] == 1
     assert reviewer["comments"][0]["body"] == "Reviewer 2 asked me to cite 15 of their own papers."
 
-    # Leaderboard rows surface the comment count so busy reviewers stand out.
+    # Leaderboard rows surface the comment count and embed the newest takes so the
+    # board's first paint carries community context without a per-row round trip.
     home = client.get("/api/home", params={"conference": "ICLR", "year": 2025})
-    assert home.json()["leaderboards"]["red"][0]["comment_count"] == 1
+    red_row = home.json()["leaderboards"]["red"][0]
+    assert red_row["comment_count"] == 1
+    assert [item["body"] for item in red_row["latest_comments"]] == [
+        "Reviewer 2 asked me to cite 15 of their own papers."
+    ]
 
     # Blank comments are rejected; unknown papers 404.
     blank = client.post("/api/papers/paper1/reviewers/R1/comments", json={"body": "   "})
     assert blank.status_code == 400
     missing = client.post("/api/papers/ghost/reviewers/R1/comments", json={"body": "hi"})
     assert missing.status_code == 404
+
+
+def test_static_home_embeds_live_comment_previews(tmp_path):
+    factory = session_factory_for(tmp_path)
+    seed(factory, tmp_path)
+
+    # A pre-rendered snapshot is comment-cold: its board row starts with no takes.
+    snapshot_path = tmp_path / "home.json"
+    snapshot_path.write_text(
+        json.dumps({
+            "latest_papers": [{"paper_id": "paper1"}],
+            "leaderboards": {
+                "overall": [{"paper_id": "paper1", "reviewer_key": "R1", "comment_count": 0, "latest_comments": []}],
+                "toxic": [],
+                "helpful": [],
+            },
+            "stats": {"paper_count": 1, "review_count": 1, "scored_review_count": 1, "audited_count": 1},
+            "audited_count": 1,
+            "paper_count": 1,
+            "review_count": 1,
+        }),
+        encoding="utf-8",
+    )
+    settings = ServerSettings(
+        database_url=f"sqlite:///{tmp_path / 'api.db'}",
+        artifact_root=tmp_path / "artifacts",
+        scoring_memory_path=tmp_path / "memory.jsonl",
+        home_snapshot_path=snapshot_path,
+    )
+    client = TestClient(create_app(settings=settings, session_factory=factory))
+
+    cold = client.get("/api/home", params={"year": 2025})
+    assert cold.json()["source"] == "static_home_2025"
+    cold_row = cold.json()["leaderboards"]["overall"][0]
+    assert cold_row["comment_count"] == 0
+    assert cold_row["latest_comments"] == []
+
+    for body in ["First community take.", "A newer, sharper take."]:
+        client.post("/api/papers/paper1/reviewers/R1/comments", json={"body": body})
+
+    # The default 2025 home still serves the snapshot, but rows are now overlaid with
+    # the live count and the newest previews (newest first), no client fetch required.
+    warm = client.get("/api/home", params={"year": 2025})
+    assert warm.json()["source"] == "static_home_2025"
+    warm_row = warm.json()["leaderboards"]["overall"][0]
+    assert warm_row["comment_count"] == 2
+    assert [item["body"] for item in warm_row["latest_comments"]] == [
+        "A newer, sharper take.",
+        "First community take.",
+    ]
 
 
 

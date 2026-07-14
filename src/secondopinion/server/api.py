@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import datetime as dt
 import json
+import logging
 import os
 import uuid
 from collections import defaultdict, deque
@@ -23,6 +24,7 @@ from .repository import (
     apply_vote_counts,
     authenticate_user,
     build_leaderboards,
+    comment_previews_by_reviewer,
     create_scoring_job,
     create_user_account,
     create_user_session,
@@ -49,6 +51,8 @@ from .repository import (
     user_to_public_dict,
 )
 
+
+logger = logging.getLogger(__name__)
 
 SESSION_COOKIE = "so_session"
 USER_TOKEN_COOKIE = "so_user_token"
@@ -202,7 +206,10 @@ def create_app(
             home_snapshot_path=settings.home_snapshot_path,
         )
         if static_payload is not None:
-            return static_payload
+            # The pre-rendered snapshot is comment-cold; overlay live comment previews
+            # from the DB so the board's first paint carries community takes without a
+            # per-row round trip.
+            return enrich_home_comment_previews(session, static_payload)
         stats = home_stats(session, conference_id=conference, year=year)
         return {
             "latest_papers": latest_scored_papers(session, conference_id=conference, year=year, limit=limit),
@@ -493,6 +500,39 @@ def create_app(
         return build_leaderboards(session, conference_id=conference, year=year, limit=limit)
 
     return app
+
+
+def enrich_home_comment_previews(session: Session, payload: dict[str, Any]) -> dict[str, Any]:
+    """Overlay live comment previews and counts onto static-snapshot leaderboard rows.
+
+    Comments are a DB-only, runtime feature, so the pre-rendered home snapshot never
+    carries them. For every shown row we set ``latest_comments`` (up to a couple of the
+    newest) and refresh ``comment_count`` from the DB. Queries are deduplicated per paper
+    and the whole pass is best-effort: any failure leaves the bare snapshot intact.
+    """
+    boards = payload.get("leaderboards")
+    if not isinstance(boards, dict):
+        return payload
+    previews_by_paper: dict[str, dict[str, dict[str, Any]]] = {}
+    try:
+        for rows in boards.values():
+            if not isinstance(rows, list):
+                continue
+            for row in rows:
+                if not isinstance(row, dict):
+                    continue
+                paper_id = str(row.get("paper_id") or "")
+                reviewer_key = str(row.get("reviewer_key") or "")
+                if not paper_id or not reviewer_key:
+                    continue
+                if paper_id not in previews_by_paper:
+                    previews_by_paper[paper_id] = comment_previews_by_reviewer(session, paper_id)
+                bucket = previews_by_paper[paper_id].get(reviewer_key) or {}
+                row["latest_comments"] = list(bucket.get("items", []))
+                row["comment_count"] = int(bucket.get("count", 0))
+    except Exception:  # pragma: no cover - never let comment enrichment break the home feed
+        logger.warning("Home comment enrichment failed; serving snapshot without previews.", exc_info=True)
+    return payload
 
 
 def load_static_home_payload(

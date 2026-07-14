@@ -858,13 +858,36 @@ def comments_by_reviewer(
     return grouped
 
 
-def comment_counts_by_reviewer(session: Session, paper_id: str) -> dict[str, int]:
+COMMENT_PREVIEW_LIMIT = 2
+
+
+def comment_previews_by_reviewer(
+    session: Session,
+    paper_id: str,
+    *,
+    limit: int = COMMENT_PREVIEW_LIMIT,
+) -> dict[str, dict[str, Any]]:
+    """Total count plus the newest public comments for each reviewer on a paper.
+
+    Returns ``reviewer_key -> {"count": int, "items": [<=limit newest public dicts]}``.
+    Previews are display-only, so they carry no viewer edit context. Used to embed a
+    few community comments directly in leaderboard rows and spare the client a
+    per-row round trip.
+    """
     rows = session.execute(
-        select(ReviewerComment.reviewer_key, func.count(ReviewerComment.id))
+        select(ReviewerComment)
         .where(ReviewerComment.paper_id == paper_id)
-        .group_by(ReviewerComment.reviewer_key)
-    ).all()
-    return {str(reviewer_key): int(count) for reviewer_key, count in rows}
+        .order_by(ReviewerComment.created_at.desc(), ReviewerComment.id.desc())
+    ).scalars().all()
+    users = _comment_user_map(session, rows)
+    grouped: dict[str, dict[str, Any]] = {}
+    keep = max(0, limit)
+    for row in rows:
+        bucket = grouped.setdefault(str(row.reviewer_key), {"count": 0, "items": []})
+        bucket["count"] += 1
+        if len(bucket["items"]) < keep:
+            bucket["items"].append(comment_to_public_dict(row, user=users.get(str(row.user_id or ""))))
+    return grouped
 
 
 def apply_reviewer_comments(
@@ -1004,7 +1027,7 @@ def build_leaderboards(
 ) -> dict[str, list[dict[str, Any]]]:
     limit = max(1, min(50, limit))
     vote_counts = _vote_counts_for_leaderboard(session, conference_id=conference_id, year=year)
-    comment_counts: dict[str, dict[str, int]] = {}
+    comment_previews: dict[str, dict[str, dict[str, Any]]] = {}
     balance = conference_id is None
 
     def candidates(metric: str, *, ascending: bool = False) -> list[dict[str, Any]]:
@@ -1022,8 +1045,9 @@ def build_leaderboards(
             paper_key = str(paper_id)
             reviewer_key_text = str(reviewer_key)
             extra = vote_counts[(paper_key, reviewer_key_text)]
-            if paper_key not in comment_counts:
-                comment_counts[paper_key] = comment_counts_by_reviewer(session, paper_key)
+            if paper_key not in comment_previews:
+                comment_previews[paper_key] = comment_previews_by_reviewer(session, paper_key)
+            comment_bucket = comment_previews[paper_key].get(reviewer_key_text) or {}
             metrics = _reviewer_score_metrics_from_values(score_value, dimensions_json)
             item = {
                 "paper_id": paper_id,
@@ -1042,7 +1066,8 @@ def build_leaderboards(
                 "verdict": metrics["verdict"],
                 "up": extra["up"],
                 "down": extra["down"],
-                "comment_count": comment_counts[paper_key].get(reviewer_key_text, 0),
+                "comment_count": int(comment_bucket.get("count", 0)),
+                "latest_comments": list(comment_bucket.get("items", [])),
             }
             if _leaderboard_display_eligible(item, metric=metric):
                 items.append(item)

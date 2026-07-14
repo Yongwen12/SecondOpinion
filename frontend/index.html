@@ -4385,6 +4385,7 @@
         up: Number(source.up || 0),
         down: Number(source.down || 0),
         commentCount: Number(source.commentCount ?? source.comment_count ?? fb.commentCount ?? 0),
+        latestComments: normalizeEmbeddedComments(source.latest_comments ?? source.latestComments),
         paperId,
         reviewerKey,
         tone,
@@ -4544,6 +4545,17 @@
 
     const boardCommentCache = new Map();
 
+    function normalizeEmbeddedComments(value) {
+      if (!Array.isArray(value)) return undefined;
+      return value.map(comment => ({
+        id: comment.id,
+        body: String(comment.body || ''),
+        author: String(comment.author || 'anon'),
+        created_at: comment.created_at || null,
+        can_edit: Boolean(comment.can_edit)
+      }));
+    }
+
     function cachedBoardComments(row) {
       const key = commentScopeKey(row);
       if (boardCommentCache.has(key)) return boardCommentCache.get(key);
@@ -4552,10 +4564,23 @@
 
     async function hydrateBoardComments() {
       const board = homeBoards[homeBoardKind] || homeBoards.overall;
-      const pending = (board.rows || []).filter(row => !isDemoCommentRow(row)
+      const rows = board.rows || [];
+      // Seed from server-embedded previews first: rows that already carry their newest
+      // takes need no round trip. Only rows without an embed still get fetched.
+      let seeded = false;
+      for (const row of rows) {
+        if (Array.isArray(row.latestComments) && !boardCommentCache.has(commentScopeKey(row))) {
+          boardCommentCache.set(commentScopeKey(row), row.latestComments);
+          seeded = true;
+        }
+      }
+      const pending = rows.filter(row => !isDemoCommentRow(row)
         && Number(row.commentCount || 0) > 0
         && !boardCommentCache.has(commentScopeKey(row)));
-      if (!pending.length) return;
+      if (!pending.length) {
+        if (seeded) renderCommunityBoard();
+        return;
+      }
       await Promise.all(pending.slice(0, 20).map(async row => {
         boardCommentCache.set(commentScopeKey(row), await fetchCommentsFor(row));
       }));

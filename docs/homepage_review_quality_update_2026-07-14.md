@@ -38,6 +38,13 @@ Make the public review rankings easier to interpret and make community ratings b
 - The rate modal is reordered around community input: claim headline (nickname removed), paper line, vote buttons, comment form, community takes — with paper abstract / full review / chunks collapsed at the bottom as evidence.
 - On the paper scorecard, the community-takes block moves above the AI dimension grid, since user comments and votes are the core asset.
 
+## Fourth pass (same day): embed comment previews in home rows
+
+- `build_leaderboards` now embeds `latest_comments` (up to two newest, plus an accurate `comment_count`) on every leaderboard row via a new `comment_previews_by_reviewer` helper, which loads a paper's comments once and returns both count and previews. This replaces the count-only `comment_counts_by_reviewer` (superseded; `limit=0` yields counts alone).
+- The default 2025 homepage is served from the pre-rendered snapshot, which is comment-cold. `enrich_home_comment_previews` overlays live previews and refreshed counts from the DB onto the snapshot's rows at request time (deduped per paper, best-effort — a failure serves the bare snapshot). So both the venue (dynamic) and default (static) home paths carry community takes in the first payload.
+- Frontend seeds `boardCommentCache` from each row's embedded `latest_comments` and only fetches rows that lack an embed, eliminating the per-row `/comments` round trips on first paint. Opening a review still fetches the full comment list.
+- Votes on the static-home path are unchanged (still snapshot values); only comments are overlaid. Refreshing vote tallies live is a possible follow-up.
+
 ## Verification
 
 - Inline homepage JavaScript syntax check passed.
