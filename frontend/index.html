@@ -3692,7 +3692,7 @@
     let rateContext = { row: null, paperId: '', reviewerKey: '', tone: 'heat', source: 'global', paperResults: [], reviewerResults: [], selectedPaper: null, comments: [], commentsLoading: false };
 
     const apiParam = new URLSearchParams(location.search).get('api') || '';
-    const DEFAULT_API_BASE = 'https://secondopinion.smartselling.work';
+    const DEFAULT_API_BASE = 'https://api.judgemyreviewers.com';
     const configuredApiBase = apiParam || window.SECONDOPINION_API_BASE || localStorage.getItem('secondOpinion-apiBase') || DEFAULT_API_BASE;
     const API_BASE = configuredApiBase.replace(/\/+$/, '');
     const SESSION_ID_KEY = 'secondOpinion-sessionId';
