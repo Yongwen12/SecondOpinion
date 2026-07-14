@@ -31,6 +31,13 @@ Make the public review rankings easier to interpret and make community ratings b
 - Row ranks for the top three use stacked glyphs (✖✖✖ / ✖✖ / ✖, ★ on the praise board) with a small №; scores render as `95/100` with a micro meter, expressing the 0–100 scale without explanatory copy.
 - Venue data uses canonical casing (NeurIPS) so venue-strip clicks match the search select options.
 
+## Third pass (same day): community takes move to the surface
+
+- Board cards drop the reviewer nickname and the AI verdict line. Each card now shows: the review claim (headline), paper title · venue, an agree/disagree vote tally, and up to two community comments ("takes") inline with author handle and age, plus a "+N more takes" opener. Empty state invites the first take.
+- Card comments hydrate lazily from the comments API for rows with a nonzero comment count, cached client-side; posting/editing/deleting a comment from the modal updates the card immediately.
+- The rate modal is reordered around community input: claim headline (nickname removed), paper line, vote buttons, comment form, community takes — with paper abstract / full review / chunks collapsed at the bottom as evidence.
+- On the paper scorecard, the community-takes block moves above the AI dimension grid, since user comments and votes are the core asset.
+
 ## Verification
 
 - Inline homepage JavaScript syntax check passed.

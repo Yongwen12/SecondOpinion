@@ -3389,6 +3389,24 @@
     .outrage-meter::after { content: ''; display: block; width: calc(var(--v) * 1%); height: 100%; background: var(--oh-accent); }
     body.praise .outrage-meter::after { background: var(--oh-ink); }
     .outrage-unit { margin-top: 5px; }
+    /* Community block on board rows: votes + user takes are the card's core */
+    .outrage-social { display: flex; align-items: flex-start; gap: 16px; margin-top: 11px; }
+    .outrage-votes { display: flex; flex-direction: column; gap: 4px; flex: none; }
+    .outrage-vote { display: flex; align-items: baseline; gap: 5px; min-width: 108px; padding: 4px 8px; border: 1px solid var(--oh-ink); background: #fff; color: var(--oh-ink); cursor: pointer; font-size: 13px; font-weight: 900; }
+    .outrage-vote b { font-size: 10px; font-weight: 900; }
+    .outrage-vote span { margin-left: auto; color: #999; font-size: 9px; font-weight: 800; letter-spacing: 0.14em; }
+    .outrage-vote:hover { background: var(--oh-ink); color: #fff; }
+    .outrage-vote:hover span { color: #bdbdbd; }
+    .outrage-takes { display: grid; gap: 7px; min-width: 0; flex: 1; }
+    .outrage-take { border-left: 3px solid var(--oh-accent); padding: 1px 0 1px 10px; }
+    body.praise .outrage-take { border-left-color: var(--oh-ink); }
+    .outrage-take p { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin: 0; color: var(--oh-ink); font-size: 13.5px; font-weight: 650; line-height: 1.35; }
+    .outrage-take span { display: block; margin-top: 2px; color: #a8a8a8; font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+    .outrage-take-more, .outrage-take-empty { justify-self: start; border: 0; padding: 0; background: transparent; color: #999; cursor: pointer; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+    .outrage-take-more:hover, .outrage-take-empty:hover { color: var(--oh-accent); }
+    /* Rate modal: the claim is the headline, takes are the core */
+    .rate-claim { margin: 6px 0 2px; font-size: 22px; font-weight: 900; line-height: 1.3; }
+    .rate-paper-line { margin: 0 0 2px; color: #777; font-size: 13px; }
     @media (max-width: 860px) {
       .venue-ranking-head { display: grid; gap: 4px; }
       .venue-ranking-title { font-size: 21px; }
@@ -3402,6 +3420,9 @@
       .outrage-row { grid-template-columns: 52px minmax(0, 1fr); }
       .outrage-rank-glyphs { font-size: 14px; letter-spacing: 2px; }
       .outrage-meter { margin-left: 0; }
+      .outrage-social { flex-direction: column; gap: 9px; }
+      .outrage-votes { flex-direction: row; }
+      .rate-claim { font-size: 18px; }
     }
   </style>
 </head>
@@ -4361,6 +4382,8 @@
         venue: venueLabel,
         score: clampScore(scoreSource),
         humanCount: Number(source.humanCount ?? source.h ?? source.human_count ?? source.vote_total ?? (Number(source.up || 0) + Number(source.down || 0))),
+        up: Number(source.up || 0),
+        down: Number(source.down || 0),
         commentCount: Number(source.commentCount ?? source.comment_count ?? fb.commentCount ?? 0),
         paperId,
         reviewerKey,
@@ -4516,17 +4539,52 @@
       if (boardCta) boardCta.innerHTML = copy.cta;
       if (finePrint) finePrint.innerHTML = copy.fine;
       renderVenueRanking();
+      hydrateBoardComments();
+    }
+
+    const boardCommentCache = new Map();
+
+    function cachedBoardComments(row) {
+      const key = commentScopeKey(row);
+      if (boardCommentCache.has(key)) return boardCommentCache.get(key);
+      return loadDemoComments(key);
+    }
+
+    async function hydrateBoardComments() {
+      const board = homeBoards[homeBoardKind] || homeBoards.overall;
+      const pending = (board.rows || []).filter(row => !isDemoCommentRow(row)
+        && Number(row.commentCount || 0) > 0
+        && !boardCommentCache.has(commentScopeKey(row)));
+      if (!pending.length) return;
+      await Promise.all(pending.slice(0, 20).map(async row => {
+        boardCommentCache.set(commentScopeKey(row), await fetchCommentsFor(row));
+      }));
+      renderCommunityBoard();
+    }
+
+    function boardRowSocialHtml(row, index, copy) {
+      const praise = copy.tone === 'praise';
+      const agreeCount = praise ? Number(row.up || 0) : Number(row.down || 0);
+      const disagreeCount = praise ? Number(row.down || 0) : Number(row.up || 0);
+      const comments = cachedBoardComments(row);
+      const total = Math.max(Number(row.commentCount || 0), comments.length);
+      const shown = comments.slice(0, 2);
+      const takesHtml = shown.length
+        ? shown.map(comment => `<div class="outrage-take"><p>${escapeHtml(comment.body)}</p><span>${escapeHtml(comment.author || 'anon')} · ${escapeHtml(relTime(comment.created_at))}</span></div>`).join('')
+          + (total > shown.length ? `<button class="outrage-take-more" type="button" data-row-rate="${index}">+${total - shown.length} more take${total - shown.length === 1 ? '' : 's'} -></button>` : '')
+        : `<button class="outrage-take-empty" type="button" data-row-rate="${index}">No community takes yet. Write the first -></button>`;
+      return `
+        <div class="outrage-social">
+          <span class="outrage-votes">
+            <button class="outrage-vote" type="button" data-row-rate="${index}" title="${praise ? 'Helpful' : 'Agree'} votes"><b>▲</b>${agreeCount}<span>${praise ? 'HELPFUL' : 'AGREE'}</span></button>
+            <button class="outrage-vote" type="button" data-row-rate="${index}" title="${praise ? 'Not quite' : 'Disagree'} votes"><b>▼</b>${disagreeCount}<span>${praise ? 'NOT QUITE' : 'DISAGREE'}</span></button>
+          </span>
+          <div class="outrage-takes">${takesHtml}</div>
+        </div>`;
     }
 
     function boardRowHtml(row, index, board, copy) {
       const rank = String(index + 1).padStart(2, '0');
-      const human = Number(row.humanCount || 0);
-      let comments = Number(row.commentCount || 0);
-      if (!comments) comments = loadDemoComments(commentScopeKey(row)).length;
-      const commentTail = comments > 0 ? ` · <b class="outrage-comments">${comments} comment${comments === 1 ? '' : 's'}</b>` : '';
-      const metaTail = human > 0
-        ? `<b>${escapeHtml(copy.hu(human))}</b>`
-        : `<button class="outrage-meta-action" type="button" data-row-rate="${index}">${escapeHtml(copy.ai)}</button>`;
       const score = clampScore(row.score);
       const glyph = copy.glyph || (copy.tone === 'praise' ? '★' : '☠');
       const rankHtml = index < 3
@@ -4537,8 +4595,8 @@
           <div class="outrage-rank${index < 3 ? ' outrage-rank--top' : ''}">${rankHtml}</div>
           <div class="outrage-main">
             <h3 class="outrage-q">${escapeHtml(row.quote)}${index === 0 ? `<span class="outrage-stamp">${copy.stamp}</span>` : ''}</h3>
-            <p class="outrage-why">${escapeHtml(row.verdict)}</p>
-            <p class="outrage-meta">${escapeHtml(row.reviewer)} · ${escapeHtml(row.paper)} · ${escapeHtml(row.venue || 'ICLR 2025')} · ${metaTail}${commentTail}</p>
+            <p class="outrage-meta">${escapeHtml(row.paper)} · ${escapeHtml(row.venue || 'ICLR 2025')}</p>
+            ${boardRowSocialHtml(row, index, copy)}
           </div>
           <div class="outrage-scorebox" title="AI ${escapeHtml(String(copy.unit || '').toLowerCase())} score, 0-100. Open the row for the full assessment.">
             <div class="outrage-num">${score}<span class="outrage-num-max">/100</span></div>
@@ -4642,9 +4700,9 @@
         const negativeVote = praise ? 'down' : 'up';
         rateModalBody.innerHTML = `
           <p class="rate-kicker">Community check</p>
-          <h2 id="rateTitle">${escapeHtml(row.reviewer)}</h2>
-          <p>${escapeHtml(row.paper)} · ${escapeHtml(row.venue || 'ICLR 2025')}</p>
-          <p class="rate-context-note">You are rating this public review, not the paper or the reviewer as a person.</p><div class="rate-review-card"><strong>${escapeHtml(row.quote)}</strong></div>${paperContext.abstract ? `<details class="rate-evidence"><summary>Paper abstract</summary><p>${escapeHtml(paperContext.abstract)}</p></details>` : ''}${reviewerContext.official_review ? `<details class="rate-evidence"><summary>Read the full official review</summary><p>${escapeHtml(reviewerContext.official_review)}</p></details>` : ''}${(reviewerContext.review_chunks || []).length ? `<details class="rate-evidence"><summary>Related review chunks (${reviewerContext.review_chunks.length})</summary>${reviewerContext.review_chunks.map(chunk => `<p><strong>${escapeHtml(chunk.chunk_id || 'Excerpt')}</strong> ${escapeHtml(chunk.text || '')}</p>`).join('')}</details>` : ''}
+          <h2 id="rateTitle" class="rate-claim">${escapeHtml(row.quote)}</h2>
+          <p class="rate-paper-line">${escapeHtml(row.paper)} · ${escapeHtml(row.venue || 'ICLR 2025')}</p>
+          <p class="rate-context-note">You are rating this public review, not the paper or the reviewer as a person.</p>
           <div class="rate-actions">
             <button class="rate-primary${selectedVote === positiveVote ? ' is-selected' : ''}" type="button" data-rate-choice="${positiveVote}" aria-pressed="${selectedVote === positiveVote}">${praise ? 'Helpful' : 'Agree'}${selectedVote === positiveVote ? ' ✓' : ''}</button>
             <button class="rate-secondary${selectedVote === negativeVote ? ' is-selected' : ''}" type="button" data-rate-choice="${negativeVote}" aria-pressed="${selectedVote === negativeVote}">${praise ? 'Not quite' : 'Disagree'}${selectedVote === negativeVote ? ' ✓' : ''}</button>
@@ -4653,8 +4711,9 @@
             <textarea class="rate-comment-input" id="rateCommentInput" rows="2" maxlength="1000" placeholder="Add context to your vote..."></textarea>
             <button class="rate-primary rate-comment-submit" type="submit">Post comment</button>
           </form>
-          <p class="rate-comments-head">Comments</p>
-          <div class="rate-comments" id="rateComments">${renderRateCommentsHtml()}</div>`;
+          <p class="rate-comments-head">Community takes</p>
+          <div class="rate-comments" id="rateComments">${renderRateCommentsHtml()}</div>
+          ${paperContext.abstract ? `<details class="rate-evidence"><summary>Paper abstract</summary><p>${escapeHtml(paperContext.abstract)}</p></details>` : ''}${reviewerContext.official_review ? `<details class="rate-evidence"><summary>Read the full official review</summary><p>${escapeHtml(reviewerContext.official_review)}</p></details>` : ''}${(reviewerContext.review_chunks || []).length ? `<details class="rate-evidence"><summary>Related review chunks (${reviewerContext.review_chunks.length})</summary>${reviewerContext.review_chunks.map(chunk => `<p><strong>${escapeHtml(chunk.chunk_id || 'Excerpt')}</strong> ${escapeHtml(chunk.text || '')}</p>`).join('')}</details>` : ''}`;
         return;
       }
       rateModalBody.innerHTML = `
@@ -4915,7 +4974,9 @@
         renderScoreDetail();
       } else {
         rateContext.comments = items;
+        if (rateContext.row) boardCommentCache.set(commentScopeKey(rateContext.row), items);
         renderRateModal();
+        renderCommunityBoard();
       }
     }
 
@@ -4950,8 +5011,10 @@
       rateContext.commentsLoading = true;
       renderRateModal();
       rateContext.comments = await fetchCommentsFor(row);
+      boardCommentCache.set(commentScopeKey(row), rateContext.comments);
       rateContext.commentsLoading = false;
       renderRateModal();
+      renderCommunityBoard();
     }
 
     async function submitReviewerComment() {
@@ -4964,8 +5027,10 @@
       const result = await postCommentFor(row, body);
       if (!result.ok) { rateModalError.textContent = result.reason === 'empty' ? 'Write something first.' : 'Comment could not be posted.'; return; }
       rateContext.comments = result.items;
+      boardCommentCache.set(commentScopeKey(row), result.items);
       renderRateModal();
-      if (result.demo) { rateModalError.textContent = 'Comment added (demo - saved on this device).'; renderCommunityBoard(); }
+      renderCommunityBoard();
+      if (result.demo) rateModalError.textContent = 'Comment added (demo - saved on this device).';
     }
 
     function scorecardCommentRow(reviewer) {
@@ -4992,7 +5057,7 @@
       }
       return `
         <div class="detail-comments">
-          <p class="rate-comments-head">Comments</p>
+          <p class="rate-comments-head">Community takes</p>
           <form class="rate-comment-form" data-sc-comment-form="${escapeHtml(reviewer.id)}">
             <textarea class="rate-comment-input" id="scCommentInput" rows="2" maxlength="1000" placeholder="Add your own take on this review..."></textarea>
             <button class="rate-primary rate-comment-submit" type="submit">Post comment</button>
@@ -5519,6 +5584,7 @@
             </div>
             <span class="detail-score ${toneClass(reviewer.tone)}">${reviewer.score}/100</span>
           </div>
+          ${renderScorecardCommentsHtml(reviewer)}
           <div class="dimension-grid">
             ${reviewer.dimensions.map(metric => `
               <div class="metric">
@@ -5539,7 +5605,6 @@
             <a class="source-link" href="${openReviewUrl(reviewer.reviewId)}" target="_blank" rel="noopener noreferrer">Source via OpenReview, CC BY 4.0</a>
             <a class="source-link" href="${reportScoreUrl(reviewer.id)}">Report this score</a>
           </div>
-          ${renderScorecardCommentsHtml(reviewer)}
         </div>`;
 
       requestAnimationFrame(() => {
