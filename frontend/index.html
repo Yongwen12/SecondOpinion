@@ -4667,8 +4667,11 @@
 
     // Emoji reactions: a judgment-free layer next to the agree/disagree vote. The
     // palette deliberately has no agreement-flavored emoji, so votes keep calibrating
-    // the assessment while reactions express how the review text lands.
-    const REACTION_EMOJI = ['\u{1F480}', '\u{1F602}', '\u{1F92F}', '\u{1FAE1}', '\u{1F62D}'];
+    // the assessment while reactions express how the review text lands. Pre-Unicode-13
+    // glyphs only, so Windows 10 renders every chip. The first QUICK_REACTIONS stay
+    // on the surface at all times; the rest live behind the "+".
+    const REACTION_EMOJI = ['\u{1F480}', '\u{1F602}', '\u{1F92F}', '\u{1F624}', '\u{1F62D}'];
+    const QUICK_REACTIONS = 3;
     let openReactionPicker = null;
 
     function loadDemoReactions() {
@@ -4709,16 +4712,23 @@
       const reactions = target.reactions || {};
       const viewer = target.viewerReaction || null;
       const open = openReactionPicker === scope;
-      const shown = open ? REACTION_EMOJI : REACTION_EMOJI.filter(emoji => Number(reactions[emoji] || 0) > 0);
+      // Reactions are the primary response tool: the quick set stays tappable on the
+      // surface even at zero; only the long-tail emoji live behind the "+".
+      const visible = (emoji, index) => index < QUICK_REACTIONS || Number(reactions[emoji] || 0) > 0 || viewer === emoji;
+      const shown = open ? REACTION_EMOJI : REACTION_EMOJI.filter(visible);
+      const hasHidden = !open && REACTION_EMOJI.some((emoji, index) => !visible(emoji, index));
       const chips = shown.map(emoji => {
         const count = Number(reactions[emoji] || 0);
         const mine = viewer === emoji;
         return `<button class="react-chip${mine ? ' is-mine' : ''}" type="button" data-react-scope="${scope}" data-react-emoji="${emoji}" aria-pressed="${mine}" title="${mine ? 'Remove your reaction' : `React with ${emoji}`}">${emoji}${count ? `<b>${count}</b>` : ''}</button>`;
       }).join('');
+      const toggle = open
+        ? `<button class="react-chip react-add" type="button" data-react-open="${scope}" aria-label="Close reaction picker" title="Close">&times;</button>`
+        : (hasHidden ? `<button class="react-chip react-add" type="button" data-react-open="${scope}" aria-label="More reactions" title="More reactions">+</button>` : '');
       return `
         <span class="react-strip" role="group" aria-label="Emoji reactions">
           ${chips}
-          <button class="react-chip react-add" type="button" data-react-open="${scope}" aria-label="${open ? 'Close reaction picker' : 'Add a reaction'}" title="${open ? 'Close' : 'Add a reaction'}">${open ? '&times;' : '+'}</button>
+          ${toggle}
         </span>`;
     }
 
@@ -4794,7 +4804,7 @@
       const takesHtml = shown.length
         ? shown.map(comment => `<div class="outrage-take"><p>${escapeHtml(comment.body)}</p><span>${escapeHtml(comment.author || 'anon')} &middot; ${escapeHtml(relTime(comment.created_at))}</span></div>`).join('')
           + (total > shown.length ? `<button class="outrage-take-more" type="button" data-row-rate="${index}">+${total - shown.length} more take${total - shown.length === 1 ? '' : 's'} -></button>` : '')
-        : `<button class="outrage-take-empty" type="button" data-row-rate="${index}">No takes yet &middot; add the first -></button>`;
+        : `<button class="outrage-take-empty" type="button" data-row-rate="${index}">Add a take -></button>`;
       return `
         <div class="outrage-social">
           <span class="outrage-votes" aria-label="Rate this assessment">
@@ -5811,7 +5821,7 @@
         </div>`).join('');
       const opener = total > shown.length
         ? `<button class="reviewer-take-more" type="button" data-reviewer-open="${escapeHtml(reviewer.id)}">+${total - shown.length} more take${total - shown.length === 1 ? '' : 's'} -></button>`
-        : (total === 0 ? `<button class="reviewer-take-more" type="button" data-reviewer-open="${escapeHtml(reviewer.id)}" data-focus-take="1">No takes yet &middot; add the first -></button>` : '');
+        : (total === 0 ? `<button class="reviewer-take-more" type="button" data-reviewer-open="${escapeHtml(reviewer.id)}" data-focus-take="1">Add a take -></button>` : '');
       return `<div class="reviewer-takes">${shownHtml}${opener}</div>`;
     }
 

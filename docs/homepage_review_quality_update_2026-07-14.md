@@ -127,3 +127,19 @@ by palette curation rather than by merging systems:
   viewer's own chip from the server, paper-page detail and modal share counts, a modal
   removal syncs back to the board row, mobile 375px has no overflow.
 - Inline JS `node --check` passed.
+
+## Ninth pass (2026-07-18): reactions become the primary response tool
+
+- The quick set (💀 😂 🤯) now renders as tappable chips at all times, even at zero -
+  one tap reacts, no picker needed. Long-tail emoji (😤 😭) surface automatically once
+  they have counts (or are the viewer's pick) and otherwise live behind the "+", which
+  disappears entirely when all five are visible.
+- 🫡 (Unicode 14) replaced with 😤: Windows 10's emoji font predates Unicode 13, so the
+  salute rendered as a tofu box. The palette now sticks to pre-Unicode-13 glyphs;
+  server whitelist updated to match.
+- Comment invites shorten to "Add a take ->" on board rows and paper-page reviewer
+  previews - reactions lead, comments follow.
+- Verified against the seeded local API: zero-count quick chips tap-to-react directly,
+  "+" expands the full palette with 😤/😭, counts auto-surface long-tail chips, and the
+  paper-page detail hides the "+" when nothing is left to reveal. pytest 8 passed;
+  inline JS node --check passed.
