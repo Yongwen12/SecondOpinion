@@ -143,3 +143,17 @@ by palette curation rather than by merging systems:
   "+" expands the full palette with 😤/😭, counts auto-surface long-tail chips, and the
   paper-page detail hides the "+" when nothing is left to reveal. pytest 8 passed;
   inline JS node --check passed.
+
+## Tenth pass (2026-07-18): the full core set on the surface, a big palette in the popover
+
+- All five core emoji (💀 😂 🤯 😤 😭) now stay on the surface at all times, poll-style:
+  a zero-count chip is an open ballot, and the count appears beside the emoji once
+  someone taps it.
+- The "+" opens a proper popover (2px-ink panel, wraps to the viewport) holding the
+  full 25-emoji palette: the core five plus 🔥 👀 🤔 😬 😅 🙃 😱 🤬 😴 🥱 🍿 ☕ 🤡 🗿 💅 🎻
+  🚩 😈 🤖 😇 - all pre-Unicode-13 (Windows 10-safe), all judgment-free. Extended emoji
+  surface as counted chips once used. Picking closes the popover; clicking anywhere
+  outside dismisses it. Server whitelist matches the 25.
+- Verified: zero-count core chips tap-to-react, popover pick (🍿, 🤖) surfaces a counted
+  chip on board rows and the paper-page detail, outside-click dismissal, 375px fit;
+  pytest 8 passed; inline JS node --check passed.

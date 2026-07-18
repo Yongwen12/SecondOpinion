@@ -3473,6 +3473,27 @@
     .react-chip.is-mine { border-color: var(--oh-ink); box-shadow: inset 0 0 0 1px var(--oh-ink); }
     .react-add { min-width: 27px; justify-content: center; color: #999999; font-size: 14px; font-weight: 900; }
     .react-add:hover { color: var(--oh-ink); }
+    .react-add.is-open { border-color: var(--oh-ink); color: var(--oh-ink); }
+    /* The "+" opens a popover with the full extended palette. */
+    .react-strip { position: relative; }
+    .react-picker {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      z-index: 30;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2px;
+      width: 302px;
+      max-width: calc(100vw - 40px);
+      padding: 8px;
+      border: 2px solid var(--oh-ink);
+      background: #ffffff;
+      box-shadow: 4px 4px 0 rgba(17, 17, 17, .14);
+    }
+    .react-pick { display: grid; place-items: center; width: 34px; height: 32px; border: 0; background: #ffffff; cursor: pointer; font-size: 17px; line-height: 1; }
+    .react-pick:hover { background: #f4f4f4; }
+    .react-pick.is-mine { box-shadow: inset 0 0 0 2px var(--oh-ink); }
     .app-view .reviewer-detail .outrage-social { margin-top: 2px; }
     .rate-social { margin: 10px 0 4px; }
     /* Evidence / dimension foldouts: collapsed by default, expand on demand */
@@ -4668,10 +4689,16 @@
     // Emoji reactions: a judgment-free layer next to the agree/disagree vote. The
     // palette deliberately has no agreement-flavored emoji, so votes keep calibrating
     // the assessment while reactions express how the review text lands. Pre-Unicode-13
-    // glyphs only, so Windows 10 renders every chip. The first QUICK_REACTIONS stay
-    // on the surface at all times; the rest live behind the "+".
-    const REACTION_EMOJI = ['\u{1F480}', '\u{1F602}', '\u{1F92F}', '\u{1F624}', '\u{1F62D}'];
-    const QUICK_REACTIONS = 3;
+    // glyphs only, so Windows 10 renders every chip. The CORE_REACTIONS set stays on
+    // the surface at all times, poll-style; the extended palette lives in the "+" popover.
+    const REACTION_EMOJI = [
+      '\u{1F480}', '\u{1F602}', '\u{1F92F}', '\u{1F624}', '\u{1F62D}',
+      '\u{1F525}', '\u{1F440}', '\u{1F914}', '\u{1F62C}', '\u{1F605}',
+      '\u{1F643}', '\u{1F631}', '\u{1F92C}', '\u{1F634}', '\u{1F971}',
+      '\u{1F37F}', '☕', '\u{1F921}', '\u{1F5FF}', '\u{1F485}',
+      '\u{1F3BB}', '\u{1F6A9}', '\u{1F608}', '\u{1F916}', '\u{1F607}'
+    ];
+    const CORE_REACTIONS = 5;
     let openReactionPicker = null;
 
     function loadDemoReactions() {
@@ -4712,23 +4739,25 @@
       const reactions = target.reactions || {};
       const viewer = target.viewerReaction || null;
       const open = openReactionPicker === scope;
-      // Reactions are the primary response tool: the quick set stays tappable on the
-      // surface even at zero; only the long-tail emoji live behind the "+".
-      const visible = (emoji, index) => index < QUICK_REACTIONS || Number(reactions[emoji] || 0) > 0 || viewer === emoji;
-      const shown = open ? REACTION_EMOJI : REACTION_EMOJI.filter(visible);
-      const hasHidden = !open && REACTION_EMOJI.some((emoji, index) => !visible(emoji, index));
-      const chips = shown.map(emoji => {
+      // Poll-style: the whole core set stays tappable on the surface (a zero-count chip
+      // is an open ballot); extended emoji surface once they carry a count and the full
+      // palette lives in the "+" popover.
+      const surfaced = REACTION_EMOJI.filter((emoji, index) =>
+        index < CORE_REACTIONS || Number(reactions[emoji] || 0) > 0 || viewer === emoji);
+      const chips = surfaced.map(emoji => {
         const count = Number(reactions[emoji] || 0);
         const mine = viewer === emoji;
         return `<button class="react-chip${mine ? ' is-mine' : ''}" type="button" data-react-scope="${scope}" data-react-emoji="${emoji}" aria-pressed="${mine}" title="${mine ? 'Remove your reaction' : `React with ${emoji}`}">${emoji}${count ? `<b>${count}</b>` : ''}</button>`;
       }).join('');
-      const toggle = open
-        ? `<button class="react-chip react-add" type="button" data-react-open="${scope}" aria-label="Close reaction picker" title="Close">&times;</button>`
-        : (hasHidden ? `<button class="react-chip react-add" type="button" data-react-open="${scope}" aria-label="More reactions" title="More reactions">+</button>` : '');
+      const picker = open
+        ? `<span class="react-picker" role="menu" aria-label="All reactions">${REACTION_EMOJI.map(emoji =>
+            `<button class="react-pick${viewer === emoji ? ' is-mine' : ''}" type="button" role="menuitem" data-react-scope="${scope}" data-react-emoji="${emoji}" title="React with ${emoji}">${emoji}</button>`).join('')}</span>`
+        : '';
       return `
         <span class="react-strip" role="group" aria-label="Emoji reactions">
           ${chips}
-          ${toggle}
+          <button class="react-chip react-add${open ? ' is-open' : ''}" type="button" data-react-open="${scope}" aria-expanded="${open}" aria-label="${open ? 'Close reactions' : 'More reactions'}" title="${open ? 'Close' : 'More reactions'}">${open ? '&times;' : '+'}</button>
+          ${picker}
         </span>`;
     }
 
@@ -6166,6 +6195,14 @@
     document.addEventListener('click', event => {
       if (!event.target.closest('.search-results') && !event.target.closest('#landingSearch') && !event.target.closest('#topSearch')) {
         hideSearchResults();
+      }
+
+      // Clicking anywhere outside the reaction UI dismisses an open picker; the click
+      // itself still lands on whatever it targeted.
+      if (openReactionPicker && !event.target.closest('.react-picker') && !event.target.closest('[data-react-open]') && !event.target.closest('[data-react-emoji]')) {
+        const staleScope = openReactionPicker;
+        openReactionPicker = null;
+        renderReactionScope(staleScope);
       }
 
       const focusSearch = event.target.closest('[data-focus-search]');

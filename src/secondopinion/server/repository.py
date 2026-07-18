@@ -547,7 +547,15 @@ def upsert_vote(session: Session, *, paper_id: str, reviewer_key: str, session_i
 # signals stay orthogonal (votes calibrate the assessment, reactions express
 # how the review text lands). One reaction per session per review.
 # Palette sticks to pre-Unicode-13 emoji so Windows 10 renders every glyph.
-REACTION_EMOJI = ("\U0001f480", "\U0001f602", "\U0001f92f", "\U0001f624", "\U0001f62d")
+REACTION_EMOJI = (
+    # Core set: always on the surface in the client, poll-style.
+    "\U0001f480", "\U0001f602", "\U0001f92f", "\U0001f624", "\U0001f62d",
+    # Extended palette behind the "+" picker.
+    "\U0001f525", "\U0001f440", "\U0001f914", "\U0001f62c", "\U0001f605",
+    "\U0001f643", "\U0001f631", "\U0001f92c", "\U0001f634", "\U0001f971",
+    "\U0001f37f", "☕", "\U0001f921", "\U0001f5ff", "\U0001f485",
+    "\U0001f3bb", "\U0001f6a9", "\U0001f608", "\U0001f916", "\U0001f607",
+)
 
 
 def upsert_reaction(session: Session, *, paper_id: str, reviewer_key: str, session_id: str, emoji: str) -> dict[str, Any]:
