@@ -3494,7 +3494,7 @@
     .react-pick { display: grid; place-items: center; width: 34px; height: 32px; border: 0; background: #ffffff; cursor: pointer; font-size: 17px; line-height: 1; }
     .react-pick:hover { background: #f4f4f4; }
     .react-pick.is-mine { box-shadow: inset 0 0 0 2px var(--oh-ink); }
-    .app-view .reviewer-detail .outrage-social { margin-top: 2px; }
+    .app-view .reviewer-entry > .outrage-social { margin: 0 4px 13px 52px; }
     .rate-social { margin: 10px 0 4px; }
     /* Evidence / dimension foldouts: collapsed by default, expand on demand */
     .rate-evidence { margin-top: 12px; border-top: 1px solid #ececec; padding-top: 10px; }
@@ -4761,10 +4761,23 @@
         </span>`;
     }
 
+    function positionReactionPicker() {
+      // Clamp the popover into the viewport (the strip can sit deep in an indented
+      // row). Synchronous on purpose: rAF never fires in throttled tabs.
+      const picker = document.querySelector('.react-picker');
+      if (!picker) return;
+      picker.style.left = '0px';
+      const rect = picker.getBoundingClientRect();
+      const margin = 12;
+      const overflow = rect.right - (window.innerWidth - margin);
+      if (overflow > 0) picker.style.left = `${-Math.min(overflow, Math.max(0, rect.left - margin))}px`;
+    }
+
     function renderReactionScope(scope) {
       if (scope.startsWith('reviewer:')) renderReviewerCards();
       else if (scope === 'modal') renderRateModal();
       else renderCommunityBoard();
+      positionReactionPicker();
     }
 
     function reactionTargetFor(scope) {
@@ -5854,21 +5867,27 @@
       return `<div class="reviewer-takes">${shownHtml}${opener}</div>`;
     }
 
-    function reviewerDetailHtml(reviewer) {
-      // Same interaction contract as the board rows and rate modal: vote and react,
-      // then discuss - followed by the full AI score breakdown as evidence.
+    function reviewerSocialHtml(reviewer) {
+      // The same surface contract as board rows: votes and reactions live with the
+      // review itself, no expansion required.
       const counts = reviewerSocialCounts(reviewer);
       hydrateDemoReaction(reviewer, scorecardCommentRow(reviewer));
       return `
+        <div class="outrage-social reviewer-social" aria-label="Vote and react to this review">
+          <span class="outrage-votes" aria-label="Vote on this review">
+            <button class="outrage-vote outrage-vote--agree${counts.selected === 'up' ? ' is-on' : ''}" type="button" data-reviewer-vote="up" data-reviewer-id="${reviewer.id}" aria-pressed="${counts.selected === 'up'}" title="This review was helpful" aria-label="Helpful: ${counts.up}"><b>&#9650;</b><span class="outrage-vote-count">${counts.up}</span></button>
+            <button class="outrage-vote outrage-vote--disagree${counts.selected === 'down' ? ' is-on' : ''}" type="button" data-reviewer-vote="down" data-reviewer-id="${reviewer.id}" aria-pressed="${counts.selected === 'down'}" title="Not helpful" aria-label="Not helpful: ${counts.down}"><b>&#9660;</b><span class="outrage-vote-count">${counts.down}</span></button>
+          </span>
+          ${reactionStripHtml(reviewer, `reviewer:${reviewer.id}`)}
+        </div>`;
+    }
+
+    function reviewerDetailHtml(reviewer) {
+      // The expansion holds the deep layer only: AI read, the discussion thread, the
+      // score dimensions, and source links. Votes and reactions stay on the surface.
+      return `
         <div class="reviewer-detail">
           <p class="detail-summary"><b>AI read:</b> ${escapeHtml(reviewer.summary)}</p>
-          <div class="outrage-social detail-social" aria-label="Vote and react to this review">
-            <span class="outrage-votes" aria-label="Vote on this review">
-              <button class="outrage-vote outrage-vote--agree${counts.selected === 'up' ? ' is-on' : ''}" type="button" data-reviewer-vote="up" data-reviewer-id="${reviewer.id}" aria-pressed="${counts.selected === 'up'}" title="This review was helpful" aria-label="Helpful: ${counts.up}"><b>&#9650;</b><span class="outrage-vote-count">${counts.up}</span></button>
-              <button class="outrage-vote outrage-vote--disagree${counts.selected === 'down' ? ' is-on' : ''}" type="button" data-reviewer-vote="down" data-reviewer-id="${reviewer.id}" aria-pressed="${counts.selected === 'down'}" title="Not helpful" aria-label="Not helpful: ${counts.down}"><b>&#9660;</b><span class="outrage-vote-count">${counts.down}</span></button>
-            </span>
-            ${reactionStripHtml(reviewer, `reviewer:${reviewer.id}`)}
-          </div>
           ${renderScorecardCommentsHtml(reviewer)}
           <details class="rate-evidence detail-dimensions" open>
             <summary>Why this score &middot; AI dimensions &amp; evidence</summary>
@@ -5918,6 +5937,7 @@
               <span class="chevron" aria-hidden="true">v</span>
             </button>
             <div class="reviewer-excerpts">${reviewText}</div>
+            ${reviewerSocialHtml(reviewer)}
             ${active ? reviewerDetailHtml(reviewer) : reviewerTakesPreviewHtml(reviewer)}
           </article>`;
       }).join('');

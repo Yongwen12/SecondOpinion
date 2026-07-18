@@ -157,3 +157,24 @@ by palette curation rather than by merging systems:
 - Verified: zero-count core chips tap-to-react, popover pick (🍿, 🤖) surfaces a counted
   chip on board rows and the paper-page detail, outside-click dismissal, 375px fit;
   pytest 8 passed; inline JS node --check passed.
+
+## Eleventh pass (2026-07-18): the paper page adopts the board-row surface contract
+
+The paper page still segregated all interaction inside the expandable detail, so a
+reader saw scores and review text but no way to respond without opening a panel. Now
+every reviewer entry carries the same surface as a home board row:
+
+- Collapsed: Reviewer N + score, review excerpts, then the live social strip
+  (▲/▼ votes + the five core reaction chips + "+" popover) and the take previews -
+  vote and react with zero clicks of expansion.
+- Expanded: the deep layer only - AI read, the full Community-takes form and thread,
+  the score dimensions with evidence, and the OpenReview/report links. The vote and
+  reaction strip stays on the surface above (no duplicate inside the panel).
+- New `positionReactionPicker` clamps the "+" popover into the viewport (the strip
+  sits 52px-indented inside entries; on 375px the panel used to overflow right).
+  Synchronous measurement, since rAF never fires in throttled tabs.
+
+Verified: all three collapsed entries show votes/chips with live counts; voting and
+reacting from the collapsed state round-trips; expansion shows no duplicate strip and
+keeps the surface strip; popovers clamp inside 375px on both the board and paper
+pages; pytest 8 passed; inline JS node --check passed.
