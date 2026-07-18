@@ -1811,11 +1811,6 @@
       color: var(--oh-ink);
     }
 
-    body.praise .outrage-home .outrage-stamp {
-      border-color: var(--oh-ink);
-      color: var(--oh-ink);
-    }
-
     .outrage-home *,
     .outrage-home *::before,
     .outrage-home *::after,
@@ -2169,22 +2164,6 @@
       font-weight: 800;
       line-height: 1.25;
       letter-spacing: 0;
-    }
-
-    .outrage-stamp {
-      display: inline-block;
-      margin: 4px 0 2px 14px;
-      padding: 4px 9px;
-      transform: rotate(-4deg);
-      border: 2px solid var(--oh-accent);
-      background: #ffffff;
-      color: var(--oh-accent);
-      font-size: 10.5px;
-      font-weight: 800;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      vertical-align: 4px;
-      white-space: nowrap;
     }
 
     .outrage-why {
@@ -2706,12 +2685,6 @@
 
       .outrage-q {
         font-size: 17px;
-      }
-
-      .outrage-stamp {
-        margin-left: 8px;
-        transform: rotate(0);
-        font-size: 9px;
       }
 
       .outrage-num {
@@ -3279,9 +3252,6 @@
       box-shadow: none;
     }
 
-    .outrage-stamp { transition: transform .16s ease; }
-    .outrage-row:hover .outrage-stamp { transform: rotate(-1deg); }
-
     @keyframes rowIn {
       from { opacity: 0; transform: translateY(9px); }
       to { opacity: 1; transform: none; }
@@ -3337,7 +3307,6 @@
       .outrage-board.is-entering .outrage-row { animation: none; }
       .outrage-search-form.is-invalid { animation: none; }
       .sticky-bar { transition: none; }
-      .outrage-stamp { transition: none; }
       .app-view .reviewer-detail { animation: none; }
       .app-view .reviewer-detail .metric-fill { animation: none; transition: none; }
     }
@@ -3409,7 +3378,6 @@
       .outrage-num { font-size: 28px; }
       .outrage-rowrate { grid-column: 1 / -1; margin-top: 4px; }
       .outrage-q { font-size: 17px; }
-      .outrage-stamp { display: inline-block; margin: 7px 0 0; }
       .outrage-meta { white-space: normal; }
       .app-view .score-section {
         grid-template-columns: minmax(0, 1fr);
@@ -3810,7 +3778,6 @@
         heading: 'The reviews doing the most damage.',
         description: 'Ranked by review-quality risk: vague claims, no evidence, no actionable point, or empty hostility. #1 is the worst in this list.',
         unit: 'RISK SCORE',
-        stamp: 'HIGHEST RISK',
         rate: 'MORE ABOUT THIS PAPER ->',
         hu: n => `${n} community vote${n === 1 ? '' : 's'}`,
         ai: 'Add your take',
@@ -3826,7 +3793,6 @@
         heading: 'Technically empty. Socially, unnecessary.',
         description: 'Tone risk tracks contempt and personal attacks separately from technical criticism.',
         unit: 'TONE RISK',
-        stamp: 'TOO PERSONAL',
         rate: 'MORE ABOUT THIS PAPER ->',
         hu: n => `${n} community vote${n === 1 ? '' : 's'}`,
         ai: 'Add your take',
@@ -3842,7 +3808,6 @@
         heading: 'Proof that Reviewer 2 can be useful.',
         description: 'Specific, evidence-linked comments that an author can actually act on.',
         unit: 'HELPFUL',
-        stamp: 'WORTH READING',
         rate: 'MORE ABOUT THIS PAPER ->',
         hu: n => `${n} community vote${n === 1 ? '' : 's'}`,
         ai: 'Add your take',
@@ -4715,7 +4680,7 @@
         <article class="outrage-row" role="button" tabindex="0" data-board-row="${index}" aria-label="Rank ${index + 1}. Open review assessment" style="--i:${Math.min(index, 11)}">
           <div class="outrage-rank${index < 3 ? ' outrage-rank--top' : ''}">${rankHtml}</div>
           <div class="outrage-main">
-            <h3 class="outrage-q">${escapeHtml(row.quote)}${index === 0 ? `<span class="outrage-stamp">${copy.stamp}</span>` : ''}</h3>
+            <h3 class="outrage-q">${escapeHtml(row.quote)}</h3>
             <p class="outrage-why">${escapeHtml(row.verdict)}</p>
             <p class="outrage-meta">${escapeHtml(row.reviewer)} &middot; ${escapeHtml(row.paper)} &middot; ${escapeHtml(row.venue || 'ICLR 2025')}</p>
             ${boardRowSocialHtml(row, index, copy)}          </div>
