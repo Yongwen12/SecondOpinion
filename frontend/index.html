@@ -3317,21 +3317,23 @@
     .home-intro-actions .outrage-submit { padding: 7px 10px; border: 1px solid var(--oh-accent); background: #fff; color: var(--oh-accent); }
     /* Venue index is context, not the story: a quiet compact brief below the search.
        Static rows (no button affordance); red stays on #1 and the named venue only. */
+    /* Context zone stays on the gray rungs of the ink ladder: pure black is reserved
+       for the board headline and row quotes; red survives only on #1 and the verdict. */
     .venue-ranking { margin: 28px 0 0; }
     .venue-ranking-head { display: flex; align-items: baseline; justify-content: space-between; gap: 18px; margin: 0 0 6px; }
     .venue-ranking .home-kicker { margin: 0; color: #9b9b9b; }
-    .venue-ranking-title { margin: 0; font-size: 15px; font-weight: 900; letter-spacing: 0; }
+    .venue-ranking-title { margin: 0; color: #555555; font-size: 15px; font-weight: 800; letter-spacing: 0; }
     .venue-ranking-title em { color: var(--oh-accent); font-style: normal; }
-    .venue-ranking-list { display: grid; border-top: 1px solid var(--oh-ink); }
+    .venue-ranking-list { display: grid; border-top: 1px solid #cfcfcf; }
     .venue-rank-row { display: grid; grid-template-columns: 34px 84px minmax(0, 1fr) auto; align-items: center; gap: 14px; min-height: 30px; padding: 4px 0; border-bottom: 1px solid #ececec; }
     .venue-rank-no { color: #b5b5b5; font-size: 10px; font-weight: 900; letter-spacing: .1em; font-variant-numeric: tabular-nums; }
     .venue-rank-row:first-child .venue-rank-no { color: var(--oh-accent); }
-    .venue-rank-name { font-size: 12.5px; font-weight: 900; letter-spacing: .02em; text-transform: uppercase; }
+    .venue-rank-name { color: #3c3c3c; font-size: 12.5px; font-weight: 800; letter-spacing: .02em; text-transform: uppercase; }
     .venue-rank-track { position: relative; display: block; height: 4px; background: #f1f1f1; }
-    .venue-rank-track::after { content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: calc(var(--v) * 1%); background: var(--oh-ink); }
+    .venue-rank-track::after { content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: calc(var(--v) * 1%); background: #b3b3b3; }
     .venue-rank-row:first-child .venue-rank-track::after { background: var(--oh-accent); }
     .venue-rank-data { display: flex; align-items: baseline; justify-content: flex-end; gap: 10px; font-variant-numeric: tabular-nums; }
-    .venue-rank-score { font-size: 14px; font-weight: 900; line-height: 1; }
+    .venue-rank-score { color: #3c3c3c; font-size: 14px; font-weight: 900; line-height: 1; }
     .venue-rank-score span { margin-left: 1px; color: #b5b5b5; font-size: 10px; font-weight: 800; }
     .venue-rank-row:first-child .venue-rank-score { color: var(--oh-accent); }
     .venue-rank-count { min-width: 92px; color: #999; font-size: 10px; font-weight: 700; text-align: right; }
@@ -3405,7 +3407,7 @@
     }
     /* Board identity: three-cell segmented masthead tabs */
     .outrage-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; margin-top: 0; overflow: visible; border: 2px solid var(--oh-ink); }
-    .outrage-tab { display: grid; gap: 3px; align-content: start; justify-items: start; min-height: 62px; padding: 9px 13px 11px; border-left: 1px solid var(--oh-ink); color: var(--oh-ink); text-align: left; white-space: normal; letter-spacing: .03em; }
+    .outrage-tab { display: grid; gap: 3px; align-content: start; justify-items: start; min-height: 62px; padding: 9px 13px 11px; border-left: 1px solid var(--oh-ink); color: #3c3c3c; text-align: left; white-space: normal; letter-spacing: .03em; }
     .outrage-tab:first-child { border-left: 0; }
     .outrage-tab:hover { background: #f4f4f4; color: var(--oh-ink); }
     .outrage-tab.is-active { background: var(--oh-ink); color: #fff; }
