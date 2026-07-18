@@ -57,3 +57,19 @@ Make the public review rankings easier to interpret and make community ratings b
 
 - Inline homepage JavaScript syntax check passed.
 - `python -m pytest tests/test_server_api.py -q --basetemp C:\tmp\secondopinion-pytest` passed: 6 tests.
+
+## Sixth pass (2026-07-18): comments on the surface, an honest venue index, inline reviewer expansion
+
+User feedback drove three changes:
+
+1. **Comments no longer hide inside panels.** Home board rows always render their takes strip: rows with comments show the two newest plus "+N more takes ->", and empty rows show a "No takes yet - add the first ->" opener into the rate modal (the invite had regressed to nothing). On the paper page, each collapsed reviewer entry now previews its two newest community takes (with the same +N / add-the-first openers) using the comments already embedded in the scorecard payload - zero extra requests. The openers expand the reviewer inline; the empty-state opener also focuses the comment box.
+2. **The venue ranking reads as a ranking, not navigation.** The six-cell segmented strip (which looked like clickable tabs but only preset the search dropdown) is now a static leaderboard: one row per venue with a rank number, venue name, a score-scaled bar, `NN/100`, and the review count. Plain divs - no button semantics, cursor, or hover states - with #1 carried in accent red. The `data-venue-filter` click handler was removed.
+3. **Reviewer entries expand in place and say what the score is.** Collapsed rows show `Reviewer N`, the big score with an explicit `/100` + "AI usefulness" label, and the review excerpts. Clicking expands a dossier directly under that reviewer (never at the section bottom, which the old `#scoreDetail` panel did): AI one-line read, Helpful/Not-helpful vote row, the Community-takes form and thread, the "Why this score" dimension grid with quotes/verdicts open by default, and a prominent "Read the full review on OpenReview ->" button plus Report link. The bottom `#scoreDetail` element, its clip/animation CSS, and the digest-summary fold are gone; `renderScoreDetail()` now just re-renders the reviewer grid.
+
+Implementation notes: scorecard loads seed `boardCommentCache` per reviewer so paper-page and home-board previews stay consistent both directions; `commentCount` tracks post/edit/delete so "+N more" math stays honest; metric bars carry inline widths animated by a CSS `barIn` keyframe instead of the old `requestAnimationFrame` width writer (which never fired in throttled/background tabs, leaving bars empty); reduced-motion disables both the expansion and bar animations.
+
+## Verification (sixth pass)
+
+- Inline homepage JavaScript syntax check passed (`node --check` on the extracted script).
+- `python -m pytest tests/test_server_api.py -q` passed: 7 tests (backend untouched).
+- Browser-verified against a locally seeded API (3 reviewers, mixed comment counts): venue rows render as non-interactive divs with scaled bars; board rows show embedded takes and the empty invite; paper page shows per-reviewer previews (+N counts), inline expansion above the next entry, working vote round-trip, comment post updating thread, previews, and the home board cache; deep link `?paper=...&reviewer=R2` opens expanded; mobile (375px) has no horizontal scroll and a one-column dimension grid.

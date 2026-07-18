@@ -1031,46 +1031,9 @@
       text-transform: uppercase;
     }
 
-    .score-detail {
-      display: grid;
-      grid-template-rows: 0fr;
-      opacity: 0;
-      transform: translateY(-4px);
-      transition: grid-template-rows .28s var(--ease), opacity .2s ease, transform .28s var(--ease);
-    }
-
-    .score-detail.is-open {
-      grid-template-rows: 1fr;
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .score-detail-clip { overflow: hidden; }
-
-    .score-detail-card {
+    .reviewer-detail {
       display: grid;
       gap: 13px;
-      margin-top: 1px;
-      padding: 14px;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: var(--surface-2);
-    }
-
-    .detail-head {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 12px;
-      align-items: start;
-    }
-
-    .detail-copy { min-width: 0; }
-
-    .detail-name {
-      margin: 0 0 4px;
-      font-size: 14px;
-      font-weight: 780;
-      letter-spacing: -.02em;
     }
 
     .detail-summary {
@@ -1078,19 +1041,6 @@
       color: var(--ink-2);
       font-size: 13px;
       line-height: 1.5;
-    }
-
-    .detail-score {
-      min-width: 54px;
-      min-height: 32px;
-      display: inline-grid;
-      place-items: center;
-      padding: 0 9px;
-      border: 1px solid currentColor;
-      border-radius: 10px;
-      font-size: 12px;
-      font-weight: 800;
-      font-variant-numeric: tabular-nums;
     }
 
     .tone-green { color: var(--green); background: var(--green-soft); }
@@ -2944,19 +2894,51 @@
     .app-view .reviewer-score-line strong { color: #111111; }
     .app-view .chevron { color: #9b9b9b; }
 
-    /* Detail panel: a flat gray dossier, metrics as table cells */
-    .app-view .score-detail-card { border: 0; background: #fafafa; }
+    /* Inline reviewer detail: the expansion lives directly under its reviewer row */
+    .app-view .reviewer-detail {
+      margin: 2px 4px 18px;
+      padding: 2px 16px 16px;
+      background: #fafafa;
+      box-shadow: inset 3px 0 0 #e10600;
+      animation: rowIn .2s var(--ease) both;
+    }
+    .app-view .reviewer-detail .detail-summary { margin: 12px 0 0; color: #555555; font-size: 13px; line-height: 1.5; }
+    .app-view .reviewer-detail .detail-summary b { color: #111111; font-weight: 800; }
+    /* Bars carry their width inline; the keyframe replays the grow-in on each expand. */
+    @keyframes barIn { from { width: 0; } }
+    .app-view .reviewer-detail .metric-fill { animation: barIn .62s var(--ease); }
     .app-view .metric { border: 0; background: #ffffff; }
     .app-view .metric-track { background: #ececec; }
     .app-view .metric-fill,
     .app-view .metric-fill.blue,
     .app-view .metric-fill.gold,
     .app-view .metric-fill.red { background: #111111; }
-    .app-view .detail-score { border: 1px solid #111111; color: #111111; background: #ffffff; }
     .app-view .guide-swatch,
     .app-view .guide-item:nth-child(2) .guide-swatch,
     .app-view .guide-item:nth-child(3) .guide-swatch,
     .app-view .guide-item:nth-child(4) .guide-swatch { background: #111111; }
+    /* Community take previews on collapsed reviewer rows */
+    .app-view .reviewer-takes { display: grid; gap: 7px; margin: 0 4px 14px 52px; }
+    .app-view .reviewer-take { border-left: 3px solid #e10600; padding: 1px 0 1px 10px; }
+    .app-view .reviewer-take p { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin: 0; color: #111111; font-size: 13px; font-weight: 650; line-height: 1.4; }
+    .app-view .reviewer-take span { display: block; margin-top: 2px; color: #a8a8a8; font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+    .app-view .reviewer-take-more { justify-self: start; border: 0; padding: 0; background: transparent; color: #999999; cursor: pointer; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+    .app-view .reviewer-take-more:hover { color: #e10600; }
+    .score-denom { color: #9b9b9b; font-size: 11px; font-weight: 800; }
+    .detail-cta {
+      display: inline-block;
+      padding: 7px 11px;
+      border: 1px solid #111111;
+      background: #ffffff;
+      color: #111111;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      text-decoration: none;
+    }
+    .detail-cta:hover { border-color: #e10600; background: #fff5f4; color: #e10600; }
+    .source-actions { align-items: center; }
 
     /* Themes / cloud */
     .app-view .cloud-stage {
@@ -3351,6 +3333,8 @@
       .outrage-search-form.is-invalid { animation: none; }
       .sticky-bar { transition: none; }
       .outrage-stamp { transition: none; }
+      .app-view .reviewer-detail { animation: none; }
+      .app-view .reviewer-detail .metric-fill { animation: none; transition: none; }
     }
 
     /* Small homepage refinements only. */
@@ -3361,23 +3345,20 @@
     .venue-ranking-head { display: flex; align-items: baseline; justify-content: space-between; gap: 18px; margin: 0 0 10px; }
     .venue-ranking-title { margin: 2px 0 0; font-size: 26px; font-weight: 900; letter-spacing: -0.01em; }
     .venue-ranking-title em { color: var(--oh-accent); font-style: normal; }
-    .venue-ranking-list { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); border: 2px solid var(--oh-ink); }
-    .venue-strip-item { display: grid; gap: 1px; align-content: start; justify-items: start; min-width: 0; padding: 10px 12px 12px; border: 0; border-left: 1px solid var(--oh-ink); background: #fff; color: var(--oh-ink); cursor: pointer; text-align: left; }
-    .venue-strip-item:first-child { border-left: 0; background: var(--oh-ink); color: #fff; }
-    .venue-strip-item:hover { background: #f4f4f4; }
-    .venue-strip-item:first-child:hover { background: #000; }
-    .venue-strip-rank { color: #999; font-size: 10px; font-weight: 900; letter-spacing: 0.14em; }
-    .venue-strip-item:first-child .venue-strip-rank { color: #ff6f66; }
-    .venue-strip-name { font-size: 15px; font-weight: 900; letter-spacing: 0.02em; text-transform: uppercase; }
-    .venue-strip-score { margin-top: 3px; font-size: 30px; font-weight: 900; line-height: 1; }
-    .venue-strip-score span { margin-left: 1px; color: #b5b5b5; font-size: 12px; font-weight: 800; }
-    .venue-strip-item:first-child .venue-strip-score { color: #ff4d42; }
-    .venue-strip-item:first-child .venue-strip-score span { color: #8a8a8a; }
-    .venue-strip-bar { display: block; width: 100%; height: 4px; margin-top: 7px; background: #ececec; }
-    .venue-strip-item:first-child .venue-strip-bar { background: #3a3a3a; }
-    .venue-strip-bar::after { content: ''; display: block; width: calc(var(--v) * 1%); height: 100%; background: var(--oh-accent); }
-    .venue-strip-count { margin-top: 6px; overflow: hidden; max-width: 100%; color: #999; font-size: 10.5px; text-overflow: ellipsis; white-space: nowrap; }
-    .venue-strip-item:first-child .venue-strip-count { color: #8a8a8a; }
+    /* A static leaderboard, not navigation: rank number + bar carry the order, nothing here is a button. */
+    .venue-ranking-list { display: grid; border-top: 2px solid var(--oh-ink); }
+    .venue-rank-row { display: grid; grid-template-columns: 44px 96px minmax(0, 1fr) auto; align-items: center; gap: 16px; min-height: 42px; padding: 8px 0; border-bottom: 1px solid #ececec; }
+    .venue-rank-no { color: #b5b5b5; font-size: 12px; font-weight: 900; letter-spacing: .1em; font-variant-numeric: tabular-nums; }
+    .venue-rank-row:first-child .venue-rank-no { color: var(--oh-accent); }
+    .venue-rank-name { font-size: 15px; font-weight: 900; letter-spacing: .02em; text-transform: uppercase; }
+    .venue-rank-track { position: relative; display: block; height: 8px; background: #f1f1f1; }
+    .venue-rank-track::after { content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: calc(var(--v) * 1%); background: var(--oh-ink); }
+    .venue-rank-row:first-child .venue-rank-track::after { background: var(--oh-accent); }
+    .venue-rank-data { display: flex; align-items: baseline; justify-content: flex-end; gap: 12px; font-variant-numeric: tabular-nums; }
+    .venue-rank-score { font-size: 19px; font-weight: 900; line-height: 1; }
+    .venue-rank-score span { margin-left: 1px; color: #b5b5b5; font-size: 11px; font-weight: 800; }
+    .venue-rank-row:first-child .venue-rank-score { color: var(--oh-accent); }
+    .venue-rank-count { min-width: 104px; color: #999; font-size: 10.5px; font-weight: 700; text-align: right; }
     @media (max-width: 768px) {
       .outrage-home { padding: 0 14px 48px; }
       .outrage-header { min-height: 44px; flex-wrap: nowrap; gap: 10px; }
@@ -3514,10 +3495,9 @@
     @media (max-width: 860px) {
       .venue-ranking-head { display: grid; gap: 4px; }
       .venue-ranking-title { font-size: 21px; }
-      .venue-ranking-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-      .venue-strip-item { border-top: 1px solid var(--oh-ink); }
-      .venue-strip-item:nth-child(-n+3) { border-top: 0; }
-      .venue-strip-item:nth-child(3n+1) { border-left: 0; }
+      .venue-rank-row { grid-template-columns: 34px 76px minmax(0, 1fr) auto; gap: 10px; min-height: 36px; }
+      .venue-rank-name { font-size: 13px; }
+      .venue-rank-count { display: none; }
       .outrage-tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; }
       .outrage-tab { min-height: 56px; padding: 8px 9px 10px; font-size: 10px; }
       .outrage-tab-label { font-size: 10.5px; }
@@ -3560,7 +3540,7 @@
             <h2 class="venue-ranking-title" id="venueRankingTitle">Where are the meanest reviewers?</h2>
             <p class="home-kicker" id="venueRankingKicker">Venue risk index / 2025</p>
           </div>
-          <div class="venue-ranking-list" id="venueRankingList" aria-live="polite"></div>
+          <div class="venue-ranking-list" id="venueRankingList" role="list" aria-live="polite"></div>
         </section>
 
           <form class="outrage-search-form" id="landingSearch" novalidate>
@@ -3652,10 +3632,7 @@
                 <button class="paper-action-button" id="followVenueButton" type="button" data-follow-venue>Follow venue</button>
               </div>
             </div>
-            <div class="reviewer-grid" id="reviewerGrid" aria-label="Reviewer scores"></div>
-            <div class="score-detail" id="scoreDetail" aria-live="polite">
-              <div class="score-detail-clip" id="scoreDetailClip"></div>
-            </div>
+            <div class="reviewer-grid" id="reviewerGrid" aria-label="Reviewer scores" aria-live="polite"></div>
           </div>
         </section>
 
@@ -3954,8 +3931,6 @@
     const paperStats = document.getElementById('paperStats');
     const redList = document.getElementById('redList');
     const blackList = document.getElementById('blackList');
-    const scoreDetail = document.getElementById('scoreDetail');
-    const scoreDetailClip = document.getElementById('scoreDetailClip');
     const cloudStage = document.getElementById('cloudStage');
     const cloudCanvas = document.getElementById('cloudCanvas');
     const cloudTooltip = document.getElementById('cloudTooltip');
@@ -4617,7 +4592,8 @@
       if (title && leader) title.innerHTML = `The meanest reviewers are at <em>${escapeHtml(leader.venue)}</em>.`;
       const kicker = document.getElementById('venueRankingKicker');
       if (kicker) kicker.textContent = `Venue risk index / 2025 / ${totalReviews.toLocaleString()} reviews scored`;
-      venueRankingList.innerHTML = VENUE_RISK_2025.map((item, index) => `<button class="venue-strip-item" type="button" data-venue-filter="${item.venue}" aria-label="${escapeHtml(item.venue)}, rank ${index + 1}, risk ${item.score} of 100. Search this venue."><span class="venue-strip-rank">&#8470;${index + 1}</span><strong class="venue-strip-name">${escapeHtml(item.venue)}</strong><b class="venue-strip-score">${item.score}<span>/100</span></b><i class="venue-strip-bar" style="--v:${Math.round((item.score / maxScore) * 100)}" aria-hidden="true"></i><span class="venue-strip-count">${item.reviewCount.toLocaleString()} reviews</span></button>`).join('');
+      // A read-only index: plain ranked rows, no button affordance to mislead.
+      venueRankingList.innerHTML = VENUE_RISK_2025.map((item, index) => `<div class="venue-rank-row" role="listitem" aria-label="Rank ${index + 1}: ${escapeHtml(item.venue)}, risk ${item.score} of 100, ${item.reviewCount.toLocaleString()} reviews scored"><span class="venue-rank-no">&#8470;${index + 1}</span><strong class="venue-rank-name">${escapeHtml(item.venue)}</strong><i class="venue-rank-track" style="--v:${Math.round((item.score / maxScore) * 100)}" aria-hidden="true"></i><span class="venue-rank-data"><b class="venue-rank-score">${item.score}<span>/100</span></b><span class="venue-rank-count">${item.reviewCount.toLocaleString()} reviews</span></span></div>`).join('');
     }
 
     function renderCommunityBoard() {
@@ -4706,17 +4682,18 @@
       const comments = cachedBoardComments(row);
       const total = Math.max(Number(row.commentCount || 0), comments.length);
       const shown = comments.slice(0, 2);
+      // Takes stay on the surface: show the newest ones, or an explicit invite when empty.
       const takesHtml = shown.length
         ? shown.map(comment => `<div class="outrage-take"><p>${escapeHtml(comment.body)}</p><span>${escapeHtml(comment.author || 'anon')} &middot; ${escapeHtml(relTime(comment.created_at))}</span></div>`).join('')
           + (total > shown.length ? `<button class="outrage-take-more" type="button" data-row-rate="${index}">+${total - shown.length} more take${total - shown.length === 1 ? '' : 's'} -></button>` : '')
-        : '';
+        : `<button class="outrage-take-empty" type="button" data-row-rate="${index}">No takes yet &middot; add the first -></button>`;
       return `
         <div class="outrage-social">
           <span class="outrage-votes" aria-label="Rate this assessment">
             <button class="outrage-vote outrage-vote--agree" type="button" data-board-vote="agree" data-board-row="${index}" title="Agree with this assessment"><b>&#9650;</b><span class="outrage-vote-count">${agreeCount}</span><span>${praise ? 'HELPFUL' : 'AGREE'}</span></button>
             <button class="outrage-vote outrage-vote--disagree" type="button" data-board-vote="disagree" data-board-row="${index}" title="Disagree with this assessment"><b>&#9660;</b><span class="outrage-vote-count">${disagreeCount}</span><span>${praise ? 'NOT QUITE' : 'DISAGREE'}</span></button>
           </span>
-          ${takesHtml ? `<div class="outrage-takes">${takesHtml}</div>` : ''}
+          <div class="outrage-takes">${takesHtml}</div>
         </div>`;
     }
     function boardRowHtml(row, index, board, copy) {
@@ -5122,6 +5099,7 @@
     function applyCommentItems(context, items) {
       if (context.source === 'scorecard' && context.reviewer) {
         context.reviewer.comments = items;
+        context.reviewer.commentCount = items.length;
         context.reviewer.commentsLoaded = true;
         if (context.row) boardCommentCache.set(commentScopeKey(context.row), items);
         renderScoreDetail();
@@ -5224,6 +5202,7 @@
       reviewer.commentsLoading = true;
       renderScoreDetail();
       reviewer.comments = await fetchCommentsFor(scorecardCommentRow(reviewer));
+      reviewer.commentCount = reviewer.comments.length;
       boardCommentCache.set(commentScopeKey(scorecardCommentRow(reviewer)), reviewer.comments);
       reviewer.commentsLoading = false;
       reviewer.commentsLoaded = true;
@@ -5240,6 +5219,7 @@
       const result = await postCommentFor(scorecardCommentRow(reviewer), body);
       if (!result.ok) { if (status) status.textContent = result.reason === 'empty' ? 'Write something first.' : 'Comment could not be posted.'; return; }
       reviewer.comments = result.items;
+      reviewer.commentCount = result.items.length;
       reviewer.commentsLoaded = true;
       boardCommentCache.set(commentScopeKey(scorecardCommentRow(reviewer)), result.items);
       renderScoreDetail();
@@ -5505,10 +5485,17 @@
           summary: reviewer.summary || 'Reviewer comments scored by Judge My Reviewers.',
           social: reviewer.social || { up: 0, down: 0 },
           comments: Array.isArray(reviewer.comments) ? reviewer.comments : [],
+          commentCount: Number(reviewer.comment_count ?? (Array.isArray(reviewer.comments) ? reviewer.comments.length : 0)),
           commentsLoaded: true,
           dimensions
         };
       });
+      if (paper.paper_id) {
+        // Scorecard-embedded takes are fresher than any cached board preview.
+        reviewers.forEach(reviewer => {
+          boardCommentCache.set(commentScopeKey({ paperId: paper.paper_id, reviewerKey: reviewer.id }), reviewer.comments || []);
+        });
+      }
       summary.overall_score = reviewers.length
         ? Math.round(reviewers.reduce((total, reviewer) => total + reviewer.score, 0) / reviewers.length)
         : 0;
@@ -5693,77 +5680,45 @@
       requestAnimationFrame(tick);
     }
 
-    function renderReviewerCards() {
-      reviewerGrid.innerHTML = [...reviewers].sort((a, b) => b.score - a.score).map(reviewer => {
-        const active = state.selectedReviewer === reviewer.id;
-        const excerpts = splitComments.filter(comment => comment.id === reviewer.id);
-        const reviewText = excerpts.length
-          ? excerpts.map(comment => `
-              <p class="reviewer-excerpt">
-                <span class="reviewer-excerpt-label">Review ${escapeHtml(comment.chunk)}</span>
-                ${escapeHtml(comment.view)}
-              </p>`).join('')
-          : '<p class="reviewer-excerpt">No public review text is available for this reviewer yet.</p>';
-        return `
-          <article class="reviewer-entry">
-            <button class="reviewer-card${active ? ' is-active' : ''}" type="button" data-reviewer="${reviewer.id}" aria-expanded="${active}" aria-label="${escapeHtml(reviewer.name)}: vote and comment on this review">
-              <span class="mini-avatar" aria-hidden="true">${avatarSvg[reviewer.avatar || reviewer.id] || avatarSvg.R1}</span>
-              <span class="reviewer-card-copy">
-                <span class="reviewer-name">${escapeHtml(reviewer.name)}</span>
-                <span class="reviewer-score-line"><strong>${reviewer.score}</strong><span class="tone-label">${escapeHtml(reviewer.label)} &middot; Agree, disagree, comment</span></span>
-              </span>
-              <span class="chevron" aria-hidden="true">v</span>
-            </button>
-            <div class="reviewer-excerpts">${reviewText}</div>
-          </article>`;
-      }).join('');
-    }
-    function metricTone(value) {
-      if (value < 40) return 'red';
-      if (value < 70) return 'gold';
-      if (value < 85) return 'blue';
-      return '';
+    function reviewerTakesPreviewHtml(reviewer) {
+      const takes = reviewer.comments || [];
+      const total = Math.max(Number(reviewer.commentCount || 0), takes.length);
+      const shown = takes.slice(0, 2);
+      const shownHtml = shown.map(comment => `
+        <div class="reviewer-take">
+          <p>${escapeHtml(comment.body)}</p>
+          <span>${escapeHtml(comment.author || 'anon')} &middot; ${escapeHtml(relTime(comment.created_at))}</span>
+        </div>`).join('');
+      const opener = total > shown.length
+        ? `<button class="reviewer-take-more" type="button" data-reviewer-open="${escapeHtml(reviewer.id)}">+${total - shown.length} more take${total - shown.length === 1 ? '' : 's'} -></button>`
+        : (total === 0 ? `<button class="reviewer-take-more" type="button" data-reviewer-open="${escapeHtml(reviewer.id)}" data-focus-take="1">No takes yet &middot; add the first -></button>` : '');
+      return `<div class="reviewer-takes">${shownHtml}${opener}</div>`;
     }
 
-    function renderScoreDetail() {
-      const reviewer = reviewers.find(item => item.id === state.selectedReviewer);
-      scoreDetail.classList.toggle('is-open', Boolean(reviewer));
-      if (!reviewer) {
-        scoreDetailClip.innerHTML = '';
-        syncLinkedReviewer();
-        return;
-      }
-
+    function reviewerDetailHtml(reviewer) {
       // Same interaction contract as the board rows and rate modal: vote on the
-      // review, then discuss. AI dimensions collapse behind a one-line digest.
+      // review, then discuss - followed by the full AI score breakdown as evidence.
       const praise = reviewer.score >= 70;
       const counts = reviewerSocialCounts(reviewer);
       const positiveVote = praise ? 'up' : 'down';
       const negativeVote = praise ? 'down' : 'up';
       const positiveCount = praise ? counts.up : counts.down;
       const negativeCount = praise ? counts.down : counts.up;
-      const dimensionDigest = reviewer.dimensions.map(metric => `${metric.name} ${metric.value}`).join(' · ');
-      scoreDetailClip.innerHTML = `
-        <div class="score-detail-card">
-          <div class="detail-head">
-            <div class="detail-copy">
-              <h3 class="detail-name">${reviewer.name}</h3>
-              <p class="detail-summary">${escapeHtml(reviewer.summary)}</p>
-            </div>
-            <span class="detail-score ${toneClass(reviewer.tone)}">${reviewer.score}/100</span>
-          </div>
+      return `
+        <div class="reviewer-detail">
+          <p class="detail-summary"><b>AI read:</b> ${escapeHtml(reviewer.summary)}</p>
           <div class="rate-actions detail-vote" aria-label="Vote on this review">
             <button class="rate-primary${counts.selected === positiveVote ? ' is-selected' : ''}" type="button" data-reviewer-vote="${positiveVote}" data-reviewer-id="${reviewer.id}" aria-pressed="${counts.selected === positiveVote}">${praise ? 'Helpful' : 'Not helpful'} &middot; ${positiveCount}${counts.selected === positiveVote ? ' &#10003;' : ''}</button>
             <button class="rate-secondary${counts.selected === negativeVote ? ' is-selected' : ''}" type="button" data-reviewer-vote="${negativeVote}" data-reviewer-id="${reviewer.id}" aria-pressed="${counts.selected === negativeVote}">${praise ? 'Not helpful' : 'Helpful'} &middot; ${negativeCount}${counts.selected === negativeVote ? ' &#10003;' : ''}</button>
           </div>
           ${renderScorecardCommentsHtml(reviewer)}
-          <details class="rate-evidence detail-dimensions">
-            <summary>AI score dimensions${dimensionDigest ? ` — ${escapeHtml(dimensionDigest)}` : ''}</summary>
+          <details class="rate-evidence detail-dimensions" open>
+            <summary>Why this score &middot; AI dimensions &amp; evidence</summary>
             <div class="dimension-grid">
               ${reviewer.dimensions.map(metric => `
                 <div class="metric">
                   <div class="metric-head"><span>${escapeHtml(metric.name)}</span><strong>${metric.value}</strong></div>
-                  <div class="metric-track"><i class="metric-fill ${metricTone(metric.value)}" data-width="${metric.value}%"></i></div>
+                  <div class="metric-track"><i class="metric-fill ${metricTone(metric.value)}" style="width:${metric.value}%"></i></div>
                   <div class="criterion">${escapeHtml(metric.criterion)}</div>
                   ${metric.quote ? `<div class="criterion"><b>Quote</b> ${escapeHtml(metric.quote)}</div>` : ''}
                   ${metric.verdict ? `<div class="criterion"><b>Verdict</b> ${escapeHtml(metric.verdict)}</div>` : ''}
@@ -5777,22 +5732,51 @@
             </div>
           </details>
           <div class="source-actions">
-            <a class="source-link" href="${openReviewUrl(reviewer.reviewId)}" target="_blank" rel="noopener noreferrer">Source via OpenReview, CC BY 4.0</a>
+            <a class="detail-cta" href="${openReviewUrl(reviewer.reviewId)}" target="_blank" rel="noopener noreferrer">Read the full review on OpenReview -></a>
             <a class="source-link" href="${reportScoreUrl(reviewer.id)}">Report this score</a>
           </div>
         </div>`;
+    }
 
-      const dimensionsPanel = scoreDetailClip.querySelector('.detail-dimensions');
-      if (dimensionsPanel) {
-        dimensionsPanel.addEventListener('toggle', () => {
-          if (!dimensionsPanel.open) return;
-          requestAnimationFrame(() => {
-            dimensionsPanel.querySelectorAll('.metric-fill').forEach(fill => { fill.style.width = fill.dataset.width; });
-          });
-        });
-      }
-      if (!reviewer.commentsLoaded && !reviewer.commentsLoading) loadScorecardComments(reviewer);
+    function renderReviewerCards() {
+      reviewerGrid.innerHTML = [...reviewers].sort((a, b) => b.score - a.score).map(reviewer => {
+        const active = state.selectedReviewer === reviewer.id;
+        const excerpts = splitComments.filter(comment => comment.id === reviewer.id);
+        const reviewText = excerpts.length
+          ? excerpts.map(comment => `
+              <p class="reviewer-excerpt">
+                <span class="reviewer-excerpt-label">Review ${escapeHtml(comment.chunk)}</span>
+                ${escapeHtml(comment.view)}
+              </p>`).join('')
+          : '<p class="reviewer-excerpt">No public review text is available for this reviewer yet.</p>';
+        return `
+          <article class="reviewer-entry${active ? ' is-open' : ''}">
+            <button class="reviewer-card${active ? ' is-active' : ''}" type="button" data-reviewer="${reviewer.id}" aria-expanded="${active}" aria-label="${escapeHtml(reviewer.name)}: open community takes and the score breakdown">
+              <span class="mini-avatar" aria-hidden="true">${avatarSvg[reviewer.avatar || reviewer.id] || avatarSvg.R1}</span>
+              <span class="reviewer-card-copy">
+                <span class="reviewer-name">${escapeHtml(reviewer.name)}</span>
+                <span class="reviewer-score-line"><strong title="AI-scored review usefulness, 0-100">${reviewer.score}</strong><span class="score-denom">/100</span><span class="tone-label">AI usefulness &middot; ${escapeHtml(reviewer.label)}</span></span>
+              </span>
+              <span class="chevron" aria-hidden="true">v</span>
+            </button>
+            <div class="reviewer-excerpts">${reviewText}</div>
+            ${active ? reviewerDetailHtml(reviewer) : reviewerTakesPreviewHtml(reviewer)}
+          </article>`;
+      }).join('');
+      const activeReviewer = reviewers.find(item => item.id === state.selectedReviewer);
+      if (activeReviewer && !activeReviewer.commentsLoaded && !activeReviewer.commentsLoading) loadScorecardComments(activeReviewer);
       syncLinkedReviewer();
+    }
+    function metricTone(value) {
+      if (value < 40) return 'red';
+      if (value < 70) return 'gold';
+      if (value < 85) return 'blue';
+      return '';
+    }
+
+    function renderScoreDetail() {
+      // The reviewer detail expands inline inside its own reviewer entry.
+      renderReviewerCards();
     }
 
     const CLOUD_STOPWORDS = new Set('are not the and that this with from also had has have was were for but you your our out set get got there here than then they them its can will would could should may might one two use used using via per etc let make made more most some such into onto only very much many any all each both same other does did how why what when where which while because been being over under about'.split(' '));
@@ -5896,7 +5880,6 @@
       renderPaperInfo();
       renderOverallScore();
       renderReviewerCards();
-      renderScoreDetail();
       renderCloud();
     }
 
@@ -5904,9 +5887,9 @@
       state.selectedReviewer = state.selectedReviewer === id ? null : id;
       setPaperDeepLink(state.selectedReviewer || '', 'replace');
       renderReviewerCards();
-      renderScoreDetail();
       if (state.selectedReviewer && window.innerWidth < 680) {
-        window.setTimeout(() => scoreDetail.scrollIntoView({ behavior: reducedMotion.matches ? 'auto' : 'smooth', block: 'nearest' }), 80);
+        const openEntry = reviewerGrid.querySelector('.reviewer-entry.is-open');
+        if (openEntry) window.setTimeout(() => openEntry.scrollIntoView({ behavior: reducedMotion.matches ? 'auto' : 'smooth', block: 'nearest' }), 80);
       }
     }
 
@@ -6069,11 +6052,12 @@
         return;
       }
 
-      const venueFilter = event.target.closest('[data-venue-filter]');
-      if (venueFilter) {
-        landingConference.value = venueFilter.dataset.venueFilter;
-        landingInput.focus();
-        showToast(`${venueFilter.dataset.venueFilter} selected`);
+      const reviewerOpen = event.target.closest('[data-reviewer-open]');
+      if (reviewerOpen) {
+        const reviewerId = reviewerOpen.dataset.reviewerOpen;
+        const focusTake = 'focusTake' in reviewerOpen.dataset;
+        if (state.selectedReviewer !== reviewerId) selectReviewer(reviewerId);
+        if (focusTake) window.setTimeout(() => document.getElementById('scCommentInput')?.focus(), 90);
         return;
       }
       const accountPaper = event.target.closest('[data-account-paper]');
@@ -6274,7 +6258,6 @@
         showCloudTooltip(index, event.clientX, event.clientY, true);
         state.selectedReviewer = wordButton.dataset.reviewer;
         renderReviewerCards();
-        renderScoreDetail();
         return;
       }
 
@@ -6309,7 +6292,7 @@
       submitAuthForm();
     });
 
-    scoreDetail.addEventListener('submit', event => {
+    reviewerGrid.addEventListener('submit', event => {
       const form = event.target.closest('[data-sc-comment-form]');
       if (!form) return;
       event.preventDefault();
