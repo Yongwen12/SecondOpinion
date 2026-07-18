@@ -156,6 +156,19 @@ class Vote(Base):
     updated_at: Mapped[dt.datetime] = mapped_column(DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False)
 
 
+class ReviewerReaction(Base):
+    __tablename__ = "reviewer_reactions"
+    __table_args__ = (UniqueConstraint("paper_id", "reviewer_key", "session_id", name="uq_reaction_session_reviewer"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    paper_id: Mapped[str] = mapped_column(ForeignKey("papers.paper_id"), index=True, nullable=False)
+    reviewer_key: Mapped[str] = mapped_column(String(40), index=True, nullable=False)
+    session_id: Mapped[str] = mapped_column(String(160), index=True, nullable=False)
+    emoji: Mapped[str] = mapped_column(String(16), nullable=False)
+    created_at: Mapped[dt.datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
+    updated_at: Mapped[dt.datetime] = mapped_column(DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False)
+
+
 class UserAccount(Base):
     __tablename__ = "users"
 

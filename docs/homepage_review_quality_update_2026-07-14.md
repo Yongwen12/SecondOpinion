@@ -91,3 +91,39 @@ so the page had no focal point. New hierarchy - identity, action, context, story
 Type scale on desktop now reads masthead 92 > board heading 44 > review quotes 20 >
 venue brief 15/14. Verified in-browser (order, block heights, fold position, static venue
 rows, board takes unaffected) at 1280px and 375px; inline JS `node --check` passed.
+
+## Eighth pass (2026-07-18): emoji reactions beside the vote, votes de-texted
+
+Two-layer community feedback, WhatsApp-channel style, with the layers kept orthogonal
+by palette curation rather than by merging systems:
+
+- **Votes lose their words.** Board rows, the rate modal, and the paper-page reviewer
+  detail all use the same compact pair: `▲ count / ▼ count` with the meaning in
+  title/aria ("Agree with this assessment" / "This review was helpful"). The selected
+  side fills ink. GitHub-precedent: judgments (Approve / Request changes) and emoji
+  reactions live side by side without labels colliding.
+- **Emoji reactions are a judgment-free layer.** Fixed palette 💀 😂 🤯 🫡 😭 - deliberately
+  no 👍/👎/✅/🎯, so reactions never overlap the agree/disagree semantics. One reaction
+  per session per review (tap a new one to switch, tap your own to remove), rendered as
+  square chips next to the vote pair on all three surfaces, with a "+" opener that
+  expands the full palette inline.
+- **Backend**: `reviewer_reactions` table (unique per paper/reviewer/session; alembic
+  20260718_0004), `POST /api/papers/{id}/reviewers/{key}/reactions` (whitelist, 422 on
+  judgment emoji, 429 rate limit at 120/h), counts embedded in the scorecard
+  (`reactions` + `viewer_reaction` per reviewer), in dynamic leaderboard rows, and
+  overlaid onto the static home snapshot by the renamed
+  `enrich_home_community_signals` (formerly `enrich_home_comment_previews`).
+- Reactions feed no scores; votes remain the calibration signal. No-API/demo rows fall
+  back to a local `soDemoReactions` store, and against an old backend the strip
+  degrades to a "+" that toasts on failure.
+
+## Verification (eighth pass)
+
+- `python -m pytest tests/test_server_api.py -q`: 8 passed, including the new
+  `test_reviewer_reaction_flow` (react, switch, second session, scorecard + home
+  embeds, clear, 422 on 👍, 404 on ghost paper).
+- Browser against the seeded local API: chips render from the enriched snapshot
+  (💀3 😂1), picker opens/closes, react-switch-remove round-trips, reload restores the
+  viewer's own chip from the server, paper-page detail and modal share counts, a modal
+  removal syncs back to the board row, mobile 375px has no overflow.
+- Inline JS `node --check` passed.

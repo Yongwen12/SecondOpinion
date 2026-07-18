@@ -279,6 +279,54 @@ def test_static_home_embeds_live_comment_previews(tmp_path):
     ]
 
 
+def test_reviewer_reaction_flow(tmp_path):
+    factory = session_factory_for(tmp_path)
+    seed(factory, tmp_path)
+    settings = ServerSettings(
+        database_url=f"sqlite:///{tmp_path / 'api.db'}",
+        artifact_root=tmp_path / "artifacts",
+        scoring_memory_path=tmp_path / "memory.jsonl",
+    )
+    app = create_app(settings=settings, session_factory=factory)
+    client = TestClient(app)
+    skull, laugh = "\U0001f480", "\U0001f602"
+    viewer = {"X-SecondOpinion-Session": "sess-react-1"}
+    other = {"X-SecondOpinion-Session": "sess-react-2"}
+
+    # React, then switch: one reaction per session, the newer emoji replaces the older.
+    first = client.post("/api/papers/paper1/reviewers/R1/reactions", json={"emoji": skull}, headers=viewer)
+    assert first.status_code == 200
+    assert first.json()["selected"] == skull
+    assert first.json()["reactions"] == {skull: 1}
+
+    switched = client.post("/api/papers/paper1/reviewers/R1/reactions", json={"emoji": laugh}, headers=viewer)
+    assert switched.json()["selected"] == laugh
+    assert switched.json()["reactions"] == {laugh: 1}
+
+    seconded = client.post("/api/papers/paper1/reviewers/R1/reactions", json={"emoji": skull}, headers=other)
+    assert seconded.json()["reactions"] == {skull: 1, laugh: 1}
+
+    # The scorecard embeds counts and the viewer's own pick.
+    scorecard = client.get("/api/papers/paper1/scorecard", headers=viewer)
+    reviewer = scorecard.json()["reviewers"][0]
+    assert reviewer["reactions"] == {skull: 1, laugh: 1}
+    assert reviewer["viewer_reaction"] == laugh
+
+    # Dynamic home rows carry the tallies too.
+    home = client.get("/api/home", params={"conference": "ICLR", "year": 2025}, headers=viewer)
+    red_row = home.json()["leaderboards"]["red"][0]
+    assert red_row["reactions"] == {skull: 1, laugh: 1}
+    assert red_row["viewer_reaction"] == laugh
+
+    # Clearing removes the viewer's reaction; judgment emoji stay rejected.
+    cleared = client.post("/api/papers/paper1/reviewers/R1/reactions", json={"emoji": "none"}, headers=viewer)
+    assert cleared.json()["selected"] is None
+    assert cleared.json()["reactions"] == {skull: 1}
+    unsupported = client.post("/api/papers/paper1/reviewers/R1/reactions", json={"emoji": "\U0001f44d"}, headers=viewer)
+    assert unsupported.status_code == 422
+    missing = client.post("/api/papers/ghost/reviewers/R1/reactions", json={"emoji": skull}, headers=viewer)
+    assert missing.status_code == 404
+
 
 def auth_headers(token: str, session_id: str = "test-session") -> dict[str, str]:
     return {"Authorization": f"Bearer {token}", "X-SecondOpinion-Session": session_id}

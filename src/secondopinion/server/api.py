@@ -17,10 +17,11 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from .config import ServerSettings, settings_from_env
 from .database import init_db, make_engine, make_session_factory
-from .models import Paper, ReviewerComment, ScoringJob, UserAccount, Vote, utcnow
+from .models import Paper, ReviewerComment, ReviewerReaction, ScoringJob, UserAccount, Vote, utcnow
 from .repository import (
     add_reviewer_comment,
     apply_reviewer_comments,
+    apply_reviewer_reactions,
     apply_vote_counts,
     authenticate_user,
     build_leaderboards,
@@ -46,6 +47,8 @@ from .repository import (
     update_reviewer_comment,
     delete_reviewer_comment,
     delete_user_account,
+    reaction_counts_by_reviewer,
+    upsert_reaction,
     upsert_vote,
     user_from_token,
     user_to_public_dict,
@@ -194,11 +197,13 @@ def create_app(
 
     @app.get("/api/home")
     def home(
+        request: Request,
         conference: str | None = None,
         year: int | None = 2025,
         limit: int = 12,
         session: Session = Depends(get_session),
     ) -> dict[str, Any]:
+        viewer_session_id = session_id_from_request(request)
         static_payload = load_static_home_payload(
             conference=conference,
             year=year,
@@ -206,12 +211,12 @@ def create_app(
             home_snapshot_path=settings.home_snapshot_path,
         )
         if static_payload is not None:
-            # The pre-rendered snapshot is comment-cold; overlay live comment previews
-            # from the DB so the board's first paint carries community takes without a
-            # per-row round trip.
-            return enrich_home_comment_previews(session, static_payload)
+            # The pre-rendered snapshot is comment- and reaction-cold; overlay live
+            # community signals from the DB so the board's first paint carries takes
+            # and reactions without a per-row round trip.
+            return enrich_home_community_signals(session, static_payload, viewer_session_id=viewer_session_id)
         stats = home_stats(session, conference_id=conference, year=year)
-        return {
+        payload = {
             "latest_papers": latest_scored_papers(session, conference_id=conference, year=year, limit=limit),
             "leaderboards": build_leaderboards(session, conference_id=conference, year=year, limit=min(50, max(1, limit))),
             "stats": stats,
@@ -219,6 +224,8 @@ def create_app(
             "paper_count": stats["paper_count"],
             "review_count": stats["review_count"],
         }
+        # build_leaderboards embeds counts; the overlay adds the viewer's own reaction.
+        return enrich_home_community_signals(session, payload, viewer_session_id=viewer_session_id)
 
     @app.get("/api/conferences")
     def conferences(session: Session = Depends(get_session)) -> dict[str, Any]:
@@ -262,12 +269,18 @@ def create_app(
         if scorecard is None:
             raise HTTPException(status_code=404, detail={"code": "scorecard_not_ready"})
         user = current_user_from_request(session, request)
-        payload = apply_reviewer_comments(
+        viewer_session_id = session_id_from_request(request)
+        payload = apply_reviewer_reactions(
             session,
             paper_id,
-            apply_vote_counts(session, paper_id, scorecard.public_json),
-            viewer_session_id=session_id_from_request(request),
-            viewer_user_id=user.user_id if user else None,
+            apply_reviewer_comments(
+                session,
+                paper_id,
+                apply_vote_counts(session, paper_id, scorecard.public_json),
+                viewer_session_id=viewer_session_id,
+                viewer_user_id=user.user_id if user else None,
+            ),
+            viewer_session_id=viewer_session_id,
         )
         paper_payload = payload.setdefault("paper", {})
         paper_payload["paper_id"] = paper_id
@@ -339,18 +352,60 @@ def create_app(
         scorecard = latest_scorecard(session, paper_id)
         user = current_user_from_request(session, request)
         result["scorecard"] = (
-            apply_reviewer_comments(
+            apply_reviewer_reactions(
                 session,
                 paper_id,
-                apply_vote_counts(session, paper_id, scorecard.public_json),
+                apply_reviewer_comments(
+                    session,
+                    paper_id,
+                    apply_vote_counts(session, paper_id, scorecard.public_json),
+                    viewer_session_id=session_id,
+                    viewer_user_id=user.user_id if user else None,
+                ),
                 viewer_session_id=session_id,
-                viewer_user_id=user.user_id if user else None,
             )
             if scorecard
             else None
         )
         if result["scorecard"]:
             result["scorecard"].setdefault("paper", {})["paper_id"] = paper_id
+        response = JSONResponse(result)
+        response.set_cookie(
+            SESSION_COOKIE,
+            session_id,
+            max_age=60 * 60 * 24 * 365,
+            httponly=False,
+            samesite="lax",
+        )
+        return response
+
+    @app.post("/api/papers/{paper_id}/reviewers/{reviewer_key}/reactions")
+    async def reviewer_reaction(
+        paper_id: str,
+        reviewer_key: str,
+        request: Request,
+        session: Session = Depends(get_session),
+    ) -> JSONResponse:
+        paper = session.get(Paper, paper_id)
+        if paper is None:
+            raise HTTPException(status_code=404, detail={"code": "paper_not_found"})
+        body = await parse_json_body(request)
+        session_id = session_id_from_request(request)
+        emoji = str(body.get("emoji") or "none")
+        if emoji != "none":
+            enforce_reaction_rate_limit(session, session_id)
+        try:
+            result = upsert_reaction(
+                session,
+                paper_id=paper_id,
+                reviewer_key=reviewer_key,
+                session_id=session_id,
+                emoji=emoji,
+            )
+        except ValueError:
+            raise HTTPException(status_code=422, detail={"code": "unsupported_reaction"})
+        bucket = reaction_counts_by_reviewer(session, paper_id, viewer_session_id=session_id).get(reviewer_key) or {}
+        result["reactions"] = dict(bucket.get("counts") or {})
         response = JSONResponse(result)
         response.set_cookie(
             SESSION_COOKIE,
@@ -502,18 +557,25 @@ def create_app(
     return app
 
 
-def enrich_home_comment_previews(session: Session, payload: dict[str, Any]) -> dict[str, Any]:
-    """Overlay live comment previews and counts onto static-snapshot leaderboard rows.
+def enrich_home_community_signals(
+    session: Session,
+    payload: dict[str, Any],
+    *,
+    viewer_session_id: str = "",
+) -> dict[str, Any]:
+    """Overlay live community signals (comments + reactions) onto leaderboard rows.
 
-    Comments are a DB-only, runtime feature, so the pre-rendered home snapshot never
-    carries them. For every shown row we set ``latest_comments`` (up to a couple of the
-    newest) and refresh ``comment_count`` from the DB. Queries are deduplicated per paper
-    and the whole pass is best-effort: any failure leaves the bare snapshot intact.
+    Comments and reactions are DB-only, runtime features, so the pre-rendered home
+    snapshot never carries them. For every shown row we set ``latest_comments`` (up to
+    a couple of the newest), refresh ``comment_count``, and attach ``reactions`` counts
+    plus the viewer's own ``viewer_reaction``. Queries are deduplicated per paper and
+    the whole pass is best-effort: any failure leaves the bare payload intact.
     """
     boards = payload.get("leaderboards")
     if not isinstance(boards, dict):
         return payload
     previews_by_paper: dict[str, dict[str, dict[str, Any]]] = {}
+    reactions_by_paper: dict[str, dict[str, dict[str, Any]]] = {}
     try:
         for rows in boards.values():
             if not isinstance(rows, list):
@@ -530,8 +592,15 @@ def enrich_home_comment_previews(session: Session, payload: dict[str, Any]) -> d
                 bucket = previews_by_paper[paper_id].get(reviewer_key) or {}
                 row["latest_comments"] = list(bucket.get("items", []))
                 row["comment_count"] = int(bucket.get("count", 0))
-    except Exception:  # pragma: no cover - never let comment enrichment break the home feed
-        logger.warning("Home comment enrichment failed; serving snapshot without previews.", exc_info=True)
+                if paper_id not in reactions_by_paper:
+                    reactions_by_paper[paper_id] = reaction_counts_by_reviewer(
+                        session, paper_id, viewer_session_id=viewer_session_id
+                    )
+                reaction_bucket = reactions_by_paper[paper_id].get(reviewer_key) or {}
+                row["reactions"] = dict(reaction_bucket.get("counts") or {})
+                row["viewer_reaction"] = reaction_bucket.get("viewer")
+    except Exception:  # pragma: no cover - never let enrichment break the home feed
+        logger.warning("Home community-signal enrichment failed; serving payload without overlays.", exc_info=True)
     return payload
 
 
@@ -634,6 +703,22 @@ def enforce_vote_rate_limit(session: Session, session_id: str) -> None:
     ).scalar_one()
     if int(recent_votes or 0) >= VOTE_RATE_LIMIT:
         raise HTTPException(status_code=429, detail={"code": "vote_rate_limited"})
+
+
+REACTION_RATE_LIMIT = 120
+REACTION_RATE_WINDOW = dt.timedelta(hours=1)
+
+
+def enforce_reaction_rate_limit(session: Session, session_id: str) -> None:
+    window_start = utcnow() - REACTION_RATE_WINDOW
+    recent_reactions = session.execute(
+        select(func.count(ReviewerReaction.id)).where(
+            ReviewerReaction.session_id == session_id,
+            ReviewerReaction.updated_at >= window_start,
+        )
+    ).scalar_one()
+    if int(recent_reactions or 0) >= REACTION_RATE_LIMIT:
+        raise HTTPException(status_code=429, detail={"code": "reaction_rate_limited"})
 
 
 COMMENT_RATE_LIMIT = 20

@@ -20,6 +20,7 @@ from .models import (
     Paper,
     Review,
     ReviewerComment,
+    ReviewerReaction,
     ReviewerScore,
     SavedPaper,
     Scorecard,
@@ -541,6 +542,94 @@ def upsert_vote(session: Session, *, paper_id: str, reviewer_key: str, session_i
     return {"paper_id": paper_id, "reviewer_key": reviewer_key, "selected": vote}
 
 
+# Emoji reactions are a judgment-free layer next to the agree/disagree vote:
+# the palette deliberately contains no agreement-flavored emoji, so the two
+# signals stay orthogonal (votes calibrate the assessment, reactions express
+# how the review text lands). One reaction per session per review.
+REACTION_EMOJI = ("\U0001f480", "\U0001f602", "\U0001f92f", "\U0001fae1", "\U0001f62d")
+
+
+def upsert_reaction(session: Session, *, paper_id: str, reviewer_key: str, session_id: str, emoji: str) -> dict[str, Any]:
+    if emoji != "none" and emoji not in REACTION_EMOJI:
+        raise ValueError("unsupported reaction emoji")
+    existing = session.execute(
+        select(ReviewerReaction).where(
+            ReviewerReaction.paper_id == paper_id,
+            ReviewerReaction.reviewer_key == reviewer_key,
+            ReviewerReaction.session_id == session_id,
+        )
+    ).scalar_one_or_none()
+    if emoji == "none":
+        if existing is not None:
+            session.delete(existing)
+            session.flush()
+        return {"paper_id": paper_id, "reviewer_key": reviewer_key, "selected": None}
+    if existing is None:
+        existing = ReviewerReaction(paper_id=paper_id, reviewer_key=reviewer_key, session_id=session_id, emoji=emoji)
+        session.add(existing)
+    else:
+        existing.emoji = emoji
+        existing.updated_at = utcnow()
+    session.flush()
+    return {"paper_id": paper_id, "reviewer_key": reviewer_key, "selected": emoji}
+
+
+def reaction_counts_by_reviewer(
+    session: Session,
+    paper_id: str,
+    *,
+    viewer_session_id: str = "",
+) -> dict[str, dict[str, Any]]:
+    """Per-reviewer reaction tallies: ``reviewer_key -> {"counts": {emoji: n}, "viewer": emoji|None}``.
+
+    Counts keep the palette order so the UI renders chips stably.
+    """
+    rows = session.execute(
+        select(ReviewerReaction.reviewer_key, ReviewerReaction.emoji, func.count(ReviewerReaction.id))
+        .where(ReviewerReaction.paper_id == paper_id)
+        .group_by(ReviewerReaction.reviewer_key, ReviewerReaction.emoji)
+    ).all()
+    raw: dict[str, dict[str, int]] = defaultdict(dict)
+    for reviewer_key, emoji, count in rows:
+        if emoji in REACTION_EMOJI:
+            raw[str(reviewer_key)][str(emoji)] = int(count)
+    grouped: dict[str, dict[str, Any]] = {}
+    for reviewer_key, counts in raw.items():
+        grouped[reviewer_key] = {
+            "counts": {emoji: counts[emoji] for emoji in REACTION_EMOJI if counts.get(emoji)},
+            "viewer": None,
+        }
+    if viewer_session_id:
+        viewer_rows = session.execute(
+            select(ReviewerReaction.reviewer_key, ReviewerReaction.emoji).where(
+                ReviewerReaction.paper_id == paper_id,
+                ReviewerReaction.session_id == viewer_session_id,
+            )
+        ).all()
+        for reviewer_key, emoji in viewer_rows:
+            bucket = grouped.setdefault(str(reviewer_key), {"counts": {}, "viewer": None})
+            bucket["viewer"] = str(emoji)
+    return grouped
+
+
+def apply_reviewer_reactions(
+    session: Session,
+    paper_id: str,
+    public_json: dict[str, Any],
+    *,
+    viewer_session_id: str = "",
+) -> dict[str, Any]:
+    scorecard = copy.deepcopy(public_json)
+    grouped = reaction_counts_by_reviewer(session, paper_id, viewer_session_id=viewer_session_id)
+    for reviewer in scorecard.get("reviewers", []):
+        if not isinstance(reviewer, dict):
+            continue
+        bucket = grouped.get(str(reviewer.get("reviewer_key", ""))) or {}
+        reviewer["reactions"] = dict(bucket.get("counts") or {})
+        reviewer["viewer_reaction"] = bucket.get("viewer")
+    return scorecard
+
+
 HANDLE_RE = re.compile(r"^[a-zA-Z0-9_-]{3,32}$")
 PASSWORD_ITERATIONS = 600_000
 
@@ -1028,6 +1117,7 @@ def build_leaderboards(
     limit = max(1, min(50, limit))
     vote_counts = _vote_counts_for_leaderboard(session, conference_id=conference_id, year=year)
     comment_previews: dict[str, dict[str, dict[str, Any]]] = {}
+    reaction_tallies: dict[str, dict[str, dict[str, Any]]] = {}
     balance = conference_id is None
 
     def candidates(metric: str, *, ascending: bool = False) -> list[dict[str, Any]]:
@@ -1048,6 +1138,9 @@ def build_leaderboards(
             if paper_key not in comment_previews:
                 comment_previews[paper_key] = comment_previews_by_reviewer(session, paper_key)
             comment_bucket = comment_previews[paper_key].get(reviewer_key_text) or {}
+            if paper_key not in reaction_tallies:
+                reaction_tallies[paper_key] = reaction_counts_by_reviewer(session, paper_key)
+            reaction_bucket = reaction_tallies[paper_key].get(reviewer_key_text) or {}
             metrics = _reviewer_score_metrics_from_values(score_value, dimensions_json)
             item = {
                 "paper_id": paper_id,
@@ -1068,6 +1161,7 @@ def build_leaderboards(
                 "down": extra["down"],
                 "comment_count": int(comment_bucket.get("count", 0)),
                 "latest_comments": list(comment_bucket.get("items", [])),
+                "reactions": dict(reaction_bucket.get("counts") or {}),
             }
             if _leaderboard_display_eligible(item, metric=metric):
                 items.append(item)
