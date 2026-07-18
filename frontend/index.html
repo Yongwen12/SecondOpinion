@@ -3026,7 +3026,7 @@
     .home-intro {
       position: relative;
       max-width: none;
-      padding: 44px 0 36px;
+      padding: 40px 0 34px;
     }
     .home-kicker {
       margin: 0 0 16px;
@@ -3059,7 +3059,7 @@
     .outrage-brand--masthead:hover::after { background: #111; }
     .home-intro-copy {
       max-width: 640px;
-      margin: 24px 0 30px;
+      margin: 20px 0 24px;
       color: #555;
       font-size: 17px;
       line-height: 1.55;
@@ -3144,13 +3144,16 @@
       display: block;
       margin-bottom: 16px;
     }
+    /* The board is the page's story: its heading outranks everything except the masthead. */
+    .board-intro .outrage-eyebrow { margin: 0 0 10px; color: var(--oh-accent); font-weight: 800; }
     .board-intro h2 {
       margin: 6px 0 0;
-      font-size: 30px;
+      font-size: clamp(32px, 3.6vw, 44px);
       font-weight: 900;
-      line-height: 1.05;
+      line-height: 1.02;
       letter-spacing: -.02em;
     }
+    .board-intro h2 .board-period { color: var(--oh-accent); }
     .board-intro-copy {
       max-width: 640px;
       margin: 8px 0 0;
@@ -3341,24 +3344,26 @@
     .outrage-rowrate { padding: 5px 8px; border: 1px solid var(--oh-accent); background: #fff; color: var(--oh-accent); }
     .outrage-row:hover .outrage-rowrate, .outrage-rowrate:hover { background: #fff5f4; color: var(--oh-accent); }
     .home-intro-actions .outrage-submit { padding: 7px 10px; border: 1px solid var(--oh-accent); background: #fff; color: var(--oh-accent); }
-    .venue-ranking { margin: 0 0 34px; }
-    .venue-ranking-head { display: flex; align-items: baseline; justify-content: space-between; gap: 18px; margin: 0 0 10px; }
-    .venue-ranking-title { margin: 2px 0 0; font-size: 26px; font-weight: 900; letter-spacing: -0.01em; }
+    /* Venue index is context, not the story: a quiet compact brief below the search.
+       Static rows (no button affordance); red stays on #1 and the named venue only. */
+    .venue-ranking { margin: 28px 0 0; }
+    .venue-ranking-head { display: flex; align-items: baseline; justify-content: space-between; gap: 18px; margin: 0 0 6px; }
+    .venue-ranking .home-kicker { margin: 0; color: #9b9b9b; }
+    .venue-ranking-title { margin: 0; font-size: 15px; font-weight: 900; letter-spacing: 0; }
     .venue-ranking-title em { color: var(--oh-accent); font-style: normal; }
-    /* A static leaderboard, not navigation: rank number + bar carry the order, nothing here is a button. */
-    .venue-ranking-list { display: grid; border-top: 2px solid var(--oh-ink); }
-    .venue-rank-row { display: grid; grid-template-columns: 44px 96px minmax(0, 1fr) auto; align-items: center; gap: 16px; min-height: 42px; padding: 8px 0; border-bottom: 1px solid #ececec; }
-    .venue-rank-no { color: #b5b5b5; font-size: 12px; font-weight: 900; letter-spacing: .1em; font-variant-numeric: tabular-nums; }
+    .venue-ranking-list { display: grid; border-top: 1px solid var(--oh-ink); }
+    .venue-rank-row { display: grid; grid-template-columns: 34px 84px minmax(0, 1fr) auto; align-items: center; gap: 14px; min-height: 30px; padding: 4px 0; border-bottom: 1px solid #ececec; }
+    .venue-rank-no { color: #b5b5b5; font-size: 10px; font-weight: 900; letter-spacing: .1em; font-variant-numeric: tabular-nums; }
     .venue-rank-row:first-child .venue-rank-no { color: var(--oh-accent); }
-    .venue-rank-name { font-size: 15px; font-weight: 900; letter-spacing: .02em; text-transform: uppercase; }
-    .venue-rank-track { position: relative; display: block; height: 8px; background: #f1f1f1; }
+    .venue-rank-name { font-size: 12.5px; font-weight: 900; letter-spacing: .02em; text-transform: uppercase; }
+    .venue-rank-track { position: relative; display: block; height: 4px; background: #f1f1f1; }
     .venue-rank-track::after { content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: calc(var(--v) * 1%); background: var(--oh-ink); }
     .venue-rank-row:first-child .venue-rank-track::after { background: var(--oh-accent); }
-    .venue-rank-data { display: flex; align-items: baseline; justify-content: flex-end; gap: 12px; font-variant-numeric: tabular-nums; }
-    .venue-rank-score { font-size: 19px; font-weight: 900; line-height: 1; }
-    .venue-rank-score span { margin-left: 1px; color: #b5b5b5; font-size: 11px; font-weight: 800; }
+    .venue-rank-data { display: flex; align-items: baseline; justify-content: flex-end; gap: 10px; font-variant-numeric: tabular-nums; }
+    .venue-rank-score { font-size: 14px; font-weight: 900; line-height: 1; }
+    .venue-rank-score span { margin-left: 1px; color: #b5b5b5; font-size: 10px; font-weight: 800; }
     .venue-rank-row:first-child .venue-rank-score { color: var(--oh-accent); }
-    .venue-rank-count { min-width: 104px; color: #999; font-size: 10.5px; font-weight: 700; text-align: right; }
+    .venue-rank-count { min-width: 92px; color: #999; font-size: 10px; font-weight: 700; text-align: right; }
     @media (max-width: 768px) {
       .outrage-home { padding: 0 14px 48px; }
       .outrage-header { min-height: 44px; flex-wrap: nowrap; gap: 10px; }
@@ -3493,11 +3498,12 @@
     /* Unified vote row on the paper detail card */
     .detail-vote { max-width: 560px; margin: 14px 0 2px; }
     @media (max-width: 860px) {
-      .venue-ranking-head { display: grid; gap: 4px; }
-      .venue-ranking-title { font-size: 21px; }
-      .venue-rank-row { grid-template-columns: 34px 76px minmax(0, 1fr) auto; gap: 10px; min-height: 36px; }
-      .venue-rank-name { font-size: 13px; }
+      .venue-ranking-head { display: grid; gap: 2px; }
+      .venue-ranking-title { font-size: 14px; }
+      .venue-rank-row { grid-template-columns: 28px 72px minmax(0, 1fr) auto; gap: 10px; min-height: 27px; }
+      .venue-rank-name { font-size: 11.5px; }
       .venue-rank-count { display: none; }
+      .board-intro h2 { font-size: 30px; }
       .outrage-tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; }
       .outrage-tab { min-height: 56px; padding: 8px 9px 10px; font-size: 10px; }
       .outrage-tab-label { font-size: 10.5px; }
@@ -3535,14 +3541,6 @@
         <section class="home-intro" aria-labelledby="homeTitle">
           <h1 class="home-masthead" id="homeTitle"><button class="outrage-brand outrage-brand--masthead" id="homeBrand" type="button" data-home-reset>Judge My Reviewers</button></h1>
           <p class="home-intro-copy"><strong>A second opinion on peer review.</strong> Find the feedback worth answering, the comments worth questioning, and the occasional Reviewer 2 who understood the assignment.</p>
-        <section class="venue-ranking" aria-labelledby="venueRankingTitle">
-          <div class="venue-ranking-head">
-            <h2 class="venue-ranking-title" id="venueRankingTitle">Where are the meanest reviewers?</h2>
-            <p class="home-kicker" id="venueRankingKicker">Venue risk index / 2025</p>
-          </div>
-          <div class="venue-ranking-list" id="venueRankingList" role="list" aria-live="polite"></div>
-        </section>
-
           <form class="outrage-search-form" id="landingSearch" novalidate>
             <label class="sr-only" for="landingYear">Year</label>
             <select class="outrage-search-conf outrage-search-year" id="landingYear" aria-label="Year">
@@ -3571,10 +3569,18 @@
           </div>
           <div class="input-error outrage-error" id="landingError" role="status" aria-live="polite"></div>
           <div class="search-results outrage-results" id="landingResults" role="listbox" aria-label="Paper search results" hidden></div>
+          <section class="venue-ranking" aria-labelledby="venueRankingTitle">
+            <div class="venue-ranking-head">
+              <h2 class="venue-ranking-title" id="venueRankingTitle">Where are the meanest reviewers?</h2>
+              <p class="home-kicker" id="venueRankingKicker">Venue risk index / 2025</p>
+            </div>
+            <div class="venue-ranking-list" id="venueRankingList" role="list" aria-live="polite"></div>
+          </section>
         </section>
 
         <div class="board-intro">
           <div>
+            <p class="outrage-eyebrow" id="outrageEyebrow"></p>
             <h2 id="boardHeading">Reviews that need a clearer point.</h2>
           </div>
         </div>
@@ -4603,7 +4609,7 @@
       body.classList.toggle('praise', copy.tone === 'praise');
       if (homeBrand) homeBrand.textContent = BRAND;
       if (outrageEyebrow) outrageEyebrow.textContent = copy.eyebrow(homeAuditedCount || board.count || 0);
-      if (boardHeading) boardHeading.textContent = copy.heading;
+      if (boardHeading) boardHeading.innerHTML = escapeHtml(copy.heading).replace(/\.$/, '<span class="board-period">.</span>');
       if (boardDescription) boardDescription.textContent = copy.description;
       if (boardTabs) {
         boardTabs.innerHTML = BOARD_ORDER.map(key => {

@@ -73,3 +73,21 @@ Implementation notes: scorecard loads seed `boardCommentCache` per reviewer so p
 - Inline homepage JavaScript syntax check passed (`node --check` on the extracted script).
 - `python -m pytest tests/test_server_api.py -q` passed: 7 tests (backend untouched).
 - Browser-verified against a locally seeded API (3 reviewers, mixed comment counts): venue rows render as non-interactive divs with scaled bars; board rows show embedded takes and the empty invite; paper page shows per-reviewer previews (+N counts), inline expansion above the next entry, working vote round-trip, comment post updating thread, previews, and the home board cache; deep link `?paper=...&reviewer=R2` opens expanded; mobile (375px) has no horizontal scroll and a one-column dimension grid.
+
+## Seventh pass (2026-07-18): one visual hierarchy for the landing page
+
+The venue index, the search form, and the main board all carried similar visual weight,
+so the page had no focal point. New hierarchy - identity, action, context, story:
+
+- **Search moves up** directly under the masthead intro: the page's primary action, and
+  the only heavy-bordered box in the top zone.
+- **The venue risk index demotes to a compact brief** below the search: 15px title, gray
+  kicker, 30px rows with 4px bars and 14px scores (~207px total, down from ~330px). Red
+  survives only on the #1 row and the named venue. Still fully static.
+- **The board becomes the page's story**: a red uppercase eyebrow ("99,671 public reviews
+  audited"), the heading scaled to clamp(32px, 3.6vw, 44px) with a red terminal period -
+  the largest type on the page after the masthead.
+
+Type scale on desktop now reads masthead 92 > board heading 44 > review quotes 20 >
+venue brief 15/14. Verified in-browser (order, block heights, fold position, static venue
+rows, board takes unaffected) at 1280px and 375px; inline JS `node --check` passed.
