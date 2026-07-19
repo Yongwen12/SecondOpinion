@@ -237,3 +237,25 @@ Per user direction the two reviewer-panel drawers now read as numbered side-tabs
 
 Verified on demo data: collapsed labels read "1 take · add yours" / "6 scoring
 dimensions · why 91/100"; posting bumps to "2 takes"; node --check passed.
+
+## Fifteenth pass (2026-07-19): the venue index becomes three parallel sentiment boards
+
+The single "meanest reviewers" table (long bars, review counts) is replaced by three
+side-by-side mini-boards, one per sentiment direction, each just rank + venue +
+score/100 - about a third of the width per list and no bars:
+
+- "Who's the meanest?" - avg outrage per review, red (#e10600 top rule, em word,
+  and #1 row).
+- "Who's the least professional?" - avg toxicity per review, ink.
+- "Where's the best author experience?" - avg helpfulness per review, deep green
+  (--green #16795a; the one non-red accent, reserved for the positive direction).
+
+Numbers are real: aggregated on prod (read-only) from the 2025 scored corpus -
+latest scorecard per paper, per-review dimension means grouped by venue (outrage /
+toxicity / helpfulness), 99,671 reviews. TMLR leads outrage (17.0), MIDL toxicity
+(2.5), ICLR helpfulness (66.1). Each board states its metric in a small gray line
+so the score keeps its meaning; boards collapse to a single column under 860px.
+
+Verified on localhost DOM: three boards render with per-direction border/em/#1-row
+colors (red / ink / green), 6 rows each, kicker reads "99,671 reviews scored";
+node --check passed.

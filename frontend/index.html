@@ -3325,19 +3325,25 @@
     .venue-ranking .home-kicker { margin: 0; color: #9b9b9b; }
     .venue-ranking-title { margin: 0; color: #555555; font-size: 15px; font-weight: 800; letter-spacing: 0; }
     .venue-ranking-title em { color: var(--oh-accent); font-style: normal; }
-    .venue-ranking-list { display: grid; border-top: 1px solid #cfcfcf; }
-    .venue-rank-row { display: grid; grid-template-columns: 34px 84px minmax(0, 1fr) auto; align-items: center; gap: 14px; min-height: 30px; padding: 4px 0; border-bottom: 1px solid #ececec; }
+    /* Three parallel sentiment boards. Each board declares its direction color via
+       --vb: red = mean, ink = unprofessional, deep green = good experience. */
+    .venue-board-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 28px; }
+    .venue-board { --vb: var(--oh-ink); border-top: 3px solid var(--vb); padding-top: 9px; }
+    .venue-board--mean { --vb: var(--oh-accent); }
+    .venue-board--toxic { --vb: var(--oh-ink); }
+    .venue-board--best { --vb: var(--green); }
+    .venue-board-q { margin: 0; color: var(--oh-ink); font-size: 14.5px; font-weight: 900; line-height: 1.25; }
+    .venue-board-q em { color: var(--vb); font-style: normal; }
+    .venue-board-metric { margin: 2px 0 6px; color: #9b9b9b; font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+    .venue-board-rows { display: grid; border-top: 1px solid #dedede; }
+    .venue-board-row { display: grid; grid-template-columns: 26px minmax(0, 1fr) auto; align-items: baseline; gap: 10px; min-height: 26px; padding: 4px 0; border-bottom: 1px solid #ececec; }
     .venue-rank-no { color: #b5b5b5; font-size: 10px; font-weight: 900; letter-spacing: .1em; font-variant-numeric: tabular-nums; }
-    .venue-rank-row:first-child .venue-rank-no { color: var(--oh-accent); }
-    .venue-rank-name { color: #3c3c3c; font-size: 12.5px; font-weight: 800; letter-spacing: .02em; text-transform: uppercase; }
-    .venue-rank-track { position: relative; display: block; height: 4px; background: #f1f1f1; }
-    .venue-rank-track::after { content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: calc(var(--v) * 1%); background: #b3b3b3; }
-    .venue-rank-row:first-child .venue-rank-track::after { background: var(--oh-accent); }
-    .venue-rank-data { display: flex; align-items: baseline; justify-content: flex-end; gap: 10px; font-variant-numeric: tabular-nums; }
-    .venue-rank-score { color: #3c3c3c; font-size: 14px; font-weight: 900; line-height: 1; }
-    .venue-rank-score span { margin-left: 1px; color: #b5b5b5; font-size: 10px; font-weight: 800; }
-    .venue-rank-row:first-child .venue-rank-score { color: var(--oh-accent); }
-    .venue-rank-count { min-width: 92px; color: #999; font-size: 10px; font-weight: 700; text-align: right; }
+    .venue-board-name { color: #3c3c3c; font-size: 12px; font-weight: 800; letter-spacing: .02em; text-transform: uppercase; }
+    .venue-board-score { color: #6a6a6a; font-size: 13px; font-weight: 900; line-height: 1; font-variant-numeric: tabular-nums; text-align: right; }
+    .venue-board-score span { margin-left: 1px; color: #b5b5b5; font-size: 9px; font-weight: 800; }
+    .venue-board-row:first-child .venue-rank-no,
+    .venue-board-row:first-child .venue-board-name,
+    .venue-board-row:first-child .venue-board-score { color: var(--vb); }
     @media (max-width: 768px) {
       .outrage-home { padding: 0 14px 48px; }
       .outrage-header { min-height: 44px; flex-wrap: nowrap; gap: 10px; }
@@ -3511,9 +3517,7 @@
     @media (max-width: 860px) {
       .venue-ranking-head { display: grid; gap: 2px; }
       .venue-ranking-title { font-size: 14px; }
-      .venue-rank-row { grid-template-columns: 28px 72px minmax(0, 1fr) auto; gap: 10px; min-height: 27px; }
-      .venue-rank-name { font-size: 11.5px; }
-      .venue-rank-count { display: none; }
+      .venue-board-grid { grid-template-columns: 1fr; gap: 18px; }
       .board-intro h2 { font-size: 30px; }
       .outrage-tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; }
       .outrage-tab { min-height: 56px; padding: 8px 9px 10px; font-size: 10px; }
@@ -3582,10 +3586,10 @@
           <div class="search-results outrage-results" id="landingResults" role="listbox" aria-label="Paper search results" hidden></div>
           <section class="venue-ranking" aria-labelledby="venueRankingTitle">
             <div class="venue-ranking-head">
-              <h2 class="venue-ranking-title" id="venueRankingTitle">Where are the meanest reviewers?</h2>
-              <p class="home-kicker" id="venueRankingKicker">Venue risk index / 2025</p>
+              <h2 class="venue-ranking-title" id="venueRankingTitle">How 2025 venues treat authors.</h2>
+              <p class="home-kicker" id="venueRankingKicker">Venue sentiment index / 2025</p>
             </div>
-            <div class="venue-ranking-list" id="venueRankingList" role="list" aria-live="polite"></div>
+            <div class="venue-board-grid" id="venueRankingList" aria-live="polite"></div>
           </section>
         </section>
 
@@ -3802,14 +3806,35 @@
 
     const BRAND = 'Judge My Reviewers';
     const BOARD_ORDER = ['overall', 'toxic', 'helpful'];
-    const VENUE_RISK_2025 = [
-      { venue: 'TMLR', score: 20, reviewCount: 15526 },
-      { venue: 'ICLR', score: 18, reviewCount: 46748 },
-      { venue: 'ICML', score: 18, reviewCount: 13102 },
-      { venue: 'NeurIPS', score: 18, reviewCount: 22369 },
-      { venue: 'MIDL', score: 16, reviewCount: 357 },
-      { venue: 'COLM', score: 13, reviewCount: 1569 }
-    ];
+    // Three parallel venue boards, one per sentiment direction. Numbers are real
+    // per-review dimension means aggregated from the 2025 scored corpus on
+    // 2026-07-19 (outrage / toxicity / helpfulness, latest scorecard per paper).
+    const VENUE_BOARDS_2025 = {
+      totalReviews: 99671,
+      boards: [
+        {
+          key: 'mean', question: 'Who&#39;s the <em>meanest</em>?', metric: 'avg outrage per review',
+          rows: [
+            { venue: 'TMLR', score: 17.0 }, { venue: 'ICLR', score: 16.8 }, { venue: 'NeurIPS', score: 16.2 },
+            { venue: 'ICML', score: 15.9 }, { venue: 'MIDL', score: 14.1 }, { venue: 'COLM', score: 8.0 }
+          ]
+        },
+        {
+          key: 'toxic', question: 'Who&#39;s the <em>least professional</em>?', metric: 'avg toxicity per review',
+          rows: [
+            { venue: 'MIDL', score: 2.5 }, { venue: 'ICLR', score: 2.4 }, { venue: 'ICML', score: 2.1 },
+            { venue: 'NeurIPS', score: 2.1 }, { venue: 'TMLR', score: 1.8 }, { venue: 'COLM', score: 1.0 }
+          ]
+        },
+        {
+          key: 'best', question: 'Where&#39;s the <em>best author experience</em>?', metric: 'avg helpfulness per review',
+          rows: [
+            { venue: 'ICLR', score: 66.1 }, { venue: 'NeurIPS', score: 65.0 }, { venue: 'MIDL', score: 64.3 },
+            { venue: 'ICML', score: 63.1 }, { venue: 'COLM', score: 53.9 }, { venue: 'TMLR', score: 50.7 }
+          ]
+        }
+      ]
+    };
     const BOARD_COPY = {
       overall: {
         label: 'Worst Review Failures',
@@ -4601,15 +4626,18 @@
 
     function renderVenueRanking() {
       if (!venueRankingList) return;
-      const leader = VENUE_RISK_2025[0];
-      const maxScore = Math.max(...VENUE_RISK_2025.map(item => item.score), 1);
-      const totalReviews = VENUE_RISK_2025.reduce((sum, item) => sum + item.reviewCount, 0);
-      const title = document.getElementById('venueRankingTitle');
-      if (title && leader) title.innerHTML = `The meanest reviewers are at <em>${escapeHtml(leader.venue)}</em>.`;
       const kicker = document.getElementById('venueRankingKicker');
-      if (kicker) kicker.textContent = `Venue risk index / 2025 / ${totalReviews.toLocaleString()} reviews scored`;
-      // A read-only index: plain ranked rows, no button affordance to mislead.
-      venueRankingList.innerHTML = VENUE_RISK_2025.map((item, index) => `<div class="venue-rank-row" role="listitem" aria-label="Rank ${index + 1}: ${escapeHtml(item.venue)}, risk ${item.score} of 100, ${item.reviewCount.toLocaleString()} reviews scored"><span class="venue-rank-no">&#8470;${index + 1}</span><strong class="venue-rank-name">${escapeHtml(item.venue)}</strong><i class="venue-rank-track" style="--v:${Math.round((item.score / maxScore) * 100)}" aria-hidden="true"></i><span class="venue-rank-data"><b class="venue-rank-score">${item.score}<span>/100</span></b><span class="venue-rank-count">${item.reviewCount.toLocaleString()} reviews</span></span></div>`).join('');
+      if (kicker) kicker.textContent = `Venue sentiment index / 2025 / ${VENUE_BOARDS_2025.totalReviews.toLocaleString()} reviews scored`;
+      // Three parallel read-only boards (rank + score only, no button affordance);
+      // each carries its own direction color: red = mean, ink = toxic, green = good.
+      venueRankingList.innerHTML = VENUE_BOARDS_2025.boards.map(board => `
+        <article class="venue-board venue-board--${board.key}">
+          <h3 class="venue-board-q">${board.question}</h3>
+          <p class="venue-board-metric">${escapeHtml(board.metric)}</p>
+          <div class="venue-board-rows" role="list">
+            ${board.rows.map((row, index) => `<div class="venue-board-row" role="listitem" aria-label="Rank ${index + 1}: ${escapeHtml(row.venue)}, ${row.score.toFixed(1)} of 100"><span class="venue-rank-no">&#8470;${index + 1}</span><strong class="venue-board-name">${escapeHtml(row.venue)}</strong><b class="venue-board-score">${row.score.toFixed(1)}<span>/100</span></b></div>`).join('')}
+          </div>
+        </article>`).join('');
     }
 
     function renderCommunityBoard() {
