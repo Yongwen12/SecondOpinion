@@ -223,3 +223,17 @@ drawers under the AI-read line:
 Verified on localhost:8377 demo data: both drawers collapsed on expansion; opening
 takes + posting keeps the drawer open and bumps the summary to "1 take"; a vote
 re-render keeps both open flags; inline JS node --check passed.
+
+## Fourteenth pass (2026-07-19): drawer labels go count-first
+
+Per user direction the two reviewer-panel drawers now read as numbered side-tabs:
+
+- Takes drawer: "Add a take" when empty; "N takes · add yours" once the thread
+  has content - the drawer is purely about reading/adding comments.
+- Dimensions drawer: "6 scoring dimensions · why 77/100" (count from the actual
+  dimension list, score restated with its /100 denominator so the number keeps
+  its meaning at a glance; falls back to plain "Scoring dimensions" when a
+  scorecard ships no metrics).
+
+Verified on demo data: collapsed labels read "1 take · add yours" / "6 scoring
+dimensions · why 91/100"; posting bumps to "2 takes"; node --check passed.

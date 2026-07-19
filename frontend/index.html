@@ -5364,7 +5364,7 @@
       const count = Number(reviewer.commentCount || (reviewer.comments || []).length || 0);
       return `
         <details class="rate-evidence detail-comments"${reviewer.takesOpen ? ' open' : ''} data-detail-fold="takes" data-fold-reviewer="${escapeHtml(reviewer.id)}">
-          <summary>Community takes &middot; ${count ? `${count} take${count === 1 ? '' : 's'}` : 'add yours'}</summary>
+          <summary>${count ? `${count} take${count === 1 ? '' : 's'} &middot; add yours` : 'Add a take'}</summary>
           <form class="rate-comment-form" data-sc-comment-form="${escapeHtml(reviewer.id)}">
             <textarea class="rate-comment-input" id="scCommentInput" rows="2" maxlength="1000" placeholder="Add your own take on this review..."></textarea>
             <button class="rate-primary rate-comment-submit" type="submit">Post comment</button>
@@ -5897,7 +5897,7 @@
           <p class="detail-summary"><b>AI read:</b> ${escapeHtml(reviewer.summary)}</p>
           ${renderScorecardCommentsHtml(reviewer)}
           <details class="rate-evidence detail-dimensions"${reviewer.dimsOpen ? ' open' : ''} data-detail-fold="dims" data-fold-reviewer="${escapeHtml(reviewer.id)}">
-            <summary>Why this score &middot; AI dimensions &amp; evidence</summary>
+            <summary>${reviewer.dimensions.length ? `${reviewer.dimensions.length} scoring dimensions` : 'Scoring dimensions'} &middot; why ${reviewer.score}/100</summary>
             <div class="dimension-grid">
               ${reviewer.dimensions.map(metric => `
                 <div class="metric">
