@@ -206,3 +206,20 @@ Verified via localhost:8377 DOM pass: quote `rgb(47,47,47)` vs headline
 `rgb(17,17,17)`, score `rgb(74,74,74)` 30px/800, meter fill `rgb(17,17,17)`,
 rowrate border/padding 0, arrows `rgb(143,143,143)`, zero `.outrage-vote-count`
 spans in demo data; inline JS node --check passed.
+
+## Thirteenth pass (2026-07-19): the reviewer panel folds into two drawers
+
+The expanded reviewer panel stacked the full comment form, the thread, and the
+dimension grid in one long scroll. Now the deep layer is two collapsed `<details>`
+drawers under the AI-read line:
+
+- "Community takes · N takes / add yours" - the form, thread, and status live
+  inside; the summary carries the count so the scent survives the fold.
+- "Why this score · AI dimensions & evidence" - no longer open by default.
+- Drawer state is remembered per reviewer (`takesOpen`/`dimsOpen`, captured via a
+  capture-phase `toggle` listener, since re-renders rebuild the DOM): posting a
+  take or voting re-renders the panel without slamming the drawer shut.
+
+Verified on localhost:8377 demo data: both drawers collapsed on expansion; opening
+takes + posting keeps the drawer open and bumps the summary to "1 take"; a vote
+re-render keeps both open flags; inline JS node --check passed.

@@ -5361,16 +5361,17 @@
             <p class="rate-comment-meta">${escapeHtml(comment.author || 'anon')} - ${escapeHtml(relTime(comment.created_at))}${commentActionsHtml(comment, 'scorecard', reviewer.id)}</p>
           </div>`).join('');
       }
+      const count = Number(reviewer.commentCount || (reviewer.comments || []).length || 0);
       return `
-        <div class="detail-comments">
-          <p class="rate-comments-head">Community takes</p>
+        <details class="rate-evidence detail-comments"${reviewer.takesOpen ? ' open' : ''} data-detail-fold="takes" data-fold-reviewer="${escapeHtml(reviewer.id)}">
+          <summary>Community takes &middot; ${count ? `${count} take${count === 1 ? '' : 's'}` : 'add yours'}</summary>
           <form class="rate-comment-form" data-sc-comment-form="${escapeHtml(reviewer.id)}">
             <textarea class="rate-comment-input" id="scCommentInput" rows="2" maxlength="1000" placeholder="Add your own take on this review..."></textarea>
             <button class="rate-primary rate-comment-submit" type="submit">Post comment</button>
           </form>
           <div class="rate-comments">${listHtml}</div>
           <p class="detail-comment-status" id="scCommentStatus"></p>
-        </div>`;
+        </details>`;
     }
 
     async function loadScorecardComments(reviewer) {
@@ -5888,13 +5889,14 @@
     }
 
     function reviewerDetailHtml(reviewer) {
-      // The expansion holds the deep layer only: AI read, the discussion thread, the
-      // score dimensions, and source links. Votes and reactions stay on the surface.
+      // The expansion holds the deep layer only: AI read, then two collapsed drawers
+      // (community takes, score dimensions) and source links. Votes and reactions
+      // stay on the surface; the drawers keep the panel scannable at a glance.
       return `
         <div class="reviewer-detail">
           <p class="detail-summary"><b>AI read:</b> ${escapeHtml(reviewer.summary)}</p>
           ${renderScorecardCommentsHtml(reviewer)}
-          <details class="rate-evidence detail-dimensions" open>
+          <details class="rate-evidence detail-dimensions"${reviewer.dimsOpen ? ' open' : ''} data-detail-fold="dims" data-fold-reviewer="${escapeHtml(reviewer.id)}">
             <summary>Why this score &middot; AI dimensions &amp; evidence</summary>
             <div class="dimension-grid">
               ${reviewer.dimensions.map(metric => `
@@ -6216,6 +6218,17 @@
     topClear.addEventListener('click', () => { setInputValue(''); topInput.focus(); });
     document.getElementById('homeButton').addEventListener('click', resetToSearch);
     document.getElementById('resetCloud').addEventListener('click', resetCloudView);
+    // The reviewer-detail drawers re-render on every vote/comment; remember each
+    // reviewer's open panes so posting a take doesn't slam its drawer shut.
+    // Capture phase: toggle does not bubble.
+    document.addEventListener('toggle', event => {
+      const fold = event.target && event.target.dataset ? event.target : null;
+      if (!fold || !fold.dataset.detailFold) return;
+      const reviewer = reviewers.find(item => item.id === fold.dataset.foldReviewer);
+      if (!reviewer) return;
+      if (fold.dataset.detailFold === 'takes') reviewer.takesOpen = fold.open;
+      else reviewer.dimsOpen = fold.open;
+    }, true);
 
     document.addEventListener('click', event => {
       if (!event.target.closest('.search-results') && !event.target.closest('#landingSearch') && !event.target.closest('#topSearch')) {
