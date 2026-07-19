@@ -259,3 +259,26 @@ so the score keeps its meaning; boards collapse to a single column under 860px.
 Verified on localhost DOM: three boards render with per-direction border/em/#1-row
 colors (red / ink / green), 6 rows each, kicker reads "99,671 reviews scored";
 node --check passed.
+
+## Sixteenth pass (2026-07-19): the venue boards switch from averages to odds
+
+Emotion pass on the sentiment boards - averages inform, odds land. Same three
+boards, same direction colors, new numbers (all real tail-rates, aggregated
+read-only from prod on 2026-07-19; thresholds outrage >= 50 / toxicity >= 30 /
+helpfulness >= 70):
+
+- Section headline becomes the hook: "2,890 reviews boiled over in 2025." (19px
+  ink, count in red).
+- Meanest: odds of a review boiling over. TMLR 1 in 9 - vs 1 in 62..178 for
+  everyone else. Burn line: "TMLR runs 7x hotter than the rest of the field."
+- Least professional: odds of a personal attack. TMLR 1 in 518, ICLR 1 in 1,558,
+  COLM/MIDL literally "none found". Burn: "Only 68 reviews got personal all
+  year - 60 of them at TMLR and ICLR."
+- Best experience: share that genuinely helps. ICLR 27% ... COLM 10%. Burn:
+  "Best odds in ML: 1 in 4 ICLR reviews actually helps."
+- Each board keeps its small metric-definition line (threshold stated), so every
+  viral number stays auditable. Burn-line numbers inherit the board's direction
+  color via --vb.
+
+Verified on localhost DOM: headline + red count, three boards with odds rows,
+"none found" cells, per-board burn lines in red/ink/green; node --check passed.

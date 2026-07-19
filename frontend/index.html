@@ -3323,7 +3323,7 @@
     .venue-ranking { margin: 28px 0 0; }
     .venue-ranking-head { display: flex; align-items: baseline; justify-content: space-between; gap: 18px; margin: 0 0 6px; }
     .venue-ranking .home-kicker { margin: 0; color: #9b9b9b; }
-    .venue-ranking-title { margin: 0; color: #555555; font-size: 15px; font-weight: 800; letter-spacing: 0; }
+    .venue-ranking-title { margin: 0; color: var(--oh-ink); font-size: 19px; font-weight: 900; letter-spacing: -.01em; }
     .venue-ranking-title em { color: var(--oh-accent); font-style: normal; }
     /* Three parallel sentiment boards. Each board declares its direction color via
        --vb: red = mean, ink = unprofessional, deep green = good experience. */
@@ -3344,6 +3344,9 @@
     .venue-board-row:first-child .venue-rank-no,
     .venue-board-row:first-child .venue-board-name,
     .venue-board-row:first-child .venue-board-score { color: var(--vb); }
+    /* The burn line: one data-derived sentence per board, built to be quoted. */
+    .venue-board-burn { margin: 8px 0 0; color: #555555; font-size: 12px; font-weight: 650; line-height: 1.45; }
+    .venue-board-burn em { color: var(--vb); font-style: normal; font-weight: 900; }
     @media (max-width: 768px) {
       .outrage-home { padding: 0 14px 48px; }
       .outrage-header { min-height: 44px; flex-wrap: nowrap; gap: 10px; }
@@ -3586,7 +3589,7 @@
           <div class="search-results outrage-results" id="landingResults" role="listbox" aria-label="Paper search results" hidden></div>
           <section class="venue-ranking" aria-labelledby="venueRankingTitle">
             <div class="venue-ranking-head">
-              <h2 class="venue-ranking-title" id="venueRankingTitle">How 2025 venues treat authors.</h2>
+              <h2 class="venue-ranking-title" id="venueRankingTitle"><em>2,890</em> reviews boiled over in 2025.</h2>
               <p class="home-kicker" id="venueRankingKicker">Venue sentiment index / 2025</p>
             </div>
             <div class="venue-board-grid" id="venueRankingList" aria-live="polite"></div>
@@ -3806,31 +3809,38 @@
 
     const BRAND = 'Judge My Reviewers';
     const BOARD_ORDER = ['overall', 'toxic', 'helpful'];
-    // Three parallel venue boards, one per sentiment direction. Numbers are real
-    // per-review dimension means aggregated from the 2025 scored corpus on
-    // 2026-07-19 (outrage / toxicity / helpfulness, latest scorecard per paper).
+    // Three parallel venue boards, one per sentiment direction. Every number is a
+    // real tail-rate aggregated read-only from the 2025 scored corpus (2026-07-19,
+    // latest scorecard per paper): odds beat averages for feel - "1 in 9 boils
+    // over" lands where "avg outrage 17/100" doesn't. Thresholds: outrage >= 50,
+    // toxicity >= 30, helpfulness >= 70. Each board carries one data-derived burn
+    // line - the shareable sentence.
     const VENUE_BOARDS_2025 = {
       totalReviews: 99671,
+      headline: '<em>2,890</em> reviews boiled over in 2025.',
       boards: [
         {
-          key: 'mean', question: 'Who&#39;s the <em>meanest</em>?', metric: 'avg outrage per review',
+          key: 'mean', question: 'Who&#39;s the <em>meanest</em>?', metric: 'reviews boiling over &middot; outrage &ge; 50',
+          burn: 'TMLR runs <em>7&times;</em> hotter than the rest of the field.',
           rows: [
-            { venue: 'TMLR', score: 17.0 }, { venue: 'ICLR', score: 16.8 }, { venue: 'NeurIPS', score: 16.2 },
-            { venue: 'ICML', score: 15.9 }, { venue: 'MIDL', score: 14.1 }, { venue: 'COLM', score: 8.0 }
+            { venue: 'TMLR', value: '1 in 9' }, { venue: 'ICML', value: '1 in 62' }, { venue: 'NeurIPS', value: '1 in 67' },
+            { venue: 'ICLR', value: '1 in 69' }, { venue: 'COLM', value: '1 in 174' }, { venue: 'MIDL', value: '1 in 178' }
           ]
         },
         {
-          key: 'toxic', question: 'Who&#39;s the <em>least professional</em>?', metric: 'avg toxicity per review',
+          key: 'toxic', question: 'Who&#39;s the <em>least professional</em>?', metric: 'reviews with personal attacks &middot; toxicity &ge; 30',
+          burn: 'Only <em>68</em> reviews got personal all year &mdash; 60 of them at TMLR and ICLR.',
           rows: [
-            { venue: 'MIDL', score: 2.5 }, { venue: 'ICLR', score: 2.4 }, { venue: 'ICML', score: 2.1 },
-            { venue: 'NeurIPS', score: 2.1 }, { venue: 'TMLR', score: 1.8 }, { venue: 'COLM', score: 1.0 }
+            { venue: 'TMLR', value: '1 in 518' }, { venue: 'ICLR', value: '1 in 1,558' }, { venue: 'ICML', value: '1 in 3,276' },
+            { venue: 'NeurIPS', value: '1 in 5,592' }, { venue: 'COLM', value: 'none found' }, { venue: 'MIDL', value: 'none found' }
           ]
         },
         {
-          key: 'best', question: 'Where&#39;s the <em>best author experience</em>?', metric: 'avg helpfulness per review',
+          key: 'best', question: 'Where&#39;s the <em>best author experience</em>?', metric: 'reviews that genuinely help &middot; helpfulness &ge; 70',
+          burn: 'Best odds in ML: <em>1 in 4</em> ICLR reviews actually helps.',
           rows: [
-            { venue: 'ICLR', score: 66.1 }, { venue: 'NeurIPS', score: 65.0 }, { venue: 'MIDL', score: 64.3 },
-            { venue: 'ICML', score: 63.1 }, { venue: 'COLM', score: 53.9 }, { venue: 'TMLR', score: 50.7 }
+            { venue: 'ICLR', value: '27%' }, { venue: 'MIDL', value: '22%' }, { venue: 'NeurIPS', value: '21%' },
+            { venue: 'TMLR', value: '16%' }, { venue: 'ICML', value: '15%' }, { venue: 'COLM', value: '10%' }
           ]
         }
       ]
@@ -4626,17 +4636,21 @@
 
     function renderVenueRanking() {
       if (!venueRankingList) return;
+      const title = document.getElementById('venueRankingTitle');
+      if (title) title.innerHTML = VENUE_BOARDS_2025.headline;
       const kicker = document.getElementById('venueRankingKicker');
       if (kicker) kicker.textContent = `Venue sentiment index / 2025 / ${VENUE_BOARDS_2025.totalReviews.toLocaleString()} reviews scored`;
-      // Three parallel read-only boards (rank + score only, no button affordance);
+      // Three parallel read-only boards (rank + odds only, no button affordance);
       // each carries its own direction color: red = mean, ink = toxic, green = good.
+      // The burn line under each list is the sentence built to be quoted.
       venueRankingList.innerHTML = VENUE_BOARDS_2025.boards.map(board => `
         <article class="venue-board venue-board--${board.key}">
           <h3 class="venue-board-q">${board.question}</h3>
-          <p class="venue-board-metric">${escapeHtml(board.metric)}</p>
+          <p class="venue-board-metric">${board.metric}</p>
           <div class="venue-board-rows" role="list">
-            ${board.rows.map((row, index) => `<div class="venue-board-row" role="listitem" aria-label="Rank ${index + 1}: ${escapeHtml(row.venue)}, ${row.score.toFixed(1)} of 100"><span class="venue-rank-no">&#8470;${index + 1}</span><strong class="venue-board-name">${escapeHtml(row.venue)}</strong><b class="venue-board-score">${row.score.toFixed(1)}<span>/100</span></b></div>`).join('')}
+            ${board.rows.map((row, index) => `<div class="venue-board-row" role="listitem" aria-label="Rank ${index + 1}: ${escapeHtml(row.venue)}, ${escapeHtml(row.value)}"><span class="venue-rank-no">&#8470;${index + 1}</span><strong class="venue-board-name">${escapeHtml(row.venue)}</strong><b class="venue-board-score">${escapeHtml(row.value)}</b></div>`).join('')}
           </div>
+          <p class="venue-board-burn">${board.burn}</p>
         </article>`).join('');
     }
 
