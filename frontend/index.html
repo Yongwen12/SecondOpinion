@@ -1805,8 +1805,7 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Helpful board: scores stop shouting red, but red stays the interaction color. */
-    body.praise .outrage-home .outrage-num,
+    /* Helpful board: the #1 rank mark drops red too (scores are gray on every board). */
     body.praise .outrage-home .outrage-row:first-child .outrage-rank {
       color: var(--oh-ink);
     }
@@ -2159,7 +2158,7 @@
       -webkit-line-clamp: 2;
       overflow: hidden;
       margin: 0;
-      color: var(--oh-ink);
+      color: #2f2f2f;
       font-size: 21px;
       font-weight: 800;
       line-height: 1.25;
@@ -2204,12 +2203,14 @@
       text-align: right;
     }
 
+    /* The score is reference, not the story: gray ink, one size down from the quote zone. */
     .outrage-num {
-      color: var(--oh-accent);
-      font-size: 46px;
-      font-weight: 900;
+      color: #4a4a4a;
+      font-size: 34px;
+      font-weight: 800;
       line-height: 1;
       letter-spacing: 0;
+      font-variant-numeric: tabular-nums;
     }
 
     .outrage-unit {
@@ -2261,8 +2262,6 @@
     .outrage-vote:last-child { border-right: 0; }
     .outrage-vote:hover { background: #f7f7f7; color: var(--oh-ink); }
     .outrage-vote-icon { font-size: 13px; line-height: 1; }
-    .outrage-vote--agree .outrage-vote-icon { color: #00a878; }
-    .outrage-vote--disagree .outrage-vote-icon { color: #ff3b30; }
     .outrage-row:hover .outrage-rowrate,
     .outrage-rowrate:hover {
       color: var(--oh-accent);
@@ -3147,9 +3146,9 @@
     .outrage-why { color: #555; font-weight: 650; }
     .outrage-meta { margin-top: 9px; }
     .outrage-scorebox { align-self: center; }
-    .outrage-num { font-size: 42px; }
-    .outrage-unit { color: #777; }
-    .outrage-rowrate { opacity: 1; color: #555; }
+    .outrage-num { font-size: 30px; }
+    .outrage-unit { color: #9a9a9a; }
+    .outrage-rowrate { opacity: 1; color: #9a9a9a; }
     .outrage-cta { margin-top: 34px; }
     .outrage-fine { max-width: 780px; }
     .rate-account-list {
@@ -3311,14 +3310,16 @@
       .app-view .reviewer-detail .metric-fill { animation: none; transition: none; }
     }
 
-    /* Small homepage refinements only. */
-    .outrage-rowrate { padding: 5px 8px; border: 1px solid var(--oh-accent); background: #fff; color: var(--oh-accent); }
-    .outrage-row:hover .outrage-rowrate, .outrage-rowrate:hover { background: #fff5f4; color: var(--oh-accent); }
+    /* Small homepage refinements only. The paper link is a quiet text affordance:
+       red only answers the cursor, so the row's reds stay reserved for human signals. */
+    .outrage-rowrate { padding: 0; border: 0; background: transparent; color: #9a9a9a; }
+    .outrage-row:hover .outrage-rowrate, .outrage-rowrate:hover { background: transparent; color: var(--oh-accent); }
     .home-intro-actions .outrage-submit { padding: 7px 10px; border: 1px solid var(--oh-accent); background: #fff; color: var(--oh-accent); }
     /* Venue index is context, not the story: a quiet compact brief below the search.
        Static rows (no button affordance); red stays on #1 and the named venue only. */
     /* Context zone stays on the gray rungs of the ink ladder: pure black is reserved
-       for the board headline and row quotes; red survives only on #1 and the verdict. */
+       for the board headline; row quotes sit one rung down so the masthead outranks them.
+       Red survives only on #1, the verdict, and human signals — never on the score. */
     .venue-ranking { margin: 28px 0 0; }
     .venue-ranking-head { display: flex; align-items: baseline; justify-content: space-between; gap: 18px; margin: 0 0 6px; }
     .venue-ranking .home-kicker { margin: 0; color: #9b9b9b; }
@@ -3426,13 +3427,12 @@
     .outrage-row:first-child .outrage-rank-no,
     .outrage-row:hover .outrage-rank-no { color: var(--oh-ink); }
     /* Scorebox: X/100 with a micro meter */
-    .outrage-num { font-size: 38px; }
-    .outrage-num-max { margin-left: 2px; color: #b5b5b5; font-size: 12px; font-weight: 800; letter-spacing: 0; }
-    .outrage-meter { display: block; width: 88px; height: 4px; margin: 7px 0 0 auto; background: #ececec; }
+    .outrage-num { font-size: 30px; }
+    .outrage-num-max { margin-left: 2px; color: #b5b5b5; font-size: 11px; font-weight: 800; letter-spacing: 0; }
+    .outrage-meter { display: block; width: 64px; height: 3px; margin: 6px 0 0 auto; background: #ececec; }
     .outrage-unit { font-size: 9px; letter-spacing: 0.16em; }
-    .outrage-rowrate { margin-top: 7px; padding: 4px 6px; font-size: 9px; letter-spacing: 0.12em; }
-    .outrage-meter::after { content: ''; display: block; width: calc(var(--v) * 1%); height: 100%; background: var(--oh-accent); }
-    body.praise .outrage-meter::after { background: var(--oh-ink); }
+    .outrage-rowrate { margin-top: 7px; padding: 0; font-size: 9px; letter-spacing: 0.12em; }
+    .outrage-meter::after { content: ''; display: block; width: calc(var(--v) * 1%); height: 100%; background: var(--oh-ink); }
     .outrage-unit { margin-top: 5px; }
     /* Community block on board rows: votes + user takes are the card's core */
     .outrage-social { display: flex; align-items: flex-start; gap: 16px; margin-top: 11px; }
@@ -3450,21 +3450,26 @@
     .outrage-take-more, .outrage-take-empty { justify-self: start; border: 0; padding: 0; background: transparent; color: #999; cursor: pointer; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
     .outrage-take-more:hover, .outrage-take-empty:hover { color: var(--oh-accent); }
     /* Rate modal: the claim is the headline, takes are the core */
-    .rate-claim { margin: 6px 0 2px; font-size: 22px; font-weight: 900; line-height: 1.3; }
+    .rate-claim { margin: 6px 0 2px; color: #2f2f2f; font-size: 22px; font-weight: 900; line-height: 1.3; }
     .rate-paper-line { margin: 0 0 2px; color: #777; font-size: 13px; }
     .outrage-social .outrage-votes { display: inline-flex; flex-direction: row; gap: 0; border: 1px solid var(--oh-ink); background: #ffffff; }
-    .outrage-social .outrage-vote { display: inline-flex; align-items: center; gap: 5px; min-width: 0; min-height: 27px; padding: 4px 8px; border: 0; border-right: 1px solid var(--oh-ink); background: #ffffff; color: #777777; font-size: 9px; letter-spacing: 0.1em; }
+    .outrage-social .outrage-vote { display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-width: 32px; min-height: 27px; padding: 4px 8px; border: 0; border-right: 1px solid var(--oh-ink); background: #ffffff; color: #777777; font-size: 9px; letter-spacing: 0.1em; }
     .outrage-social .outrage-vote:last-child { border-right: 0; }
     .outrage-social .outrage-vote:hover { background: #f7f7f7; color: var(--oh-ink); }
-    .outrage-social .outrage-vote b { font-size: 13px; }
-    .outrage-social .outrage-vote--agree b { color: #00a878; }
-    .outrage-social .outrage-vote--disagree b { color: #ff3b30; }
+    .outrage-social .outrage-vote b { font-size: 13px; color: #8f8f8f; }
+    .outrage-social .outrage-vote:hover b { color: var(--oh-ink); }
     .outrage-social .outrage-vote span { margin-left: 0; color: inherit; font-size: 9px; }
-    /* De-texted votes: the arrow carries the meaning (title/aria keep the words), the count reads big. */
+    /* De-texted votes: the arrow alone carries the meaning (title/aria keep the words);
+       a count appears only once someone has voted, so zero rows stay silent. */
     .outrage-social .outrage-vote .outrage-vote-count { color: var(--oh-ink); font-size: 12.5px; font-weight: 900; font-variant-numeric: tabular-nums; }
     .outrage-social .outrage-vote.is-on { background: var(--oh-ink); }
     .outrage-social .outrage-vote.is-on:hover { background: var(--oh-ink); }
+    .outrage-social .outrage-vote.is-on b,
+    .outrage-social .outrage-vote.is-on:hover b,
     .outrage-social .outrage-vote.is-on .outrage-vote-count { color: #ffffff; }
+    /* The single red: a cast disagree vote. */
+    .outrage-social .outrage-vote--disagree.is-on,
+    .outrage-social .outrage-vote--disagree.is-on:hover { background: var(--oh-accent); }
     /* Emoji reactions: judgment-free chips next to the vote pair (palette has no thumbs). */
     .react-strip { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 4px; }
     .react-chip { display: inline-flex; align-items: center; gap: 4px; min-height: 27px; padding: 2px 8px; border: 1px solid #dcdcdc; background: #ffffff; cursor: pointer; font-size: 14px; line-height: 1; }
@@ -4850,8 +4855,8 @@
       return `
         <div class="outrage-social">
           <span class="outrage-votes" aria-label="Rate this assessment">
-            <button class="outrage-vote outrage-vote--agree${selectedVote === agreeVote ? ' is-on' : ''}" type="button" data-board-vote="agree" data-board-row="${index}" aria-pressed="${selectedVote === agreeVote}" title="${agreeTitle}" aria-label="${agreeTitle}: ${agreeCount}"><b>&#9650;</b><span class="outrage-vote-count">${agreeCount}</span></button>
-            <button class="outrage-vote outrage-vote--disagree${selectedVote && selectedVote !== agreeVote ? ' is-on' : ''}" type="button" data-board-vote="disagree" data-board-row="${index}" aria-pressed="${Boolean(selectedVote) && selectedVote !== agreeVote}" title="${disagreeTitle}" aria-label="${disagreeTitle}: ${disagreeCount}"><b>&#9660;</b><span class="outrage-vote-count">${disagreeCount}</span></button>
+            <button class="outrage-vote outrage-vote--agree${selectedVote === agreeVote ? ' is-on' : ''}" type="button" data-board-vote="agree" data-board-row="${index}" aria-pressed="${selectedVote === agreeVote}" title="${agreeTitle}" aria-label="${agreeTitle}: ${agreeCount}"><b>&#9650;</b>${agreeCount ? `<span class="outrage-vote-count">${agreeCount}</span>` : ''}</button>
+            <button class="outrage-vote outrage-vote--disagree${selectedVote && selectedVote !== agreeVote ? ' is-on' : ''}" type="button" data-board-vote="disagree" data-board-row="${index}" aria-pressed="${Boolean(selectedVote) && selectedVote !== agreeVote}" title="${disagreeTitle}" aria-label="${disagreeTitle}: ${disagreeCount}"><b>&#9660;</b>${disagreeCount ? `<span class="outrage-vote-count">${disagreeCount}</span>` : ''}</button>
           </span>
           ${reactionStripHtml(row, `row:${index}`)}
           <div class="outrage-takes">${takesHtml}</div>
@@ -4985,8 +4990,8 @@
           <p class="rate-context-note">You are rating this public review, not the paper or the reviewer as a person.</p>
           <div class="outrage-social rate-social" aria-label="Vote and react">
             <span class="outrage-votes" aria-label="Rate this assessment">
-              <button class="outrage-vote outrage-vote--agree${selectedVote === agreeVote ? ' is-on' : ''}" type="button" data-rate-choice="${agreeVote}" aria-pressed="${selectedVote === agreeVote}" title="${agreeTitle}" aria-label="${agreeTitle}: ${agreeCount}"><b>&#9650;</b><span class="outrage-vote-count">${agreeCount}</span></button>
-              <button class="outrage-vote outrage-vote--disagree${selectedVote === disagreeVote ? ' is-on' : ''}" type="button" data-rate-choice="${disagreeVote}" aria-pressed="${selectedVote === disagreeVote}" title="${disagreeTitle}" aria-label="${disagreeTitle}: ${disagreeCount}"><b>&#9660;</b><span class="outrage-vote-count">${disagreeCount}</span></button>
+              <button class="outrage-vote outrage-vote--agree${selectedVote === agreeVote ? ' is-on' : ''}" type="button" data-rate-choice="${agreeVote}" aria-pressed="${selectedVote === agreeVote}" title="${agreeTitle}" aria-label="${agreeTitle}: ${agreeCount}"><b>&#9650;</b>${agreeCount ? `<span class="outrage-vote-count">${agreeCount}</span>` : ''}</button>
+              <button class="outrage-vote outrage-vote--disagree${selectedVote === disagreeVote ? ' is-on' : ''}" type="button" data-rate-choice="${disagreeVote}" aria-pressed="${selectedVote === disagreeVote}" title="${disagreeTitle}" aria-label="${disagreeTitle}: ${disagreeCount}"><b>&#9660;</b>${disagreeCount ? `<span class="outrage-vote-count">${disagreeCount}</span>` : ''}</button>
             </span>
             ${reactionStripHtml(row, 'modal')}
           </div>
@@ -5875,8 +5880,8 @@
       return `
         <div class="outrage-social reviewer-social" aria-label="Vote and react to this review">
           <span class="outrage-votes" aria-label="Vote on this review">
-            <button class="outrage-vote outrage-vote--agree${counts.selected === 'up' ? ' is-on' : ''}" type="button" data-reviewer-vote="up" data-reviewer-id="${reviewer.id}" aria-pressed="${counts.selected === 'up'}" title="This review was helpful" aria-label="Helpful: ${counts.up}"><b>&#9650;</b><span class="outrage-vote-count">${counts.up}</span></button>
-            <button class="outrage-vote outrage-vote--disagree${counts.selected === 'down' ? ' is-on' : ''}" type="button" data-reviewer-vote="down" data-reviewer-id="${reviewer.id}" aria-pressed="${counts.selected === 'down'}" title="Not helpful" aria-label="Not helpful: ${counts.down}"><b>&#9660;</b><span class="outrage-vote-count">${counts.down}</span></button>
+            <button class="outrage-vote outrage-vote--agree${counts.selected === 'up' ? ' is-on' : ''}" type="button" data-reviewer-vote="up" data-reviewer-id="${reviewer.id}" aria-pressed="${counts.selected === 'up'}" title="This review was helpful" aria-label="Helpful: ${counts.up}"><b>&#9650;</b>${counts.up ? `<span class="outrage-vote-count">${counts.up}</span>` : ''}</button>
+            <button class="outrage-vote outrage-vote--disagree${counts.selected === 'down' ? ' is-on' : ''}" type="button" data-reviewer-vote="down" data-reviewer-id="${reviewer.id}" aria-pressed="${counts.selected === 'down'}" title="Not helpful" aria-label="Not helpful: ${counts.down}"><b>&#9660;</b>${counts.down ? `<span class="outrage-vote-count">${counts.down}</span>` : ''}</button>
           </span>
           ${reactionStripHtml(reviewer, `reviewer:${reviewer.id}`)}
         </div>`;

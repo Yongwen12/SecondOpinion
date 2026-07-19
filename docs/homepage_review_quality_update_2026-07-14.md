@@ -178,3 +178,31 @@ Verified: all three collapsed entries show votes/chips with live counts; voting 
 reacting from the collapsed state round-trips; expansion shows no duplicate strip and
 keeps the surface strip; popovers clamp inside 375px on both the board and paper
 pages; pytest 8 passed; inline JS node --check passed.
+
+## Twelfth pass (2026-07-19): scores step back, human signals keep the red
+
+Board rows shouted their reference number: a 42px red score, a red-bordered paper
+button, green/red vote arrows, and a pure-black quote fighting the masthead. This
+pass demotes everything that is machine reference and keeps color only where a
+human acted:
+
+- Row quotes (and the modal claim) drop one rung to `#2f2f2f`; pure black now
+  belongs to the board headline and tab block alone, so the page keeps a single
+  black anchor above the fold.
+- The score goes gray: 30px / weight 800 / `#4a4a4a` with a `#9a9a9a` unit line,
+  and the micro meter fills in ink instead of red on every board. Severity still
+  reads from the bar length and HIGH/WATCH tier word - the number is a reference,
+  not a verdict.
+- "MORE ABOUT THIS PAPER" sheds its red box and becomes a quiet gray text link;
+  red only answers the cursor.
+- Vote arrows lose the green/red fills: gray at rest, ink on hover. A cast vote is
+  the only colored state - agree fills the cell black, disagree fills it the site
+  red, both with a white arrow and count.
+- Zero counts vanish: an unvoted row shows two bare arrows (min-width keeps the
+  target), and a count appears only once someone has voted. aria-labels keep the
+  full wording either way.
+
+Verified via localhost:8377 DOM pass: quote `rgb(47,47,47)` vs headline
+`rgb(17,17,17)`, score `rgb(74,74,74)` 30px/800, meter fill `rgb(17,17,17)`,
+rowrate border/padding 0, arrows `rgb(143,143,143)`, zero `.outrage-vote-count`
+spans in demo data; inline JS node --check passed.
