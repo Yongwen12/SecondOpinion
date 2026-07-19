@@ -3334,7 +3334,8 @@
     .venue-board--best { --vb: var(--green); }
     .venue-board-q { margin: 0; color: var(--oh-ink); font-size: 14.5px; font-weight: 900; line-height: 1.25; }
     .venue-board-q em { color: var(--vb); font-style: normal; }
-    .venue-board-metric { margin: 2px 0 6px; color: #9b9b9b; font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+    /* Metric line is just the emoji; the threshold definition lives in title/aria. */
+    .venue-board-metric { margin: 3px 0 6px; font-size: 14px; line-height: 1; cursor: help; }
     .venue-board-rows { display: grid; border-top: 1px solid #dedede; }
     .venue-board-row { display: grid; grid-template-columns: 26px minmax(0, 1fr) auto; align-items: baseline; gap: 10px; min-height: 26px; padding: 4px 0; border-bottom: 1px solid #ececec; }
     .venue-rank-no { color: #b5b5b5; font-size: 10px; font-weight: 900; letter-spacing: .1em; font-variant-numeric: tabular-nums; }
@@ -3589,7 +3590,7 @@
           <div class="search-results outrage-results" id="landingResults" role="listbox" aria-label="Paper search results" hidden></div>
           <section class="venue-ranking" aria-labelledby="venueRankingTitle">
             <div class="venue-ranking-head">
-              <h2 class="venue-ranking-title" id="venueRankingTitle"><em>2,890</em> reviews boiled over in 2025.</h2>
+              <h2 class="venue-ranking-title" id="venueRankingTitle"><em>2,890</em> hostile reviews in 2025.</h2>
               <p class="home-kicker" id="venueRankingKicker">Venue sentiment index / 2025</p>
             </div>
             <div class="venue-board-grid" id="venueRankingList" aria-live="polite"></div>
@@ -3817,10 +3818,11 @@
     // line - the shareable sentence.
     const VENUE_BOARDS_2025 = {
       totalReviews: 99671,
-      headline: '<em>2,890</em> reviews boiled over in 2025.',
+      headline: '<em>2,890</em> hostile reviews in 2025.',
       boards: [
         {
-          key: 'mean', question: 'Who&#39;s the <em>meanest</em>?', metric: 'reviews boiling over &middot; outrage &ge; 50',
+          key: 'mean', question: 'Who&#39;s the <em>meanest</em>?', emoji: '\u{1F525}',
+          metricTitle: 'Share of reviews with outrage ≥ 50',
           burn: 'TMLR runs <em>7&times;</em> hotter than the rest of the field.',
           rows: [
             { venue: 'TMLR', value: '1 in 9' }, { venue: 'ICML', value: '1 in 62' }, { venue: 'NeurIPS', value: '1 in 67' },
@@ -3828,7 +3830,8 @@
           ]
         },
         {
-          key: 'toxic', question: 'Who&#39;s the <em>least professional</em>?', metric: 'reviews with personal attacks &middot; toxicity &ge; 30',
+          key: 'toxic', question: 'Who&#39;s the <em>least professional</em>?', emoji: '\u{1F92C}',
+          metricTitle: 'Share of reviews with toxicity ≥ 30 (personal attacks)',
           burn: 'Only <em>68</em> reviews got personal all year &mdash; 60 of them at TMLR and ICLR.',
           rows: [
             { venue: 'TMLR', value: '1 in 518' }, { venue: 'ICLR', value: '1 in 1,558' }, { venue: 'ICML', value: '1 in 3,276' },
@@ -3836,7 +3839,8 @@
           ]
         },
         {
-          key: 'best', question: 'Where&#39;s the <em>best author experience</em>?', metric: 'reviews that genuinely help &middot; helpfulness &ge; 70',
+          key: 'best', question: 'Where&#39;s the <em>best author experience</em>?', emoji: '\u{1F91D}',
+          metricTitle: 'Share of reviews with helpfulness ≥ 70',
           burn: 'Best odds in ML: <em>1 in 4</em> ICLR reviews actually helps.',
           rows: [
             { venue: 'ICLR', value: '27%' }, { venue: 'MIDL', value: '22%' }, { venue: 'NeurIPS', value: '21%' },
@@ -3845,6 +3849,9 @@
         }
       ]
     };
+    // The masthead ticker repeats the same counters on every board view: the hook
+    // travels even when the venue brief is below the fold.
+    const EMOTION_TICKER = '<span class="hl">2,890</span> hostile reviews in 2025 &middot; <span class="hl">68</span> got personal &middot; worst odds: <b>TMLR, 1 in 9</b> &middot; best help: <b>ICLR, 27%</b>';
     const BOARD_COPY = {
       overall: {
         label: 'Worst Review Failures',
@@ -3928,7 +3935,7 @@
     // Seed the stagger guard so the initial render (and its fast static/API re-renders) does
     // not start an entrance animation that the next same-kind render would cancel mid-flight.
     renderCommunityBoard.lastKind = homeBoardKind;
-    let homeTickerHtml = '<span class="hl">24 human ratings this week</span> &middot; latest: <b>brutal but fair/b> on Reviewer #4 - 2 min ago';
+    let homeTickerHtml = EMOTION_TICKER;
     let usingDemoHome = true;
     let rateContext = { row: null, paperId: '', reviewerKey: '', tone: 'heat', source: 'global', paperResults: [], reviewerResults: [], selectedPaper: null, comments: [], commentsLoading: false };
 
@@ -4646,7 +4653,7 @@
       venueRankingList.innerHTML = VENUE_BOARDS_2025.boards.map(board => `
         <article class="venue-board venue-board--${board.key}">
           <h3 class="venue-board-q">${board.question}</h3>
-          <p class="venue-board-metric">${board.metric}</p>
+          <p class="venue-board-metric" title="${escapeHtml(board.metricTitle)}" aria-label="${escapeHtml(board.metricTitle)}">${board.emoji}</p>
           <div class="venue-board-rows" role="list">
             ${board.rows.map((row, index) => `<div class="venue-board-row" role="listitem" aria-label="Rank ${index + 1}: ${escapeHtml(row.venue)}, ${escapeHtml(row.value)}"><span class="venue-rank-no">&#8470;${index + 1}</span><strong class="venue-board-name">${escapeHtml(row.venue)}</strong><b class="venue-board-score">${escapeHtml(row.value)}</b></div>`).join('')}
           </div>
@@ -4939,9 +4946,7 @@
       homeBoards = cloneHomeBoards(DEMO_HOME_BOARDS);
       usingDemoHome = true;
       homeAuditedCount = 82219;
-      homeTickerHtml = homeBoardKind === 'helpful'
-        ? '<span class="hl">24 human ratings this week</span> &middot; latest: <b>I owe this reviewer a beer/b> on Reviewer #17 - 12 min ago'
-        : '<span class="hl">24 human ratings this week</span> &middot; latest: <b>brutal but fair/b> on Reviewer #4 - 2 min ago';
+      homeTickerHtml = EMOTION_TICKER;
       setHomeStatus('');
       renderCommunityHome();
       try {
@@ -4951,7 +4956,7 @@
           homePapers = Array.isArray(staticPayload.latest_papers) ? staticPayload.latest_papers : [];
           homeBoards = normalizeHomeBoards(staticPayload);
           usingDemoHome = false;
-          homeTickerHtml = staticPayload.ticker_html || staticPayload.ticker || '';
+          homeTickerHtml = EMOTION_TICKER;
           renderCommunityHome();
         }
       } catch (error) {
@@ -4965,7 +4970,7 @@
         homePapers = Array.isArray(payload.latest_papers) ? payload.latest_papers : [];
         homeBoards = normalizeHomeBoards(payload);
         usingDemoHome = false;
-        homeTickerHtml = payload.ticker_html || payload.ticker || '';
+        homeTickerHtml = EMOTION_TICKER;
         renderCommunityHome();
       } catch (error) {
         console.warn('Community home API refresh failed; using static or demo board.', error);
@@ -6397,11 +6402,6 @@
       if (tabButton) {
         homeBoardKind = BOARD_ORDER.includes(tabButton.dataset.boardTab) ? tabButton.dataset.boardTab : 'overall';
         setBoardDeepLink(homeBoardKind);
-        if (usingDemoHome) {
-          homeTickerHtml = homeBoardKind === 'helpful'
-            ? '<span class="hl">24 human ratings this week</span> &middot; latest: <b>I owe this reviewer a beer/b> on Reviewer #17 - 12 min ago'
-            : '<span class="hl">24 human ratings this week</span> &middot; latest: <b>brutal but fair/b> on Reviewer #4 - 2 min ago';
-        }
         renderCommunityBoard();
         return;
       }

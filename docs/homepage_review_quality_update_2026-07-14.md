@@ -282,3 +282,22 @@ helpfulness >= 70):
 
 Verified on localhost DOM: headline + red count, three boards with odds rows,
 "none found" cells, per-board burn lines in red/ink/green; node --check passed.
+
+## Seventeenth pass (2026-07-19): blunter headline, emoji metrics, counter ticker
+
+Per user direction - direct over figurative, symbols over explanations:
+
+- Headline: "2,890 hostile reviews in 2025." (was "boiled over" - no metaphor).
+- The gray metric-definition lines under each board question are now a single
+  emoji (fire = outrage, cursing = toxicity, handshake = helpfulness; all
+  pre-Unicode-13). The full threshold definition moved into title/aria - hover
+  shows it, screen readers hear it, the surface stays wordless.
+- The masthead ticker drops the demo "24 human ratings this week" copy and now
+  carries the counters on every load path (demo, static snapshot, API):
+  "2,890 hostile reviews in 2025 - 68 got personal - worst odds: TMLR, 1 in 9 -
+  best help: ICLR, 27%", numbers in red. The tab-switch ticker override is gone.
+- Quote receipts (real review excerpts on venue rows) explicitly rejected - no
+  added prose anywhere.
+
+Verified on localhost DOM: ticker visible with red counters, headline reads
+"hostile", three emoji metric lines with threshold tooltips; node --check passed.
