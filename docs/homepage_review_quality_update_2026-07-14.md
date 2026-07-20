@@ -301,3 +301,22 @@ Per user direction - direct over figurative, symbols over explanations:
 
 Verified on localhost DOM: ticker visible with red counters, headline reads
 "hostile", three emoji metric lines with threshold tooltips; node --check passed.
+
+## Eighteenth pass (2026-07-20): the story board adopts the venue direction colors
+
+The red / ink / green direction system from the venue boards now drives the main
+review board via a body-level custom property (--board-accent: red for Worst
+Review Failures, ink for Personal/Toxic, green for Reviews Worth Keeping):
+
+- Each tab wears its own direction color on its star glyph at rest; the active
+  tab fills with its color (white glyph/label, translucent-white count).
+- Board-identity elements follow the active board: intro eyebrow, headline
+  period, #1 rank number, top-3 rank glyph stacks, take border bars, and the
+  row-level hover accents (MORE ABOUT THIS PAPER, +N more takes).
+- The old body.praise red->ink overrides collapse into the variable; entering
+  the paper page clears the board classes so the app view keeps its default red
+  identity. Disagree-vote red and the brand mark stay red on every board.
+
+Verified on localhost DOM per tab: active-tab background and eyebrow/rank-glyph
+colors read rgb(225,6,0) / rgb(17,17,17) / rgb(22,121,90) on overall / toxic /
+helpful respectively; resting glyphs keep per-tab colors; node --check passed.

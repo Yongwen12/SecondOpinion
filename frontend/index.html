@@ -1805,10 +1805,12 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Helpful board: the #1 rank mark drops red too (scores are gray on every board). */
-    body.praise .outrage-home .outrage-row:first-child .outrage-rank {
-      color: var(--oh-ink);
-    }
+    /* Direction color, carried from the venue boards into the story board:
+       red = worst failures, ink = personal/toxic, green = worth keeping.
+       Board-identity elements (tabs, rank marks, take bars, eyebrow) read it. */
+    body { --board-accent: #e10600; }
+    body.board-ink { --board-accent: #111111; }
+    body.board-green { --board-accent: #16795a; }
 
     .outrage-home *,
     .outrage-home *::before,
@@ -2145,7 +2147,7 @@
     }
 
     .outrage-row:first-child .outrage-rank {
-      color: var(--oh-accent);
+      color: var(--board-accent);
     }
 
     .outrage-main {
@@ -3119,7 +3121,7 @@
       margin-bottom: 16px;
     }
     /* The board is the page's story: its heading outranks everything except the masthead. */
-    .board-intro .outrage-eyebrow { margin: 0 0 10px; color: var(--oh-accent); font-weight: 800; }
+    .board-intro .outrage-eyebrow { margin: 0 0 10px; color: var(--board-accent); font-weight: 800; }
     .board-intro h2 {
       margin: 6px 0 0;
       font-size: clamp(32px, 3.6vw, 44px);
@@ -3127,7 +3129,7 @@
       line-height: 1.02;
       letter-spacing: -.02em;
     }
-    .board-intro h2 .board-period { color: var(--oh-accent); }
+    .board-intro h2 .board-period { color: var(--board-accent); }
     .board-intro-copy {
       max-width: 640px;
       margin: 8px 0 0;
@@ -3313,7 +3315,7 @@
     /* Small homepage refinements only. The paper link is a quiet text affordance:
        red only answers the cursor, so the row's reds stay reserved for human signals. */
     .outrage-rowrate { padding: 0; border: 0; background: transparent; color: #9a9a9a; }
-    .outrage-row:hover .outrage-rowrate, .outrage-rowrate:hover { background: transparent; color: var(--oh-accent); }
+    .outrage-row:hover .outrage-rowrate, .outrage-rowrate:hover { background: transparent; color: var(--board-accent); }
     .home-intro-actions .outrage-submit { padding: 7px 10px; border: 1px solid var(--oh-accent); background: #fff; color: var(--oh-accent); }
     /* Venue index is context, not the story: a quiet compact brief below the search.
        Static rows (no button affordance); red stays on #1 and the named venue only. */
@@ -3421,18 +3423,20 @@
     .outrage-tab { display: grid; gap: 3px; align-content: start; justify-items: start; min-height: 62px; padding: 9px 13px 11px; border-left: 1px solid var(--oh-ink); color: #3c3c3c; text-align: left; white-space: normal; letter-spacing: .03em; }
     .outrage-tab:first-child { border-left: 0; }
     .outrage-tab:hover { background: #f4f4f4; color: var(--oh-ink); }
-    .outrage-tab.is-active { background: var(--oh-ink); color: #fff; }
-    .outrage-tab.is-active:hover { background: var(--oh-ink); }
+    /* Each tab wears its own direction color; the active tab fills with it. */
+    .outrage-tab.is-active { background: var(--board-accent); color: #fff; }
+    .outrage-tab.is-active:hover { background: var(--board-accent); }
     .outrage-tab-top { display: flex; align-items: baseline; gap: 7px; width: 100%; }
     .outrage-tab-glyph { color: var(--oh-accent); font-family: 'Segoe UI Symbol', 'Noto Sans Symbols 2', sans-serif; font-size: 17px; font-weight: 900; line-height: 1; }
-    .outrage-tab.is-active .outrage-tab-glyph { color: #ff4d42; }
+    .outrage-tab[data-board-tab="toxic"] .outrage-tab-glyph { color: var(--oh-ink); }
+    .outrage-tab[data-board-tab="helpful"] .outrage-tab-glyph { color: var(--green); }
+    .outrage-tab.is-active .outrage-tab-glyph { color: #ffffff; }
     .outrage-tab-count { display: inline; margin-left: auto; color: #a5a5a5; font-size: 11px; font-weight: 800; vertical-align: baseline; }
-    .outrage-tab.is-active .outrage-tab-count { color: #8a8a8a; }
+    .outrage-tab.is-active .outrage-tab-count { color: rgba(255, 255, 255, .65); }
     .outrage-tab-label { font-size: 12.5px; font-weight: 900; line-height: 1.2; }
     /* Rank glyph stacks: No.1 gets three, No.2 two, No.3 one */
     .outrage-rank--top { display: grid; gap: 3px; align-content: center; justify-items: start; }
-    .outrage-rank-glyphs { color: var(--oh-accent); font-family: 'Segoe UI Symbol', 'Noto Sans Symbols 2', sans-serif; font-size: 19px; font-weight: 900; letter-spacing: 3px; line-height: 1; }
-    body.praise .outrage-rank-glyphs { color: var(--oh-ink); }
+    .outrage-rank-glyphs { color: var(--board-accent); font-family: 'Segoe UI Symbol', 'Noto Sans Symbols 2', sans-serif; font-size: 19px; font-weight: 900; letter-spacing: 3px; line-height: 1; }
     .outrage-rank-no { color: #b5b5b5; font-size: 11px; font-weight: 900; letter-spacing: 0.12em; }
     .outrage-row:first-child .outrage-rank-no,
     .outrage-row:hover .outrage-rank-no { color: var(--oh-ink); }
@@ -3453,12 +3457,11 @@
     .outrage-vote:hover { background: var(--oh-ink); color: #fff; }
     .outrage-vote:hover span { color: #bdbdbd; }
     .outrage-takes { display: grid; gap: 7px; min-width: 0; flex: 1; }
-    .outrage-take { border-left: 3px solid var(--oh-accent); padding: 1px 0 1px 10px; }
-    body.praise .outrage-take { border-left-color: var(--oh-ink); }
+    .outrage-take { border-left: 3px solid var(--board-accent); padding: 1px 0 1px 10px; }
     .outrage-take p { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin: 0; color: var(--oh-ink); font-size: 13.5px; font-weight: 650; line-height: 1.35; }
     .outrage-take span { display: block; margin-top: 2px; color: #a8a8a8; font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
     .outrage-take-more, .outrage-take-empty { justify-self: start; border: 0; padding: 0; background: transparent; color: #999; cursor: pointer; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
-    .outrage-take-more:hover, .outrage-take-empty:hover { color: var(--oh-accent); }
+    .outrage-take-more:hover, .outrage-take-empty:hover { color: var(--board-accent); }
     /* Rate modal: the claim is the headline, takes are the core */
     .rate-claim { margin: 6px 0 2px; color: #2f2f2f; font-size: 22px; font-weight: 900; line-height: 1.3; }
     .rate-paper-line { margin: 0 0 2px; color: #777; font-size: 13px; }
@@ -4666,6 +4669,8 @@
       const copy = BOARD_COPY[homeBoardKind] || BOARD_COPY.overall;
       document.title = BRAND;
       body.classList.toggle('praise', copy.tone === 'praise');
+      body.classList.toggle('board-ink', homeBoardKind === 'toxic');
+      body.classList.toggle('board-green', homeBoardKind === 'helpful');
       if (homeBrand) homeBrand.textContent = BRAND;
       if (outrageEyebrow) outrageEyebrow.textContent = copy.eyebrow(homeAuditedCount || board.count || 0);
       if (boardHeading) boardHeading.innerHTML = escapeHtml(copy.heading).replace(/\.$/, '<span class="board-period">.</span>');
@@ -5613,7 +5618,7 @@
     }
 
     function enterResolvedView(source) {
-      body.classList.remove('is-idle', 'praise');
+      body.classList.remove('is-idle', 'praise', 'board-ink', 'board-green');
       body.classList.add('is-resolved');
       setPaperDeepLink(state.selectedReviewer || '');
       renderAll();
