@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#ffffff" />
   <title>Judge My Reviewers</title>
-  <meta name="description" content="Public peer reviews from six 2025 ML venues, scored for usefulness. Find the feedback worth answering and the occasional Reviewer 2 who understood the assignment." />
+  <meta name="description" content="The public leaderboard for outrageous peer reviews, ranked and discussed by readers." />
   <meta property="og:title" content="Judge My Reviewers" />
-  <meta property="og:description" content="A second opinion on peer review. 99,671 public official reviews from ICLR, ICML, NeurIPS, TMLR, COLM, and MIDL, scored for usefulness." />
+  <meta property="og:description" content="Outrageous peer reviews, ranked and discussed by readers." />
   <meta property="og:type" content="website" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23ffffff'/%3E%3Crect x='6' y='10' width='36' height='36' fill='%23111111'/%3E%3Crect x='44' y='38' width='14' height='14' fill='%23e10600'/%3E%3C/svg%3E" />
   <style>
@@ -3536,16 +3536,137 @@
       .outrage-votes { flex-direction: row; }
       .rate-claim { font-size: 18px; }
     }
+    /* Outrage community v1: journal masthead, two primary boards, forum rows. */
+    body.is-idle { background: #f6f3ea; }
+    .landing { padding: 20px 28px 34px; background: #f6f3ea; }
+    .outrage-home { width: min(1120px, 100%); color: #111; font-family: Arial, Helvetica, sans-serif; }
+    .outrage-masthead { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 22px; padding: 0 0 14px; border-bottom: 3px double #111; }
+    .outrage-brand--masthead { font-family: Georgia, 'Times New Roman', serif; font-size: clamp(23px, 3vw, 30px); font-weight: 900; letter-spacing: -.02em; text-transform: none; }
+    .outrage-archive { color: #6b675f; font-family: Consolas, 'Liberation Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: .1em; }
+    .outrage-masthead .outrage-actions { gap: 16px; }
+    .outrage-masthead .outrage-header-link,
+    .outrage-masthead .account-button { min-height: 0; padding: 3px 0; border: 0; border-bottom: 1px solid transparent; border-radius: 0; background: transparent; color: #111; font-size: 12px; }
+    .outrage-masthead .outrage-header-link:hover,
+    .outrage-masthead .account-button:hover { border-bottom-color: #111; background: transparent; }
+    .home-intro { display: grid; gap: 0; max-width: none; padding: 32px 0 26px; }
+    .home-kicker { margin: 0 0 10px; color: #ff2a14; font-family: Consolas, 'Liberation Mono', monospace; font-size: 10px; font-weight: 900; letter-spacing: .1em; }
+    .home-masthead { max-width: 820px; margin: 0; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(34px, 5.4vw, 54px); font-weight: 900; line-height: 1.01; letter-spacing: -.035em; text-transform: none; }
+    .outrage-search-form { width: min(760px, 100%); margin-top: 24px; border: 1px solid #111; border-radius: 0; background: #fff; box-shadow: none; }
+    .outrage-search-form:focus-within { box-shadow: 0 0 0 2px #ff2a14; }
+    .outrage-search-conf,
+    .outrage-search-input,
+    .outrage-search-submit { border-radius: 0; }
+    .outrage-search-submit { background: #111; }
+    .outrage-search-submit:hover { background: #ff2a14; }
+    .outrage-ledger { margin-top: 2px; }
+    .outrage-board-nav { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; border-bottom: 2px solid #111; }
+    .outrage-tabs { display: flex; align-items: flex-end; gap: 28px; margin: 0; overflow: visible; border: 0; }
+    .outrage-tab { position: relative; display: block; min-height: 0; padding: 12px 0 10px; border: 0; background: transparent; color: #111; font-family: Consolas, 'Liberation Mono', monospace; font-size: 12px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+    .outrage-tab:first-child { border: 0; }
+    .outrage-tab:hover { background: transparent; color: #ff2a14; }
+    .outrage-tab.is-active,
+    .outrage-tab.is-active:hover { background: transparent; color: #ff2a14; }
+    .outrage-tab.is-active::after { position: absolute; right: 0; bottom: -2px; left: 0; height: 4px; background: #ff2a14; content: ''; }
+    .outrage-tab-top,
+    .outrage-tab-glyph,
+    .outrage-tab-count { display: none; }
+    .outrage-tab-label { font-size: inherit; line-height: inherit; }
+    .hot-threads-link { padding: 12px 0 10px; border: 0; background: transparent; color: #111; cursor: pointer; font-family: Consolas, 'Liberation Mono', monospace; font-size: 11px; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; }
+    .hot-threads-link:hover,
+    .hot-threads-link[aria-pressed='true'] { color: #ff2a14; }
+    .hot-threads-link[aria-pressed='true'] { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 5px; }
+    .hot-threads-link b { color: #ff2a14; }
+    .board-intro { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 13px 0 8px; }
+    .board-intro .outrage-eyebrow,
+    .board-intro h2 { margin: 0; color: #77726b; font-family: Consolas, 'Liberation Mono', monospace; font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    .board-intro h2 { text-align: right; }
+    .outrage-board { border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+    .outrage-row { display: grid; grid-template-columns: 60px minmax(0, 1fr) 132px; gap: 18px; padding: 23px 0 25px; border: 0; border-top: 1px solid #111; border-radius: 0; background: transparent; box-shadow: none; transform: none; }
+    .outrage-row:hover { background: transparent; transform: none; }
+    .outrage-rank { align-self: start; color: #ff2a14; font-family: Georgia, 'Times New Roman', serif; font-size: 20px; font-weight: 900; line-height: 1; }
+    .outrage-row:nth-child(n+4) .outrage-rank { color: #111; }
+    .outrage-main { min-width: 0; }
+    .outrage-q { display: -webkit-box; width: 100%; padding: 0; overflow: hidden; border: 0; background: transparent; color: #111; cursor: pointer; -webkit-box-orient: vertical; -webkit-line-clamp: 3; margin: 0; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(20px, 2.8vw, 27px); font-weight: 900; line-height: 1.16; text-align: left; text-decoration: none; }
+    .outrage-q:hover { color: #ff2a14; }
+    .outrage-meta { margin: 9px 0 0; color: #77726b; font-family: Consolas, 'Liberation Mono', monospace; font-size: 10px; font-weight: 700; line-height: 1.5; white-space: normal; }
+    .outrage-why { margin: 11px 0 0; color: #111; font-size: 14px; font-weight: 900; line-height: 1.35; }
+    .outrage-social { display: flex; align-items: center; flex-wrap: wrap; gap: 9px 13px; margin-top: 15px; }
+    .outrage-social .outrage-votes { display: grid; grid-template-columns: repeat(2, minmax(0, auto)); gap: 8px; border: 0; background: transparent; }
+    .outrage-social .outrage-vote { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 7px 11px; border: 1px solid #111; border-radius: 1px; background: #fff; color: #111; font-size: 10px; font-weight: 900; letter-spacing: .035em; text-transform: uppercase; }
+    .outrage-social .outrage-vote:last-child { border: 1px solid #111; }
+    .outrage-social .outrage-vote:hover { border-color: #ff2a14; background: #fff0ed; color: #111; }
+    .outrage-social .outrage-vote b { color: #ff2a14; font-size: 13px; }
+    .outrage-social .outrage-vote.is-on,
+    .outrage-social .outrage-vote.is-on:hover { border-color: #ff2a14; background: #ff2a14; color: #fff; }
+    .outrage-social .outrage-vote.is-on b,
+    .outrage-social .outrage-vote.is-on .outrage-vote-count { color: #fff; }
+    .outrage-vote-label { color: inherit; }
+    .outrage-social .outrage-vote .outrage-vote-count { color: inherit; font-size: 11px; font-variant-numeric: tabular-nums; }
+    .react-strip { gap: 7px; }
+    .react-chip { min-height: 0; padding: 4px 0; border: 0; background: transparent; color: #77726b; }
+    .react-chip:hover { border: 0; color: #111; }
+    .react-chip.is-mine { color: #ff2a14; box-shadow: none; }
+    .outrage-takes { width: 100%; display: grid; gap: 0; flex-basis: 100%; margin-top: 5px; border-top: 1px solid #c9c4b9; }
+    .outrage-take { padding: 10px 0; border: 0; }
+    .outrage-take + .outrage-take { border-top: 1px solid #c9c4b9; }
+    .outrage-take p { font-size: 13px; font-weight: 700; }
+    .outrage-take span { color: #77726b; font-family: Consolas, 'Liberation Mono', monospace; font-size: 9px; }
+    .outrage-take-more { margin-top: 7px; color: #ff2a14; font-family: Consolas, 'Liberation Mono', monospace; font-size: 10px; }
+    .outrage-row-aside { display: flex; min-width: 0; flex-direction: column; align-items: flex-end; justify-content: space-between; gap: 14px; color: #77726b; font-family: Consolas, 'Liberation Mono', monospace; font-size: 9px; font-weight: 800; letter-spacing: .06em; text-align: right; text-transform: uppercase; }
+    .outrage-open-thread { border: 0; padding: 0; background: transparent; color: #111; cursor: pointer; font: inherit; }
+    .outrage-open-thread:hover { color: #ff2a14; }
+    .site-footer { margin-top: 18px; padding-top: 14px; border-top: 3px double #111; color: #77726b; font-family: Consolas, 'Liberation Mono', monospace; font-size: 9px; }
+    .site-footer a { color: #111; } .app-view .score-overview, .app-view .cloud-section, .app-view .trust-note { display: none; } .app-view .score-main { width: 100%; } .app-view .score-section { grid-template-columns: 1fr; border-radius: 0; background: #f6f3ea; box-shadow: none; } .app-view .reviewer-entry { border-radius: 0; }
+    .rate-dialog { max-width: 860px; border-radius: 0; background: #f6f3ea; box-shadow: 8px 8px 0 rgba(17,17,17,.16); }
+    .rate-kicker,
+    .rate-comments-head { color: #ff2a14; font-family: Consolas, 'Liberation Mono', monospace; letter-spacing: .09em; }
+    .rate-claim { font-family: Georgia, 'Times New Roman', serif; font-size: clamp(28px, 4vw, 40px); line-height: 1.1; }
+    .rate-context-note { display: block; margin: 15px 0 0; padding-left: 12px; border-left: 3px solid #ff2a14; color: #111; font-family: Georgia, 'Times New Roman', serif; font-size: 15px; font-weight: 700; line-height: 1.45; }
+    .rate-paper-line { font-family: Consolas, 'Liberation Mono', monospace; font-size: 10px; }
+    .rate-comment-form { border-top: 1px solid #111; }
+    .rate-comment-input { border-radius: 0; }
+    .rate-primary { border-radius: 0; background: #111; } .rate-primary:disabled { border-color: #aaa59b; background: #d8d4ca; color: #77726b; cursor: not-allowed; }
+    .rate-primary:hover { background: #ff2a14; }
+    @media (max-width: 700px) {
+      .landing { padding: 16px; }
+      .outrage-masthead { grid-template-columns: 1fr auto; gap: 12px; }
+      .outrage-archive { display: none; }
+      .outrage-brand--masthead { font-size: 21px; }
+      .home-intro { padding: 26px 0 22px; }
+      .outrage-search-form { grid-template-columns: auto auto minmax(0, 1fr) auto; }
+      .outrage-search-submit { display: none; }
+      .outrage-board-nav { flex-wrap: wrap; }
+      .outrage-tabs { gap: 22px; }
+      .hot-threads-link { width: 100%; margin-top: -5px; text-align: right; }
+      .outrage-row { grid-template-columns: 38px minmax(0, 1fr); grid-template-areas: 'rank main' '. aside'; gap: 10px 12px; }
+      .outrage-rank { grid-area: rank; font-size: 17px; }
+      .outrage-main { grid-area: main; }
+      .outrage-row-aside { grid-area: aside; flex-direction: row; align-items: center; justify-content: space-between; text-align: left; }
+      .outrage-social .outrage-votes { width: 100%; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .outrage-social .outrage-vote { justify-content: center; min-width: 0; padding-inline: 7px; }
+      .react-strip { width: 100%; }
+      .board-intro h2 { font-size: 10px; }
+    }
+    @media (max-width: 390px) {
+      .outrage-masthead .outrage-actions { gap: 10px; }
+      .outrage-masthead .outrage-header-link,
+      .outrage-masthead .account-button { font-size: 11px; }
+      .outrage-search-year { display: none; }
+      .outrage-search-form { grid-template-columns: auto minmax(0, 1fr) auto; }
+      .outrage-social .outrage-vote { font-size: 9px; letter-spacing: 0; }
+      .board-intro h2 { display: none; }
+    }
   </style>
 </head>
 <body class="is-idle">
   <main class="shell">
-    <section class="landing" aria-label="Public review quality explorer">
+    <section class="landing" aria-label="Outrageous peer review community">
       <div class="outrage-home" id="outrageHome">
-        <header class="outrage-header">
-          <span class="outrage-header-note">Public reviews, scored for usefulness.</span>
+        <header class="outrage-header outrage-masthead">
+          <button class="outrage-brand outrage-brand--masthead" id="homeBrand" type="button" data-home-reset>Judge My Reviewers</button>
+          <span class="outrage-archive">PUBLIC REVIEW ARCHIVE &middot; VOL. 01</span>
           <div class="outrage-actions">
-            <a class="outrage-header-link" href="./methodology.html">Methodology</a>
+            <button class="outrage-header-link" type="button" data-focus-search>Search</button>
             <button class="account-button account-button--home" id="accountButton" type="button" data-auth-open>Sign in</button>
           </div>
         </header>
@@ -3554,15 +3675,15 @@
           <div class="sticky-bar-inner">
             <button class="outrage-brand sticky-brand" type="button" data-home-reset>Judge My Reviewers</button>
             <div class="sticky-actions">
-              <button class="sticky-search" type="button" data-focus-search>Find paper <kbd class="outrage-key">/</kbd></button>
+              <button class="sticky-search" type="button" data-focus-search>Search <kbd class="outrage-key">/</kbd></button>
               <button class="account-button account-button--home" id="stickyAccountButton" type="button" data-auth-open>Sign in</button>
             </div>
           </div>
         </div>
 
         <section class="home-intro" aria-labelledby="homeTitle">
-          <h1 class="home-masthead" id="homeTitle"><button class="outrage-brand outrage-brand--masthead" id="homeBrand" type="button" data-home-reset>Judge My Reviewers</button></h1>
-          <p class="home-intro-copy"><strong>A second opinion on peer review.</strong> Find the feedback worth answering, the comments worth questioning, and the occasional Reviewer 2 who understood the assignment.</p>
+          <p class="home-kicker">ISSUE 08 &middot; PUBLIC PEER REVIEW</p>
+          <h1 class="home-masthead" id="homeTitle">Outrageous peer review,<br />ranked by readers.</h1>
           <form class="outrage-search-form" id="landingSearch" novalidate>
             <label class="sr-only" for="landingYear">Year</label>
             <select class="outrage-search-conf outrage-search-year" id="landingYear" aria-label="Year">
@@ -3571,7 +3692,7 @@
             </select>
             <label class="sr-only" for="landingConference">Conference</label>
             <select class="outrage-search-conf" id="landingConference" aria-label="Venue">
-              <option value="all">All 2025</option>
+              <option value="all">All venues</option>
               <option value="ICLR">ICLR</option>
               <option value="ICML">ICML</option>
               <option value="NeurIPS">NeurIPS</option>
@@ -3581,45 +3702,34 @@
             </select>
             <label class="sr-only" for="landingInput">Search paper title or OpenReview ID</label>
             <input class="outrage-search-input" id="landingInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Paper title or OpenReview ID" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="landingResults" />
-            <button class="outrage-search-clear" id="landingClear" type="button" aria-label="Clear input" hidden>x</button>
-            <button class="outrage-search-submit" id="landingSubmit" type="submit">Find paper</button>
-            <kbd class="outrage-key outrage-search-key" aria-hidden="true" title="Press / to search">/</kbd>
+            <button class="outrage-search-clear" id="landingClear" type="button" aria-label="Clear input" hidden>&times;</button>
+            <button class="outrage-search-submit" id="landingSubmit" type="submit">Find</button>
+            <kbd class="outrage-key outrage-search-key" aria-hidden="true">/</kbd>
           </form>
-          <div class="home-intro-actions">
-            <button class="outrage-submit" id="rateReviewerButton" type="button" data-open-rate>Rate one review</button>
-            <small>Browsing is open. Sign in only when you want to save, follow, or comment.</small>
-          </div>
           <div class="input-error outrage-error" id="landingError" role="status" aria-live="polite"></div>
           <div class="search-results outrage-results" id="landingResults" role="listbox" aria-label="Paper search results" hidden></div>
-          <section class="venue-ranking" aria-labelledby="venueRankingTitle">
-            <div class="venue-ranking-head">
-              <h2 class="venue-ranking-title" id="venueRankingTitle"><em>2,890</em> hostile reviews in 2025.</h2>
-              <p class="home-kicker" id="venueRankingKicker">Venue sentiment index / 2025</p>
-            </div>
-            <div class="venue-board-grid" id="venueRankingList" aria-live="polite"></div>
-          </section>
         </section>
 
-        <div class="board-intro">
-          <div>
-            <p class="outrage-eyebrow" id="outrageEyebrow"></p>
-            <h2 id="boardHeading">Reviews that need a clearer point.</h2>
+        <section class="outrage-ledger" aria-labelledby="boardHeading">
+          <div class="outrage-board-nav">
+            <nav class="outrage-tabs" id="boardTabs" aria-label="Outrage leaderboard"></nav>
+            <button class="hot-threads-link" id="hotThreadsLink" type="button" data-hot-threads aria-pressed="false"><span aria-hidden="true">&#128293;</span> Hot threads <b id="hotThreadCount"></b> &rarr;</button>
           </div>
-        </div>
-        <nav class="outrage-tabs" id="boardTabs" aria-label="Reviewer leaderboards"></nav>
-        <p class="outrage-ticker" id="communityTicker" hidden></p>
-        <div class="home-status" id="homeStatus" role="status" aria-live="polite" hidden></div>
-        <section class="outrage-board" id="outrageBoard" aria-live="polite"></section>
-        <div class="outrage-cta" id="boardCta"></div>
-        <p class="outrage-fine" id="finePrint"></p>
-        <p class="trust-note"><strong>Machine judgment, not a verdict.</strong> Scores are AI-generated and may be inaccurate. They evaluate the published text of a review, not the reviewer as a person.</p>
+          <div class="board-intro">
+            <p class="outrage-eyebrow" id="outrageEyebrow">LATEST ENTRIES</p>
+            <h2 id="boardHeading">NEWLY SURFACED</h2>
+          </div>
+          <div class="home-status" id="homeStatus" role="status" aria-live="polite" hidden></div>
+          <section class="outrage-board" id="outrageBoard" aria-live="polite"></section>
+        </section>
+
         <footer class="site-footer">
-          <p>Public official review excerpts via OpenReview under CC BY 4.0. No anonymous identity inference. No drama added; peer review brought enough.</p>
-          <nav aria-label="Trust and legal"><a href="./methodology.html">Methodology &amp; limitations</a><a href="./privacy.html">Privacy</a><a href="./terms.html">Terms</a><a href="https://github.com/Yongwen12/SecondOpinion/issues/new?template=score-dispute.yml">Report a score</a></nav>
+          <p>Public official review excerpts via OpenReview &middot; CC BY 4.0.</p>
+          <nav aria-label="Trust and legal"><a href="./methodology.html">Methodology</a><a href="./privacy.html">Privacy</a><a href="./terms.html">Terms</a><a href="https://github.com/Yongwen12/SecondOpinion/issues/new?template=score-dispute.yml">Report</a></nav>
         </footer>
       </div>
     </section>
-    <section class="app-view" aria-label="Review results">
+    <section class="app-view" aria-label="Paper discussion threads">
       <header class="topbar">
                 <button class="brand" id="homeButton" type="button" aria-label="Back to search">
           <span class="brand-mark">Judge My Reviewers</span>
@@ -3660,7 +3770,7 @@
                 <button class="paper-action-button" id="followVenueButton" type="button" data-follow-venue>Follow venue</button>
               </div>
             </div>
-            <div class="reviewer-grid" id="reviewerGrid" aria-label="Reviewer scores" aria-live="polite"></div>
+            <div class="reviewer-grid" id="reviewerGrid" aria-label="Outrage discussion threads" aria-live="polite"></div>
           </div>
         </section>
 
@@ -3679,10 +3789,10 @@
             <div class="cloud-corner" aria-hidden="true"><span class="reviewer-dot"></span><span class="reviewer-dot"></span><span class="reviewer-dot"></span></div>
           </div>
         </section>
-        <p class="trust-note"><strong>Read the source before raising the pitchfork.</strong> Scores are AI-generated, may be inaccurate, and assess review text rather than reviewer identity or character.</p>
+        <p class="trust-note">Vote on the public review text, not the reviewer as a person.</p>
         <footer class="site-footer">
-          <p>Public official review excerpts via OpenReview, CC BY 4.0. Use the source links to verify context or report a score for human review.</p>
-          <nav aria-label="Trust and legal"><a href="./methodology.html">Methodology &amp; limitations</a><a href="./privacy.html">Privacy</a><a href="./terms.html">Terms</a><a id="detailReportLink" href="https://github.com/Yongwen12/SecondOpinion/issues/new?template=score-dispute.yml">Report this score</a></nav>
+          <p>Public official review excerpts via OpenReview, CC BY 4.0. Read the source before joining the thread.</p>
+          <nav aria-label="Trust and legal"><a href="./methodology.html">Methodology &amp; limitations</a><a href="./privacy.html">Privacy</a><a href="./terms.html">Terms</a><a id="detailReportLink" href="https://github.com/Yongwen12/SecondOpinion/issues/new?template=score-dispute.yml">Report this thread</a></nav>
         </footer>
       </div>
     </section>
@@ -3812,121 +3922,29 @@
     ];
 
     const BRAND = 'Judge My Reviewers';
-    const BOARD_ORDER = ['overall', 'toxic', 'helpful'];
-    // Three parallel venue boards, one per sentiment direction. Every number is a
-    // real tail-rate aggregated read-only from the 2025 scored corpus (2026-07-19,
-    // latest scorecard per paper): odds beat averages for feel - "1 in 9 boils
-    // over" lands where "avg outrage 17/100" doesn't. Thresholds: outrage >= 50,
-    // toxicity >= 30, helpfulness >= 70. Each board carries one data-derived burn
-    // line - the shareable sentence.
-    const VENUE_BOARDS_2025 = {
-      totalReviews: 99671,
-      headline: '<em>2,890</em> hostile reviews in 2025.',
-      boards: [
-        {
-          key: 'mean', question: 'Who&#39;s the <em>meanest</em>?', emoji: '\u{1F525}',
-          metricTitle: 'Share of reviews with outrage ≥ 50',
-          burn: 'TMLR runs <em>7&times;</em> hotter than the rest of the field.',
-          rows: [
-            { venue: 'TMLR', value: '1 in 9' }, { venue: 'ICML', value: '1 in 62' }, { venue: 'NeurIPS', value: '1 in 67' },
-            { venue: 'ICLR', value: '1 in 69' }, { venue: 'COLM', value: '1 in 174' }, { venue: 'MIDL', value: '1 in 178' }
-          ]
-        },
-        {
-          key: 'toxic', question: 'Who&#39;s the <em>least professional</em>?', emoji: '\u{1F92C}',
-          metricTitle: 'Share of reviews with toxicity ≥ 30 (personal attacks)',
-          burn: 'Only <em>68</em> reviews got personal all year &mdash; 60 of them at TMLR and ICLR.',
-          rows: [
-            { venue: 'TMLR', value: '1 in 518' }, { venue: 'ICLR', value: '1 in 1,558' }, { venue: 'ICML', value: '1 in 3,276' },
-            { venue: 'NeurIPS', value: '1 in 5,592' }, { venue: 'COLM', value: 'none found' }, { venue: 'MIDL', value: 'none found' }
-          ]
-        },
-        {
-          key: 'best', question: 'Where&#39;s the <em>best author experience</em>?', emoji: '\u{1F91D}',
-          metricTitle: 'Share of reviews with helpfulness ≥ 70',
-          burn: 'Best odds in ML: <em>1 in 4</em> ICLR reviews actually helps.',
-          rows: [
-            { venue: 'ICLR', value: '27%' }, { venue: 'MIDL', value: '22%' }, { venue: 'NeurIPS', value: '21%' },
-            { venue: 'TMLR', value: '16%' }, { venue: 'ICML', value: '15%' }, { venue: 'COLM', value: '10%' }
-          ]
-        }
-      ]
-    };
-    // The masthead ticker repeats the same counters on every board view: the hook
-    // travels even when the venue brief is below the fold.
-    const EMOTION_TICKER = '<span class="hl">2,890</span> hostile reviews in 2025 &middot; <span class="hl">68</span> got personal &middot; worst odds: <b>TMLR, 1 in 9</b> &middot; best help: <b>ICLR, 27%</b>';
+    const BOARD_ORDER = ['latest', 'all-time'];
     const BOARD_COPY = {
-      overall: {
-        label: 'Worst Review Failures',
-        glyph: '★',
-        tone: 'heat',
-        eyebrow: count => `${Number(count || 0).toLocaleString()} PUBLIC REVIEWS AUDITED`,
-        heading: 'The reviews doing the most damage.',
-        description: 'Ranked by review-quality risk: vague claims, no evidence, no actionable point, or empty hostility. #1 is the worst in this list.',
-        unit: 'RISK SCORE',
-        rate: 'MORE ABOUT THIS PAPER ->',
-        hu: n => `${n} community vote${n === 1 ? '' : 's'}`,
-        ai: 'Add your take',
-        cta: '<p><b>Disagree with us?</b> Good, pick a review and leave your opinions here.</p><button class="outrage-submit" type="button" data-open-rate>Rate a review</button>',
-        fine: 'Scores describe the usefulness of public review comments, not reviewers as people. Reviewer names stay paper-scoped and pseudonymous.',
-        tier: score => score >= 85 ? 'HIGH' : score >= 65 ? 'WATCH' : 'MIXED'
-      },
-      toxic: {
-        label: 'Personal / Toxic',
-        glyph: '★',
-        tone: 'heat',
-        eyebrow: count => `${Number(count || 0).toLocaleString()} PUBLIC REVIEWS AUDITED`,
-        heading: 'Technically empty. Socially, unnecessary.',
-        description: 'Tone risk tracks contempt and personal attacks separately from technical criticism.',
-        unit: 'TONE RISK',
-        rate: 'MORE ABOUT THIS PAPER ->',
-        hu: n => `${n} community vote${n === 1 ? '' : 's'}`,
-        ai: 'Add your take',
-        cta: '<p><b>Harsh is not the same as useful.</b>Agree or disagree with the assessment.</p><button class="outrage-submit" type="button" data-open-rate>Rate a review</button>',
-        fine: 'A high tone-risk score does not decide whether a technical concern is correct. It only says the wording got in the way.',
-        tier: score => score >= 80 ? 'HIGH' : score >= 55 ? 'WATCH' : 'MIXED'
-      },
-      helpful: {
-        label: 'Reviews Worth Keeping',
-        glyph: '★',
-        tone: 'praise',
-        eyebrow: count => `${Number(count || 0).toLocaleString()} PUBLIC REVIEWS AUDITED`,
-        heading: 'Proof that Reviewer 2 can be useful.',
-        description: 'Specific, evidence-linked comments that an author can actually act on.',
-        unit: 'HELPFUL',
-        rate: 'MORE ABOUT THIS PAPER ->',
-        hu: n => `${n} community vote${n === 1 ? '' : 's'}`,
-        ai: 'Add your take',
-        cta: '<p><b>Good feedback deserves receipts too.</b>Vouch for a review that made the paper better.</p><button class="outrage-submit" type="button" data-open-rate>Rate a review</button>',
-        fine: 'Helpful means specific and actionable. Polite praise without substance does not qualify.',
-        tier: score => score >= 85 ? 'STRONG' : score >= 70 ? 'SOLID' : 'USEFUL'
-      }
+      latest: { label: 'Latest', tone: 'heat', eyebrow: 'LATEST ENTRIES', heading: 'NEWLY SURFACED' },
+      'all-time': { label: 'All-time', tone: 'heat', eyebrow: 'ALL-TIME LEADERBOARD', heading: 'COMMUNITY RANKED' },
+      hot: { label: 'Hot threads', tone: 'heat', eyebrow: 'HOT THREADS', heading: 'LAST 48 HOURS' }
     };
     const DEMO_HOME_BOARDS = {
-      overall: { key: 'overall', label: 'Overall', emoji: '!', count: 128, tone: 'heat', rows: [
-        { quote: 'This is not convincing.', verdict: 'No experiment named. No evidence cited. Full confidence.', reviewer: 'Reviewer #2', paper: 'Evidence-Grounded Review Auditing', score: 94, humanCount: 2 },
-        { quote: 'The authors clearly do not understand their own method.', verdict: 'An insult where a technical objection should be.', reviewer: 'Reviewer #4', paper: 'Retrieval Benchmarks', score: 91, humanCount: 5 },
-        { quote: 'Needs more experiments.', verdict: 'Which ones? The review never says.', reviewer: 'Reviewer #1', paper: 'Multimodal Agents', score: 88, humanCount: 0 },
-        { quote: 'Not novel. See prior work.', verdict: 'Cites zero prior work.', reviewer: 'Reviewer #3', paper: 'Scalable RAG', score: 84, humanCount: 1 },
-        { quote: 'I did not read the appendix.', verdict: 'The proofs are in the appendix.', reviewer: 'Reviewer #7', paper: 'Sparse Attention Proofs', score: 82, humanCount: 3 },
-        { quote: 'Reject.', verdict: 'The full review. Two lines, for a 14-page paper.', reviewer: 'Reviewer #5', paper: 'Diffusion Policy Transfer', score: 79, humanCount: 0 },
-        { quote: 'The writing should be improved.', verdict: 'No section, no sentence, no example given.', reviewer: 'Reviewer #9', paper: 'Graph Pretraining', score: 76, humanCount: 0 },
-        { quote: 'Score raised from 3 to 8 after rebuttal.', verdict: 'Zero words of the review changed.', reviewer: 'Reviewer #6', paper: 'Contrastive Decoding', score: 73, humanCount: 2 }
+      latest: { key: 'latest', label: 'Latest', count: 3, tone: 'heat', rows: [
+        { quote: 'This paper is only a template, which shows no respect for ICLR.', verdict: 'The confidence is doing most of the reviewing here.', reviewer: 'Reviewer 4', paper: 'Balancing Differential Discriminative Knowledge', venue: 'ICLR 2025', paperId: 'demo-latest-1', reviewerKey: 'R4', surfacedAt: new Date(Date.now() - 18 * 60000).toISOString(), up: 87, down: 12, reactions: {'\u{1F480}': 14, '\u{1F525}': 8}, latestComments: [{body: 'A rejection wearing the costume of feedback.', author: 'anon-b65fab', created_at: new Date(Date.now() - 14 * 60000).toISOString()}], commentCount: 36 },
+        { quote: 'Needs more experiments.', verdict: 'Three words. Zero actionable detail.', reviewer: 'Reviewer 2', paper: 'Learning Transferable Visual Models', venue: 'ICML 2025', paperId: 'demo-latest-2', reviewerKey: 'R2', surfacedAt: new Date(Date.now() - 43 * 60000).toISOString(), up: 41, down: 9, reactions: {'\u{1F914}': 7, '\u{1F644}': 4}, commentCount: 0 },
+        { quote: 'The novelty is limited compared with prior work.', verdict: '"Not novel" is not a citation.', reviewer: 'Reviewer 1', paper: 'Evidence-Grounded Review Auditing at Scale', venue: 'TMLR 2025', paperId: 'demo-latest-3', reviewerKey: 'R1', surfacedAt: new Date(Date.now() - 2 * 3600000).toISOString(), up: 29, down: 18, reactions: {'\u{1F914}': 11, '\u{1F440}': 5}, latestComments: [{body: 'Name the prior work or call it a hunch.', author: 'r2-survivor', created_at: new Date(Date.now() - 3600000).toISOString()}], commentCount: 9 }
       ]},
-      toxic: { key: 'toxic', label: 'Toxic', emoji: '!', count: 24, tone: 'heat', rows: [
-        { quote: 'The authors clearly do not understand their own method.', verdict: 'Personal, dismissive, technically empty.', reviewer: 'Reviewer #4', paper: 'Retrieval Benchmarks', score: 96, humanCount: 5 },
-        { quote: 'This reads like a first-year course project.', verdict: 'Condescension is not a weakness section.', reviewer: 'Reviewer #8', paper: 'Federated Distillation', score: 92, humanCount: 3 },
-        { quote: 'Why was this even submitted?', verdict: 'A question, not a review.', reviewer: 'Reviewer #11', paper: 'Video World Models', score: 89, humanCount: 2 },
-        { quote: 'I stopped reading at page 3.', verdict: 'The method starts on page 4.', reviewer: 'Reviewer #4', paper: 'Reward Hacking Audits', score: 85, humanCount: 1 },
-        { quote: 'The related work section is an insult to the field.', verdict: 'Names none of the insulted work.', reviewer: 'Reviewer #13', paper: 'Neural Theorem Proving', score: 81, humanCount: 0 }
+      'all-time': { key: 'all-time', label: 'All-time', count: 3, tone: 'heat', rows: [
+        { quote: 'I stopped reading at page 3.', verdict: 'The method starts on page four.', reviewer: 'Reviewer 4', paper: 'Reward Hacking Audits for General-Purpose Agents', venue: 'NeurIPS 2025', paperId: 'demo-all-1', reviewerKey: 'R4', surfacedAt: '2026-07-12T12:00:00Z', up: 462, down: 21, reactions: {'\u{1F480}': 91, '\u{1F602}': 44}, latestComments: [{body: 'At least the reviewer disclosed the stopping rule.', author: 'appendix-enjoyer', created_at: '2026-08-03T12:00:00Z'}], commentCount: 84 },
+        { quote: 'Reject.', verdict: 'A verdict arrived. The review did not.', reviewer: 'Reviewer 5', paper: 'Diffusion Policy Transfer Under Distribution Shift', venue: 'ICLR 2025', paperId: 'demo-all-2', reviewerKey: 'R5', surfacedAt: '2026-06-28T12:00:00Z', up: 388, down: 34, reactions: {'\u{1F480}': 62, '\u{1F525}': 55}, commentCount: 0 },
+        { quote: 'The authors clearly do not understand their own method.', verdict: 'An insult where a technical objection should be.', reviewer: 'Reviewer 3', paper: 'Retrieval Benchmarks Beyond Top-K Accuracy', venue: 'COLM 2025', paperId: 'demo-all-3', reviewerKey: 'R3', surfacedAt: '2026-06-04T12:00:00Z', up: 351, down: 47, reactions: {'\u{1F525}': 73, '\u{1F440}': 28}, latestComments: [{body: 'Harshness is not evidence.', author: 'calibrated-take', created_at: '2026-08-05T12:00:00Z'}, {body: 'The next paragraph had a concrete bug though.', author: 'devils-advocate', created_at: '2026-08-05T13:00:00Z'}], commentCount: 67 }
       ]},
-      helpful: { key: 'helpful', label: 'Most Helpful', emoji: '+', count: 53, tone: 'praise', rows: [
-        { quote: 'Found the bug in Eq. 7. Authors confirmed.', verdict: 'One comment saved the camera-ready.', reviewer: 'Reviewer #17', paper: 'Stochastic Interpolants', score: 98, humanCount: 7 },
-        { quote: 'Suggested the ablation that became Table 4.', verdict: 'The paper\'s strongest table came from a review.', reviewer: 'Reviewer #22', paper: 'Tool-Use Agents', score: 96, humanCount: 4 },
-        { quote: 'Linked three missing baselines, with numbers.', verdict: 'Did the related-work the paper needed.', reviewer: 'Reviewer #16', paper: 'Open-Vocab Segmentation', score: 94, humanCount: 2 },
-        { quote: 'Asked the one question that reframed the paper.', verdict: 'The authors thanked them by name.', reviewer: 'Reviewer #20', paper: 'Latent Reasoning', score: 91, humanCount: 3 }
+      hot: { key: 'hot', label: 'Hot threads', count: 2, tone: 'heat', rows: [
+        { quote: 'The authors clearly do not understand their own method.', verdict: 'An insult where a technical objection should be.', reviewer: 'Reviewer 3', paper: 'Retrieval Benchmarks Beyond Top-K Accuracy', venue: 'COLM 2025', paperId: 'demo-all-3', reviewerKey: 'R3', surfacedAt: new Date(Date.now() - 22 * 60000).toISOString(), recentCommentCount: 18, up: 351, down: 47, reactions: {'\u{1F525}': 73, '\u{1F440}': 28}, latestComments: [{body: 'Harshness is not evidence.', author: 'calibrated-take', created_at: new Date(Date.now() - 22 * 60000).toISOString()}, {body: 'The next paragraph had a concrete bug though.', author: 'devils-advocate', created_at: new Date(Date.now() - 11 * 60000).toISOString()}], commentCount: 67 },
+        { quote: 'The novelty is limited compared with prior work.', verdict: '"Not novel" is not a citation.', reviewer: 'Reviewer 1', paper: 'Evidence-Grounded Review Auditing at Scale', venue: 'TMLR 2025', paperId: 'demo-latest-3', reviewerKey: 'R1', surfacedAt: new Date(Date.now() - 14 * 60000).toISOString(), recentCommentCount: 11, up: 29, down: 18, reactions: {'\u{1F914}': 11, '\u{1F440}': 5}, latestComments: [{body: 'Name the prior work or call it a hunch.', author: 'r2-survivor', created_at: new Date(Date.now() - 14 * 60000).toISOString()}, {body: 'Not every review needs a bibliography.', author: 'baseline-police', created_at: new Date(Date.now() - 6 * 60000).toISOString()}], commentCount: 31 }
       ]}
-    };    let publicScorecard = null;
+    };
+    let publicScorecard = null;
     let leaderboards = { red: [], black: [] };
     let paperSearchResults = [];
     let homePapers = [];
@@ -3934,11 +3952,9 @@
     let homeYear = 2025;
     let homeAuditedCount = 82219;
     let homeBoardKind = initialHomeBoard();
-    let venueLeaderboardExpanded = false;
     // Seed the stagger guard so the initial render (and its fast static/API re-renders) does
     // not start an entrance animation that the next same-kind render would cancel mid-flight.
     renderCommunityBoard.lastKind = homeBoardKind;
-    let homeTickerHtml = EMOTION_TICKER;
     let usingDemoHome = true;
     let rateContext = { row: null, paperId: '', reviewerKey: '', tone: 'heat', source: 'global', paperResults: [], reviewerResults: [], selectedPaper: null, comments: [], commentsLoading: false };
 
@@ -4002,8 +4018,9 @@
     const communityTicker = document.getElementById('communityTicker');
     const outrageBoard = document.getElementById('outrageBoard');
     const boardCta = document.getElementById('boardCta');
-    const venueRankingList = document.getElementById('venueRankingList');
     const finePrint = document.getElementById('finePrint');
+    const hotThreadsLink = document.getElementById('hotThreadsLink');
+    const hotThreadCount = document.getElementById('hotThreadCount');
     const boardHeading = document.getElementById('boardHeading');
     const boardDescription = document.getElementById('boardDescription');
     const themesSection = document.getElementById('themesSection');
@@ -4461,7 +4478,7 @@
 
     function cloneHomeBoards(source) {
       const cloned = {};
-      for (const key of BOARD_ORDER) {
+      for (const key of [...BOARD_ORDER, 'hot']) {
         const board = source[key] || DEMO_HOME_BOARDS[key];
         cloned[key] = {
           key,
@@ -4476,8 +4493,10 @@
     }
 
     function initialHomeBoard() {
-      const value = new URLSearchParams(location.search).get('b') || 'overall';
-      return BOARD_ORDER.includes(value) ? value : 'overall';
+      const params = new URLSearchParams(location.search);
+      if (params.get('view') === 'hot') return 'hot';
+      const value = params.get('board') || params.get('b') || 'latest';
+      return BOARD_ORDER.includes(value) ? value : 'latest';
     }
 
     function clampScore(value) {
@@ -4513,6 +4532,10 @@
           ? (source.toxicity ?? source.toxic_final)
           : attentionScore;
       const scoreSource = dimensionScore ?? source.score ?? source.s ?? fb.score ?? 0;
+      const votes = source.votes && typeof source.votes === 'object' ? source.votes : {};
+      const up = Number(votes.outrageous ?? source.up ?? 0);
+      const down = Number(votes.not_really ?? source.down ?? 0);
+      const viewerVote = source.viewer_vote === 'outrageous' ? 'up' : source.viewer_vote === 'not_really' ? 'down' : null;
       const paperId = String(source.paperId || source.paper_id || source.paperID || fb.paperId || `demo-${key}-${index + 1}`);
       const reviewerKey = String(source.reviewerKey || source.reviewer_key || fb.reviewerKey || reviewerKeyFromLabel(reviewer, index));
       const venueName = String(source.venue || source.conference_id || fb.venue || 'ICLR');
@@ -4520,16 +4543,20 @@
       const venueLabel = /\b20\d{2}\b/.test(venueName) ? venueName : `${venueName} ${venueYear}`;
       return {
         quote: String(source.quote || source.t || source.best_quote || source.summary || fb.quote || 'Needs more experiments.'),
-        verdict: String(source.verdict || source.w || source.indictment || source.label || fb.verdict || 'Specificity pending real board-row data.'),
+        verdict: String(source.verdict || source.w || source.indictment || source.label || fb.verdict || ''),
         reviewer,
         paper,
         venue: venueLabel,
         score: clampScore(scoreSource),
-        agreeCount: Number(source.agreeCount ?? source.agree_count ?? source.up ?? 0),
-        disagreeCount: Number(source.disagreeCount ?? source.disagree_count ?? source.down ?? 0),
-        humanCount: Number(source.humanCount ?? source.h ?? source.human_count ?? source.vote_total ?? (Number(source.up || 0) + Number(source.down || 0))),
-        up: Number(source.up || 0),
-        down: Number(source.down || 0),
+        agreeCount: up,
+        disagreeCount: down,
+        humanCount: Number(votes.total ?? source.humanCount ?? source.h ?? source.human_count ?? source.vote_total ?? (up + down)),
+        viewerVote,
+        surfacedAt: source.surfaced_at ?? source.surfacedAt ?? null,
+        recentCommentCount: Number(source.recent_comment_count ?? source.recentCommentCount ?? 0),
+        isColdStart: Boolean(source.is_cold_start ?? source.isColdStart),
+        up,
+        down,
         commentCount: Number(source.commentCount ?? source.comment_count ?? fb.commentCount ?? 0),
         latestComments: normalizeEmbeddedComments(source.latest_comments ?? source.latestComments),
         reactions: (source.reactions && typeof source.reactions === 'object') ? { ...source.reactions } : {},
@@ -4541,85 +4568,58 @@
       };
     }
 
-    function homePayloadRowEligible(row, key) {
+    function homePayloadRowEligible(row) {
       const source = row || {};
-      const text = String(source.quote || '') + ' ' + String(source.verdict || '');
-      const normalized = text.toLowerCase();
+      const text = `${source.quote || ''} ${source.verdict || ''}`.toLowerCase();
       const noise = /updating updating|my concern has been addressed|we sincerely thank|thank you for (the|your) comments|uploaded the revised|author.review|we are currently incorporating/;
-      if (!normalized.trim() || noise.test(normalized)) return false;
-      const recusal = /find another reviewer.*disregard|disregard (my )?(comments|review)|unable to provide a meaningful review|cannot provide a meaningful review|outside of? my expertise|out of my expertise/;
-      if (recusal.test(normalized)) return false;
-      if (key === 'toxic') return Number(source.toxicity ?? source.toxic_final ?? 0) >= 25;
-      if (key === 'helpful') {
-        const contradiction = /not informative|non-informative|insufficient|non-substantive|no substantive|not a substantive|no actionable|unhelpful|low usefulness|summary|too vague|no critique|repetitive/;
-        return Number(source.helpfulness ?? source.helpful_final ?? 0) >= 55
-          && Number(source.toxicity ?? source.toxic_final ?? 0) <= 35
-          && !contradiction.test(normalized);
-      }
-      return true;
+      const recusal = /find another reviewer.*disregard|disregard (my )?(comments|review)|unable to provide a meaningful review|cannot provide a meaningful review|outside of? my expertise|out of my expertise|not be able to perform my reviews|kill a granny/;
+      return Boolean(text.trim()) && !noise.test(text) && !recusal.test(text);
     }
-
     function rowsFromBoardPayload(value, key) {
       if (Array.isArray(value)) return { rows: value, count: value.length };
       if (value && typeof value === 'object') return { rows: Array.isArray(value.rows) ? value.rows : [], count: Number(value.count || value.n || value.rows?.length || 0), label: value.label, emoji: value.emoji || value.e, tone: value.tone };
       return { rows: [], count: 0 };
     }
 
-    function legacyRows(items, key) {
-      const demoRows = DEMO_HOME_BOARDS[key].rows;
-      const tone = key === 'helpful' ? 'praise' : 'heat';
-      return (items || []).map((item, index) => {
-        const fallback = demoRows[index % demoRows.length];
-        const quality = clampScore(item.score);
-        const score = tone === 'praise' ? quality : clampScore(100 - quality);
-        return normalizeBoardRow({ ...item, score, paper: item.paper_title, humanCount: Number(item.up || 0) + Number(item.down || 0) }, index, key, tone, fallback);
-      });
-    }
-
     function normalizeHomeBoards(payload = {}) {
       const boards = cloneHomeBoards(DEMO_HOME_BOARDS);
       const raw = payload.leaderboards || payload.boards || {};
-      let usedModern = false;
-      for (const key of BOARD_ORDER) {
-        if (!(key in raw)) continue;
-        const boardPayload = rowsFromBoardPayload(raw[key], key);
-        if (!boardPayload.rows.length) continue;
-        usedModern = true;
+      const sources = {
+        latest: raw.outrage_latest ?? raw.latest ?? raw.overall,
+        'all-time': raw.outrage_all ?? raw['all-time'] ?? raw.overall,
+        hot: raw.outrage_hot ?? raw.hot
+      };
+      for (const key of [...BOARD_ORDER, 'hot']) {
+        if (sources[key] === undefined) continue;
+        const boardPayload = rowsFromBoardPayload(sources[key], key);
         const demoRows = DEMO_HOME_BOARDS[key].rows;
-        const tone = boardPayload.tone || (key === 'helpful' ? 'praise' : 'heat');
+        const rows = boardPayload.rows
+          .filter(homePayloadRowEligible)
+          .map((row, index) => normalizeBoardRow(row, index, key, 'heat', demoRows[index % demoRows.length]));
         boards[key] = {
           key,
-          label: boardPayload.label || DEMO_HOME_BOARDS[key].label,
-          emoji: boardPayload.emoji || DEMO_HOME_BOARDS[key].emoji,
-          count: Number(boardPayload.count || boardPayload.rows.length),
-          tone,
-          rows: boardPayload.rows.filter(row => homePayloadRowEligible(row, key)).map((row, index) => normalizeBoardRow(row, index, key, tone, demoRows[index % demoRows.length])).sort((left, right) => right.score - left.score).slice(0, venueLeaderboardExpanded ? 50 : (key === 'overall' ? 8 : 20))
+          label: BOARD_COPY[key].label,
+          count: Number(boardPayload.count || rows.length),
+          tone: 'heat',
+          rows: rows.slice(0, 20)
         };
-      }
-      if (!usedModern && raw && (Array.isArray(raw.red) || Array.isArray(raw.black))) {
-        const black = Array.isArray(raw.black) ? raw.black : [];
-        const red = Array.isArray(raw.red) ? raw.red : [];
-        if (black.length) {
-          boards.overall.rows = legacyRows(black, 'overall').slice(0, 8);
-          boards.overall.count = Math.max(boards.overall.rows.length, boards.overall.count);
-          boards.toxic.rows = legacyRows(black, 'toxic').slice(0, 20);
-          boards.toxic.count = boards.toxic.rows.length;
-        }
-        if (red.length) {
-          boards.helpful.rows = legacyRows(red, 'helpful').slice(0, 20);
-          boards.helpful.count = boards.helpful.rows.length;
-        }
       }
       const latest = Array.isArray(payload.latest_papers) ? payload.latest_papers : [];
       const audited = Number(payload.audited_count || payload.review_count || latest.reduce((sum, item) => sum + Number(item.review_count || 0), 0));
       if (audited > 0) homeAuditedCount = audited;
-
       return boards;
     }
 
     function setBoardDeepLink(key) {
       const url = new URL(window.location.href);
-      url.searchParams.set('b', key);
+      url.searchParams.delete('b');
+      if (key === 'hot') {
+        url.searchParams.delete('board');
+        url.searchParams.set('view', 'hot');
+      } else {
+        url.searchParams.delete('view');
+        url.searchParams.set('board', key);
+      }
       window.history.replaceState({}, '', url);
     }
 
@@ -4644,60 +4644,28 @@
       window.history[mode === 'replace' ? 'replaceState' : 'pushState']({}, '', url);
     }
 
-    function renderVenueRanking() {
-      if (!venueRankingList) return;
-      const title = document.getElementById('venueRankingTitle');
-      if (title) title.innerHTML = VENUE_BOARDS_2025.headline;
-      const kicker = document.getElementById('venueRankingKicker');
-      if (kicker) kicker.textContent = `Venue sentiment index / 2025 / ${VENUE_BOARDS_2025.totalReviews.toLocaleString()} reviews scored`;
-      // Three parallel read-only boards (rank + odds only, no button affordance);
-      // each carries its own direction color: red = mean, ink = toxic, green = good.
-      // The burn line under each list is the sentence built to be quoted.
-      venueRankingList.innerHTML = VENUE_BOARDS_2025.boards.map(board => `
-        <article class="venue-board venue-board--${board.key}">
-          <h3 class="venue-board-q">${board.question}</h3>
-          <p class="venue-board-metric" title="${escapeHtml(board.metricTitle)}" aria-label="${escapeHtml(board.metricTitle)}">${board.emoji}</p>
-          <div class="venue-board-rows" role="list">
-            ${board.rows.map((row, index) => `<div class="venue-board-row" role="listitem" aria-label="Rank ${index + 1}: ${escapeHtml(row.venue)}, ${escapeHtml(row.value)}"><span class="venue-rank-no">&#8470;${index + 1}</span><strong class="venue-board-name">${escapeHtml(row.venue)}</strong><b class="venue-board-score">${escapeHtml(row.value)}</b></div>`).join('')}
-          </div>
-          <p class="venue-board-burn">${board.burn}</p>
-        </article>`).join('');
-    }
-
     function renderCommunityBoard() {
-      const board = homeBoards[homeBoardKind] || homeBoards.overall;
-      const copy = BOARD_COPY[homeBoardKind] || BOARD_COPY.overall;
+      const board = homeBoards[homeBoardKind] || homeBoards.latest;
+      const copy = BOARD_COPY[homeBoardKind] || BOARD_COPY.latest;
       document.title = BRAND;
-      body.classList.toggle('praise', copy.tone === 'praise');
-      body.classList.toggle('board-ink', homeBoardKind === 'toxic');
-      body.classList.toggle('board-green', homeBoardKind === 'helpful');
+      body.classList.remove('praise', 'board-ink', 'board-green');
       if (homeBrand) homeBrand.textContent = BRAND;
-      if (outrageEyebrow) outrageEyebrow.textContent = copy.eyebrow(homeAuditedCount || board.count || 0);
-      if (boardHeading) boardHeading.innerHTML = escapeHtml(copy.heading).replace(/\.$/, '<span class="board-period">.</span>');
-      if (boardDescription) boardDescription.textContent = copy.description;
+      if (outrageEyebrow) outrageEyebrow.textContent = copy.eyebrow;
+      if (boardHeading) boardHeading.textContent = copy.heading;
       if (boardTabs) {
         boardTabs.innerHTML = BOARD_ORDER.map(key => {
-          const tabBoard = homeBoards[key] || DEMO_HOME_BOARDS[key];
           const selected = key === homeBoardKind;
-          const tabCopy = BOARD_COPY[key] || {};
-          const count = Number(tabBoard.count || (tabBoard.rows || []).length || 0);
-          return `<button class="outrage-tab${selected ? ' is-active' : ''}" type="button" role="tab" aria-selected="${selected}" aria-label="${escapeHtml(tabCopy.label || tabBoard.label)}" data-board-tab="${key}"><span class="outrage-tab-top"><b class="outrage-tab-glyph" aria-hidden="true">${tabCopy.glyph || ''}</b><span class="outrage-tab-count">${count.toLocaleString()}</span></span><span class="outrage-tab-label">${escapeHtml(tabCopy.label || tabBoard.label)}</span></button>`;
+          return `<button class="outrage-tab${selected ? ' is-active' : ''}" type="button" role="tab" aria-selected="${selected}" data-board-tab="${key}"><span class="outrage-tab-label">${escapeHtml(BOARD_COPY[key].label)}</span></button>`;
         }).join('');
       }
-      if (communityTicker) {
-        const ticker = homeTickerHtml || '';
-        communityTicker.hidden = !ticker;
-        communityTicker.innerHTML = ticker;
-      }
+      const hotBoard = homeBoards.hot || DEMO_HOME_BOARDS.hot;
+      if (hotThreadsLink) hotThreadsLink.setAttribute('aria-pressed', String(homeBoardKind === 'hot'));
+      if (hotThreadCount) hotThreadCount.textContent = hotBoard.rows.length ? String(hotBoard.rows.length) : '';
       if (outrageBoard) {
-        // Stagger rows in only when the visible board actually changes, not on silent data refreshes.
         outrageBoard.classList.toggle('is-entering', homeBoardKind !== renderCommunityBoard.lastKind);
         renderCommunityBoard.lastKind = homeBoardKind;
-        outrageBoard.innerHTML = (board.rows || []).map((row, index) => boardRowHtml(row, index, board, copy)).join('') || '<p class="outrage-fine"><b>No ranking yet.</b> The demo board stays available while live data loads.</p>';
+        outrageBoard.innerHTML = (board.rows || []).map((row, index) => boardRowHtml(row, index, board, copy)).join('') || '<p class="outrage-fine"><b>No threads here yet.</b></p>';
       }
-      if (boardCta) boardCta.innerHTML = copy.cta;
-      if (finePrint) finePrint.innerHTML = copy.fine;
-      renderVenueRanking();
       hydrateBoardComments();
     }
 
@@ -4721,7 +4689,7 @@
     }
 
     async function hydrateBoardComments() {
-      const board = homeBoards[homeBoardKind] || homeBoards.overall;
+      const board = homeBoards[homeBoardKind] || homeBoards.latest;
       const rows = board.rows || [];
       // Seed from server-embedded previews first: rows that already carry their newest
       // takes need no round trip. Only rows without an embed still get fetched.
@@ -4889,54 +4857,44 @@
       }
     }
 
-    function boardRowSocialHtml(row, index, copy) {
-      const praise = copy.tone === 'praise';
-      const agreeCount = praise ? Number(row.up || 0) : Number(row.down || 0);
-      const disagreeCount = praise ? Number(row.down || 0) : Number(row.up || 0);
-      const agreeVote = praise ? 'up' : 'down';
-      const selectedVote = voteState[`reviewer:${row.paperId}:${row.reviewerKey}`] || null;
-      const agreeTitle = praise ? 'This review was helpful' : 'Agree with this assessment';
-      const disagreeTitle = praise ? 'Not that helpful' : 'Disagree with this assessment';
-      hydrateDemoReaction(row, row);
+    function boardRowSocialHtml(row, index) {
+      const selectionKey = `reviewer:${row.paperId}:${row.reviewerKey}`;
+      const selectedVote = voteState[selectionKey] || row.viewerVote || null;
+      const reactionEntries = Object.entries(row.reactions || {}).filter(([, count]) => Number(count) > 0).slice(0, 3);
+      const reactionsHtml = reactionEntries.map(([emoji, count]) => `<button class="react-chip${row.viewerReaction === emoji ? ' is-mine' : ''}" type="button" data-react-scope="row:${index}" data-react-emoji="${escapeHtml(emoji)}" aria-pressed="${row.viewerReaction === emoji}">${escapeHtml(emoji)}<b>${Number(count)}</b></button>`).join('');
       const comments = cachedBoardComments(row);
       const total = Math.max(Number(row.commentCount || 0), comments.length);
       const shown = comments.slice(0, 2);
-      // Takes stay on the surface: show the newest ones, or an explicit invite when empty.
-      const takesHtml = shown.length
-        ? shown.map(comment => `<div class="outrage-take"><p>${escapeHtml(comment.body)}</p><span>${escapeHtml(comment.author || 'anon')} &middot; ${escapeHtml(relTime(comment.created_at))}</span></div>`).join('')
-          + (total > shown.length ? `<button class="outrage-take-more" type="button" data-row-rate="${index}">+${total - shown.length} more take${total - shown.length === 1 ? '' : 's'} -></button>` : '')
-        : `<button class="outrage-take-empty" type="button" data-row-rate="${index}">Add a take -></button>`;
+      const takesHtml = shown.length ? `
+        <div class="outrage-takes">
+          ${shown.map(comment => `<div class="outrage-take"><p>${escapeHtml(comment.body)}</p><span>@${escapeHtml(String(comment.author || 'anon').replace(/^@/, ''))} &middot; ${escapeHtml(relTime(comment.created_at))}</span></div>`).join('')}
+          ${total > shown.length ? `<button class="outrage-take-more" type="button" data-row-rate="${index}">+ ${total - shown.length} MORE IN THREAD &rarr;</button>` : ''}
+        </div>` : '';
       return `
         <div class="outrage-social">
-          <span class="outrage-votes" aria-label="Rate this assessment">
-            <button class="outrage-vote outrage-vote--agree${selectedVote === agreeVote ? ' is-on' : ''}" type="button" data-board-vote="agree" data-board-row="${index}" aria-pressed="${selectedVote === agreeVote}" title="${agreeTitle}" aria-label="${agreeTitle}: ${agreeCount}"><b>&#9650;</b>${agreeCount ? `<span class="outrage-vote-count">${agreeCount}</span>` : ''}</button>
-            <button class="outrage-vote outrage-vote--disagree${selectedVote && selectedVote !== agreeVote ? ' is-on' : ''}" type="button" data-board-vote="disagree" data-board-row="${index}" aria-pressed="${Boolean(selectedVote) && selectedVote !== agreeVote}" title="${disagreeTitle}" aria-label="${disagreeTitle}: ${disagreeCount}"><b>&#9660;</b>${disagreeCount ? `<span class="outrage-vote-count">${disagreeCount}</span>` : ''}</button>
+          <span class="outrage-votes" aria-label="Vote on outrageousness">
+            <button class="outrage-vote${selectedVote === 'up' ? ' is-on' : ''}" type="button" data-board-vote="outrageous" data-board-row="${index}" aria-pressed="${selectedVote === 'up'}"><b>&#9650;</b><span class="outrage-vote-label">Outrageous</span><span class="outrage-vote-count">${Number(row.up || 0)}</span></button>
+            <button class="outrage-vote${selectedVote === 'down' ? ' is-on' : ''}" type="button" data-board-vote="not_really" data-board-row="${index}" aria-pressed="${selectedVote === 'down'}"><b>&#9660;</b><span class="outrage-vote-label">Not really</span><span class="outrage-vote-count">${Number(row.down || 0)}</span></button>
           </span>
-          ${reactionStripHtml(row, `row:${index}`)}
-          <div class="outrage-takes">${takesHtml}</div>
+          <span class="react-strip" aria-label="Emoji reactions">${reactionsHtml}<button class="react-chip react-add" type="button" data-react-open="row:${index}" aria-expanded="false" aria-label="More reactions">+</button></span>
+          ${takesHtml}
         </div>`;
     }
-    function boardRowHtml(row, index, board, copy) {
-      const rank = String(index + 1).padStart(2, '0');
-      const score = clampScore(row.score);
-      const glyph = copy.glyph || (copy.tone === 'praise' ? '★' : '☠');
-      const rankHtml = index < 3
-        ? `<span class="outrage-rank-glyphs" aria-hidden="true">${glyph.repeat(3 - index)}</span><span class="outrage-rank-no">&#8470;${index + 1}</span>`
-        : rank;
+
+    function boardRowHtml(row, index) {
+      const activity = homeBoardKind === 'hot' && row.recentCommentCount
+        ? `${row.recentCommentCount} NEW TODAY`
+        : row.isColdStart ? 'NEW' : relTime(row.surfacedAt).toUpperCase();
       return `
-        <article class="outrage-row" role="button" tabindex="0" data-board-row="${index}" aria-label="Rank ${index + 1}. Open review assessment" style="--i:${Math.min(index, 11)}">
-          <div class="outrage-rank${index < 3 ? ' outrage-rank--top' : ''}">${rankHtml}</div>
+        <article class="outrage-row">
+          <div class="outrage-rank">#${String(index + 1).padStart(2, '0')}</div>
           <div class="outrage-main">
-            <h3 class="outrage-q">${escapeHtml(row.quote)}</h3>
-            <p class="outrage-why">${escapeHtml(row.verdict)}</p>
-            <p class="outrage-meta">${escapeHtml(row.reviewer)} &middot; ${escapeHtml(row.paper)} &middot; ${escapeHtml(row.venue || 'ICLR 2025')}</p>
-            ${boardRowSocialHtml(row, index, copy)}          </div>
-          <div class="outrage-scorebox" title="Score, 0-100. Open the row to rate this review.">
-            <div class="outrage-num">${score}<span class="outrage-num-max">/100</span></div>
-            <i class="outrage-meter" style="--v:${score}" aria-hidden="true"></i>
-            <div class="outrage-unit">${copy.unit} &middot; ${copy.tier(score)}</div>
-            <button class="outrage-rowrate" type="button" data-row-paper="${index}" title="Read more reviews and the paper scorecard">${copy.rate}</button>
+            <button class="outrage-q" type="button" data-row-rate="${index}">${escapeHtml(row.quote)}</button>
+            <p class="outrage-meta">${escapeHtml(row.paper)} &middot; ${escapeHtml(row.venue || '2025')} &middot; ${escapeHtml(row.reviewer)}</p>
+            ${row.verdict ? `<p class="outrage-why">${escapeHtml(row.verdict)}</p>` : ''}
+            ${boardRowSocialHtml(row, index)}
           </div>
+          <div class="outrage-row-aside"><span>${escapeHtml(activity)}</span><button class="outrage-open-thread" type="button" data-row-rate="${index}">OPEN THREAD &rarr;</button></div>
         </article>`;
     }
 
@@ -4945,13 +4903,11 @@
     }
 
     async function loadCommunityHome(year = homeYear) {
-      venueLeaderboardExpanded = false;
       homeYear = Number(year || 2025);
       homePapers = [];
       homeBoards = cloneHomeBoards(DEMO_HOME_BOARDS);
       usingDemoHome = true;
       homeAuditedCount = 82219;
-      homeTickerHtml = EMOTION_TICKER;
       setHomeStatus('');
       renderCommunityHome();
       try {
@@ -4961,7 +4917,6 @@
           homePapers = Array.isArray(staticPayload.latest_papers) ? staticPayload.latest_papers : [];
           homeBoards = normalizeHomeBoards(staticPayload);
           usingDemoHome = false;
-          homeTickerHtml = EMOTION_TICKER;
           renderCommunityHome();
         }
       } catch (error) {
@@ -4975,7 +4930,6 @@
         homePapers = Array.isArray(payload.latest_papers) ? payload.latest_papers : [];
         homeBoards = normalizeHomeBoards(payload);
         usingDemoHome = false;
-        homeTickerHtml = EMOTION_TICKER;
         renderCommunityHome();
       } catch (error) {
         console.warn('Community home API refresh failed; using static or demo board.', error);
@@ -4984,7 +4938,7 @@
     }
 
     function currentBoardRow(index) {
-      const board = homeBoards[homeBoardKind] || homeBoards.overall;
+      const board = homeBoards[homeBoardKind] || homeBoards.latest;
       return (board.rows || [])[Number(index)] || null;
     }
 
@@ -5003,7 +4957,7 @@
       openHomePaper(row.paperId, 'landing');
     }
     function openRateModal(row = null, source = 'global') {
-      const board = homeBoards[homeBoardKind] || homeBoards.overall;
+      const board = homeBoards[homeBoardKind] || homeBoards.latest;
       rateContext = { row, paperId: row?.paperId || '', reviewerKey: row?.reviewerKey || '', tone: row?.tone || board.tone, source, paperResults: [], reviewerResults: [], selectedPaper: null, conference: row?.conference || 'ICLR', query: '', comments: [], commentsLoading: false };
       rateModal.hidden = false;
       rateModalError.textContent = '';
@@ -5021,37 +4975,31 @@
       if (!rateModalBody) return;
       const row = rateContext.row;
       if (row) {
-        const praise = rateContext.tone === 'praise';
-        const detail = rateContext.detail || {};
-        const paperContext = detail.paper || {};
-        const reviewerContext = detail.reviewer || {};
         const selectionKey = `reviewer:${row.paperId}:${row.reviewerKey}`;
-        const selectedVote = voteState[selectionKey] || null;
-        const agreeVote = praise ? 'up' : 'down';
-        const disagreeVote = agreeVote === 'up' ? 'down' : 'up';
-        const agreeCount = praise ? Number(row.up || 0) : Number(row.down || 0);
-        const disagreeCount = praise ? Number(row.down || 0) : Number(row.up || 0);
-        const agreeTitle = praise ? 'This review was helpful' : 'Agree with this assessment';
-        const disagreeTitle = praise ? 'Not that helpful' : 'Disagree with this assessment';
-        hydrateDemoReaction(row, row);
+        const selectedVote = voteState[selectionKey] || row.viewerVote || null;
+        const outrageousCount = Number(row.up || 0);
+        const notReallyCount = Number(row.down || 0);
         const commentsHtml = renderRateCommentsHtml();
+        const commentCount = (rateContext.comments || []).length;
+        hydrateDemoReaction(row, row);
         rateModalBody.innerHTML = `
-          <p class="rate-kicker">Community check</p>
+          <p class="rate-kicker">Discussion thread</p>
           <h2 id="rateTitle" class="rate-claim">${escapeHtml(row.quote)}</h2>
           <p class="rate-paper-line">${escapeHtml(row.paper)} &middot; ${escapeHtml(row.venue || 'ICLR 2025')}</p>
-          <p class="rate-context-note">You are rating this public review, not the paper or the reviewer as a person.</p>
+          ${row.verdict ? `<p class="rate-context-note">${escapeHtml(row.verdict)}</p>` : ''}
           <div class="outrage-social rate-social" aria-label="Vote and react">
-            <span class="outrage-votes" aria-label="Rate this assessment">
-              <button class="outrage-vote outrage-vote--agree${selectedVote === agreeVote ? ' is-on' : ''}" type="button" data-rate-choice="${agreeVote}" aria-pressed="${selectedVote === agreeVote}" title="${agreeTitle}" aria-label="${agreeTitle}: ${agreeCount}"><b>&#9650;</b>${agreeCount ? `<span class="outrage-vote-count">${agreeCount}</span>` : ''}</button>
-              <button class="outrage-vote outrage-vote--disagree${selectedVote === disagreeVote ? ' is-on' : ''}" type="button" data-rate-choice="${disagreeVote}" aria-pressed="${selectedVote === disagreeVote}" title="${disagreeTitle}" aria-label="${disagreeTitle}: ${disagreeCount}"><b>&#9660;</b>${disagreeCount ? `<span class="outrage-vote-count">${disagreeCount}</span>` : ''}</button>
+            <span class="outrage-votes" aria-label="How outrageous is this review?">
+              <button class="outrage-vote outrage-vote--agree${selectedVote === 'up' ? ' is-on' : ''}" type="button" data-rate-choice="up" aria-pressed="${selectedVote === 'up'}" aria-label="Outrageous: ${outrageousCount}"><b>&#9650;</b><span class="outrage-vote-label">Outrageous</span><span class="outrage-vote-count">${outrageousCount}</span></button>
+              <button class="outrage-vote outrage-vote--disagree${selectedVote === 'down' ? ' is-on' : ''}" type="button" data-rate-choice="down" aria-pressed="${selectedVote === 'down'}" aria-label="Not really: ${notReallyCount}"><b>&#9660;</b><span class="outrage-vote-label">Not really</span><span class="outrage-vote-count">${notReallyCount}</span></button>
             </span>
             ${reactionStripHtml(row, 'modal')}
           </div>
           <form class="rate-comment-form" data-comment-form>
-            <textarea class="rate-comment-input" id="rateCommentInput" rows="2" maxlength="1000" placeholder="Add a note (optional)"></textarea>
-            <button class="rate-primary rate-comment-submit" type="submit">Post note</button>
+            <textarea class="rate-comment-input" id="rateCommentInput" rows="3" maxlength="1000" placeholder="Join the discussion (optional)"></textarea>
+            <button class="rate-primary rate-comment-submit" type="submit"${selectedVote ? '' : ' disabled'}>${selectedVote ? 'Post comment' : 'Vote before commenting'}</button>
           </form>
-          ${commentsHtml ? `<p class="rate-comments-head">Community notes</p><div class="rate-comments" id="rateComments">${commentsHtml}</div>` : ''}`;        return;
+          ${commentsHtml ? `<p class="rate-comments-head">Discussion &middot; ${commentCount} comment${commentCount === 1 ? '' : 's'}</p><div class="rate-comments" id="rateComments">${commentsHtml}</div>` : ''}`;
+        return;
       }
       rateModalBody.innerHTML = `
         <p class="rate-kicker">Rate a review</p>
@@ -5088,7 +5036,7 @@
     }
 
     function rateReviewerResultsHtml() {
-      return rateContext.reviewerResults.map((reviewer, index) => `<button type="button" data-reviewer-pick="${index}"><strong>${escapeHtml(reviewer.nickname || reviewer.reviewer_key || `Reviewer #${index + 1}`)}</strong><span>${escapeHtml(reviewer.summary || reviewer.label || 'Review scorecard row')}</span></button>`).join('');
+      return rateContext.reviewerResults.map((reviewer, index) => `<button type="button" data-reviewer-pick="${index}"><strong>${escapeHtml(reviewer.nickname || reviewer.reviewer_key || `Reviewer #${index + 1}`)}</strong><span>${escapeHtml(reviewer.summary || reviewer.label || 'Public review')}</span></button>`).join('');
     }
 
     async function loadRatePapers(query) {
@@ -5125,7 +5073,7 @@
         renderRateModal();
       } catch (error) {
         console.warn('Rate reviewer load failed.', error);
-        rateModalError.textContent = 'This paper does not have a scorecard yet.';
+        rateModalError.textContent = 'This paper does not have public review threads yet.';
       }
     }
 
@@ -5133,10 +5081,10 @@
       const reviewer = rateContext.reviewerResults[Number(index)];
       const paper = rateContext.selectedPaper || {};
       if (!reviewer) return;
-      const board = homeBoards[homeBoardKind] || homeBoards.overall;
+      const board = homeBoards[homeBoardKind] || homeBoards.latest;
       rateContext.row = normalizeBoardRow({
-        quote: reviewer.summary || reviewer.label || 'Review scorecard row',
-        verdict: reviewer.label || 'Reviewer quality scorecard is ready.',
+        quote: reviewer.summary || reviewer.label || 'Public review',
+        verdict: reviewer.label || '',
         reviewer: reviewer.nickname || reviewer.reviewer_key,
         paper: paper.title,
         venue: `${paper.venue || paper.conference_id || rateContext.conference} ${paper.year || 2025}`,
@@ -5154,23 +5102,53 @@
       loadReviewerComments(rateContext.row);
     }
 
+    function matchingBoardRows(row) {
+      const matches = [row];
+      Object.values(homeBoards || {}).forEach(board => {
+        (board?.rows || []).forEach(candidate => {
+          if (candidate !== row && candidate.paperId === row.paperId && candidate.reviewerKey === row.reviewerKey) matches.push(candidate);
+        });
+      });
+      return [...new Set(matches)];
+    }
+
     function updateRowVoteCounts(row, previous, next) {
       if (previous === next) return;
-      if (previous === 'up') row.up = Math.max(0, Number(row.up || 0) - 1);
-      if (previous === 'down') row.down = Math.max(0, Number(row.down || 0) - 1);
-      if (next === 'up') row.up = Number(row.up || 0) + 1;
-      if (next === 'down') row.down = Number(row.down || 0) + 1;
-      row.agreeCount = Number(row.up || 0);
-      row.disagreeCount = Number(row.down || 0);
-      if (!previous && next) row.humanCount = Number(row.humanCount || 0) + 1;
-      if (previous && !next) row.humanCount = Math.max(0, Number(row.humanCount || 0) - 1);
+      matchingBoardRows(row).forEach(target => {
+        if (previous === 'up') target.up = Math.max(0, Number(target.up || 0) - 1);
+        if (previous === 'down') target.down = Math.max(0, Number(target.down || 0) - 1);
+        if (next === 'up') target.up = Number(target.up || 0) + 1;
+        if (next === 'down') target.down = Number(target.down || 0) + 1;
+        target.agreeCount = Number(target.up || 0);
+        target.disagreeCount = Number(target.down || 0);
+        target.humanCount = Number(target.up || 0) + Number(target.down || 0);
+        target.viewerVote = next || null;
+        target.votes = { outrageous: target.up, not_really: target.down, total: target.humanCount };
+      });
+    }
+
+    function applyVoteResponse(row, payload) {
+      const votes = payload?.votes || {};
+      const up = Number(votes.outrageous ?? payload?.up ?? row.up ?? 0);
+      const down = Number(votes.not_really ?? payload?.down ?? row.down ?? 0);
+      const selected = payload?.selected === 'outrageous' ? 'up' : payload?.selected === 'not_really' ? 'down' : null;
+      matchingBoardRows(row).forEach(target => {
+        target.up = up;
+        target.down = down;
+        target.agreeCount = up;
+        target.disagreeCount = down;
+        target.humanCount = up + down;
+        target.viewerVote = selected;
+        target.votes = { outrageous: up, not_really: down, total: up + down };
+      });
+      return selected;
     }
 
     async function submitRateVote(vote) {
       const row = rateContext.row;
       if (!row) return;
       const key = `reviewer:${row.paperId}:${row.reviewerKey}`;
-      const previous = voteState[key] || null;
+      const previous = voteState[key] || row.viewerVote || null;
       const next = previous === vote ? null : vote;
       if (next) voteState[key] = next;
       else delete voteState[key];
@@ -5179,19 +5157,26 @@
       renderCommunityBoard();
       if (!API_BASE || row.paperId.startsWith('demo-')) {
         if (!rateModal.hidden) {
-          rateModalError.textContent = next ? 'Demo vote recorded locally.' : 'Demo vote removed locally.';
           renderRateModal();
+          rateModalError.textContent = next ? 'Vote recorded on this device.' : 'Vote removed on this device.';
         }
         return;
       }
       try {
+        const publicVote = next === 'up' ? 'outrageous' : next === 'down' ? 'not_really' : 'none';
         const response = await apiFetch(`/api/papers/${encodeURIComponent(row.paperId)}/reviewers/${encodeURIComponent(row.reviewerKey)}/votes`, {
-          method: 'POST', body: JSON.stringify({ vote: next || 'none' })
+          method: 'POST', body: JSON.stringify({ vote: publicVote })
         });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const payload = await safeJson(response) || {};
+        if (!response.ok) throw new Error(payload.detail?.code || `HTTP ${response.status}`);
+        const confirmed = applyVoteResponse(row, payload);
+        if (confirmed) voteState[key] = confirmed;
+        else delete voteState[key];
+        saveVoteState(voteState);
+        renderCommunityBoard();
         if (!rateModal.hidden) {
-          rateModalError.textContent = next ? 'Vote recorded.' : 'Vote removed.';
           renderRateModal();
+          rateModalError.textContent = confirmed ? 'Vote recorded. You can comment, or leave it there.' : 'Vote removed.';
         }
       } catch (error) {
         if (previous) voteState[key] = previous;
@@ -5288,14 +5273,13 @@
         const response = await apiFetch(`/api/papers/${encodeURIComponent(row.paperId)}/reviewers/${encodeURIComponent(row.reviewerKey)}/comments`, {
           method: 'POST', body: JSON.stringify({ body: clean })
         });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const payload = await response.json();
+        const payload = await safeJson(response) || {};
+        if (!response.ok) return { ok: false, reason: payload.detail?.code || `http_${response.status}` };
         return { ok: true, items: Array.isArray(payload.items) ? payload.items : [] };
       } catch (error) {
-        return { ok: false, reason: 'network' };
+        return { ok: false, reason: error.message || 'network' };
       }
     }
-
     function commentActionContext(button) {
       const source = button.dataset.commentSource || 'rate';
       if (source === 'scorecard') {
@@ -5379,18 +5363,25 @@
       const row = rateContext.row;
       const input = document.getElementById('rateCommentInput');
       if (!row || !input) return;
+      const key = `reviewer:${row.paperId}:${row.reviewerKey}`;
+      if (!(voteState[key] || row.viewerVote)) {
+        rateModalError.textContent = 'Vote before joining the discussion.';
+        return;
+      }
       const body = input.value.trim();
       if (!body) { rateModalError.textContent = 'Write something first.'; return; }
       rateModalError.textContent = '';
       const result = await postCommentFor(row, body);
-      if (!result.ok) { rateModalError.textContent = result.reason === 'empty' ? 'Write something first.' : 'Comment could not be posted.'; return; }
+      if (!result.ok) {
+        rateModalError.textContent = result.reason === 'vote_required' ? 'Vote before joining the discussion.' : result.reason === 'empty' ? 'Write something first.' : 'Comment could not be posted.';
+        return;
+      }
       rateContext.comments = result.items;
       boardCommentCache.set(commentScopeKey(row), result.items);
       renderRateModal();
       renderCommunityBoard();
-      if (result.demo) rateModalError.textContent = 'Comment added (demo - saved on this device).';
+      if (result.demo) rateModalError.textContent = 'Comment added on this device.';
     }
-
     function scorecardCommentRow(reviewer) {
       return {
         paperId: state.paperId || publicScorecard?.paper?.paper_id || '',
@@ -5401,11 +5392,12 @@
     }
 
     function renderScorecardCommentsHtml(reviewer) {
+      const hasVote = Boolean(reviewerSocialCounts(reviewer).selected);
       let listHtml;
       if (reviewer.commentsLoading) {
         listHtml = '<p class="rate-comments-empty">Loading comments...</p>';
       } else if (!(reviewer.comments || []).length) {
-        listHtml = '<p class="rate-comments-empty">No comments yet. Be the first to weigh in.</p>';
+        listHtml = '';
       } else {
         listHtml = reviewer.comments.map(comment => `
           <div class="rate-comment">
@@ -5415,17 +5407,16 @@
       }
       const count = Number(reviewer.commentCount || (reviewer.comments || []).length || 0);
       return `
-        <details class="rate-evidence detail-comments"${reviewer.takesOpen ? ' open' : ''} data-detail-fold="takes" data-fold-reviewer="${escapeHtml(reviewer.id)}">
-          <summary>${count ? `${count} take${count === 1 ? '' : 's'} &middot; add yours` : 'Add a take'}</summary>
+        <div class="detail-comments">
+          <p class="rate-comments-head">Discussion${(reviewer.comments || []).length ? ` &middot; ${(reviewer.comments || []).length}` : ''}</p>
           <form class="rate-comment-form" data-sc-comment-form="${escapeHtml(reviewer.id)}">
-            <textarea class="rate-comment-input" id="scCommentInput" rows="2" maxlength="1000" placeholder="Add your own take on this review..."></textarea>
-            <button class="rate-primary rate-comment-submit" type="submit">Post comment</button>
+            <textarea class="rate-comment-input" id="scCommentInput" rows="2" maxlength="1000" placeholder="Join the discussion (optional)"></textarea>
+            <button class="rate-primary rate-comment-submit" type="submit"${hasVote ? '' : ' disabled'}>${hasVote ? 'Post comment' : 'Vote before commenting'}</button>
           </form>
-          <div class="rate-comments">${listHtml}</div>
+          ${listHtml ? `<div class="rate-comments">${listHtml}</div>` : ''}
           <p class="detail-comment-status" id="scCommentStatus"></p>
-        </details>`;
+        </div>`;
     }
-
     async function loadScorecardComments(reviewer) {
       reviewer.commentsLoading = true;
       renderScoreDetail();
@@ -5442,17 +5433,23 @@
       const input = document.getElementById('scCommentInput');
       const status = document.getElementById('scCommentStatus');
       if (!reviewer || !input) return;
+      if (!reviewerSocialCounts(reviewer).selected) {
+        if (status) status.textContent = 'Vote before joining the discussion.';
+        return;
+      }
       const body = input.value.trim();
       if (!body) { if (status) status.textContent = 'Write something first.'; return; }
       const result = await postCommentFor(scorecardCommentRow(reviewer), body);
-      if (!result.ok) { if (status) status.textContent = result.reason === 'empty' ? 'Write something first.' : 'Comment could not be posted.'; return; }
+      if (!result.ok) {
+        if (status) status.textContent = result.reason === 'vote_required' ? 'Vote before joining the discussion.' : result.reason === 'empty' ? 'Write something first.' : 'Comment could not be posted.';
+        return;
+      }
       reviewer.comments = result.items;
       reviewer.commentCount = result.items.length;
       reviewer.commentsLoaded = true;
       boardCommentCache.set(commentScopeKey(scorecardCommentRow(reviewer)), result.items);
       renderScoreDetail();
     }
-
     async function openHomePaper(paperId, source = 'landing') {
       if (!paperId) return;
       const paper = homePapers.find(item => item.paper_id === paperId) || { paper_id: paperId };
@@ -5470,41 +5467,16 @@
           return;
         }
         console.warn('Home paper load failed.', error);
-        showToast('Could not load this paper scorecard');
+        showToast("Could not load this paper's review threads");
       } finally {
         setBusy(false, source);
       }
     }
     async function submitPaper(value, source = 'landing') {
       if (source === 'landing' && selectedLandingYear() === 2026) { showComingSoon(); return; }
-    async function openVenueLeaderboard() {
-      const year = selectedLandingYear();
-      if (year === 2026) { showComingSoon(); return; }
-      const venue = landingConference?.value || '';
-      if (!venue || venue === 'all' || !API_BASE) { showInputError(); return; }
-      const response = await apiFetch(`/api/home?conference=${encodeURIComponent(venue)}&year=${encodeURIComponent(year)}&limit=50`);
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const payload = await response.json();
-      venueLeaderboardExpanded = true;
-      homeBoards = normalizeHomeBoards(payload);
-      homeAuditedCount = payload.stats?.audited_count || payload.audited_count || 0;
-      homeBoardKind = 'overall';
-      setBoardDeepLink(homeBoardKind);
-      renderCommunityHome();
-      document.getElementById('boardHeading')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      showToast(`${venue}: ranked review-quality risks`);
-    }
       if (state.busy) return;
       const clean = (value || '').trim();
       if (!clean) {
-        if (source === 'landing' && landingConference?.value && landingConference.value !== 'all') {
-          setBusy(true, source);
-          try { await openVenueLeaderboard(); }
-          catch (error) { console.warn('Venue leaderboard load failed.', error); showToast('Could not load this venue yet'); }
-          finally { setBusy(false, source); }
-          return;
-        }
-
         if (source === 'landing') {
           showInputError();
         } else {
@@ -5573,7 +5545,7 @@
       state.selectedReviewer = reviewers.some(reviewer => reviewer.id === linkedReviewer) ? linkedReviewer : null;
       hideSearchResults();
       enterResolvedView(source);
-      if (source === 'top') showToast('Scorecard updated');
+      if (source === 'top') showToast('Review threads updated');
       return true;
     }
 
@@ -5623,7 +5595,7 @@
       setPaperDeepLink(state.selectedReviewer || '');
       renderAll();
       window.scrollTo({ top: 0, behavior: reducedMotion.matches ? 'auto' : 'smooth' });
-      if (source === 'top') showToast('Scorecard updated');
+      if (source === 'top') showToast('Review threads updated');
     }
     async function loadPublicScorecard() {
       const initialParams = new URLSearchParams(location.search);
@@ -5710,7 +5682,7 @@
           score: quality,
           tone: band.className || 'green',
           label: plainBand(band.label),
-          summary: reviewer.summary || 'Reviewer comments scored by Judge My Reviewers.',
+          summary: reviewer.summary || '',
           social: reviewer.social || { up: 0, down: 0 },
           comments: Array.isArray(reviewer.comments) ? reviewer.comments : [],
           commentCount: Number(reviewer.comment_count ?? (Array.isArray(reviewer.comments) ? reviewer.comments.length : 0)),
@@ -5772,13 +5744,13 @@
 
     function reportScoreUrl(reviewerId = '') {
       const paper = publicScorecard?.paper || {};
-      const subject = `SecondOpinion score report: ${paper.title || paper.paper_id || 'paper'}`;
+      const subject = `Judge My Reviewers thread report: ${paper.title || paper.paper_id || 'paper'}`;
       const body = [
         `Paper: ${paper.title || ''}`,
         `OpenReview: ${openReviewUrl()}`,
         reviewerId ? `Reviewer: ${reviewerId}` : '',
         '',
-        'What looks wrong, and why:'
+        'What needs moderation or correction:'
       ].filter(Boolean).join('\n');
       return `https://github.com/Yongwen12/SecondOpinion/issues/new?template=score-dispute.yml&title=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     }
@@ -5789,8 +5761,8 @@
       const summary = publicScorecard.summary || {};
       document.getElementById('paperTitle').textContent = paper.title || parsePaperTitle(state.paper || 'Select a paper');
       paperStats.innerHTML = [
-        `${reviewers.length} reviewers`,
-        `${splitComments.length} comments`,
+        `${reviewers.length} review threads`,
+        `${splitComments.length} public excerpts`,
         paper.conference || ''
       ].filter(Boolean).map(item => `<span>${escapeHtml(item)}</span>`).join('');
       renderPaperActions();
@@ -5804,7 +5776,7 @@
 
     function reviewerSocialCounts(reviewer) {
       const key = `reviewer:${state.paperId}:${reviewer.id}`;
-      const selected = voteState[key] || null;
+      const selected = voteState[key] || (reviewer.social?.viewer_vote === 'outrageous' ? 'up' : reviewer.social?.viewer_vote === 'not_really' ? 'down' : reviewer.social?.viewer_vote || null);
       const base = reviewer.social || { up: 0, down: 0 };
       return {
         selected,
@@ -5846,7 +5818,7 @@
 
     async function updateReviewerVote(reviewerId, action) {
       const key = `reviewer:${state.paperId}:${reviewerId}`;
-      const previous = voteState[key] || null;
+      const previous = reviewerSocialCounts(reviewerById(reviewerId) || { id: reviewerId }).selected || null;
       const next = previous === action ? null : action;
       if (next) voteState[key] = next;
       else delete voteState[key];
@@ -5865,15 +5837,24 @@
       try {
         const response = await apiFetch(`/api/papers/${encodeURIComponent(state.paperId)}/reviewers/${encodeURIComponent(reviewerId)}/votes`, {
           method: 'POST',
-          body: JSON.stringify({ vote: next || 'none' })
+          body: JSON.stringify({ vote: next === 'up' ? 'outrageous' : next === 'down' ? 'not_really' : 'none' })
         });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const payload = await response.json();
+        const payload = await safeJson(response) || {};
+        if (!response.ok) throw new Error(payload.detail?.code || `HTTP ${response.status}`);
+        const confirmed = payload.selected === 'outrageous' ? 'up' : payload.selected === 'not_really' ? 'down' : null;
+        if (confirmed) voteState[key] = confirmed;
+        else delete voteState[key];
+        saveVoteState(voteState);
+        const linkedRow = Object.values(homeBoards).flatMap(board => board?.rows || []).find(
+          row => row.paperId === state.paperId && row.reviewerKey === reviewerId
+        );
+        if (linkedRow) applyVoteResponse(linkedRow, payload);
         if (payload.scorecard) {
           applyPublicScorecard(payload.scorecard);
           renderAll();
         }
-        showToast(next ? 'Vote recorded' : 'Vote removed');
+        renderCommunityBoard();
+        showToast(confirmed ? 'Vote recorded' : 'Vote removed');
       } catch (error) {
         console.warn('Reviewer vote sync failed.', error);
         if (previous) voteState[key] = previous;
@@ -5914,84 +5895,60 @@
       const takes = reviewer.comments || [];
       const total = Math.max(Number(reviewer.commentCount || 0), takes.length);
       const shown = takes.slice(0, 2);
+      if (!shown.length) return '';
       const shownHtml = shown.map(comment => `
         <div class="reviewer-take">
           <p>${escapeHtml(comment.body)}</p>
           <span>${escapeHtml(comment.author || 'anon')} &middot; ${escapeHtml(relTime(comment.created_at))}</span>
         </div>`).join('');
       const opener = total > shown.length
-        ? `<button class="reviewer-take-more" type="button" data-reviewer-open="${escapeHtml(reviewer.id)}">+${total - shown.length} more take${total - shown.length === 1 ? '' : 's'} -></button>`
-        : (total === 0 ? `<button class="reviewer-take-more" type="button" data-reviewer-open="${escapeHtml(reviewer.id)}" data-focus-take="1">Add a take -></button>` : '');
+        ? `<button class="reviewer-take-more" type="button" data-reviewer-open="${escapeHtml(reviewer.id)}">+${total - shown.length} more in thread &rarr;</button>`
+        : '';
       return `<div class="reviewer-takes">${shownHtml}${opener}</div>`;
     }
-
     function reviewerSocialHtml(reviewer) {
-      // The same surface contract as board rows: votes and reactions live with the
-      // review itself, no expansion required.
       const counts = reviewerSocialCounts(reviewer);
       hydrateDemoReaction(reviewer, scorecardCommentRow(reviewer));
       return `
         <div class="outrage-social reviewer-social" aria-label="Vote and react to this review">
-          <span class="outrage-votes" aria-label="Vote on this review">
-            <button class="outrage-vote outrage-vote--agree${counts.selected === 'up' ? ' is-on' : ''}" type="button" data-reviewer-vote="up" data-reviewer-id="${reviewer.id}" aria-pressed="${counts.selected === 'up'}" title="This review was helpful" aria-label="Helpful: ${counts.up}"><b>&#9650;</b>${counts.up ? `<span class="outrage-vote-count">${counts.up}</span>` : ''}</button>
-            <button class="outrage-vote outrage-vote--disagree${counts.selected === 'down' ? ' is-on' : ''}" type="button" data-reviewer-vote="down" data-reviewer-id="${reviewer.id}" aria-pressed="${counts.selected === 'down'}" title="Not helpful" aria-label="Not helpful: ${counts.down}"><b>&#9660;</b>${counts.down ? `<span class="outrage-vote-count">${counts.down}</span>` : ''}</button>
+          <span class="outrage-votes" aria-label="How outrageous is this review?">
+            <button class="outrage-vote outrage-vote--agree${counts.selected === 'up' ? ' is-on' : ''}" type="button" data-reviewer-vote="up" data-reviewer-id="${reviewer.id}" aria-pressed="${counts.selected === 'up'}" aria-label="Outrageous: ${counts.up}"><b>&#9650;</b><span class="outrage-vote-label">Outrageous</span><span class="outrage-vote-count">${counts.up}</span></button>
+            <button class="outrage-vote outrage-vote--disagree${counts.selected === 'down' ? ' is-on' : ''}" type="button" data-reviewer-vote="down" data-reviewer-id="${reviewer.id}" aria-pressed="${counts.selected === 'down'}" aria-label="Not really: ${counts.down}"><b>&#9660;</b><span class="outrage-vote-label">Not really</span><span class="outrage-vote-count">${counts.down}</span></button>
           </span>
           ${reactionStripHtml(reviewer, `reviewer:${reviewer.id}`)}
         </div>`;
     }
-
     function reviewerDetailHtml(reviewer) {
-      // The expansion holds the deep layer only: AI read, then two collapsed drawers
-      // (community takes, score dimensions) and source links. Votes and reactions
-      // stay on the surface; the drawers keep the panel scannable at a glance.
       return `
         <div class="reviewer-detail">
-          <p class="detail-summary"><b>AI read:</b> ${escapeHtml(reviewer.summary)}</p>
+          ${reviewer.summary ? `<p class="detail-summary">${escapeHtml(reviewer.summary)}</p>` : ''}
           ${renderScorecardCommentsHtml(reviewer)}
-          <details class="rate-evidence detail-dimensions"${reviewer.dimsOpen ? ' open' : ''} data-detail-fold="dims" data-fold-reviewer="${escapeHtml(reviewer.id)}">
-            <summary>${reviewer.dimensions.length ? `${reviewer.dimensions.length} scoring dimensions` : 'Scoring dimensions'} &middot; why ${reviewer.score}/100</summary>
-            <div class="dimension-grid">
-              ${reviewer.dimensions.map(metric => `
-                <div class="metric">
-                  <div class="metric-head"><span>${escapeHtml(metric.name)}</span><strong>${metric.value}</strong></div>
-                  <div class="metric-track"><i class="metric-fill ${metricTone(metric.value)}" style="width:${metric.value}%"></i></div>
-                  <div class="criterion">${escapeHtml(metric.criterion)}</div>
-                  ${metric.quote ? `<div class="criterion"><b>Quote</b> ${escapeHtml(metric.quote)}</div>` : ''}
-                  ${metric.verdict ? `<div class="criterion"><b>Verdict</b> ${escapeHtml(metric.verdict)}</div>` : ''}
-                </div>`).join('') || '<div class="empty-panel">No reviewer metrics are available for this scorecard yet.</div>'}
-            </div>
-            <div class="score-guide" aria-label="Score guide">
-              <span class="guide-item"><i class="guide-swatch"></i>0-39 Weak</span>
-              <span class="guide-item"><i class="guide-swatch"></i>40-69 Mixed</span>
-              <span class="guide-item"><i class="guide-swatch"></i>70-84 Solid</span>
-              <span class="guide-item"><i class="guide-swatch"></i>85-100 Strong</span>
-            </div>
-          </details>
           <div class="source-actions">
-            <a class="detail-cta" href="${openReviewUrl(reviewer.reviewId)}" target="_blank" rel="noopener noreferrer">Read the full review on OpenReview -></a>
-            <a class="source-link" href="${reportScoreUrl(reviewer.id)}">Report this score</a>
+            <a class="detail-cta" href="${openReviewUrl(reviewer.reviewId)}" target="_blank" rel="noopener noreferrer">Read the full review on OpenReview &rarr;</a>
+            <a class="source-link" href="${reportScoreUrl(reviewer.id)}">Report this thread</a>
           </div>
         </div>`;
     }
-
     function renderReviewerCards() {
-      reviewerGrid.innerHTML = [...reviewers].sort((a, b) => b.score - a.score).map(reviewer => {
+      reviewerGrid.innerHTML = [...reviewers].sort((a, b) => Number(publicDimensionScore(b, 'outrage') ?? 0) - Number(publicDimensionScore(a, 'outrage') ?? 0)).map(reviewer => {
         const active = state.selectedReviewer === reviewer.id;
         const excerpts = splitComments.filter(comment => comment.id === reviewer.id);
+        const counts = reviewerSocialCounts(reviewer);
+        const voteCount = counts.up + counts.down;
         const reviewText = excerpts.length
           ? excerpts.map(comment => `
               <p class="reviewer-excerpt">
-                <span class="reviewer-excerpt-label">Review ${escapeHtml(comment.chunk)}</span>
+                <span class="reviewer-excerpt-label">Public review excerpt</span>
                 ${escapeHtml(comment.view)}
               </p>`).join('')
-          : '<p class="reviewer-excerpt">No public review text is available for this reviewer yet.</p>';
+          : '<p class="reviewer-excerpt">No public review text is available for this thread yet.</p>';
         return `
           <article class="reviewer-entry${active ? ' is-open' : ''}">
-            <button class="reviewer-card${active ? ' is-active' : ''}" type="button" data-reviewer="${reviewer.id}" aria-expanded="${active}" aria-label="${escapeHtml(reviewer.name)}: open community takes and the score breakdown">
+            <button class="reviewer-card${active ? ' is-active' : ''}" type="button" data-reviewer="${reviewer.id}" aria-expanded="${active}" aria-label="${escapeHtml(reviewer.name)}: open discussion thread">
               <span class="mini-avatar" aria-hidden="true">${avatarSvg[reviewer.avatar || reviewer.id] || avatarSvg.R1}</span>
               <span class="reviewer-card-copy">
                 <span class="reviewer-name">${escapeHtml(reviewer.name)}</span>
-                <span class="reviewer-score-line"><strong title="AI-scored review usefulness, 0-100">${reviewer.score}</strong><span class="score-denom">/100</span><span class="tone-label">AI usefulness &middot; ${escapeHtml(reviewer.label)}</span></span>
+                <span class="reviewer-score-line"><span class="tone-label">OUTRAGE THREAD &middot; ${voteCount} vote${voteCount === 1 ? '' : 's'} &middot; ${Number(reviewer.commentCount || 0)} comment${Number(reviewer.commentCount || 0) === 1 ? '' : 's'}</span></span>
               </span>
               <span class="chevron" aria-hidden="true">v</span>
             </button>
@@ -6405,8 +6362,16 @@
 
       const tabButton = event.target.closest('[data-board-tab]');
       if (tabButton) {
-        homeBoardKind = BOARD_ORDER.includes(tabButton.dataset.boardTab) ? tabButton.dataset.boardTab : 'overall';
+        homeBoardKind = BOARD_ORDER.includes(tabButton.dataset.boardTab) ? tabButton.dataset.boardTab : 'latest';
         setBoardDeepLink(homeBoardKind);
+        renderCommunityBoard();
+        return;
+      }
+
+      const hotThreadsButton = event.target.closest('[data-hot-threads]');
+      if (hotThreadsButton) {
+        homeBoardKind = 'hot';
+        setBoardDeepLink('hot');
         renderCommunityBoard();
         return;
       }
@@ -6441,9 +6406,8 @@
         event.stopPropagation();
         const row = currentBoardRow(boardVoteButton.dataset.boardRow);
         if (row) {
-          const board = homeBoards[homeBoardKind] || homeBoards.overall;
-          const agreeVote = board.tone === 'praise' ? 'up' : 'down';
-          const vote = boardVoteButton.dataset.boardVote === 'agree' ? agreeVote : (agreeVote === 'up' ? 'down' : 'up');
+          const board = homeBoards[homeBoardKind] || homeBoards.latest;
+          const vote = boardVoteButton.dataset.boardVote === 'outrageous' ? 'up' : 'down';
           rateContext.row = row;
           rateContext.paperId = row.paperId || '';
           rateContext.reviewerKey = row.reviewerKey || '';
@@ -6482,7 +6446,7 @@
         setBusy(true, source);
         loadScorecardFromApi(item.paper_id, source, item).catch(error => {
           console.warn('Paper result load failed.', error);
-          showToast('Could not load this paper scorecard');
+          showToast("Could not load this paper's review threads");
         }).finally(() => setBusy(false, source));
         return;
       }
@@ -6579,7 +6543,7 @@
     boardTabs.addEventListener('keydown', event => {
       if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
       event.preventDefault();
-      const currentIndex = BOARD_ORDER.indexOf(homeBoardKind);
+      const currentIndex = Math.max(0, BOARD_ORDER.indexOf(homeBoardKind));
       const delta = event.key === 'ArrowRight' ? 1 : -1;
       const next = BOARD_ORDER[(currentIndex + delta + BOARD_ORDER.length) % BOARD_ORDER.length];
       homeBoardKind = next;
@@ -6681,9 +6645,9 @@
     window.addEventListener('popstate', () => {
       const urlState = new URLSearchParams(location.search);
       const paperId = urlState.get('paper') || urlState.get('id') || '';
-      const boardKey = urlState.get('b') || 'overall';
+      const boardKey = urlState.get('view') === 'hot' ? 'hot' : (urlState.get('board') || urlState.get('b') || 'latest');
       if (!paperId) {
-        homeBoardKind = BOARD_ORDER.includes(boardKey) ? boardKey : 'overall';
+        homeBoardKind = boardKey === 'hot' || BOARD_ORDER.includes(boardKey) ? boardKey : 'latest';
         body.classList.remove('is-resolved');
         body.classList.add('is-idle');
         syncStickyBar();
@@ -6691,7 +6655,7 @@
         return;
       }
       if (paperId !== state.paperId || !body.classList.contains('is-resolved')) {
-        loadScorecardFromApi(paperId, 'history').catch(() => showToast('Could not restore this scorecard'));
+        loadScorecardFromApi(paperId, 'history').catch(() => showToast('Could not restore these review threads'));
       }
     });
 

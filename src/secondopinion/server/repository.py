@@ -487,6 +487,34 @@ def vote_counts_by_reviewer(session: Session, paper_id: str) -> dict[str, dict[s
     return counts
 
 
+
+
+def viewer_votes_by_reviewer(session: Session, paper_id: str, session_id: str) -> dict[str, str]:
+    """Return the current browser/session vote for each reviewer on a paper."""
+    if not session_id:
+        return {}
+    rows = session.execute(
+        select(Vote.reviewer_key, Vote.vote).where(
+            Vote.paper_id == paper_id,
+            Vote.session_id == session_id,
+        )
+    ).all()
+    return {str(reviewer_key): str(vote) for reviewer_key, vote in rows if vote in {"up", "down"}}
+
+
+def reviewer_has_vote(session: Session, *, paper_id: str, reviewer_key: str, session_id: str) -> bool:
+    if not session_id:
+        return False
+    vote_id = session.execute(
+        select(Vote.id).where(
+            Vote.paper_id == paper_id,
+            Vote.reviewer_key == reviewer_key,
+            Vote.session_id == session_id,
+        )
+    ).scalar_one_or_none()
+    return vote_id is not None
+
+
 def apply_vote_counts(session: Session, paper_id: str, public_json: dict[str, Any]) -> dict[str, Any]:
     scorecard = copy.deepcopy(public_json)
     counts = vote_counts_by_reviewer(session, paper_id)
@@ -1287,6 +1315,10 @@ _REVIEWER_RECUSAL_PHRASES = (
     "cannot provide a meaningful review",
     "outside my expertise",
     "out of my expertise",
+    "not be able to perform my reviews",
+    "will not be able to perform my reviews",
+    "unable to perform my reviews",
+    "kill a granny",
 )
 
 def _leaderboard_display_eligible(item: dict[str, Any], *, metric: str = "") -> bool:
@@ -1322,6 +1354,284 @@ def _vote_counts_for_leaderboard(
         if vote in {"up", "down"}:
             counts[(str(paper_id), str(reviewer_key))][str(vote)] = int(count)
     return counts
+
+
+def _public_vote_name(vote: str | None) -> str | None:
+    if vote == "up":
+        return "outrageous"
+    if vote == "down":
+        return "not_really"
+    return None
+
+
+def _wilson_lower_bound(positive: int, total: int, z: float = 1.96) -> float:
+    if total <= 0:
+        return 0.0
+    proportion = positive / total
+    denominator = 1 + (z * z / total)
+    centre = proportion + (z * z / (2 * total))
+    margin = z * math.sqrt((proportion * (1 - proportion) + z * z / (4 * total)) / total)
+    return (centre - margin) / denominator
+
+
+def _outrage_candidate_items(
+    session: Session,
+    *,
+    conference_id: str | None = None,
+    year: int | None = None,
+    paper_ids: set[str] | None = None,
+) -> list[dict[str, Any]]:
+    """Build one current, public row per paper/reviewer for the outrage surfaces."""
+    stmt = select(
+        ReviewerScore.id,
+        ReviewerScore.paper_id,
+        ReviewerScore.reviewer_key,
+        ReviewerScore.score,
+        ReviewerScore.dimensions_json,
+        ReviewerScore.created_at,
+        Paper.title,
+        Paper.venue,
+        Paper.year,
+    ).join(Paper, Paper.paper_id == ReviewerScore.paper_id)
+    if conference_id:
+        stmt = stmt.where(ReviewerScore.conference_id == conference_id)
+    if year is not None:
+        stmt = stmt.where(ReviewerScore.year == year)
+    if paper_ids is not None:
+        clean_paper_ids = {str(value) for value in paper_ids if value}
+        if not clean_paper_ids:
+            return []
+        stmt = stmt.where(ReviewerScore.paper_id.in_(clean_paper_ids))
+    rows = session.execute(
+        stmt.order_by(ReviewerScore.created_at.desc(), ReviewerScore.id.desc())
+    ).all()
+    vote_counts = _vote_counts_for_leaderboard(session, conference_id=conference_id, year=year)
+    review_stmt = select(Review.paper_id, Review.reviewer_index).join(Paper, Paper.paper_id == Review.paper_id).where(
+        Review.review_stage == "initial"
+    )
+    if conference_id:
+        review_stmt = review_stmt.where(Paper.venue == conference_id)
+    if year is not None:
+        review_stmt = review_stmt.where(Paper.year == year)
+    if paper_ids is not None:
+        review_stmt = review_stmt.where(Review.paper_id.in_(clean_paper_ids))
+    official_review_keys = {
+        (str(paper_id), f"R{int(reviewer_index)}")
+        for paper_id, reviewer_index in session.execute(review_stmt).all()
+    }
+    seen: set[tuple[str, str]] = set()
+    items: list[dict[str, Any]] = []
+    for row_id, paper_id, reviewer_key, score_value, dimensions_json, created_at, title, venue, paper_year in rows:
+        key = (str(paper_id), str(reviewer_key))
+        if key not in official_review_keys:
+            continue
+        if key in seen:
+            continue
+        seen.add(key)
+        metrics = _reviewer_score_metrics_from_values(score_value, dimensions_json)
+        counts = vote_counts[key]
+        total = int(counts["up"]) + int(counts["down"])
+        item = {
+            "paper_id": str(paper_id),
+            "paper_title": str(title or "Untitled paper"),
+            "venue": str(venue or ""),
+            "year": int(paper_year or 0),
+            "reviewer_key": str(reviewer_key),
+            "quote": str(metrics.get("quote") or ""),
+            "verdict": str(metrics.get("verdict") or ""),
+            "surfaced_at": created_at.isoformat() if created_at else None,
+            "votes": {
+                "outrageous": int(counts["up"]),
+                "not_really": int(counts["down"]),
+                "total": total,
+            },
+            # Legacy aliases remain for one compatibility release. New clients use votes.
+            "up": int(counts["up"]),
+            "down": int(counts["down"]),
+            "comment_count": 0,
+            "latest_comments": [],
+            "reactions": {},
+            "viewer_vote": None,
+            "_created_at": created_at or dt.datetime.min.replace(tzinfo=dt.timezone.utc),
+            "_outrage_seed": int(metrics.get("outrage") or 0),
+            "_row_id": int(row_id or 0),
+        }
+        if item["_outrage_seed"] < 55:
+            continue
+        if not _leaderboard_display_eligible(item, metric="outrage"):
+            continue
+        items.append(item)
+    return items
+
+
+def _public_outrage_item(item: dict[str, Any], *, cold_start: bool = False) -> dict[str, Any]:
+    public = {key: value for key, value in item.items() if not key.startswith("_")}
+    if cold_start:
+        public["is_cold_start"] = True
+    return public
+
+
+def build_outrage_latest(
+    session: Session,
+    *,
+    conference_id: str | None = None,
+    year: int | None = None,
+    limit: int = 12,
+    _items: list[dict[str, Any]] | None = None,
+) -> list[dict[str, Any]]:
+    items = list(_items if _items is not None else _outrage_candidate_items(
+        session, conference_id=conference_id, year=year
+    ))
+    items.sort(key=lambda item: (item["_created_at"], item["paper_id"], item["reviewer_key"]), reverse=True)
+    return [_public_outrage_item(item) for item in items[: max(1, min(50, limit))]]
+
+
+def build_outrage_all_time(
+    session: Session,
+    *,
+    conference_id: str | None = None,
+    year: int | None = None,
+    limit: int = 12,
+    _items: list[dict[str, Any]] | None = None,
+) -> list[dict[str, Any]]:
+    capped_limit = max(1, min(50, limit))
+    items = list(_items if _items is not None else _outrage_candidate_items(
+        session, conference_id=conference_id, year=year
+    ))
+    ranked: list[tuple[float, int, dt.datetime, dict[str, Any]]] = []
+    cold: list[dict[str, Any]] = []
+    for item in items:
+        votes = item["votes"]
+        total = int(votes["total"])
+        if total >= 5:
+            ranked.append((
+                _wilson_lower_bound(int(votes["outrageous"]), total),
+                total,
+                item["_created_at"],
+                item,
+            ))
+        else:
+            cold.append(item)
+    ranked.sort(key=lambda entry: (entry[0], entry[1], entry[2]), reverse=True)
+    result = [_public_outrage_item(entry[3]) for entry in ranked[:capped_limit]]
+    if len(result) < capped_limit:
+        cold.sort(key=lambda item: (item["_outrage_seed"], item["_created_at"]), reverse=True)
+        result.extend(
+            _public_outrage_item(item, cold_start=True)
+            for item in cold[: capped_limit - len(result)]
+        )
+    return result
+
+
+def _recent_hot_activity(
+    session: Session,
+    *,
+    conference_id: str | None,
+    year: int | None,
+) -> dict[tuple[str, str], dict[str, Any]]:
+    cutoff = utcnow() - dt.timedelta(hours=48)
+    activity: dict[tuple[str, str], dict[str, Any]] = defaultdict(
+        lambda: {"commenters": set(), "comments": 0, "votes": 0, "reactions": 0}
+    )
+
+    comment_stmt = select(
+        ReviewerComment.paper_id,
+        ReviewerComment.reviewer_key,
+        ReviewerComment.session_id,
+    ).join(Paper, Paper.paper_id == ReviewerComment.paper_id).where(ReviewerComment.created_at >= cutoff)
+    vote_stmt = select(Vote.paper_id, Vote.reviewer_key, func.count(Vote.id)).join(
+        Paper, Paper.paper_id == Vote.paper_id
+    ).where(Vote.updated_at >= cutoff)
+    reaction_stmt = select(
+        ReviewerReaction.paper_id,
+        ReviewerReaction.reviewer_key,
+        func.count(ReviewerReaction.id),
+    ).join(Paper, Paper.paper_id == ReviewerReaction.paper_id).where(ReviewerReaction.updated_at >= cutoff)
+    if conference_id:
+        comment_stmt = comment_stmt.where(Paper.venue == conference_id)
+        vote_stmt = vote_stmt.where(Paper.venue == conference_id)
+        reaction_stmt = reaction_stmt.where(Paper.venue == conference_id)
+    if year is not None:
+        comment_stmt = comment_stmt.where(Paper.year == year)
+        vote_stmt = vote_stmt.where(Paper.year == year)
+        reaction_stmt = reaction_stmt.where(Paper.year == year)
+
+    for paper_id, reviewer_key, session_id in session.execute(comment_stmt).all():
+        bucket = activity[(str(paper_id), str(reviewer_key))]
+        bucket["comments"] += 1
+        bucket["commenters"].add(f"session:{session_id}")
+    for paper_id, reviewer_key, count in session.execute(
+        vote_stmt.group_by(Vote.paper_id, Vote.reviewer_key)
+    ).all():
+        activity[(str(paper_id), str(reviewer_key))]["votes"] = int(count)
+    for paper_id, reviewer_key, count in session.execute(
+        reaction_stmt.group_by(ReviewerReaction.paper_id, ReviewerReaction.reviewer_key)
+    ).all():
+        activity[(str(paper_id), str(reviewer_key))]["reactions"] = int(count)
+    return activity
+
+
+def build_hot_threads(
+    session: Session,
+    *,
+    conference_id: str | None = None,
+    year: int | None = None,
+    limit: int = 12,
+    _items: list[dict[str, Any]] | None = None,
+) -> list[dict[str, Any]]:
+    activity = _recent_hot_activity(session, conference_id=conference_id, year=year)
+    if _items is None:
+        if not activity:
+            return []
+        items = _outrage_candidate_items(
+            session,
+            conference_id=conference_id,
+            year=year,
+            paper_ids={paper_id for paper_id, _ in activity},
+        )
+    else:
+        items = list(_items)
+    hot: list[tuple[float, dict[str, Any]]] = []
+    for item in items:
+        bucket = activity.get((item["paper_id"], item["reviewer_key"]))
+        if not bucket:
+            continue
+        commenters = len(bucket["commenters"])
+        comments = int(bucket["comments"])
+        if commenters < 2 and comments < 3:
+            continue
+        votes = item["votes"]
+        total = int(votes["total"])
+        controversy = min(10, total) * (
+            1 - abs(int(votes["outrageous"]) - int(votes["not_really"])) / max(1, total)
+        )
+        score = 4 * commenters + 2 * comments + int(bucket["votes"]) + int(bucket["reactions"]) + controversy
+        item = dict(item)
+        item["recent_comment_count"] = comments
+        item["_hot_score"] = score
+        hot.append((score, item))
+    hot.sort(key=lambda entry: (entry[0], entry[1]["_created_at"]), reverse=True)
+    return [_public_outrage_item(item) for _, item in hot[: max(1, min(50, limit))]]
+
+def build_outrage_leaderboards(
+    session: Session,
+    *,
+    conference_id: str | None = None,
+    year: int | None = None,
+    limit: int = 12,
+) -> dict[str, list[dict[str, Any]]]:
+    items = _outrage_candidate_items(session, conference_id=conference_id, year=year)
+    return {
+        "outrage_latest": build_outrage_latest(
+            session, conference_id=conference_id, year=year, limit=limit, _items=items
+        ),
+        "outrage_all": build_outrage_all_time(
+            session, conference_id=conference_id, year=year, limit=limit, _items=items
+        ),
+        "outrage_hot": build_hot_threads(
+            session, conference_id=conference_id, year=year, limit=limit, _items=items
+        ),
+    }
 
 
 def home_stats(

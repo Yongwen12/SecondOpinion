@@ -161,9 +161,15 @@ def test_api_search_scorecard_vote_and_job_flow(tmp_path):
     assert scorecard.json()["paper"]["openreview_forum_id"] == "paper1"
     assert scorecard.json()["reviewers"][0]["review_id"] == "review1"
 
-    vote = client.post("/api/papers/paper1/reviewers/R1/votes", json={"vote": "up"})
+    vote = client.post("/api/papers/paper1/reviewers/R1/votes", json={"vote": "outrageous"})
     assert vote.status_code == 200
     assert vote.json()["scorecard"]["reviewers"][0]["social"]["up"] == 1
+    assert vote.json()["selected"] == "outrageous"
+    assert vote.json()["votes"] == {"outrageous": 1, "not_really": 0, "total": 1}
+    refreshed_home = client.get("/api/home", params={"conference": "ICLR", "year": 2025})
+    outrage_row = refreshed_home.json()["leaderboards"]["outrage_latest"][0]
+    assert outrage_row["votes"] == {"outrageous": 1, "not_really": 0, "total": 1}
+    assert outrage_row["viewer_vote"] == "outrageous"
 
     missing = client.get("/api/papers/paper2/scorecard")
     assert missing.status_code == 404
@@ -194,6 +200,18 @@ def test_reviewer_comment_flow(tmp_path):
     empty = client.get("/api/papers/paper1/reviewers/R1/comments")
     assert empty.status_code == 200
     assert empty.json()["items"] == []
+
+    blocked = client.post(
+        "/api/papers/paper1/reviewers/R1/comments",
+        json={"body": "I should have to vote before this is accepted."},
+    )
+    assert blocked.status_code == 409
+    assert blocked.json()["detail"]["code"] == "vote_required"
+
+    vote = client.post("/api/papers/paper1/reviewers/R1/votes", json={"vote": "outrageous"})
+    assert vote.status_code == 200
+    assert vote.json()["selected"] == "outrageous"
+    assert vote.json()["votes"] == {"outrageous": 1, "not_really": 0, "total": 1}
 
     created = client.post(
         "/api/papers/paper1/reviewers/R1/comments",
@@ -263,8 +281,13 @@ def test_static_home_embeds_live_comment_previews(tmp_path):
     cold_row = cold.json()["leaderboards"]["overall"][0]
     assert cold_row["comment_count"] == 0
     assert cold_row["latest_comments"] == []
+    assert cold.json()["leaderboards"]["outrage_latest"][0]["votes"]["total"] == 0
+    assert client.post(
+        "/api/papers/paper1/reviewers/R1/votes",
+        json={"vote": "outrageous"},
+    ).status_code == 200
 
-    for body in ["First community take.", "A newer, sharper take."]:
+    for body in ["First community take.", "A newer, sharper take.", "This thread is now hot."]:
         client.post("/api/papers/paper1/reviewers/R1/comments", json={"body": body})
 
     # The default 2025 home still serves the snapshot, but rows are now overlaid with
@@ -272,11 +295,15 @@ def test_static_home_embeds_live_comment_previews(tmp_path):
     warm = client.get("/api/home", params={"year": 2025})
     assert warm.json()["source"] == "static_home_2025"
     warm_row = warm.json()["leaderboards"]["overall"][0]
-    assert warm_row["comment_count"] == 2
+    assert warm_row["comment_count"] == 3
     assert [item["body"] for item in warm_row["latest_comments"]] == [
+        "This thread is now hot.",
         "A newer, sharper take.",
-        "First community take.",
     ]
+    hot_row = warm.json()["leaderboards"]["outrage_hot"][0]
+    assert hot_row["paper_id"] == "paper1"
+    assert hot_row["reviewer_key"] == "R1"
+    assert hot_row["recent_comment_count"] == 3
 
 
 def test_reviewer_reaction_flow(tmp_path):
@@ -415,6 +442,11 @@ def test_authenticated_comment_edit_delete_permissions(tmp_path):
     other = register_user(client, "other1", "other1@example.com")
     owner_headers = auth_headers(owner["token"], "session-owner1")
     other_headers = auth_headers(other["token"], "session-other1")
+    assert client.post(
+        "/api/papers/paper1/reviewers/R1/votes",
+        headers=owner_headers,
+        json={"vote": "outrageous"},
+    ).status_code == 200
 
     created = client.post(
         "/api/papers/paper1/reviewers/R1/comments",
@@ -465,6 +497,11 @@ def test_anonymous_comment_edit_is_bound_to_stable_session_header(tmp_path):
 
     owner_headers = {"X-SecondOpinion-Session": "anon-browser-1"}
     other_headers = {"X-SecondOpinion-Session": "anon-browser-2"}
+    assert client.post(
+        "/api/papers/paper1/reviewers/R1/votes",
+        headers=owner_headers,
+        json={"vote": "not_really"},
+    ).status_code == 200
     created = client.post(
         "/api/papers/paper1/reviewers/R1/comments",
         headers=owner_headers,
@@ -505,6 +542,11 @@ def test_account_can_be_deleted_and_auth_is_rate_limited(tmp_path):
     registered = register_user(client, "deleteme", "delete@example.com")
     headers = auth_headers(registered["token"], "session-deleteme")
     assert client.post("/api/me/saved-papers/paper1", headers=headers).status_code == 200
+    assert client.post(
+        "/api/papers/paper1/reviewers/R1/votes",
+        headers=headers,
+        json={"vote": "outrageous"},
+    ).status_code == 200
     assert client.post(
         "/api/papers/paper1/reviewers/R1/comments",
         headers=headers,

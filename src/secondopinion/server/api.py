@@ -20,6 +20,8 @@ from .database import init_db, make_engine, make_session_factory
 from .models import Paper, ReviewerComment, ReviewerReaction, ScoringJob, UserAccount, Vote, utcnow
 from .repository import (
     add_reviewer_comment,
+    build_outrage_leaderboards,
+    build_hot_threads,
     apply_reviewer_comments,
     apply_reviewer_reactions,
     apply_vote_counts,
@@ -39,6 +41,7 @@ from .repository import (
     list_venue_subscriptions,
     paper_to_public_dict,
     remove_saved_paper,
+    reviewer_has_vote,
     revoke_user_session,
     save_paper_for_user,
     search_papers,
@@ -46,6 +49,8 @@ from .repository import (
     unsubscribe_user_from_venue,
     update_reviewer_comment,
     delete_reviewer_comment,
+    viewer_votes_by_reviewer,
+    vote_counts_by_reviewer,
     delete_user_account,
     reaction_counts_by_reviewer,
     upsert_reaction,
@@ -211,14 +216,26 @@ def create_app(
             home_snapshot_path=settings.home_snapshot_path,
         )
         if static_payload is not None:
-            # The pre-rendered snapshot is comment- and reaction-cold; overlay live
-            # community signals from the DB so the board's first paint carries takes
-            # and reactions without a per-row round trip.
-            return enrich_home_community_signals(session, static_payload, viewer_session_id=viewer_session_id)
+            static_payload = ensure_outrage_boards(static_payload)
+            static_payload["leaderboards"]["outrage_hot"] = build_hot_threads(
+                session,
+                conference_id=conference,
+                year=year,
+                limit=min(50, max(1, limit)),
+            )
+            return enrich_home_community_signals(
+                session,
+                static_payload,
+                viewer_session_id=viewer_session_id,
+            )
         stats = home_stats(session, conference_id=conference, year=year)
+        boards = build_leaderboards(session, conference_id=conference, year=year, limit=min(50, max(1, limit)))
+        boards.update(
+            build_outrage_leaderboards(session, conference_id=conference, year=year, limit=min(50, max(1, limit)))
+        )
         payload = {
             "latest_papers": latest_scored_papers(session, conference_id=conference, year=year, limit=limit),
-            "leaderboards": build_leaderboards(session, conference_id=conference, year=year, limit=min(50, max(1, limit))),
+            "leaderboards": boards,
             "stats": stats,
             "audited_count": stats["audited_count"],
             "paper_count": stats["paper_count"],
@@ -339,16 +356,39 @@ def create_app(
             raise HTTPException(status_code=404, detail={"code": "paper_not_found"})
         body = await parse_json_body(request)
         session_id = session_id_from_request(request)
-        selected = str(body.get("vote") or "none")
-        if selected in {"up", "down"}:
+        requested_vote = str(body.get("vote") or "none")
+        storage_votes = {
+            "outrageous": "up",
+            "not_really": "down",
+            "up": "up",
+            "down": "down",
+            "none": "none",
+        }
+        if requested_vote not in storage_votes:
+            raise HTTPException(status_code=422, detail={"code": "unsupported_vote"})
+        stored_vote = storage_votes[requested_vote]
+        if stored_vote in {"up", "down"}:
             enforce_vote_rate_limit(session, session_id)
         result = upsert_vote(
             session,
             paper_id=paper_id,
             reviewer_key=reviewer_key,
             session_id=session_id,
-            vote=selected,
+            vote=stored_vote,
         )
+        counts = vote_counts_by_reviewer(session, paper_id).get(reviewer_key) or {"up": 0, "down": 0}
+        outrageous = int(counts.get("up") or 0)
+        not_really = int(counts.get("down") or 0)
+        result["selected"] = (
+            "outrageous" if stored_vote == "up" else "not_really" if stored_vote == "down" else None
+        )
+        result["votes"] = {
+            "outrageous": outrageous,
+            "not_really": not_really,
+            "total": outrageous + not_really,
+        }
+        result["up"] = outrageous
+        result["down"] = not_really
         scorecard = latest_scorecard(session, paper_id)
         user = current_user_from_request(session, request)
         result["scorecard"] = (
@@ -447,6 +487,9 @@ def create_app(
         body = await parse_json_body(request)
         session_id = session_id_from_request(request)
         user = current_user_from_request(session, request)
+        if not reviewer_has_vote(session, paper_id=paper_id, reviewer_key=reviewer_key, session_id=session_id):
+            raise HTTPException(status_code=409, detail={"code": "vote_required"})
+
         enforce_comment_rate_limit(session, session_id)
         try:
             comment = add_reviewer_comment(
@@ -557,13 +600,47 @@ def create_app(
     return app
 
 
+def ensure_outrage_boards(payload: dict[str, Any]) -> dict[str, Any]:
+    """Give older static snapshots the two-board outrage contract."""
+    boards = payload.get("leaderboards")
+    if not isinstance(boards, dict):
+        boards = {}
+        payload["leaderboards"] = boards
+    legacy_rows = boards.get("overall") if isinstance(boards.get("overall"), list) else []
+
+    def compatible_rows(rows: list[Any], *, cold_start: bool = False) -> list[dict[str, Any]]:
+        result: list[dict[str, Any]] = []
+        for raw in rows:
+            if not isinstance(raw, dict):
+                continue
+            row = dict(raw)
+            outrageous = int(row.get("up") or 0)
+            not_really = int(row.get("down") or 0)
+            row.setdefault("surfaced_at", None)
+            row["votes"] = {
+                "outrageous": outrageous,
+                "not_really": not_really,
+                "total": outrageous + not_really,
+            }
+            row.setdefault("viewer_vote", None)
+            if cold_start and outrageous + not_really < 5:
+                row["is_cold_start"] = True
+            result.append(row)
+        return result
+
+    boards.setdefault("outrage_latest", compatible_rows(legacy_rows))
+    boards.setdefault("outrage_all", compatible_rows(legacy_rows, cold_start=True))
+    boards.setdefault("outrage_hot", [])
+    return payload
+
+
 def enrich_home_community_signals(
     session: Session,
     payload: dict[str, Any],
     *,
     viewer_session_id: str = "",
 ) -> dict[str, Any]:
-    """Overlay live community signals (comments + reactions) onto leaderboard rows.
+    """Overlay authoritative votes, comments, and reactions onto leaderboard rows.
 
     Comments and reactions are DB-only, runtime features, so the pre-rendered home
     snapshot never carries them. For every shown row we set ``latest_comments`` (up to
@@ -576,6 +653,8 @@ def enrich_home_community_signals(
         return payload
     previews_by_paper: dict[str, dict[str, dict[str, Any]]] = {}
     reactions_by_paper: dict[str, dict[str, dict[str, Any]]] = {}
+    votes_by_paper: dict[str, dict[str, dict[str, int]]] = {}
+    viewer_votes_by_paper: dict[str, dict[str, str]] = {}
     try:
         for rows in boards.values():
             if not isinstance(rows, list):
@@ -587,6 +666,23 @@ def enrich_home_community_signals(
                 reviewer_key = str(row.get("reviewer_key") or "")
                 if not paper_id or not reviewer_key:
                     continue
+                if paper_id not in votes_by_paper:
+                    votes_by_paper[paper_id] = vote_counts_by_reviewer(session, paper_id)
+                    viewer_votes_by_paper[paper_id] = viewer_votes_by_reviewer(
+                        session, paper_id, viewer_session_id
+                    )
+                vote_bucket = votes_by_paper[paper_id].get(reviewer_key) or {"up": 0, "down": 0}
+                outrageous = int(vote_bucket.get("up") or 0)
+                not_really = int(vote_bucket.get("down") or 0)
+                row["up"] = outrageous
+                row["down"] = not_really
+                row["votes"] = {
+                    "outrageous": outrageous,
+                    "not_really": not_really,
+                    "total": outrageous + not_really,
+                }
+                stored_vote = viewer_votes_by_paper[paper_id].get(reviewer_key)
+                row["viewer_vote"] = "outrageous" if stored_vote == "up" else "not_really" if stored_vote == "down" else None
                 if paper_id not in previews_by_paper:
                     previews_by_paper[paper_id] = comment_previews_by_reviewer(session, paper_id)
                 bucket = previews_by_paper[paper_id].get(reviewer_key) or {}
@@ -599,6 +695,32 @@ def enrich_home_community_signals(
                 reaction_bucket = reactions_by_paper[paper_id].get(reviewer_key) or {}
                 row["reactions"] = dict(reaction_bucket.get("counts") or {})
                 row["viewer_reaction"] = reaction_bucket.get("viewer")
+        all_time_rows = boards.get("outrage_all")
+        if isinstance(all_time_rows, list):
+            indexed_rows = list(enumerate(all_time_rows))
+
+            def all_time_rank(entry: tuple[int, Any]) -> tuple[float, float, int, int]:
+                position, row = entry
+                votes = row.get("votes") if isinstance(row, dict) else {}
+                outrageous = int((votes or {}).get("outrageous") or 0)
+                total = int((votes or {}).get("total") or 0)
+                if isinstance(row, dict):
+                    if total < 5:
+                        row["is_cold_start"] = True
+                    else:
+                        row.pop("is_cold_start", None)
+                if total < 5:
+                    return (0.0, 0.0, 0, -position)
+                proportion = outrageous / total
+                z = 1.96
+                denominator = 1 + z * z / total
+                centre = proportion + z * z / (2 * total)
+                margin = z * ((proportion * (1 - proportion) + z * z / (4 * total)) / total) ** 0.5
+                wilson = (centre - margin) / denominator
+                return (1.0, wilson, total, -position)
+
+            indexed_rows.sort(key=all_time_rank, reverse=True)
+            boards["outrage_all"] = [row for _, row in indexed_rows]
     except Exception:  # pragma: no cover - never let enrichment break the home feed
         logger.warning("Home community-signal enrichment failed; serving payload without overlays.", exc_info=True)
     return payload
