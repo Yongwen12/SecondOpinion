@@ -65,6 +65,18 @@ def test_frontend_has_community_home_entrypoint():
     assert '<span>AI TAKE</span>' in html
     assert "outrage-ai-take" in html
 
+def test_curated_home_is_not_replaced_by_a_stale_api_snapshot():
+    html = Path("frontend/index.html").read_text(encoding="utf-8")
+
+    assert "let curatedStaticLoaded = false" in html
+    assert "curatedStaticLoaded = true" in html
+    assert "function mergeCommunitySignals(curatedBoards, liveBoards)" in html
+    assert "homeBoards = mergeCommunitySignals(homeBoards, liveBoards)" in html
+    assert "homeBoards = normalizeHomeBoards(payload)" not in html
+    assert "const signalFields = [" in html
+    assert "'commentCount', 'latestComments', 'reactions', 'viewerReaction'" in html
+
+
 def test_frontend_keeps_the_public_review_scope_concise():
     html = Path("frontend/index.html").read_text(encoding="utf-8")
 

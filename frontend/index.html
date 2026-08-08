@@ -4613,6 +4613,39 @@
       return boards;
     }
 
+    function boardRowIdentity(row = {}) {
+      return `${String(row.paperId || '')}::${String(row.reviewerKey || '')}`;
+    }
+
+    function mergeCommunitySignals(curatedBoards, liveBoards) {
+      const signalsByRow = new Map();
+      const signalFields = [
+        'up', 'down', 'agreeCount', 'disagreeCount', 'humanCount', 'viewerVote',
+        'commentCount', 'latestComments', 'reactions', 'viewerReaction', 'recentCommentCount'
+      ];
+      for (const key of [...BOARD_ORDER, 'hot']) {
+        for (const row of liveBoards?.[key]?.rows || []) {
+          const identity = boardRowIdentity(row);
+          if (identity !== '::') signalsByRow.set(identity, row);
+        }
+      }
+      const merged = {};
+      for (const key of [...BOARD_ORDER, 'hot']) {
+        const board = curatedBoards[key] || cloneHomeBoards(DEMO_HOME_BOARDS)[key];
+        const rows = (board.rows || []).map(row => {
+          const live = signalsByRow.get(boardRowIdentity(row));
+          if (!live) return row;
+          const signals = {};
+          for (const field of signalFields) {
+            if (live[field] !== undefined) signals[field] = live[field];
+          }
+          return { ...row, ...signals };
+        });
+        merged[key] = { ...board, rows };
+      }
+      return merged;
+    }
+
     function setBoardDeepLink(key) {
       const url = new URL(window.location.href);
       url.searchParams.delete('b');
@@ -4913,6 +4946,7 @@
       homeAuditedCount = 82219;
       setHomeStatus('');
       renderCommunityHome();
+      let curatedStaticLoaded = false;
       try {
         const staticResponse = await fetch(`./data/home_${encodeURIComponent(homeYear)}.json`, { cache: 'no-store' });
         if (staticResponse.ok) {
@@ -4920,6 +4954,7 @@
           homePapers = Array.isArray(staticPayload.latest_papers) ? staticPayload.latest_papers : [];
           homeBoards = normalizeHomeBoards(staticPayload);
           usingDemoHome = false;
+          curatedStaticLoaded = true;
           renderCommunityHome();
         }
       } catch (error) {
@@ -4930,8 +4965,13 @@
         const response = await apiFetch(`/api/home?year=${encodeURIComponent(homeYear)}&limit=12`);
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const payload = await response.json();
-        homePapers = Array.isArray(payload.latest_papers) ? payload.latest_papers : [];
-        homeBoards = normalizeHomeBoards(payload);
+        const liveBoards = normalizeHomeBoards(payload);
+        if (curatedStaticLoaded) {
+          homeBoards = mergeCommunitySignals(homeBoards, liveBoards);
+        } else {
+          homePapers = Array.isArray(payload.latest_papers) ? payload.latest_papers : [];
+          homeBoards = liveBoards;
+        }
         usingDemoHome = false;
         renderCommunityHome();
       } catch (error) {
