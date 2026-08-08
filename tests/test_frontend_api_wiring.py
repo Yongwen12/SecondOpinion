@@ -37,7 +37,7 @@ def test_frontend_has_community_home_entrypoint():
     assert 'id="outrageBoard"' in html
     assert 'id="boardTabs"' in html
     assert 'id="hotThreadsLink"' in html
-    assert "const BOARD_ORDER = ['latest', 'all-time']" in html
+    assert "const BOARD_ORDER = ['all-time', 'latest']" in html
     assert "data-board-tab" in html
     assert "data-hot-threads" in html
     assert "data-row-rate" in html
@@ -64,6 +64,10 @@ def test_frontend_has_community_home_entrypoint():
     assert "source.ai_take || source.aiTake" in html
     assert '<span>AI TAKE</span>' in html
     assert "outrage-ai-take" in html
+    assert "|| params.get('b') || 'all-time'" in html
+    assert "? boardKey : 'all-time'" in html
+    assert '>ALL-TIME LEADERBOARD</p>' in html
+    assert '<h2 id="boardHeading">COMMUNITY RANKED</h2>' in html
 
 def test_curated_home_is_not_replaced_by_a_stale_api_snapshot():
     html = Path("frontend/index.html").read_text(encoding="utf-8")

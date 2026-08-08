@@ -3718,8 +3718,8 @@
             <button class="hot-threads-link" id="hotThreadsLink" type="button" data-hot-threads aria-pressed="false"><span aria-hidden="true">&#128293;</span> Hot threads <b id="hotThreadCount"></b> &rarr;</button>
           </div>
           <div class="board-intro">
-            <p class="outrage-eyebrow" id="outrageEyebrow">LATEST ENTRIES</p>
-            <h2 id="boardHeading">NEWLY SURFACED</h2>
+            <p class="outrage-eyebrow" id="outrageEyebrow">ALL-TIME LEADERBOARD</p>
+            <h2 id="boardHeading">COMMUNITY RANKED</h2>
           </div>
           <div class="home-status" id="homeStatus" role="status" aria-live="polite" hidden></div>
           <section class="outrage-board" id="outrageBoard" aria-live="polite"></section>
@@ -3924,7 +3924,7 @@
     ];
 
     const BRAND = 'Judge My Reviewers';
-    const BOARD_ORDER = ['latest', 'all-time'];
+    const BOARD_ORDER = ['all-time', 'latest'];
     const BOARD_COPY = {
       latest: { label: 'Latest', tone: 'heat', eyebrow: 'LATEST ENTRIES', heading: 'NEWLY SURFACED' },
       'all-time': { label: 'All-time', tone: 'heat', eyebrow: 'ALL-TIME LEADERBOARD', heading: 'COMMUNITY RANKED' },
@@ -4497,8 +4497,8 @@
     function initialHomeBoard() {
       const params = new URLSearchParams(location.search);
       if (params.get('view') === 'hot') return 'hot';
-      const value = params.get('board') || params.get('b') || 'latest';
-      return BOARD_ORDER.includes(value) ? value : 'latest';
+      const value = params.get('board') || params.get('b') || 'all-time';
+      return BOARD_ORDER.includes(value) ? value : 'all-time';
     }
 
     function clampScore(value) {
@@ -6405,7 +6405,7 @@
 
       const tabButton = event.target.closest('[data-board-tab]');
       if (tabButton) {
-        homeBoardKind = BOARD_ORDER.includes(tabButton.dataset.boardTab) ? tabButton.dataset.boardTab : 'latest';
+        homeBoardKind = BOARD_ORDER.includes(tabButton.dataset.boardTab) ? tabButton.dataset.boardTab : 'all-time';
         setBoardDeepLink(homeBoardKind);
         renderCommunityBoard();
         return;
@@ -6688,9 +6688,9 @@
     window.addEventListener('popstate', () => {
       const urlState = new URLSearchParams(location.search);
       const paperId = urlState.get('paper') || urlState.get('id') || '';
-      const boardKey = urlState.get('view') === 'hot' ? 'hot' : (urlState.get('board') || urlState.get('b') || 'latest');
+      const boardKey = urlState.get('view') === 'hot' ? 'hot' : (urlState.get('board') || urlState.get('b') || 'all-time');
       if (!paperId) {
-        homeBoardKind = boardKey === 'hot' || BOARD_ORDER.includes(boardKey) ? boardKey : 'latest';
+        homeBoardKind = boardKey === 'hot' || BOARD_ORDER.includes(boardKey) ? boardKey : 'all-time';
         body.classList.remove('is-resolved');
         body.classList.add('is-idle');
         syncStickyBar();
