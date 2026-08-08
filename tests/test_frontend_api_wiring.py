@@ -61,6 +61,9 @@ def test_frontend_has_community_home_entrypoint():
     assert "Review quality, ranked by the community." not in html
     assert "Red List" not in html
     assert "Black List" not in html
+    assert "source.ai_take || source.aiTake" in html
+    assert '<span>AI TAKE</span>' in html
+    assert "outrage-ai-take" in html
 
 def test_frontend_keeps_the_public_review_scope_concise():
     html = Path("frontend/index.html").read_text(encoding="utf-8")
@@ -130,6 +133,7 @@ def test_frontend_static_home_data_is_real_2025_outrage_batch():
     assert len(data["leaderboards"]["outrage_all"]) == 12
     assert all("paper_id" in row and "reviewer_key" in row for row in data["leaderboards"]["outrage_latest"])
     assert all("votes" in row for row in data["leaderboards"]["outrage_all"])
+    assert all(row.get("ai_take") for row in data["leaderboards"]["outrage_all"])
     latest_dates = [row["surfaced_at"] for row in data["leaderboards"]["outrage_latest"]]
     assert latest_dates == sorted(latest_dates, reverse=True)
     assert "Thank you for your helpful comments" not in payload
@@ -190,7 +194,7 @@ def test_frontend_exposes_source_attribution_disputes_and_trust_pages():
     methodology = Path("frontend/methodology.html").read_text(encoding="utf-8")
     privacy = Path("frontend/privacy.html").read_text(encoding="utf-8")
     terms = Path("frontend/terms.html").read_text(encoding="utf-8")
-    assert "gpt-5.4-nano" in methodology
+    assert "gpt-5.6-luna" in methodology
     assert "not yet a representative human gold-standard" in methodology
     assert "We do not attempt to identify anonymous reviewers" in privacy
     assert "Scores evaluate review text, not reviewers as people" in terms
@@ -207,3 +211,14 @@ def test_static_home_only_publishes_safe_outrage_surfaces():
     assert "first author suffered" not in rendered.lower()
     assert "kill a granny" not in rendered.lower()
     assert "will not be able to perform my reviews" not in rendered.lower()
+
+
+def test_curated_outrage_feed_is_publishable_and_concise():
+    data = json.loads(Path("frontend/data/outrage_feed_v2.json").read_text(encoding="utf-8"))
+
+    assert data["schema_version"].startswith("outrage-feed-v2")
+    assert data["count"] == 66 == len(data["items"])
+    assert [row["feed_rank"] for row in data["items"]] == list(range(1, 67))
+    assert all(row["outrage_score"] >= 70 for row in data["items"])
+    assert all(4 <= len(row["ai_take"].split()) <= 15 for row in data["items"])
+    assert len({row["ai_take"].lower() for row in data["items"]}) == 66

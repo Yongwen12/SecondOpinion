@@ -3590,6 +3590,8 @@
     .outrage-q:hover { color: #ff2a14; }
     .outrage-meta { margin: 9px 0 0; color: #77726b; font-family: Consolas, 'Liberation Mono', monospace; font-size: 10px; font-weight: 700; line-height: 1.5; white-space: normal; }
     .outrage-why { margin: 11px 0 0; color: #111; font-size: 14px; font-weight: 900; line-height: 1.35; }
+    .outrage-ai-take { max-width: 720px; margin: 12px 0 0; color: #292929; font-size: 13.5px; font-weight: 750; line-height: 1.35; }
+    .outrage-ai-take span { margin-right: 8px; color: #8a857e; font-family: Consolas, 'Liberation Mono', monospace; font-size: 8.5px; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; }
     .outrage-social { display: flex; align-items: center; flex-wrap: wrap; gap: 9px 13px; margin-top: 15px; }
     .outrage-social .outrage-votes { display: grid; grid-template-columns: repeat(2, minmax(0, auto)); gap: 8px; border: 0; background: transparent; }
     .outrage-social .outrage-vote { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 7px 11px; border: 1px solid #111; border-radius: 1px; background: #fff; color: #111; font-size: 10px; font-weight: 900; letter-spacing: .035em; text-transform: uppercase; }
@@ -4544,6 +4546,7 @@
       return {
         quote: String(source.quote || source.t || source.best_quote || source.summary || fb.quote || 'Needs more experiments.'),
         verdict: String(source.verdict || source.w || source.indictment || source.label || fb.verdict || ''),
+        aiTake: String(source.ai_take || source.aiTake || fb.aiTake || ''),
         reviewer,
         paper,
         venue: venueLabel,
@@ -4891,7 +4894,7 @@
           <div class="outrage-main">
             <button class="outrage-q" type="button" data-row-rate="${index}">${escapeHtml(row.quote)}</button>
             <p class="outrage-meta">${escapeHtml(row.paper)} &middot; ${escapeHtml(row.venue || '2025')} &middot; ${escapeHtml(row.reviewer)}</p>
-            ${row.verdict ? `<p class="outrage-why">${escapeHtml(row.verdict)}</p>` : ''}
+            ${row.aiTake ? `<p class="outrage-ai-take"><span>AI TAKE</span>${escapeHtml(row.aiTake)}</p>` : row.verdict ? `<p class="outrage-why">${escapeHtml(row.verdict)}</p>` : ''}
             ${boardRowSocialHtml(row, index)}
           </div>
           <div class="outrage-row-aside"><span>${escapeHtml(activity)}</span><button class="outrage-open-thread" type="button" data-row-rate="${index}">OPEN THREAD &rarr;</button></div>
@@ -4986,7 +4989,7 @@
           <p class="rate-kicker">Discussion thread</p>
           <h2 id="rateTitle" class="rate-claim">${escapeHtml(row.quote)}</h2>
           <p class="rate-paper-line">${escapeHtml(row.paper)} &middot; ${escapeHtml(row.venue || 'ICLR 2025')}</p>
-          ${row.verdict ? `<p class="rate-context-note">${escapeHtml(row.verdict)}</p>` : ''}
+          ${row.aiTake ? `<p class="rate-context-note"><b>AI TAKE</b> ${escapeHtml(row.aiTake)}</p>` : row.verdict ? `<p class="rate-context-note">${escapeHtml(row.verdict)}</p>` : ''}
           <div class="outrage-social rate-social" aria-label="Vote and react">
             <span class="outrage-votes" aria-label="How outrageous is this review?">
               <button class="outrage-vote outrage-vote--agree${selectedVote === 'up' ? ' is-on' : ''}" type="button" data-rate-choice="up" aria-pressed="${selectedVote === 'up'}" aria-label="Outrageous: ${outrageousCount}"><b>&#9650;</b><span class="outrage-vote-label">Outrageous</span><span class="outrage-vote-count">${outrageousCount}</span></button>
