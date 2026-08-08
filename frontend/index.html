@@ -3615,8 +3615,9 @@
     .outrage-take span { color: #77726b; font-family: Consolas, 'Liberation Mono', monospace; font-size: 9px; }
     .outrage-take-more { margin-top: 7px; color: #ff2a14; font-family: Consolas, 'Liberation Mono', monospace; font-size: 10px; }
     .outrage-row-aside { display: flex; min-width: 0; flex-direction: column; align-items: flex-end; justify-content: space-between; gap: 14px; color: #77726b; font-family: Consolas, 'Liberation Mono', monospace; font-size: 9px; font-weight: 800; letter-spacing: .06em; text-align: right; text-transform: uppercase; }
-    .outrage-open-thread { border: 0; padding: 0; background: transparent; color: #111; cursor: pointer; font: inherit; }
-    .outrage-open-thread:hover { color: #ff2a14; }
+    .outrage-open-thread { min-width: 104px; border: 1px solid #111; padding: 10px 14px; background: #111; color: #fff; cursor: pointer; font: 900 11px/1 Consolas, 'Liberation Mono', monospace; letter-spacing: .08em; text-align: center; }
+    .outrage-open-thread:hover { border-color: #ff2a14; background: #ff2a14; color: #fff; }
+    .outrage-open-thread:focus-visible { outline: 3px solid rgba(255,42,20,.28); outline-offset: 2px; }
     .site-footer { margin-top: 18px; padding-top: 14px; border-top: 3px double #111; color: #77726b; font-family: Consolas, 'Liberation Mono', monospace; font-size: 9px; }
     .site-footer a { color: #111; } .app-view .score-overview, .app-view .cloud-section, .app-view .trust-note { display: none; } .app-view .score-main { width: 100%; } .app-view .score-section { grid-template-columns: 1fr; border-radius: 0; background: #f6f3ea; box-shadow: none; } .app-view .reviewer-entry { border-radius: 0; }
     .rate-dialog { max-width: 860px; border-radius: 0; background: #f6f3ea; box-shadow: 8px 8px 0 rgba(17,17,17,.16); }
@@ -4930,7 +4931,7 @@
             ${row.aiTake ? `<p class="outrage-ai-take"><span>AI TAKE</span>${escapeHtml(row.aiTake)}</p>` : row.verdict ? `<p class="outrage-why">${escapeHtml(row.verdict)}</p>` : ''}
             ${boardRowSocialHtml(row, index)}
           </div>
-          <div class="outrage-row-aside"><span>${escapeHtml(activity)}</span><button class="outrage-open-thread" type="button" data-row-rate="${index}">OPEN THREAD &rarr;</button></div>
+          <div class="outrage-row-aside"><span>${escapeHtml(activity)}</span><button class="outrage-open-thread" type="button" data-row-rate="${index}">COMMENT &rarr;</button></div>
         </article>`;
     }
 

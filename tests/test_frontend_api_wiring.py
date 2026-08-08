@@ -68,6 +68,11 @@ def test_frontend_has_community_home_entrypoint():
     assert "? boardKey : 'all-time'" in html
     assert '>ALL-TIME LEADERBOARD</p>' in html
     assert '<h2 id="boardHeading">COMMUNITY RANKED</h2>' in html
+    assert 'class="outrage-open-thread"' in html
+    assert '>COMMENT &rarr;</button>' in html
+    assert "min-width: 104px; border: 1px solid #111; padding: 10px 14px" in html
+    assert "background: #111; color: #fff" in html
+    assert ".outrage-open-thread:focus-visible" in html
 
 def test_curated_home_is_not_replaced_by_a_stale_api_snapshot():
     html = Path("frontend/index.html").read_text(encoding="utf-8")
