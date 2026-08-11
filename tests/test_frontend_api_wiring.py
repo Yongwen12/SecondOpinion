@@ -33,18 +33,20 @@ def test_frontend_has_community_home_entrypoint():
     html = Path("frontend/index.html").read_text(encoding="utf-8")
 
     assert "Judge My Reviewers" in html
-    assert "Outrageous peer review,<br />ranked by readers." in html
+    assert "Outrageous peer review,<br />ranked by readers." not in html
+    assert "ISSUE 08 &middot; PUBLIC PEER REVIEW" not in html
+    assert "font-size: clamp(34px, 4.8vw, 52px)" in html
     assert 'id="outrageBoard"' in html
     assert 'id="boardTabs"' in html
     assert 'id="hotThreadsLink"' in html
     assert "const BOARD_ORDER = ['all-time', 'latest']" in html
     assert "data-board-tab" in html
     assert "data-hot-threads" in html
-    assert "data-row-rate" in html
+    assert "data-row-thread" in html
     assert 'data-board-vote="outrageous"' in html
     assert 'data-board-vote="not_really"' in html
-    assert '<span class="outrage-vote-label">Outrageous</span>' in html
-    assert '<span class="outrage-vote-label">Not really</span>' in html
+    assert '<span class="outrage-vote-label">Like</span>' in html
+    assert '<span class="outrage-vote-label">Dislike</span>' in html
     assert "row.viewerVote" in html
     assert "outrage_latest" in html
     assert "outrage_all" in html
@@ -69,7 +71,16 @@ def test_frontend_has_community_home_entrypoint():
     assert '>ALL-TIME LEADERBOARD</p>' in html
     assert '<h2 id="boardHeading">COMMUNITY RANKED</h2>' in html
     assert 'class="outrage-open-thread"' in html
-    assert '>COMMENT &rarr;</button>' in html
+    assert 'data-board-comment-form' in html
+    assert 'class="board-comments"' in html
+    assert "toggleBoardThread" in html
+    assert "openRateModal(row, 'row')" not in html
+    assert 'data-row-details' in html
+    assert 'class="board-detail-grid"' in html
+    assert "toggleBoardDetails" in html
+    assert "detailChunkFor" in html
+    assert "Original review &rarr;" in html
+    assert "Source chunk" in html
     assert "min-width: 104px; border: 1px solid #111; padding: 10px 14px" in html
     assert "background: #111; color: #fff" in html
     assert ".outrage-open-thread:focus-visible" in html
@@ -137,12 +148,22 @@ def test_frontend_keeps_votes_aligned_and_unselected_buttons_white_on_mobile():
     assert "background: #fff; color: #111" in html
     assert ".outrage-social .outrage-vote.is-on" in html
     assert "background: #ff2a14; color: #fff" in html
-    assert ".outrage-social .outrage-vote b { color: #ff2a14" in html
+    assert ".outrage-social .outrage-vote b { color: #111" in html
     assert "grid-template-areas: 'rank main' '. aside'" in html
     assert "grid-template-columns: repeat(2, minmax(0, 1fr))" in html
     assert "overflow-wrap: anywhere" in html
     assert "min-width: 0" in html
     assert "width: 100%" in html
+
+
+def test_empty_search_filters_the_selected_venue_by_score():
+    html = Path("frontend/index.html").read_text(encoding="utf-8")
+
+    assert "homeVenueFilter = landingConference?.value || 'all'" in html
+    assert "homeBoardKind = 'all-time'" in html
+    assert "MOST OUTRAGEOUS FIRST" in html
+    assert "filtered.sort((a, b) => Number(b.score || 0) - Number(a.score || 0))" in html
+    assert "/api/home?conference=${encodeURIComponent(homeVenueFilter)}" in html
 
 def test_frontend_static_home_data_is_real_2025_outrage_batch():
     payload = Path("frontend/data/home_2025.json").read_text(encoding="utf-8")

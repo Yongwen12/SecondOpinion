@@ -33,6 +33,7 @@ def seed(factory, tmp_path):
                 "year": 2025,
                 "title": "Searchable Paper",
                 "abstract": "A paper.",
+                "authors_anonymized": True,
                 "reviews": [{"review_id": "review1", "review_text": "Add a baseline.", "weaknesses": "Missing baseline."}],
             },
             {"paper_id": "paper2", "venue": "ICLR", "year": 2025, "title": "No Scorecard Yet", "reviews": []},
@@ -110,6 +111,11 @@ def test_api_search_scorecard_vote_and_job_flow(tmp_path):
     assert global_search.json()["items"][0]["paper_id"] == "paper3"
     assert global_search.json()["items"][0]["venue"] == "TMLR"
 
+    paper_detail = client.get("/api/papers/paper1")
+    assert paper_detail.status_code == 200
+    assert paper_detail.json()["authors"] == []
+    assert paper_detail.json()["authors_anonymized"] is True
+
     venue_search = client.get("/api/papers", params={"query": "Paper", "conference": "TMLR", "year": 2025})
     assert venue_search.status_code == 200
     assert [item["paper_id"] for item in venue_search.json()["items"]] == ["paper3"]
@@ -170,6 +176,8 @@ def test_api_search_scorecard_vote_and_job_flow(tmp_path):
     outrage_row = refreshed_home.json()["leaderboards"]["outrage_latest"][0]
     assert outrage_row["votes"] == {"outrageous": 1, "not_really": 0, "total": 1}
     assert outrage_row["viewer_vote"] == "outrageous"
+    assert outrage_row["review_id"] == "review1"
+    assert outrage_row["chunk_id"] == "C1"
 
     missing = client.get("/api/papers/paper2/scorecard")
     assert missing.status_code == 404

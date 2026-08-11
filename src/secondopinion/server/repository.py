@@ -324,6 +324,7 @@ def store_scorecard(
 
 
 def paper_to_public_dict(paper: Paper) -> dict[str, Any]:
+    source = paper.source_json if isinstance(paper.source_json, dict) else {}
     return {
         "paper_id": paper.paper_id,
         "openreview_forum_id": paper.openreview_forum_id,
@@ -334,6 +335,11 @@ def paper_to_public_dict(paper: Paper) -> dict[str, Any]:
         "abstract": paper.abstract,
         "decision": paper.decision,
         "pdf_url": paper.pdf_url,
+        # Author names are intentionally not retained by the minimized ingest.
+        # Expose the anonymity state so the UI can explain the omission rather
+        # than inventing a name or implying that the record is incomplete.
+        "authors": [],
+        "authors_anonymized": bool(source.get("authors_anonymized")),
         "review_count": len(paper.reviews),
     }
 
@@ -1406,7 +1412,7 @@ def _outrage_candidate_items(
         stmt.order_by(ReviewerScore.created_at.desc(), ReviewerScore.id.desc())
     ).all()
     vote_counts = _vote_counts_for_leaderboard(session, conference_id=conference_id, year=year)
-    review_stmt = select(Review.paper_id, Review.reviewer_index).join(Paper, Paper.paper_id == Review.paper_id).where(
+    review_stmt = select(Review.paper_id, Review.reviewer_index, Review.review_id).join(Paper, Paper.paper_id == Review.paper_id).where(
         Review.review_stage == "initial"
     )
     if conference_id:
@@ -1415,10 +1421,11 @@ def _outrage_candidate_items(
         review_stmt = review_stmt.where(Paper.year == year)
     if paper_ids is not None:
         review_stmt = review_stmt.where(Review.paper_id.in_(clean_paper_ids))
-    official_review_keys = {
-        (str(paper_id), f"R{int(reviewer_index)}")
-        for paper_id, reviewer_index in session.execute(review_stmt).all()
+    official_reviews = {
+        (str(paper_id), f"R{int(reviewer_index)}"): str(review_id)
+        for paper_id, reviewer_index, review_id in session.execute(review_stmt).all()
     }
+    official_review_keys = set(official_reviews)
     seen: set[tuple[str, str]] = set()
     items: list[dict[str, Any]] = []
     for row_id, paper_id, reviewer_key, score_value, dimensions_json, created_at, title, venue, paper_year in rows:
@@ -1437,6 +1444,9 @@ def _outrage_candidate_items(
             "venue": str(venue or ""),
             "year": int(paper_year or 0),
             "reviewer_key": str(reviewer_key),
+            "review_id": official_reviews.get(key, ""),
+            "chunk_id": f"C{str(reviewer_key).removeprefix('R')}",
+            "source_section": "Official review excerpt",
             "quote": str(metrics.get("quote") or ""),
             "verdict": str(metrics.get("verdict") or ""),
             "surfaced_at": created_at.isoformat() if created_at else None,
