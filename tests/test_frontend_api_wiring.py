@@ -77,6 +77,13 @@ def test_frontend_has_community_home_entrypoint():
     assert "openRateModal(row, 'row')" not in html
     assert 'data-row-details' in html
     assert 'class="board-detail-grid"' in html
+    assert 'Paper · venue · reviewer' in html
+    assert 'class="board-detail-value board-detail-source-link"' in html
+    assert '<span class="board-detail-label">Venue</span>' not in html
+    assert 'board-detail-item--decision' in html
+    assert 'border-left: 3px solid #ff2a14' in html
+    assert "font-family: Arial, Helvetica, sans-serif; font-size: 14px" in html
+    assert '<p class="outrage-meta">${escapeHtml(row.paper)}' not in html
     assert "toggleBoardDetails" in html
     assert "detailChunkFor" in html
     assert "Original review &rarr;" in html

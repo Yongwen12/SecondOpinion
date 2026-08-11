@@ -3604,12 +3604,11 @@
     .outrage-rank { align-self: start; color: #ff2a14; font-family: Georgia, 'Times New Roman', serif; font-size: 20px; font-weight: 900; line-height: 1; }
     .outrage-row:nth-child(n+4) .outrage-rank { color: #111; }
     .outrage-main { min-width: 0; }
-    .outrage-q { display: -webkit-box; width: 100%; padding: 0; overflow: hidden; border: 0; background: transparent; color: #111; cursor: pointer; -webkit-box-orient: vertical; -webkit-line-clamp: 3; margin: 0; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(20px, 2.8vw, 27px); font-weight: 900; line-height: 1.16; text-align: left; text-decoration: none; }
+    .outrage-q { display: -webkit-box; width: 100%; padding: 0; overflow: hidden; border: 0; background: transparent; color: #111; cursor: pointer; -webkit-box-orient: vertical; -webkit-line-clamp: 3; margin: 0; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(24px, 3vw, 31px); font-weight: 900; letter-spacing: -.018em; line-height: 1.08; text-align: left; text-decoration: none; }
     .outrage-q:hover { color: #ff2a14; }
-    .outrage-meta { margin: 9px 0 0; color: #77726b; font-family: Consolas, 'Liberation Mono', monospace; font-size: 10px; font-weight: 700; line-height: 1.5; white-space: normal; }
     .outrage-why { margin: 11px 0 0; color: #111; font-size: 14px; font-weight: 900; line-height: 1.35; }
-    .outrage-ai-take { max-width: 720px; margin: 12px 0 0; color: #292929; font-size: 13.5px; font-weight: 750; line-height: 1.35; }
-    .outrage-ai-take span { margin-right: 8px; color: #8a857e; font-family: Consolas, 'Liberation Mono', monospace; font-size: 8.5px; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; }
+    .outrage-ai-take { max-width: 720px; margin: 15px 0 0; border-left: 3px solid #ff2a14; padding: 10px 13px 11px; background: #f6f3ea; color: #3b3833; font-family: Arial, Helvetica, sans-serif; font-size: 14px; font-weight: 600; line-height: 1.48; }
+    .outrage-ai-take span { display: block; margin: 0 0 5px; color: #ff2a14; font-family: Consolas, 'Liberation Mono', monospace; font-size: 8.5px; font-weight: 900; letter-spacing: .16em; line-height: 1; text-transform: uppercase; }
     .outrage-social { display: flex; align-items: center; flex-wrap: wrap; gap: 9px 13px; margin-top: 15px; }
     .outrage-social .outrage-votes { display: grid; grid-template-columns: repeat(2, minmax(0, auto)); gap: 8px; border: 0; background: transparent; }
     .outrage-social .outrage-vote { display: inline-flex; align-items: center; gap: 7px; min-width: 52px; min-height: 36px; padding: 7px 11px; border: 1px solid #111; border-radius: 1px; background: #fff; color: #111; font-size: 10px; font-weight: 900; letter-spacing: .035em; }
@@ -3650,7 +3649,10 @@
     .board-detail-item { min-width: 0; padding: 12px 14px; border-right: 1px solid #d9d3c8; border-bottom: 1px solid #d9d3c8; background: #f0ece3; }
     .board-detail-item--wide { grid-column: 1 / -1; }
     .board-detail-label { display: block; margin-bottom: 5px; color: #77726b; font: 900 9px/1 Consolas, 'Liberation Mono', monospace; letter-spacing: .1em; text-transform: uppercase; }
-    .board-detail-value { margin: 0; color: #222; font: 14px/1.45 Arial, Helvetica, sans-serif; overflow-wrap: anywhere; }
+    .board-detail-value { margin: 0; color: #2b2925; font: 14px/1.52 Arial, Helvetica, sans-serif; overflow-wrap: anywhere; }
+    .board-detail-source-link { display: block; color: #111; font-weight: 700; text-decoration: none; }
+    .board-detail-source-link:hover { color: #ff2a14; text-decoration: underline; text-underline-offset: 3px; }
+    .board-detail-item--decision .board-detail-value { max-width: 78ch; font-size: 15px; line-height: 1.6; }
     .board-detail-abstract { max-height: 7.2em; overflow: hidden; }
     .board-detail-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
     .board-detail-link { border-bottom: 1px solid #111; padding: 5px 0; color: #111; font: 900 10px/1.2 Consolas, 'Liberation Mono', monospace; letter-spacing: .05em; text-decoration: none; text-transform: uppercase; }
@@ -3670,7 +3672,7 @@
     .board-comment { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 10px; padding: 14px 4px; border-bottom: 1px solid #d9d3c8; }
     .board-comment-avatar { display: grid; place-items: center; width: 32px; height: 32px; border: 1px solid #111; border-radius: 50%; background: #fff; color: #111; font: 900 11px/1 Georgia, serif; text-transform: uppercase; }
     .board-comment-meta { margin: 0 0 5px; color: #77726b; font: 800 9px/1.3 Consolas, 'Liberation Mono', monospace; letter-spacing: .05em; text-transform: uppercase; }
-    .board-comment-body { margin: 0; color: #222; font: 14px/1.5 Arial, Helvetica, sans-serif; white-space: pre-wrap; word-break: break-word; }
+    .board-comment-body { margin: 0; color: #2b2925; font: 14.5px/1.58 Arial, Helvetica, sans-serif; white-space: pre-wrap; word-break: break-word; }
     .site-footer { margin-top: 18px; padding-top: 14px; border-top: 3px double #111; color: #77726b; font-family: Consolas, 'Liberation Mono', monospace; font-size: 9px; }
     .site-footer a { color: #111; } .app-view .score-overview, .app-view .cloud-section, .app-view .trust-note { display: none; } .app-view .score-main { width: 100%; } .app-view .score-section { grid-template-columns: 1fr; border-radius: 0; background: #f6f3ea; box-shadow: none; } .app-view .reviewer-entry { border-radius: 0; }
     .rate-dialog { max-width: 860px; border-radius: 0; background: #f6f3ea; box-shadow: 8px 8px 0 rgba(17,17,17,.16); }
@@ -5103,9 +5105,8 @@
         <section class="board-detail" aria-label="Paper and review details">
           <div class="board-detail-head"><h3>Source details</h3><span class="board-detail-status">${row.detailsLoading ? 'Loading full record…' : 'OpenReview record'}</span></div>
           <div class="board-detail-grid">
-            <div class="board-detail-item board-detail-item--wide"><span class="board-detail-label">Paper</span><p class="board-detail-value">${escapeHtml(row.paper)}</p></div>
-            <div class="board-detail-item"><span class="board-detail-label">Venue</span><p class="board-detail-value">${escapeHtml(row.venue)}</p></div>
-            <div class="board-detail-item"><span class="board-detail-label">Decision</span><p class="board-detail-value">${escapeHtml(decision)}</p></div>
+            <div class="board-detail-item board-detail-item--wide"><span class="board-detail-label">Paper · venue · reviewer</span>${paperUrl ? `<a class="board-detail-value board-detail-source-link" href="${escapeHtml(paperUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(row.paper)} · ${escapeHtml(row.venue || '2025')} · ${escapeHtml(row.reviewer)} &rarr;</a>` : `<p class="board-detail-value">${escapeHtml(row.paper)} · ${escapeHtml(row.venue || '2025')} · ${escapeHtml(row.reviewer)}</p>`}</div>
+            <div class="board-detail-item board-detail-item--wide board-detail-item--decision"><span class="board-detail-label">Decision</span><p class="board-detail-value">${escapeHtml(decision)}</p></div>
             <div class="board-detail-item board-detail-item--wide"><span class="board-detail-label">Authors</span><p class="board-detail-value">${escapeHtml(authorText)}</p></div>
             <div class="board-detail-item"><span class="board-detail-label">Reviewer</span><p class="board-detail-value">${escapeHtml(row.reviewer)} (${escapeHtml(row.reviewerKey)}) · anonymous public reviewer</p></div>
             <div class="board-detail-item"><span class="board-detail-label">Review note</span><p class="board-detail-value">${escapeHtml(reviewId)}</p></div>
@@ -5187,7 +5188,6 @@
           <div class="outrage-rank">#${String(index + 1).padStart(2, '0')}</div>
           <div class="outrage-main">
             <button class="outrage-q" type="button" data-row-thread="${index}" aria-expanded="${openBoardThreadKey === boardRowIdentity(row)}">${escapeHtml(row.quote)}</button>
-            <p class="outrage-meta">${escapeHtml(row.paper)} &middot; ${escapeHtml(row.venue || '2025')} &middot; ${escapeHtml(row.reviewer)}</p>
             ${row.aiTake ? `<p class="outrage-ai-take"><span>AI TAKE</span>${escapeHtml(row.aiTake)}</p>` : row.verdict ? `<p class="outrage-why">${escapeHtml(row.verdict)}</p>` : ''}
             ${boardRowSocialHtml(row, index)}
             ${boardDetailHtml(row)}
