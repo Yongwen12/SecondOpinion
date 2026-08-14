@@ -196,8 +196,8 @@ def test_frontend_static_home_data_is_real_2025_outrage_batch():
 
     assert data["audited_count"] == 99671
     assert set(data["leaderboards"]) == {"outrage_latest", "outrage_all", "outrage_hot"}
-    assert len(data["leaderboards"]["outrage_latest"]) == 12
-    assert len(data["leaderboards"]["outrage_all"]) == 12
+    assert len(data["leaderboards"]["outrage_latest"]) > 12
+    assert len(data["leaderboards"]["outrage_all"]) > 12
     assert all("paper_id" in row and "reviewer_key" in row for row in data["leaderboards"]["outrage_latest"])
     assert all("votes" in row for row in data["leaderboards"]["outrage_all"])
     assert all(row.get("ai_take") for row in data["leaderboards"]["outrage_all"])
@@ -207,6 +207,16 @@ def test_frontend_static_home_data_is_real_2025_outrage_batch():
     assert "Updating Updating Updating Updating" not in payload
     assert "Author?Reviewer discussion phase" not in payload
     assert "We are delighted that our responses" not in payload
+
+
+def test_all_time_and_latest_boards_load_more_in_twelve_row_batches():
+    html = Path("frontend/index.html").read_text(encoding="utf-8")
+
+    assert "const BOARD_PAGE_SIZE = 12" in html
+    assert "data-board-load-more" in html
+    assert "Load more" in html
+    assert "allVisibleRows.slice(0, visibleCount)" in html
+    assert "limit=50" in html
 
 
 def test_frontend_has_optional_account_saved_paper_and_comment_controls():

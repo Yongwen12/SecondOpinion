@@ -3594,6 +3594,10 @@
     .board-intro h2 { margin: 0; color: #77726b; font-family: Consolas, 'Liberation Mono', monospace; font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
     .board-intro h2 { text-align: right; }
     .outrage-board { border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+    .board-load-more { display: flex; justify-content: center; padding: 24px 0 10px; border-top: 1px solid #111; }
+    .board-load-more-button { min-width: 190px; border: 1px solid #111; padding: 13px 22px; background: #fff; color: #111; cursor: pointer; font: 900 11px/1 Consolas, 'Liberation Mono', monospace; letter-spacing: .1em; text-transform: uppercase; }
+    .board-load-more-button:hover { border-color: #ff2a14; background: #ff2a14; color: #fff; }
+    .board-load-more-button:focus-visible { outline: 3px solid rgba(255,42,20,.28); outline-offset: 3px; }
     .outrage-row { display: grid; grid-template-columns: 60px minmax(0, 1fr) 132px; gap: 18px; padding: 23px 0 25px; border: 0; border-top: 1px solid #111; border-radius: 0; background: transparent; box-shadow: none; transform: none; }
     .outrage-row:hover { background: transparent; transform: none; }
     .outrage-rank { align-self: start; color: #ff2a14; font-family: Georgia, 'Times New Roman', serif; font-size: 20px; font-weight: 900; line-height: 1; }
@@ -3999,6 +4003,7 @@
     ];
 
     const BRAND = 'Judge My Reviewers';
+    const BOARD_PAGE_SIZE = 12;
     const BOARD_ORDER = ['all-time', 'latest'];
     const BOARD_COPY = {
       latest: { label: 'Latest', tone: 'heat', eyebrow: 'LATEST ENTRIES', heading: 'NEWLY SURFACED' },
@@ -4030,6 +4035,7 @@
     let homeAuditedCount = 82219;
     let homeBoardKind = initialHomeBoard();
     let homeVenueFilter = 'all';
+    let boardVisibleCounts = { 'all-time': BOARD_PAGE_SIZE, latest: BOARD_PAGE_SIZE };
     let openBoardThreadKey = null;
     let openBoardDetailKey = null;
     // Seed the stagger guard so the initial render (and its fast static/API re-renders) does
@@ -4694,7 +4700,7 @@
           label: BOARD_COPY[key].label,
           count: Number(boardPayload.count || rows.length),
           tone: 'heat',
-          rows: rows.slice(0, 20)
+          rows: rows.slice(0, 50)
         };
       }
       const latest = Array.isArray(payload.latest_papers) ? payload.latest_papers : [];
@@ -4773,7 +4779,9 @@
     function renderCommunityBoard() {
       const board = homeBoards[homeBoardKind] || homeBoards.latest;
       const copy = BOARD_COPY[homeBoardKind] || BOARD_COPY.latest;
-      const visibleRows = visibleBoardRows(board);
+      const allVisibleRows = visibleBoardRows(board);
+      const visibleCount = boardVisibleCounts[homeBoardKind] || BOARD_PAGE_SIZE;
+      const visibleRows = allVisibleRows.slice(0, visibleCount);
       document.title = BRAND;
       body.classList.remove('praise', 'board-ink', 'board-green');
       if (homeBrand) homeBrand.textContent = BRAND;
@@ -4788,7 +4796,12 @@
       if (outrageBoard) {
         outrageBoard.classList.toggle('is-entering', homeBoardKind !== renderCommunityBoard.lastKind);
         renderCommunityBoard.lastKind = homeBoardKind;
-        outrageBoard.innerHTML = visibleRows.map((row, index) => boardRowHtml(row, index, board, copy)).join('') || '<p class="outrage-fine"><b>No threads for this venue yet.</b></p>';
+        const rowsHtml = visibleRows.map((row, index) => boardRowHtml(row, index, board, copy)).join('');
+        const remaining = Math.max(0, allVisibleRows.length - visibleRows.length);
+        const loadMoreHtml = remaining
+          ? `<div class="board-load-more"><button class="board-load-more-button" type="button" data-board-load-more>Load more <span aria-hidden="true">+</span></button></div>`
+          : '';
+        outrageBoard.innerHTML = rowsHtml ? `${rowsHtml}${loadMoreHtml}` : '<p class="outrage-fine"><b>No threads for this venue yet.</b></p>';
       }
       hydrateBoardComments();
     }
@@ -4825,7 +4838,7 @@
 
     async function hydrateBoardComments() {
       const board = homeBoards[homeBoardKind] || homeBoards.latest;
-      const rows = visibleBoardRows(board);
+      const rows = visibleBoardRows(board).slice(0, boardVisibleCounts[homeBoardKind] || BOARD_PAGE_SIZE);
       // Seed from server-embedded previews first: rows that already carry their newest
       // takes need no round trip. Only rows without an embed still get fetched.
       let seeded = false;
@@ -5216,6 +5229,7 @@
 
     async function loadCommunityHome(year = homeYear) {
       homeYear = Number(year || 2025);
+      boardVisibleCounts = { 'all-time': BOARD_PAGE_SIZE, latest: BOARD_PAGE_SIZE };
       homePapers = [];
       homeBoards = cloneHomeBoards(DEMO_HOME_BOARDS);
       usingDemoHome = true;
@@ -5238,7 +5252,7 @@
       }
       if (!API_BASE) return;
       try {
-        const response = await apiFetch(`/api/home?year=${encodeURIComponent(homeYear)}&limit=12`);
+        const response = await apiFetch(`/api/home?year=${encodeURIComponent(homeYear)}&limit=50`);
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const payload = await response.json();
         const liveBoards = normalizeHomeBoards(payload);
@@ -5800,6 +5814,7 @@
         if (source === 'landing') {
           homeVenueFilter = landingConference?.value || 'all';
           homeBoardKind = 'all-time';
+          boardVisibleCounts = { 'all-time': BOARD_PAGE_SIZE, latest: BOARD_PAGE_SIZE };
           openBoardThreadKey = null;
           openBoardDetailKey = null;
           hideSearchResults();
@@ -6708,7 +6723,15 @@
       const tabButton = event.target.closest('[data-board-tab]');
       if (tabButton) {
         homeBoardKind = BOARD_ORDER.includes(tabButton.dataset.boardTab) ? tabButton.dataset.boardTab : 'all-time';
+        boardVisibleCounts[homeBoardKind] = BOARD_PAGE_SIZE;
         setBoardDeepLink(homeBoardKind);
+        renderCommunityBoard();
+        return;
+      }
+
+      const loadMoreButton = event.target.closest('[data-board-load-more]');
+      if (loadMoreButton) {
+        boardVisibleCounts[homeBoardKind] = (boardVisibleCounts[homeBoardKind] || BOARD_PAGE_SIZE) + BOARD_PAGE_SIZE;
         renderCommunityBoard();
         return;
       }
@@ -6930,6 +6953,7 @@
       const delta = event.key === 'ArrowRight' ? 1 : -1;
       const next = BOARD_ORDER[(currentIndex + delta + BOARD_ORDER.length) % BOARD_ORDER.length];
       homeBoardKind = next;
+      boardVisibleCounts[homeBoardKind] = BOARD_PAGE_SIZE;
       setBoardDeepLink(next);
       renderCommunityBoard();
       boardTabs.querySelector(`[data-board-tab="${next}"]`)?.focus();

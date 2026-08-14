@@ -22,7 +22,7 @@ def parse_args() -> argparse.Namespace:
         help="Existing home snapshot to update.",
     )
     parser.add_argument("--year", type=int, default=2025)
-    parser.add_argument("--limit", type=int, default=12)
+    parser.add_argument("--limit", type=int, default=50)
     return parser.parse_args()
 
 
