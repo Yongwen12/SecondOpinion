@@ -73,6 +73,12 @@ def test_frontend_has_community_home_entrypoint():
     assert 'class="outrage-open-thread"' in html
     assert 'data-board-comment-form' in html
     assert 'class="board-comments"' in html
+    assert 'data-comment-emoji-open' in html
+    assert 'data-comment-emoji-value' in html
+    assert "input.setRangeText(commentEmoji.dataset.commentEmojiValue" in html
+    assert "border-top: 4px solid #111" in html
+    assert "const commentLabel = commentCount ? `COMMENT ${commentCount}` : 'COMMENT'" in html
+    assert "background: #ff2a14; color: #fff" in html
     assert "toggleBoardThread" in html
     assert "openRateModal(row, 'row')" not in html
     assert 'data-row-details' in html
@@ -88,7 +94,7 @@ def test_frontend_has_community_home_entrypoint():
     assert "detailChunkFor" in html
     assert "Original review &rarr;" in html
     assert "Source chunk" in html
-    assert "min-width: 104px; border: 1px solid #111; padding: 10px 14px" in html
+    assert "min-width: 104px; border: 1px solid #ff2a14; padding: 10px 14px" in html
     assert "background: #111; color: #fff" in html
     assert ".outrage-open-thread:focus-visible" in html
 
