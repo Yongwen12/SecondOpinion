@@ -37,11 +37,12 @@ def test_frontend_has_community_home_entrypoint():
     assert "ISSUE 08 &middot; PUBLIC PEER REVIEW" not in html
     assert "font-size: clamp(34px, 4.8vw, 52px)" in html
     assert 'id="outrageBoard"' in html
+    assert ".outrage-search-form { width: 100%;" in html
     assert 'id="boardTabs"' in html
-    assert 'id="hotThreadsLink"' in html
+    assert 'id="hotThreadsLink"' not in html
     assert "const BOARD_ORDER = ['all-time', 'latest']" in html
     assert "data-board-tab" in html
-    assert "data-hot-threads" in html
+    assert "data-hot-threads" not in html
     assert "data-row-thread" in html
     assert 'data-board-vote="outrageous"' in html
     assert 'data-board-vote="not_really"' in html
@@ -64,7 +65,10 @@ def test_frontend_has_community_home_entrypoint():
     assert "Red List" not in html
     assert "Black List" not in html
     assert "source.ai_take || source.aiTake" in html
-    assert '<span>AI TAKE</span>' in html
+    assert '<span>AI TAKE</span>' not in html
+    assert '<b>AI TAKE</b>' not in html
+    assert 'aria-label="Editorial aside"' in html
+    assert "content: '\\1F336\\FE0F'" in html
     assert "outrage-ai-take" in html
     assert "|| params.get('b') || 'all-time'" in html
     assert "? boardKey : 'all-time'" in html
@@ -75,8 +79,16 @@ def test_frontend_has_community_home_entrypoint():
     assert 'class="board-comments"' in html
     assert 'data-comment-emoji-open' in html
     assert 'data-comment-emoji-value' in html
+    assert 'aria-label="Add emoji" title="Add emoji">&#128522;</button>' in html
+    assert "'\\u{1F389}', '\\u{1F605}', '\\u{1F643}'" in html
     assert "input.setRangeText(commentEmoji.dataset.commentEmojiValue" in html
+    assert "${reactionStripHtml(row, `row:${index}`)}" in html
+    assert "'\\u{2764}\\u{FE0F}', '\\u{1F602}', '\\u{1F62E}'" in html
+    assert "right: -8px; bottom: -7px" in html
     assert "border-top: 4px solid #111" in html
+    assert 'class="board-thread-close"' in html
+    assert 'class="board-comments-count"' in html
+    assert 'class="outrage-title-row"' in html
     assert "const commentLabel = commentCount ? `COMMENT ${commentCount}` : 'COMMENT'" in html
     assert "background: #ff2a14; color: #fff" in html
     assert "toggleBoardThread" in html
@@ -88,7 +100,7 @@ def test_frontend_has_community_home_entrypoint():
     assert '<span class="board-detail-label">Venue</span>' not in html
     assert 'board-detail-item--decision' in html
     assert 'border-left: 3px solid #ff2a14' in html
-    assert "font-family: Arial, Helvetica, sans-serif; font-size: 14px" in html
+    assert "font-family: Georgia, 'Times New Roman', serif; font-size: 15.5px" in html
     assert '<p class="outrage-meta">${escapeHtml(row.paper)}' not in html
     assert "toggleBoardDetails" in html
     assert "detailChunkFor" in html
